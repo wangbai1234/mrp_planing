@@ -1,0 +1,90 @@
+<script setup lang="ts">
+import { inject, onMounted } from 'vue'
+const setCrumb = inject<(g: string, p: string) => void>('setCrumb')!
+onMounted(() => setCrumb('帮助', '排产操作手册'))
+
+function scrollTo(id: string) {
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
+</script>
+
+<template>
+  <div class="app-page active">
+    <div class="page-head">
+      <div><h1>排产页面操作手册</h1><div class="subhead" style="margin-top:4px;color:var(--text-2)">按推荐顺序使用，不需要一次理解全部按钮。先检查数据，再处理红色超限和月度差异，最后重算、发布和导出。</div></div>
+      <div class="head-actions"><router-link to="/planning" class="btn primary"><svg class="icon"><use href="#i-calendar"/></svg>边看手册边操作</router-link></div>
+    </div>
+    <div class="manual-layout">
+      <aside class="panel manual-nav">
+        <button @click="scrollTo('manual-start')">推荐操作顺序</button>
+        <button @click="scrollTo('manual-buttons')">顶部按钮说明</button>
+        <button @click="scrollTo('manual-grid')">排产表怎么读</button>
+        <button @click="scrollTo('manual-edit')">如何调整数量</button>
+        <button @click="scrollTo('manual-cases')">常见场景</button>
+        <button @click="scrollTo('manual-rules')">版本与状态规则</button>
+      </aside>
+      <div>
+        <section class="panel manual-section" id="manual-start"><div class="manual-body">
+          <h2>一、推荐操作顺序</h2>
+          <ol>
+            <li>先看顶部经营计划版本、排产版本和库存/CRM 更新时间，确认数据是最新的。</li>
+            <li>用"仅看超产能"筛选红色单元格，逐个调整到产线允许范围。</li>
+            <li>查看下方"来源月份核验"，确保每个月的"当前合计 = 可排量"，差异为 0。</li>
+            <li>数据来源发生变化时，点击"重算并生成新版本"；普通人工修改不要点击重算也能保存。</li>
+            <li>核验完成后点击"发布排产"，再根据工厂需要选择字段导出。</li>
+          </ol>
+          <div class="callout">只想查看右侧周数据时，使用表格横向滚动条或触控板左右滑动；"定位当前周"可回到最左侧，不改数据和版本。</div>
+        </div></section>
+        <section class="panel manual-section" id="manual-buttons"><div class="manual-body">
+          <h2>二、顶部按钮说明</h2>
+          <table class="data-table"><thead><tr><th>按钮</th><th>什么时候用</th><th>会发生什么</th><th>风险级别</th></tr></thead><tbody>
+            <tr><td><strong>怎么操作</strong></td><td>第一次使用或忘记流程时</td><td>打开简明指南，不改变任何数据</td><td><span class="tag success">仅查看</span></td></tr>
+            <tr><td><strong>版本对比</strong></td><td>想知道本版为什么和上一版不同</td><td>只读查看差异；不能回滚</td><td><span class="tag success">仅查看</span></td></tr>
+            <tr><td><strong>导出</strong></td><td>核验完成，需要给工厂时</td><td>选择字段并生成 Excel</td><td><span class="tag info">输出文件</span></td></tr>
+            <tr><td><strong>重算并生成新版本</strong></td><td>数据源更新后</td><td>版本号增加；人工覆盖保留</td><td><span class="tag warning">生成新版本</span></td></tr>
+            <tr><td><strong>发布排产</strong></td><td>超限和差异处理完成后</td><td>状态变为已发布；仍可修改</td><td><span class="tag warning">改变状态</span></td></tr>
+            <tr><td><strong>定位当前周</strong></td><td>横向浏览后返回</td><td>滚动表格回到最左侧</td><td><span class="tag success">仅改变视图</span></td></tr>
+          </tbody></table>
+        </div></section>
+        <section class="panel manual-section" id="manual-grid"><div class="manual-body">
+          <h2>三、排产表怎么读</h2>
+          <ul>
+            <li><strong>黄色"提前量"列：</strong>例如"8 月 W4 / 9 月提前量"表示位置在 8 月，但数量属于 9 月 Forecast。</li>
+            <li><strong>红色单元格：</strong>当前周数量超过该产线周上限，需要人工调整。</li>
+            <li><strong>蓝色底线：</strong>该值经过人工修改；抽屉中仍能看到系统自动值。</li>
+            <li><strong>灰色斜纹：</strong>该周已经执行，在月中重算场景不可编辑。</li>
+            <li><strong>来源月份核验：</strong>跨月提前量按来源月份合计，差异必须尽量调整为 0。</li>
+          </ul>
+        </div></section>
+        <section class="panel manual-section" id="manual-edit"><div class="manual-body">
+          <h2>四、如何调整周排产数量</h2>
+          <ol>
+            <li>点击表格中的数量单元格。</li>
+            <li>在右侧先核对整机料号、显示周和"来源月份"。</li>
+            <li>查看系统自动值、当前值和周上限，再输入新的非负整数。</li>
+            <li>点击"保存调整"。保存会更新月度差异并记录修改历史，但不会生成新版本。</li>
+            <li>如果想取消人工决定，重新打开该单元格，点击"恢复自动值"。</li>
+          </ol>
+          <div class="callout warn">如果某月显示"待调整"，不要直接发布。继续修改同一来源月份的其他周，直到当前合计与可排量一致。</div>
+        </div></section>
+        <section class="panel manual-section" id="manual-cases"><div class="manual-body">
+          <h2>五、常见场景</h2>
+          <h3>场景 A：只是想看右侧周数据</h3><p>横向滑动排产表即可；需要返回时点击"定位当前周"。不要点击重算。</p>
+          <h3>场景 B：Forecast 或库存刚更新</h3><p>若自动重算开关开启，系统会自动生成新版本；若关闭，则点击"重算并生成新版本"。</p>
+          <h3>场景 C：某周红色超产能</h3><p>点击红色数量，降低本周数量，把减少的数量人工分配到同一来源月份的其他可执行周。</p>
+          <h3>场景 D：月中 Forecast 增加</h3><p>切换"月中变更 TC002a"可查看示例。已执行周保持锁定，新增可排量只进入尚未执行的周。</p>
+        </div></section>
+        <section class="panel manual-section" id="manual-rules"><div class="manual-body">
+          <h2>六、版本与状态规则</h2>
+          <ul>
+            <li>人工修改周数量：不生成排产版本，只留痕。</li>
+            <li>点击重算：生成排产新版本，并保留人工覆盖。</li>
+            <li>导入经营计划：生成经营计划新版本；自动重算开启时继续生成排产新版本。</li>
+            <li>历史版本只允许比较，不能回滚。</li>
+            <li>发布后允许继续修改，系统需要保留发布后修改记录。</li>
+          </ul>
+        </div></section>
+      </div>
+    </div>
+  </div>
+</template>

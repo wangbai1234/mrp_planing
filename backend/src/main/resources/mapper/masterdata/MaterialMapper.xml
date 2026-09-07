@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.masterdata.repository.MaterialMapper">
+
+    <sql id="whereClause">
+        WHERE is_deleted = 0
+        <if test="category != null and category != ''">
+            AND category = #{category}
+        </if>
+        <if test="region != null and region != ''">
+            AND region = #{region}
+        </if>
+        <if test="isActive != null">
+            AND is_active = #{isActive}
+        </if>
+        <if test="keyword != null and keyword != ''">
+            AND (material_code LIKE CONCAT('%', #{keyword}, '%')
+                 OR material_name LIKE CONCAT('%', #{keyword}, '%')
+                 OR project_model LIKE CONCAT('%', #{keyword}, '%')
+                 OR spec_model LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+    </sql>
+
+    <insert id="insert">
+        INSERT INTO material (material_code, material_name, project_model, spec_model, unit,
+            moq, mpq, region, attribute, category, is_active, lead_time_days, origin_place,
+            data_source, external_id)
+        VALUES (#{materialCode}, #{materialName}, #{projectModel}, #{specModel}, #{unit},
+            #{moq}, #{mpq}, #{region}, #{attribute}, #{category}, #{isActive}, #{leadTimeDays},
+            #{originPlace}, #{dataSource}, #{externalId})
+    </insert>
+
+    <insert id="insertBatch">
+        INSERT INTO material (material_code, material_name, project_model, spec_model, unit,
+            moq, mpq, region, attribute, category, is_active, lead_time_days, origin_place,
+            data_source, external_id)
+        VALUES
+        <foreach collection="list" item="m" separator=",">
+            (#{m.materialCode}, #{m.materialName}, #{m.projectModel}, #{m.specModel}, #{m.unit},
+             #{m.moq}, #{m.mpq}, #{m.region}, #{m.attribute}, #{m.category}, #{m.isActive},
+             #{m.leadTimeDays}, #{m.originPlace}, #{m.dataSource}, #{m.externalId})
+        </foreach>
+    </insert>
+
+    <select id="selectById" resultType="com.mrp.masterdata.domain.Material">
+        SELECT * FROM material WHERE id = #{id} AND is_deleted = 0
+    </select>
+
+    <select id="selectByCode" resultType="com.mrp.masterdata.domain.Material">
+        SELECT * FROM material WHERE material_code = #{materialCode} AND is_deleted = 0
+    </select>
+
+    <select id="selectAll" resultType="com.mrp.masterdata.domain.Material">
+        SELECT * FROM material
+        <include refid="whereClause"/>
+        ORDER BY id DESC
+    </select>
+
+    <select id="selectPage" resultType="com.mrp.masterdata.domain.Material">
+        SELECT * FROM material
+        <include refid="whereClause"/>
+        ORDER BY id DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="countTotal" resultType="int">
+        SELECT COUNT(*) FROM material
+        <include refid="whereClause"/>
+    </select>
+
+    <update id="update">
+        UPDATE material
+        SET material_name = #{materialName}, project_model = #{projectModel}, spec_model = #{specModel},
+            unit = #{unit}, moq = #{moq}, mpq = #{mpq}, region = #{region}, attribute = #{attribute},
+            category = #{category}, is_active = #{isActive}, lead_time_days = #{leadTimeDays},
+            origin_place = #{originPlace}
+        WHERE id = #{id} AND is_deleted = 0
+    </update>
+
+    <update id="logicalDelete">
+        UPDATE material SET is_deleted = 1 WHERE id = #{id} AND is_deleted = 0
+    </update>
+
+    <select id="countByCode" resultType="int">
+        SELECT COUNT(*) FROM material WHERE material_code = #{materialCode} AND is_deleted = 0
+    </select>
+
+    <select id="countByExternalId" resultType="int">
+        SELECT COUNT(*) FROM material WHERE external_id = #{externalId} AND is_deleted = 0
+    </select>
+</mapper>

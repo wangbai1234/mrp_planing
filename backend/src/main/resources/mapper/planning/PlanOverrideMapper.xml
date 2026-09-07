@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.planning.repository.PlanOverrideMapper">
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO plan_override (plan_version_id, material_id, week_start_date, system_quantity, manual_quantity, reason, operated_by)
+        VALUES (#{planVersionId}, #{materialId}, #{weekStartDate}, #{systemQuantity}, #{manualQuantity}, #{reason}, #{operatedBy})
+    </insert>
+
+    <update id="upsert">
+        INSERT INTO plan_override (plan_version_id, material_id, week_start_date, system_quantity, manual_quantity, reason, operated_by)
+        VALUES (#{planVersionId}, #{materialId}, #{weekStartDate}, #{systemQuantity}, #{manualQuantity}, #{reason}, #{operatedBy})
+        ON DUPLICATE KEY UPDATE manual_quantity = #{manualQuantity}, reason = #{reason}, operated_by = #{operatedBy}, operated_at = CURRENT_TIMESTAMP(3)
+    </update>
+
+    <select id="selectByUnique" resultType="com.mrp.planning.domain.PlanOverride">
+        SELECT * FROM plan_override WHERE plan_version_id = #{planVersionId}
+        AND material_id = #{materialId} AND week_start_date = #{weekStartDate}
+    </select>
+
+    <select id="selectByVersionId" resultType="com.mrp.planning.domain.PlanOverride">
+        SELECT * FROM plan_override WHERE plan_version_id = #{planVersionId}
+        ORDER BY material_id, week_start_date
+    </select>
+
+    <delete id="deleteByUnique">
+        DELETE FROM plan_override WHERE plan_version_id = #{planVersionId}
+        AND material_id = #{materialId} AND week_start_date = #{weekStartDate}
+    </delete>
+</mapper>

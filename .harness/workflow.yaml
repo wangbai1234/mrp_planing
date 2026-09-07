@@ -1,0 +1,71 @@
+project: mrp-phase-1
+entrypoint: project.md
+status_file: .harness/workflow.yaml
+report_template: .harness/templates/task-report.md
+decision_template: .harness/templates/decision-request.md
+execution_policy:
+  ordered: true
+  continue_automatically: false
+  require_gate_pass: true
+  forbid_unapproved_middleware: true
+stages:
+  - id: "00"
+    name: discovery
+    status: DONE
+    prompt: .harness/prompts/00-discovery.md
+    depends_on: []
+    output: .harness/reports/00-discovery-report.md
+  - id: "01"
+    name: backend-bootstrap
+    status: DONE
+    prompt: .harness/prompts/01-backend-bootstrap.md
+    depends_on: ["00"]
+    output: .harness/reports/01-backend-bootstrap-report.md
+  - id: "02"
+    name: schema-and-migrations
+    status: DONE
+    prompt: .harness/prompts/02-schema-and-migrations.md
+    depends_on: ["01"]
+    output: .harness/reports/02-schema-and-migrations-report.md
+  - id: "03"
+    name: import-and-masterdata
+    status: DONE
+    prompt: .harness/prompts/03-import-and-masterdata.md
+    depends_on: ["02"]
+    output: .harness/reports/03-import-and-masterdata-report.md
+  - id: "04"
+    name: calculation-engine
+    status: DONE
+    prompt: .harness/prompts/04-calculation-engine.md
+    depends_on: ["03"]
+    output: .harness/reports/04-calculation-engine-report.md
+  - id: "05"
+    name: planning-api
+    status: DONE
+    prompt: .harness/prompts/05-planning-api.md
+    depends_on: ["04"]
+    output: .harness/reports/05-planning-api-report.md
+  - id: "06"
+    name: frontend
+    status: DONE
+    prompt: .harness/prompts/06-frontend.md
+    depends_on: ["05"]
+    output: .harness/reports/06-frontend-report.md
+  - id: "07"
+    name: integration-and-security
+    status: DONE
+    prompt: .harness/prompts/07-integration-and-security.md
+    depends_on: ["05", "06"]
+    output: .harness/reports/07-integration-and-security-report.md
+  - id: "08"
+    name: test-performance
+    status: DONE
+    prompt: .harness/prompts/08-test-performance.md
+    depends_on: ["07"]
+    output: .harness/reports/08-test-performance-report.md
+  - id: "09"
+    name: docker-uat
+    status: DONE
+    prompt: .harness/prompts/09-docker-uat.md
+    depends_on: ["08"]
+    output: .harness/reports/09-docker-uat-report.md

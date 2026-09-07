@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.capacity.repository.CapacityMapper">
+
+    <insert id="insertVersion" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO capacity_version (version_no, status, created_by)
+        VALUES (#{versionNo}, #{status}, #{createdBy})
+    </insert>
+
+    <select id="selectActiveVersion" resultType="com.mrp.capacity.domain.CapacityVersion">
+        SELECT * FROM capacity_version WHERE status = 'ACTIVE' ORDER BY id DESC LIMIT 1
+    </select>
+
+    <select id="selectAllVersions" resultType="com.mrp.capacity.domain.CapacityVersion">
+        SELECT * FROM capacity_version ORDER BY id DESC
+    </select>
+
+    <insert id="insertLine" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO capacity_line (version_id, factory_code, line_code, line_name, weekly_capacity, effective_date, is_active, remark)
+        VALUES (#{versionId}, #{factoryCode}, #{lineCode}, #{lineName}, #{weeklyCapacity}, #{effectiveDate}, #{isActive}, #{remark})
+    </insert>
+
+    <update id="updateLine">
+        UPDATE capacity_line SET
+            line_name = #{lineName},
+            weekly_capacity = #{weeklyCapacity},
+            effective_date = #{effectiveDate},
+            is_active = #{isActive},
+            remark = #{remark}
+        WHERE id = #{id}
+    </update>
+
+    <insert id="insertLines">
+        INSERT INTO capacity_line (version_id, factory_code, line_code, line_name, weekly_capacity, effective_date, is_active, remark)
+        VALUES
+        <foreach collection="list" item="l" separator=",">
+            (#{l.versionId}, #{l.factoryCode}, #{l.lineCode}, #{l.lineName}, #{l.weeklyCapacity}, #{l.effectiveDate}, #{l.isActive}, #{l.remark})
+        </foreach>
+    </insert>
+
+    <select id="selectLinesByVersionId" resultType="com.mrp.capacity.domain.CapacityLine">
+        SELECT * FROM capacity_line WHERE version_id = #{versionId} ORDER BY factory_code, line_code
+    </select>
+
+    <select id="selectActiveLinesByFactory" resultType="com.mrp.capacity.domain.CapacityLine">
+        SELECT * FROM capacity_line WHERE version_id = #{versionId} AND factory_code = #{factoryCode} AND is_active = 1
+        ORDER BY line_code
+    </select>
+
+    <select id="selectLineById" resultType="com.mrp.capacity.domain.CapacityLine">
+        SELECT * FROM capacity_line WHERE id = #{id}
+    </select>
+
+    <select id="countLinesByVersionId" resultType="int">
+        SELECT COUNT(*) FROM capacity_line WHERE version_id = #{versionId}
+    </select>
+</mapper>

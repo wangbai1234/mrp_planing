@@ -1,0 +1,3042 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MRP 排产系统 - 企业级原型图</title>
+    <style>
+        /* ============================================
+           MRP 排产系统 - 企业级设计系统
+           参考: 金蝶/用友/SAP 等成熟 ERP 设计思想
+           ============================================ */
+
+        /* CSS Variables - Design Tokens */
+        :root {
+            /* 主色 */
+            --color-primary: #1890ff;
+            --color-primary-light: #e6f7ff;
+            --color-primary-dark: #096dd9;
+            
+            /* 功能色 */
+            --color-success: #52c41a;
+            --color-success-light: #f6ffed;
+            --color-warning: #faad14;
+            --color-warning-light: #fffbe6;
+            --color-danger: #ff4d4f;
+            --color-danger-light: #fff2f0;
+            --color-info: #1890ff;
+            --color-info-light: #e6f7ff;
+            
+            /* 中性色 */
+            --color-text-primary: #262626;
+            --color-text-secondary: #595959;
+            --color-text-tertiary: #8c8c8c;
+            --color-text-disabled: #bfbfbf;
+            
+            --color-bg-primary: #ffffff;
+            --color-bg-secondary: #fafafa;
+            --color-bg-tertiary: #f5f5f5;
+            --color-bg-hover: #f5f5f5;
+            
+            --color-border: #d9d9d9;
+            --color-border-light: #f0f0f0;
+            --color-border-dark: #bfbfbf;
+            
+            /* 布局尺寸 */
+            --sidebar-width: 200px;
+            --sidebar-collapsed-width: 64px;
+            --header-height: 48px;
+            --breadcrumb-height: 40px;
+            --page-header-height: 56px;
+            --toolbar-height: 48px;
+            --table-row-height: 48px;
+            --table-row-height-compact: 40px;
+            --content-padding: 24px;
+            --section-gap: 16px;
+            --card-padding: 16px;
+            
+            /* 圆角 */
+            --radius-sm: 2px;
+            --radius-md: 4px;
+            --radius-lg: 6px;
+            --radius-xl: 8px;
+            
+            /* 阴影 */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+            --shadow-md: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+            
+            /* 间距 */
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 12px;
+            --spacing-lg: 16px;
+            --spacing-xl: 24px;
+            --spacing-2xl: 32px;
+            
+            /* 字体 */
+            --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 
+                'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+            --font-family-code: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            
+            --font-size-xs: 12px;
+            --font-size-sm: 13px;
+            --font-size-md: 14px;
+            --font-size-lg: 16px;
+            --font-size-xl: 20px;
+            --font-size-2xl: 24px;
+            
+            --font-weight-normal: 400;
+            --font-weight-medium: 500;
+            --font-weight-semibold: 600;
+            --font-weight-bold: 700;
+        }
+
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-family);
+            font-size: var(--font-size-md);
+            color: var(--color-text-primary);
+            background: var(--color-bg-tertiary);
+            line-height: 1.5;
+        }
+        
+        /* ============================================
+           布局系统
+           ============================================ */
+        
+        .layout {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--color-bg-primary);
+            border-right: 1px solid var(--color-border-light);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+        
+        .sidebar-header {
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            padding: 0 var(--spacing-lg);
+            border-bottom: 1px solid var(--color-border-light);
+        }
+        
+        .sidebar-logo {
+            width: 32px;
+            height: 32px;
+            background: var(--color-primary);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: var(--font-weight-bold);
+            font-size: var(--font-size-sm);
+            margin-right: var(--spacing-md);
+        }
+        
+        .sidebar-title {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-semibold);
+            color: var(--color-text-primary);
+        }
+        
+        .sidebar-nav {
+            flex: 1;
+            padding: var(--spacing-sm) 0;
+            overflow-y: auto;
+        }
+        
+        .nav-group {
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .nav-group-title {
+            padding: var(--spacing-sm) var(--spacing-lg) var(--spacing-xs);
+            font-size: var(--font-size-xs);
+            color: var(--color-text-tertiary);
+            font-weight: var(--font-weight-medium);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: var(--spacing-sm) var(--spacing-lg);
+            margin: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.15s;
+            text-decoration: none;
+            color: var(--color-text-primary);
+            font-size: var(--font-size-md);
+        }
+        
+        .nav-item:hover {
+            background: var(--color-bg-hover);
+        }
+        
+        .nav-item.active {
+            background: var(--color-primary-light);
+            color: var(--color-primary);
+            font-weight: var(--font-weight-medium);
+        }
+        
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: var(--spacing-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-lg);
+        }
+        
+        .nav-text {
+            flex: 1;
+        }
+        
+        .nav-badge {
+            min-width: 20px;
+            height: 20px;
+            padding: 0 6px;
+            background: var(--color-danger);
+            color: #fff;
+            border-radius: 10px;
+            font-size: var(--font-size-xs);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Main Content */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-width: 0;
+        }
+        
+        /* Header */
+        .header {
+            height: var(--header-height);
+            background: var(--color-bg-primary);
+            border-bottom: 1px solid var(--color-border-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 var(--spacing-xl);
+            flex-shrink: 0;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-lg);
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+        
+        .header-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s;
+            border: none;
+            background: none;
+            color: var(--color-text-tertiary);
+            font-size: var(--font-size-lg);
+        }
+        
+        .header-btn:hover {
+            background: var(--color-bg-hover);
+            color: var(--color-text-primary);
+        }
+        
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--color-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+        }
+        
+        /* Content Area */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            background: var(--color-bg-tertiary);
+        }
+        
+        /* Breadcrumb */
+        .breadcrumb {
+            height: var(--breadcrumb-height);
+            display: flex;
+            align-items: center;
+            padding: 0 var(--spacing-xl);
+            background: var(--color-bg-primary);
+            border-bottom: 1px solid var(--color-border-light);
+            font-size: var(--font-size-sm);
+            color: var(--color-text-tertiary);
+        }
+        
+        .breadcrumb a {
+            color: var(--color-text-tertiary);
+            text-decoration: none;
+        }
+        
+        .breadcrumb a:hover {
+            color: var(--color-primary);
+        }
+        
+        .breadcrumb-separator {
+            margin: 0 var(--spacing-sm);
+        }
+        
+        .breadcrumb-current {
+            color: var(--color-text-primary);
+        }
+        
+        /* Page Container */
+        .page {
+            display: none;
+            padding: var(--spacing-xl);
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        /* Page Header */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .page-header-left {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+        
+        .page-title {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-semibold);
+            color: var(--color-text-primary);
+        }
+        
+        .page-subtitle {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-tertiary);
+        }
+        
+        .page-actions {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+        
+        /* ============================================
+           组件系统
+           ============================================ */
+        
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px 16px;
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-md);
+            font-weight: var(--font-weight-medium);
+            cursor: pointer;
+            transition: all 0.15s;
+            border: 1px solid transparent;
+            text-decoration: none;
+            white-space: nowrap;
+            gap: var(--spacing-xs);
+        }
+        
+        .btn-primary {
+            background: var(--color-primary);
+            color: #fff;
+            border-color: var(--color-primary);
+        }
+        
+        .btn-primary:hover {
+            background: var(--color-primary-dark);
+            border-color: var(--color-primary-dark);
+        }
+        
+        .btn-secondary {
+            background: var(--color-bg-primary);
+            color: var(--color-text-primary);
+            border-color: var(--color-border);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--color-bg-hover);
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+        
+        .btn-success {
+            background: var(--color-success);
+            color: #fff;
+            border-color: var(--color-success);
+        }
+        
+        .btn-danger {
+            background: var(--color-danger);
+            color: #fff;
+            border-color: var(--color-danger);
+        }
+        
+        .btn-text {
+            background: transparent;
+            color: var(--color-primary);
+            border-color: transparent;
+            padding: 4px 8px;
+        }
+        
+        .btn-text:hover {
+            background: var(--color-primary-light);
+        }
+        
+        .btn-sm {
+            padding: 4px 12px;
+            font-size: var(--font-size-sm);
+        }
+        
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            padding: 0;
+        }
+        
+        /* Cards */
+        .card {
+            background: var(--color-bg-primary);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-lg) var(--spacing-xl);
+            border-bottom: 1px solid var(--color-border-light);
+        }
+        
+        .card-title {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-semibold);
+            color: var(--color-text-primary);
+        }
+        
+        .card-body {
+            padding: var(--spacing-xl);
+        }
+        
+        .card-footer {
+            padding: var(--spacing-md) var(--spacing-xl);
+            border-top: 1px solid var(--color-border-light);
+            background: var(--color-bg-secondary);
+            border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+        }
+        
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: var(--font-size-md);
+        }
+        
+        .table th {
+            background: var(--color-bg-secondary);
+            font-weight: var(--font-weight-semibold);
+            color: var(--color-text-primary);
+            padding: var(--spacing-md) var(--spacing-lg);
+            text-align: left;
+            border-bottom: 1px solid var(--color-border);
+            white-space: nowrap;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+        
+        .table td {
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-bottom: 1px solid var(--color-border-light);
+            color: var(--color-text-primary);
+            vertical-align: middle;
+        }
+        
+        .table tr:hover {
+            background: var(--color-bg-hover);
+        }
+        
+        .table th.text-right,
+        .table td.text-right {
+            text-align: right;
+        }
+        
+        .table th.text-center,
+        .table td.text-center {
+            text-align: center;
+        }
+        
+        /* Table Column Widths */
+        .col-checkbox { width: 48px; }
+        .col-index { width: 60px; }
+        .col-code { width: 140px; }
+        .col-status { width: 100px; }
+        .col-date { width: 120px; }
+        .col-number { width: 100px; }
+        .col-amount { width: 120px; }
+        .col-action { width: 150px; }
+        .col-week { width: 80px; }
+        
+        /* Number formatting */
+        .text-number {
+            font-family: var(--font-family-code);
+            font-variant-numeric: tabular-nums;
+            text-align: right;
+            display: block;
+        }
+        
+        .text-code {
+            font-family: var(--font-family-code);
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+        }
+        
+        .text-amount {
+            font-family: var(--font-family-code);
+            font-variant-numeric: tabular-nums;
+            text-align: right;
+        }
+        
+        /* Status */
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            padding: 2px 8px;
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            white-space: nowrap;
+        }
+        
+        .status-draft { background: #f5f5f5; color: #8c8c8c; }
+        .status-pending { background: #fff7e6; color: #d46b08; }
+        .status-approved { background: #f6ffed; color: #389e0d; }
+        .status-running { background: #e6f7ff; color: #096dd9; }
+        .status-completed { background: #f6ffed; color: #389e0d; }
+        .status-cancelled { background: #f5f5f5; color: #8c8c8c; }
+        .status-warning { background: #fffbe6; color: #d48806; }
+        .status-exception { background: #fff2f0; color: #cf1322; }
+        .status-shortage { background: #fff2f0; color: #cf1322; }
+        .status-overdue { background: #fff2f0; color: #cf1322; }
+        .status-overcapacity { background: #fff2f0; color: #cf1322; }
+        
+        /* Toolbar */
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+            gap: var(--spacing-lg);
+        }
+        
+        .toolbar-left {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            flex: 1;
+        }
+        
+        .toolbar-right {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+        
+        /* Search Input */
+        .search-input-wrapper {
+            position: relative;
+            width: 280px;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 6px 12px 6px 32px;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-md);
+            background: var(--color-bg-primary);
+            transition: all 0.15s;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.1);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--color-text-tertiary);
+            font-size: var(--font-size-sm);
+        }
+        
+        /* Select */
+        .form-select {
+            padding: 6px 32px 6px 12px;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-md);
+            background: var(--color-bg-primary);
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238c8c8c' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+        }
+        
+        .form-select:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.1);
+        }
+        
+        /* Filter Tags */
+        .filter-tags {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            flex-wrap: wrap;
+        }
+        
+        .filter-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            padding: 2px 8px;
+            background: var(--color-primary-light);
+            color: var(--color-primary);
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-sm);
+        }
+        
+        .filter-tag-close {
+            cursor: pointer;
+            font-size: var(--font-size-xs);
+        }
+        
+        /* Batch Bar */
+        .batch-bar {
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--spacing-md) var(--spacing-xl);
+            background: var(--color-primary-light);
+            border: 1px solid var(--color-primary);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .batch-bar.active {
+            display: flex;
+        }
+        
+        .batch-info {
+            font-size: var(--font-size-md);
+            color: var(--color-primary);
+        }
+        
+        .batch-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+        
+        /* Pagination */
+        .table-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-md) var(--spacing-xl);
+            border-top: 1px solid var(--color-border-light);
+        }
+        
+        .pagination-info {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-tertiary);
+        }
+        
+        .pagination {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+        
+        .btn-page {
+            min-width: 32px;
+            height: 32px;
+            padding: 0 8px;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            background: var(--color-bg-primary);
+            cursor: pointer;
+            font-size: var(--font-size-sm);
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-page:hover {
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+        
+        .btn-page.active {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+            color: #fff;
+        }
+        
+        /* ============================================
+           页面特定样式
+           ============================================ */
+        
+        /* Dashboard Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .stat-card {
+            background: var(--color-bg-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .stat-title {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-tertiary);
+        }
+        
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-xl);
+        }
+        
+        .stat-icon-exception {
+            background: var(--color-danger-light);
+            color: var(--color-danger);
+        }
+        
+        .stat-icon-mrp {
+            background: var(--color-primary-light);
+            color: var(--color-primary);
+        }
+        
+        .stat-icon-purchase {
+            background: var(--color-warning-light);
+            color: var(--color-warning);
+        }
+        
+        .stat-icon-production {
+            background: var(--color-success-light);
+            color: var(--color-success);
+        }
+        
+        .stat-value {
+            font-size: var(--font-size-2xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--color-text-primary);
+            margin-bottom: var(--spacing-xs);
+            font-family: var(--font-family-code);
+        }
+        
+        .stat-footer {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            font-size: var(--font-size-sm);
+        }
+        
+        .stat-trend {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+        
+        .stat-trend.up { color: var(--color-danger); }
+        .stat-trend.down { color: var(--color-success); }
+        
+        .stat-action {
+            margin-left: auto;
+        }
+        
+        .stat-action a {
+            color: var(--color-primary);
+            text-decoration: none;
+            font-size: var(--font-size-sm);
+        }
+        
+        /* Exception List */
+        .exception-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .exception-item {
+            display: flex;
+            align-items: center;
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-bottom: 1px solid var(--color-border-light);
+            transition: background 0.15s;
+        }
+        
+        .exception-item:hover {
+            background: var(--color-bg-hover);
+        }
+        
+        .exception-item:last-child {
+            border-bottom: none;
+        }
+        
+        .exception-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: var(--spacing-md);
+            font-size: var(--font-size-lg);
+        }
+        
+        .exception-icon-shortage {
+            background: var(--color-danger-light);
+            color: var(--color-danger);
+        }
+        
+        .exception-icon-delay {
+            background: var(--color-warning-light);
+            color: var(--color-warning);
+        }
+        
+        .exception-icon-inventory {
+            background: var(--color-info-light);
+            color: var(--color-info);
+        }
+        
+        .exception-content {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .exception-title {
+            font-size: var(--font-size-md);
+            color: var(--color-text-primary);
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .exception-title strong {
+            color: var(--color-danger);
+        }
+        
+        .exception-meta {
+            display: flex;
+            gap: var(--spacing-lg);
+            font-size: var(--font-size-sm);
+            color: var(--color-text-tertiary);
+        }
+        
+        .exception-time {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-tertiary);
+            margin-right: var(--spacing-lg);
+        }
+        
+        .exception-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+        
+        /* Scheduling Table */
+        .scheduling-table-wrapper {
+            overflow-x: auto;
+        }
+        
+        .scheduling-table {
+            min-width: 1200px;
+        }
+        
+        .scheduling-table th,
+        .scheduling-table td {
+            white-space: nowrap;
+        }
+        
+        .week-cell {
+            min-width: 80px;
+            text-align: right;
+        }
+        
+        .week-cell.executed {
+            background: var(--color-bg-secondary);
+            color: var(--color-text-disabled);
+        }
+        
+        .week-cell.current {
+            background: var(--color-primary-light);
+            font-weight: var(--font-weight-medium);
+        }
+        
+        .week-cell.overcapacity {
+            background: var(--color-danger-light);
+            color: var(--color-danger);
+            font-weight: var(--font-weight-medium);
+        }
+        
+        .week-input {
+            width: 70px;
+            padding: 4px 8px;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            text-align: right;
+            font-family: var(--font-family-code);
+            font-size: var(--font-size-sm);
+        }
+        
+        .week-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.1);
+        }
+        
+        .week-input.executed {
+            background: var(--color-bg-secondary);
+            color: var(--color-text-disabled);
+            cursor: not-allowed;
+        }
+        
+        .week-input.overcapacity {
+            border-color: var(--color-danger);
+            background: var(--color-danger-light);
+        }
+        
+        /* Summary Row */
+        .summary-row {
+            background: var(--color-bg-secondary) !important;
+            font-weight: var(--font-weight-semibold);
+        }
+        
+        .summary-row td {
+            border-top: 2px solid var(--color-border);
+        }
+        
+        /* Capacity Indicator */
+        .capacity-indicator {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            font-size: var(--font-size-sm);
+        }
+        
+        .capacity-bar {
+            width: 60px;
+            height: 6px;
+            background: var(--color-border-light);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .capacity-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.3s;
+        }
+        
+        .capacity-fill.normal { background: var(--color-success); }
+        .capacity-fill.warning { background: var(--color-warning); }
+        .capacity-fill.danger { background: var(--color-danger); }
+        
+        /* Status Bar */
+        .status-bar {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xl);
+            padding: var(--spacing-md) var(--spacing-xl);
+            background: var(--color-bg-primary);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--spacing-lg);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+        
+        .status-label {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-tertiary);
+        }
+        
+        .status-value {
+            font-size: var(--font-size-md);
+            font-weight: var(--font-weight-medium);
+            font-family: var(--font-family-code);
+        }
+        
+        .status-divider {
+            width: 1px;
+            height: 24px;
+            background: var(--color-border-light);
+        }
+        
+        /* Quick Links */
+        .quick-links {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--spacing-md);
+        }
+        
+        .quick-link {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-lg);
+            background: var(--color-bg-primary);
+            border: 1px solid var(--color-border-light);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.15s;
+            text-decoration: none;
+            color: var(--color-text-primary);
+        }
+        
+        .quick-link:hover {
+            border-color: var(--color-primary);
+            background: var(--color-primary-light);
+        }
+        
+        .quick-link-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-xl);
+            background: var(--color-primary-light);
+            color: var(--color-primary);
+        }
+        
+        .quick-link-content {
+            flex: 1;
+        }
+        
+        .quick-link-title {
+            font-size: var(--font-size-md);
+            font-weight: var(--font-weight-medium);
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .quick-link-desc {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-tertiary);
+        }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--color-border-light);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .tab {
+            padding: var(--spacing-md) var(--spacing-xl);
+            font-size: var(--font-size-md);
+            color: var(--color-text-secondary);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.15s;
+        }
+        
+        .tab:hover {
+            color: var(--color-primary);
+        }
+        
+        .tab.active {
+            color: var(--color-primary);
+            border-bottom-color: var(--color-primary);
+            font-weight: var(--font-weight-medium);
+        }
+        
+        /* Version Info */
+        .version-info {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md) var(--spacing-lg);
+            background: var(--color-bg-secondary);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .version-label {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-tertiary);
+        }
+        
+        .version-value {
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            font-family: var(--font-family-code);
+        }
+        
+        .version-time {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-tertiary);
+        }
+        
+        /* Loading Skeleton */
+        .skeleton {
+            background: linear-gradient(90deg, var(--color-bg-secondary) 25%, var(--color-bg-tertiary) 50%, var(--color-bg-secondary) 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
+            border-radius: var(--radius-sm);
+        }
+        
+        @keyframes skeleton-loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        /* Empty State */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: var(--spacing-3xl);
+            color: var(--color-text-tertiary);
+        }
+        
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: var(--spacing-lg);
+            opacity: 0.5;
+        }
+        
+        .empty-text {
+            font-size: var(--font-size-lg);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .empty-hint {
+            font-size: var(--font-size-sm);
+        }
+        
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+            cursor: help;
+        }
+        
+        .tooltip::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 4px 8px;
+            background: var(--color-text-primary);
+            color: #fff;
+            font-size: var(--font-size-sm);
+            border-radius: var(--radius-sm);
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.15s;
+            margin-bottom: 4px;
+        }
+        
+        .tooltip:hover::after {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.45);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal {
+            background: var(--color-bg-primary);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            width: 480px;
+            max-width: 90vw;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--spacing-lg) var(--spacing-xl);
+            border-bottom: 1px solid var(--color-border-light);
+        }
+        
+        .modal-title {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-semibold);
+        }
+        
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: var(--color-text-tertiary);
+            font-size: var(--font-size-lg);
+        }
+        
+        .modal-close:hover {
+            background: var(--color-bg-hover);
+            color: var(--color-text-primary);
+        }
+        
+        .modal-body {
+            padding: var(--spacing-xl);
+            overflow-y: auto;
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-lg) var(--spacing-xl);
+            border-top: 1px solid var(--color-border-light);
+        }
+        
+        /* Confirm Dialog */
+        .confirm-detail {
+            background: var(--color-bg-secondary);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            margin: var(--spacing-lg) 0;
+        }
+        
+        .confirm-detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--spacing-xs) 0;
+            font-size: var(--font-size-sm);
+        }
+        
+        .confirm-detail-label {
+            color: var(--color-text-tertiary);
+        }
+        
+        .confirm-detail-value {
+            font-weight: var(--font-weight-medium);
+        }
+        
+        .confirm-warning {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md);
+            background: var(--color-warning-light);
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-sm);
+            color: #d48806;
+        }
+        
+        /* History Panel */
+        .history-panel {
+            background: var(--color-bg-secondary);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            margin-top: var(--spacing-lg);
+        }
+        
+        .history-title {
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            color: var(--color-text-secondary);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .history-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .history-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-sm) 0;
+            font-size: var(--font-size-sm);
+            border-bottom: 1px solid var(--color-border-light);
+        }
+        
+        .history-item:last-child {
+            border-bottom: none;
+        }
+        
+        .history-time {
+            color: var(--color-text-tertiary);
+            min-width: 120px;
+        }
+        
+        .history-user {
+            color: var(--color-primary);
+            min-width: 60px;
+        }
+        
+        .history-action {
+            flex: 1;
+            color: var(--color-text-secondary);
+        }
+        
+        /* ============================================
+           登录页面
+           ============================================ */
+        
+        .login-page {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: var(--color-bg-tertiary);
+        }
+        
+        .login-card {
+            width: 400px;
+            background: var(--color-bg-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-3xl);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: var(--spacing-2xl);
+        }
+        
+        .login-logo {
+            width: 64px;
+            height: 64px;
+            background: var(--color-primary);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-bold);
+            margin: 0 auto var(--spacing-lg);
+        }
+        
+        .login-title {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-semibold);
+            color: var(--color-text-primary);
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .login-subtitle {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-tertiary);
+        }
+        
+        .login-form {
+            margin-top: var(--spacing-xl);
+        }
+        
+        .form-group {
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .form-label {
+            display: block;
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            color: var(--color-text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-md);
+            transition: all 0.15s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.1);
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 10px;
+            font-size: var(--font-size-md);
+            margin-top: var(--spacing-xl);
+        }
+        
+        /* Version Tag */
+        .version-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            padding: 2px 8px;
+            background: var(--color-bg-secondary);
+            border: 1px solid var(--color-border-light);
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-xs);
+            color: var(--color-text-tertiary);
+        }
+    </style>
+</head>
+<body>
+    <!-- 登录页面 -->
+    <div class="login-page" id="login-page">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-logo">MRP</div>
+                <div class="login-title">MRP 排产系统</div>
+                <div class="login-subtitle">Material Requirements Planning</div>
+            </div>
+            <form class="login-form">
+                <div class="form-group">
+                    <label class="form-label">用户名</label>
+                    <input type="text" class="form-input" placeholder="请输入用户名" value="xiaofang">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">密码</label>
+                    <input type="password" class="form-input" placeholder="请输入密码" value="••••••••">
+                </div>
+                <button type="button" class="btn btn-primary login-btn" onclick="showMainLayout()">登录</button>
+            </form>
+            <div style="text-align: center; margin-top: 16px; font-size: 12px; color: #8c8c8c;">
+                计划员：肖芳（永惠） | 徐燕平（爱培科）
+            </div>
+        </div>
+    </div>
+    
+    <!-- 主布局 -->
+    <div class="layout" id="main-layout" style="display: none;">
+        <!-- 左侧导航栏 -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">MRP</div>
+                <div class="sidebar-title">排产系统</div>
+            </div>
+            <div class="sidebar-nav">
+                <div class="nav-group">
+                    <div class="nav-group-title">主要功能</div>
+                    <a class="nav-item active" onclick="showPage('dashboard', this)">
+                        <span class="nav-icon">📊</span>
+                        <span class="nav-text">工作台</span>
+                    </a>
+                    <a class="nav-item" onclick="showPage('scheduling', this)">
+                        <span class="nav-icon">📅</span>
+                        <span class="nav-text">排产管理</span>
+                        <span class="nav-badge">3</span>
+                    </a>
+                    <a class="nav-item" onclick="showPage('plan', this)">
+                        <span class="nav-icon">📋</span>
+                        <span class="nav-text">经营计划</span>
+                    </a>
+                </div>
+                <div class="nav-group">
+                    <div class="nav-group-title">数据管理</div>
+                    <a class="nav-item" onclick="showPage('inventory', this)">
+                        <span class="nav-icon">📦</span>
+                        <span class="nav-text">库存管理</span>
+                    </a>
+                    <a class="nav-item" onclick="showPage('import', this)">
+                        <span class="nav-icon">📥</span>
+                        <span class="nav-text">数据导入</span>
+                    </a>
+                    <a class="nav-item" onclick="showPage('export', this)">
+                        <span class="nav-icon">📤</span>
+                        <span class="nav-text">数据导出</span>
+                    </a>
+                </div>
+                <div class="nav-group">
+                    <div class="nav-group-title">系统设置</div>
+                    <a class="nav-item" onclick="showPage('capacity', this)">
+                        <span class="nav-icon">⚙️</span>
+                        <span class="nav-text">产能配置</span>
+                    </a>
+                    <a class="nav-item" onclick="showPage('version', this)">
+                        <span class="nav-icon">📑</span>
+                        <span class="nav-text">版本管理</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 主内容区域 -->
+        <div class="main">
+            <!-- 顶部操作栏 -->
+            <div class="header">
+                <div class="header-left">
+                    <div class="breadcrumb">
+                        <a href="#">首页</a>
+                        <span class="breadcrumb-separator">/</span>
+                        <span class="breadcrumb-current" id="breadcrumb-current">工作台</span>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button class="header-btn" title="通知">🔔</button>
+                    <button class="header-btn" title="帮助">❓</button>
+                    <div class="user-avatar">肖</div>
+                </div>
+            </div>
+            
+            <!-- 内容区域 -->
+            <div class="content">
+                <!-- ============================================
+                     工作台页面
+                     ============================================ -->
+                <div class="page active" id="page-dashboard">
+                    <div class="page-header">
+                        <div class="page-header-left">
+                            <div class="page-title">工作台</div>
+                            <div class="version-tag">v2026.08.28</div>
+                        </div>
+                        <div class="page-actions">
+                            <button class="btn btn-secondary btn-sm" onclick="showPage('scheduling', document.querySelector('[onclick*=scheduling]'))">查看排产计划 →</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 核心指标 -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-title">待处理异常</div>
+                                <div class="stat-icon stat-icon-exception">⚠️</div>
+                            </div>
+                            <div class="stat-value">23</div>
+                            <div class="stat-footer">
+                                <div class="stat-trend up">↑ 5</div>
+                                <span style="color: #8c8c8c; font-size: 12px;">较昨日</span>
+                                <div class="stat-action">
+                                    <a href="#" onclick="showPage('scheduling', document.querySelector('[onclick*=scheduling]'))">立即处理</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-title">待运行MRP</div>
+                                <div class="stat-icon stat-icon-mrp">🔄</div>
+                            </div>
+                            <div class="stat-value">3</div>
+                            <div class="stat-footer">
+                                <span style="color: #8c8c8c; font-size: 12px;">本月第2次</span>
+                                <div class="stat-action">
+                                    <a href="#">运行MRP</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-title">待采购建议</div>
+                                <div class="stat-icon stat-icon-purchase">🛒</div>
+                            </div>
+                            <div class="stat-value">45</div>
+                            <div class="stat-footer">
+                                <span style="color: #8c8c8c; font-size: 12px;">涉及金额 ¥128,500</span>
+                                <div class="stat-action">
+                                    <a href="#">查看建议</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-title">待生产工单</div>
+                                <div class="stat-icon stat-icon-production">🏭</div>
+                            </div>
+                            <div class="stat-value">12</div>
+                            <div class="stat-footer">
+                                <div class="stat-trend" style="color: #faad14;">本周到期 5单</div>
+                                <div class="stat-action">
+                                    <a href="#">查看工单</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 异常提醒 -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                异常提醒
+                                <span class="status status-exception" style="margin-left: 8px;">23</span>
+                            </div>
+                            <button class="btn btn-text btn-sm">查看全部</button>
+                        </div>
+                        <div class="card-body" style="padding: 0;">
+                            <div class="exception-list">
+                                <div class="exception-item">
+                                    <div class="exception-icon exception-icon-shortage">📦</div>
+                                    <div class="exception-content">
+                                        <div class="exception-title">MAT-100023 伺服电机 <strong>缺料 44件</strong></div>
+                                        <div class="exception-meta">
+                                            <span>影响订单: PO-2026-0892</span>
+                                            <span>需求日期: 2026-09-15</span>
+                                            <span>供应商: 深圳XX电机有限公司</span>
+                                        </div>
+                                    </div>
+                                    <div class="exception-time">2小时前</div>
+                                    <div class="exception-actions">
+                                        <button class="btn btn-primary btn-sm">处理</button>
+                                    </div>
+                                </div>
+                                <div class="exception-item">
+                                    <div class="exception-icon exception-icon-delay">🚚</div>
+                                    <div class="exception-content">
+                                        <div class="exception-title">PO-2026-0856 <strong>供应商交期延迟</strong></div>
+                                        <div class="exception-meta">
+                                            <span>物料: PLC控制器 FX3U-48MT</span>
+                                            <span>原交期: 2026-09-05</span>
+                                            <span>新交期: 2026-09-12</span>
+                                        </div>
+                                    </div>
+                                    <div class="exception-time">3小时前</div>
+                                    <div class="exception-actions">
+                                        <button class="btn btn-secondary btn-sm">查看详情</button>
+                                    </div>
+                                </div>
+                                <div class="exception-item">
+                                    <div class="exception-icon exception-icon-inventory">📊</div>
+                                    <div class="exception-content">
+                                        <div class="exception-title">MAT-200056 PLC控制器 <strong>安全库存不足</strong></div>
+                                        <div class="exception-meta">
+                                            <span>当前库存: 12</span>
+                                            <span>安全库存: 20</span>
+                                            <span>缺口: 8</span>
+                                        </div>
+                                    </div>
+                                    <div class="exception-time">5小时前</div>
+                                    <div class="exception-actions">
+                                        <button class="btn btn-secondary btn-sm">生成采购</button>
+                                    </div>
+                                </div>
+                                <div class="exception-item">
+                                    <div class="exception-icon exception-icon-shortage">📦</div>
+                                    <div class="exception-content">
+                                        <div class="exception-title">MAT-300128 触摸屏模组 <strong>缺料 120件</strong></div>
+                                        <div class="exception-meta">
+                                            <span>影响订单: MO-2026-0178</span>
+                                            <span>需求日期: 2026-09-10</span>
+                                            <span>供应商: 东莞YY电子有限公司</span>
+                                        </div>
+                                    </div>
+                                    <div class="exception-time">6小时前</div>
+                                    <div class="exception-actions">
+                                        <button class="btn btn-primary btn-sm">处理</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 快捷入口 -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">快捷入口</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="quick-links">
+                                <div class="quick-link" onclick="showPage('scheduling', document.querySelector('[onclick*=scheduling]'))">
+                                    <div class="quick-link-icon">📅</div>
+                                    <div class="quick-link-content">
+                                        <div class="quick-link-title">排产管理</div>
+                                        <div class="quick-link-desc">查看和调整排产计划</div>
+                                    </div>
+                                </div>
+                                <div class="quick-link" onclick="showPage('import', document.querySelector('[onclick*=import]'))">
+                                    <div class="quick-link-icon">📥</div>
+                                    <div class="quick-link-content">
+                                        <div class="quick-link-title">导入经营计划</div>
+                                        <div class="quick-link-desc">上传Excel经营计划表</div>
+                                    </div>
+                                </div>
+                                <div class="quick-link" onclick="showPage('export', document.querySelector('[onclick*=export]'))">
+                                    <div class="quick-link-icon">📤</div>
+                                    <div class="quick-link-content">
+                                        <div class="quick-link-title">导出排产</div>
+                                        <div class="quick-link-desc">自定义导出排产数据</div>
+                                    </div>
+                                </div>
+                                <div class="quick-link" onclick="showPage('inventory', document.querySelector('[onclick*=inventory]'))">
+                                    <div class="quick-link-icon">📦</div>
+                                    <div class="quick-link-content">
+                                        <div class="quick-link-title">库存查询</div>
+                                        <div class="quick-link-desc">查看当前库存状态</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ============================================
+                     排产管理页面 - 核心页面
+                     ============================================ -->
+                <div class="page" id="page-scheduling">
+                    <div class="page-header">
+                        <div class="page-header-left">
+                            <div class="page-title">排产管理</div>
+                            <div class="version-tag">版本: v2026.08.28-003</div>
+                        </div>
+                        <div class="page-actions">
+                            <button class="btn btn-secondary btn-sm">版本对比</button>
+                            <button class="btn btn-secondary btn-sm">修改历史</button>
+                            <button class="btn btn-secondary btn-sm">导出</button>
+                            <button class="btn btn-primary btn-sm">发布排产</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 排产状态栏 -->
+                    <div class="status-bar">
+                        <div class="status-item">
+                            <span class="status-label">排产状态</span>
+                            <span class="status status-pending">草稿</span>
+                        </div>
+                        <div class="status-divider"></div>
+                        <div class="status-item">
+                            <span class="status-label">排产周期</span>
+                            <span class="status-value">2026-09-01 ~ 2026-11-30</span>
+                        </div>
+                        <div class="status-divider"></div>
+                        <div class="status-item">
+                            <span class="status-label">总周数</span>
+                            <span class="status-value">12周</span>
+                        </div>
+                        <div class="status-divider"></div>
+                        <div class="status-item">
+                            <span class="status-label">经营计划版本</span>
+                            <span class="status-value">PLN-2026-0089 v1.2</span>
+                        </div>
+                        <div class="status-divider"></div>
+                        <div class="status-item">
+                            <span class="status-label">产能状态</span>
+                            <span class="status status-overcapacity">超限 2周</span>
+                        </div>
+                    </div>
+                    
+                    <!-- 工具栏 -->
+                    <div class="toolbar">
+                        <div class="toolbar-left">
+                            <div class="search-input-wrapper">
+                                <span class="search-icon">🔍</span>
+                                <input type="text" class="search-input" placeholder="搜索机型、料号...">
+                            </div>
+                            <select class="form-select">
+                                <option>全部状态</option>
+                                <option>正常</option>
+                                <option>超产能</option>
+                                <option>缺料</option>
+                            </select>
+                            <select class="form-select">
+                                <option>全部月份</option>
+                                <option>2026-09</option>
+                                <option>2026-10</option>
+                                <option>2026-11</option>
+                            </select>
+                            <div class="filter-tags">
+                                <span class="filter-tag">
+                                    当前周: W1 (9月)
+                                    <span class="filter-tag-close">×</span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="toolbar-right">
+                            <button class="btn btn-secondary btn-sm">重算排产</button>
+                            <button class="btn btn-secondary btn-sm">恢复自动值</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 批量操作栏 -->
+                    <div class="batch-bar">
+                        <div class="batch-info">
+                            已选择 <strong>3</strong> 条记录
+                        </div>
+                        <div class="batch-actions">
+                            <button class="btn btn-secondary btn-sm">批量调整</button>
+                            <button class="btn btn-secondary btn-sm">设置优先级</button>
+                            <button class="btn btn-danger btn-sm">批量删除</button>
+                        </div>
+                        <button class="btn btn-text btn-sm">取消选择</button>
+                    </div>
+                    
+                    <!-- 排产表格 - 核心表格 -->
+                    <div class="card">
+                        <div class="card-body" style="padding: 0;">
+                            <div class="scheduling-table-wrapper">
+                                <table class="table scheduling-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="col-checkbox"><input type="checkbox" /></th>
+                                            <th class="col-code">机型</th>
+                                            <th>版本</th>
+                                            <th class="col-code">机头料号</th>
+                                            <th class="col-code">整机料号</th>
+                                            <th>备注</th>
+                                            <th class="col-number text-right">合计</th>
+                                            <th>来源月份</th>
+                                            <th class="col-week text-right">
+                                                <div>W1</div>
+                                                <div style="font-weight: normal; font-size: 11px; color: #8c8c8c;">9/1-7</div>
+                                            </th>
+                                            <th class="col-week text-right">
+                                                <div>W2</div>
+                                                <div style="font-weight: normal; font-size: 11px; color: #8c8c8c;">9/8-14</div>
+                                            </th>
+                                            <th class="col-week text-right">
+                                                <div>W3</div>
+                                                <div style="font-weight: normal; font-size: 11px; color: #8c8c8c;">9/15-21</div>
+                                            </th>
+                                            <th class="col-week text-right">
+                                                <div>W4</div>
+                                                <div style="font-weight: normal; font-size: 11px; color: #8c8c8c;">9/22-28</div>
+                                            </th>
+                                            <th class="col-week text-right">
+                                                <div>W1</div>
+                                                <div style="font-weight: normal; font-size: 11px; color: #8c8c8c;">10/1-7</div>
+                                            </th>
+                                            <th class="col-week text-right">
+                                                <div>W2</div>
+                                                <div style="font-weight: normal; font-size: 11px; color: #8c8c8c;">10/8-14</div>
+                                            </th>
+                                            <th class="col-week text-right">
+                                                <div>W3</div>
+                                                <div style="font-weight: normal; font-size: 11px; color: #8c8c8c;">10/15-21</div>
+                                            </th>
+                                            <th class="col-week text-right">
+                                                <div>W4</div>
+                                                <div style="font-weight: normal; font-size: 11px; color: #8c8c8c;">10/22-28</div>
+                                            </th>
+                                            <th class="col-week text-right">
+                                                <div>W1</div>
+                                                <div style="font-weight: normal; font-size: 11px; color: #8c8c8c;">11/1-7</div>
+                                            </th>
+                                            <th class="col-week text-right">
+                                                <div>W2</div>
+                                                <div style="font-weight: normal; font-size: 11px; color: #8c8c8c;">11/8-14</div>
+                                            </th>
+                                            <th class="col-week text-right">
+                                                <div>W3</div>
+                                                <div style="font-weight: normal; font-size: 11px; color: #8c8c8c;">11/15-21</div>
+                                            </th>
+                                            <th class="col-week text-right">
+                                                <div>W4</div>
+                                                <div style="font-weight: normal; font-size: 11px; color: #8c8c8c;">11/22-28</div>
+                                            </th>
+                                            <th class="col-action">操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- 8月排产 - 已执行 -->
+                                        <tr>
+                                            <td><input type="checkbox" /></td>
+                                            <td class="text-code">BYC_DR1400_A01</td>
+                                            <td>黑色国内版 2K版</td>
+                                            <td class="text-code">6810AA800175</td>
+                                            <td class="text-code">6830AA800561</td>
+                                            <td>8月3000,9月6000</td>
+                                            <td class="text-number">9,000</td>
+                                            <td><span class="status status-completed">8月</span></td>
+                                            <td class="week-cell executed">333</td>
+                                            <td class="week-cell executed">333</td>
+                                            <td class="week-cell executed">334</td>
+                                            <td class="week-cell" style="background: #fffbe6;">9月第1份</td>
+                                            <td class="week-cell"><input type="text" class="week-input" value="500" /></td>
+                                            <td class="week-cell"><input type="text" class="week-input" value="500" /></td>
+                                            <td class="week-cell"><input type="text" class="week-input" value="500" /></td>
+                                            <td class="week-cell" style="background: #fffbe6;">10月第1份</td>
+                                            <td class="week-cell"><input type="text" class="week-input" value="400" /></td>
+                                            <td class="week-cell"><input type="text" class="week-input" value="400" /></td>
+                                            <td class="week-cell"><input type="text" class="week-input" value="400" /></td>
+                                            <td class="week-cell" style="background: #fffbe6;">-</td>
+                                            <td>
+                                                <div class="table-actions">
+                                                    <button class="btn btn-text btn-sm">历史</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <!-- 9月排产 - 当前周 -->
+                                        <tr>
+                                            <td><input type="checkbox" /></td>
+                                            <td class="text-code">BYC_DR1400_B02</td>
+                                            <td>白色国内版 4K版</td>
+                                            <td class="text-code">6810AA800234</td>
+                                            <td class="text-code">6830AA800678</td>
+                                            <td>9月4500</td>
+                                            <td class="text-number">4,500</td>
+                                            <td><span class="status status-running">9月</span></td>
+                                            <td class="week-cell current">
+                                                <input type="text" class="week-input" value="375" />
+                                            </td>
+                                            <td class="week-cell"><input type="text" class="week-input" value="375" /></td>
+                                            <td class="week-cell"><input type="text" class="week-input" value="375" /></td>
+                                            <td class="week-cell" style="background: #fffbe6;">10月第1份</td>
+                                            <td class="week-cell"><input type="text" class="week-input" value="300" /></td>
+                                            <td class="week-cell"><input type="text" class="week-input" value="300" /></td>
+                                            <td class="week-cell"><input type="text" class="week-input" value="300" /></td>
+                                            <td class="week-cell" style="background: #fffbe6;">11月第1份</td>
+                                            <td class="week-cell"><input type="text" class="week-input" value="250" /></td>
+                                            <td class="week-cell"><input type="text" class="week-input" value="250" /></td>
+                                            <td class="week-cell"><input type="text" class="week-input" value="250" /></td>
+                                            <td class="week-cell" style="background: #fffbe6;">-</td>
+                                            <td>
+                                                <div class="table-actions">
+                                                    <button class="btn btn-text btn-sm">历史</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <!-- 超产能示例 -->
+                                        <tr>
+                                            <td><input type="checkbox" /></td>
+                                            <td class="text-code">BYC_DT2800_C03</td>
+                                            <td>黑色海外版</td>
+                                            <td class="text-code">6810AA800345</td>
+                                            <td class="text-code">6830AA800789</td>
+                                            <td>9月8000</td>
+                                            <td class="text-number">8,000</td>
+                                            <td><span class="status status-running">9月</span></td>
+                                            <td class="week-cell overcapacity">
+                                                <input type="text" class="week-input overcapacity" value="800" />
+                                                <div style="font-size: 10px; color: #ff4d4f;">超限</div>
+                                            </td>
+                                            <td class="week-cell overcapacity">
+                                                <input type="text" class="week-input overcapacity" value="800" />
+                                                <div style="font-size: 10px; color: #ff4d4f;">超限</div>
+                                            </td>
+                                            <td class="week-cell"><input type="text" class="week-input" value="600" /></td>
+                                            <td class="week-cell" style="background: #fffbe6;">10月第1份</td>
+                                            <td class="week-cell"><input type="text" class="week-input" value="500" /></td>
+                                            <td class="week-cell"><input type="text" class="week-input" value="500" /></td>
+                                            <td class="week-cell"><input type="text" class="week-input" value="500" /></td>
+                                            <td class="week-cell" style="background: #fffbe6;">11月第1份</td>
+                                            <td class="week-cell"><input type="text" class="week-input" value="400" /></td>
+                                            <td class="week-cell"><input type="text" class="week-input" value="400" /></td>
+                                            <td class="week-cell"><input type="text" class="week-input" value="400" /></td>
+                                            <td class="week-cell" style="background: #fffbe6;">-</td>
+                                            <td>
+                                                <div class="table-actions">
+                                                    <button class="btn btn-text btn-sm">历史</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <!-- 正常排产 -->
+                                        <tr>
+                                            <td><input type="checkbox" /></td>
+                                            <td class="text-code">BYC_DR1400_D04</td>
+                                            <td>金色国内版</td>
+                                            <td class="text-code">6810AA800456</td>
+                                            <td class="text-code">6830AA800890</td>
+                                            <td>10月3000</td>
+                                            <td class="text-number">3,000</td>
+                                            <td><span class="status status-pending">10月</span></td>
+                                            <td class="week-cell">-</td>
+                                            <td class="week-cell">-</td>
+                                            <td class="week-cell">-</td>
+                                            <td class="week-cell">-</td>
+                                            <td class="week-cell"><input type="text" class="week-input" value="250" /></td>
+                                            <td class="week-cell"><input type="text" class="week-input" value="250" /></td>
+                                            <td class="week-cell"><input type="text" class="week-input" value="250" /></td>
+                                            <td class="week-cell" style="background: #fffbe6;">11月第1份</td>
+                                            <td class="week-cell"><input type="text" class="week-input" value="200" /></td>
+                                            <td class="week-cell"><input type="text" class="week-input" value="200" /></td>
+                                            <td class="week-cell"><input type="text" class="week-input" value="200" /></td>
+                                            <td class="week-cell" style="background: #fffbe6;">-</td>
+                                            <td>
+                                                <div class="table-actions">
+                                                    <button class="btn btn-text btn-sm">历史</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <!-- 更多行 -->
+                                        <tr>
+                                            <td><input type="checkbox" /></td>
+                                            <td class="text-code">BYC_DT2800_E05</td>
+                                            <td>白色海外版</td>
+                                            <td class="text-code">6810AA800567</td>
+                                            <td class="text-code">6830AA800901</td>
+                                            <td>9月5000,10月3000</td>
+                                            <td class="text-number">8,000</td>
+                                            <td><span class="status status-running">9月</span></td>
+                                            <td class="week-cell current">
+                                                <input type="text" class="week-input" value="417" />
+                                            </td>
+                                            <td class="week-cell"><input type="text" class="week-input" value="417" /></td>
+                                            <td class="week-cell"><input type="text" class="week-input" value="416" /></td>
+                                            <td class="week-cell" style="background: #fffbe6;">10月第1份</td>
+                                            <td class="week-cell"><input type="text" class="week-input" value="250" /></td>
+                                            <td class="week-cell"><input type="text" class="week-input" value="250" /></td>
+                                            <td class="week-cell"><input type="text" class="week-input" value="250" /></td>
+                                            <td class="week-cell" style="background: #fffbe6;">11月第1份</td>
+                                            <td class="week-cell"><input type="text" class="week-input" value="200" /></td>
+                                            <td class="week-cell"><input type="text" class="week-input" value="200" /></td>
+                                            <td class="week-cell"><input type="text" class="week-input" value="200" /></td>
+                                            <td class="week-cell" style="background: #fffbe6;">-</td>
+                                            <td>
+                                                <div class="table-actions">
+                                                    <button class="btn btn-text btn-sm">历史</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr class="summary-row">
+                                            <td colspan="6" class="text-right" style="font-weight: 600;">周合计</td>
+                                            <td class="text-number" style="font-weight: 600;">32,500</td>
+                                            <td></td>
+                                            <td class="week-cell text-number" style="font-weight: 600;">1,925</td>
+                                            <td class="week-cell text-number" style="font-weight: 600;">1,925</td>
+                                            <td class="week-cell text-number" style="font-weight: 600;">1,725</td>
+                                            <td class="week-cell text-number" style="font-weight: 600;">-</td>
+                                            <td class="week-cell text-number" style="font-weight: 600;">1,800</td>
+                                            <td class="week-cell text-number" style="font-weight: 600;">1,800</td>
+                                            <td class="week-cell text-number" style="font-weight: 600;">1,800</td>
+                                            <td class="week-cell text-number" style="font-weight: 600;">-</td>
+                                            <td class="week-cell text-number" style="font-weight: 600;">1,450</td>
+                                            <td class="week-cell text-number" style="font-weight: 600;">1,450</td>
+                                            <td class="week-cell text-number" style="font-weight: 600;">1,450</td>
+                                            <td class="week-cell text-number" style="font-weight: 600;">-</td>
+                                            <td></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="table-footer">
+                            <div class="pagination-info">
+                                共 <strong>5</strong> 条记录，已选择 <strong>0</strong> 条
+                                <span style="margin-left: 16px; color: #ff4d4f;">
+                                    ⚠️ 2周超产能，产能限额: 600/周
+                                </span>
+                            </div>
+                            <div class="pagination">
+                                <span style="font-size: 12px; color: #8c8c8c; margin-right: 8px;">滚动规则: 第4周承接下月第1份</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 产能配置提示 -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">产能配置</div>
+                            <button class="btn btn-text btn-sm">编辑配置</button>
+                        </div>
+                        <div class="card-body">
+                            <div class="status-bar" style="margin-bottom: 0;">
+                                <div class="status-item">
+                                    <span class="status-label">产线</span>
+                                    <span class="status-value">A线 - 总装</span>
+                                </div>
+                                <div class="status-divider"></div>
+                                <div class="status-item">
+                                    <span class="status-label">日产能</span>
+                                    <span class="status-value">120 台/天</span>
+                                </div>
+                                <div class="status-divider"></div>
+                                <div class="status-item">
+                                    <span class="status-label">周产能</span>
+                                    <span class="status-value">600 台/周</span>
+                                </div>
+                                <div class="status-divider"></div>
+                                <div class="status-item">
+                                    <span class="status-label">产能状态</span>
+                                    <div class="capacity-indicator">
+                                        <div class="capacity-bar">
+                                            <div class="capacity-fill warning" style="width: 85%;"></div>
+                                        </div>
+                                        <span style="color: #faad14;">85%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ============================================
+                     经营计划页面
+                     ============================================ -->
+                <div class="page" id="page-plan">
+                    <div class="page-header">
+                        <div class="page-header-left">
+                            <div class="page-title">经营计划</div>
+                            <div class="version-tag">最新版本: PLN-2026-0089 v1.2</div>
+                        </div>
+                        <div class="page-actions">
+                            <button class="btn btn-secondary btn-sm">版本历史</button>
+                            <button class="btn btn-primary btn-sm">导入计划</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 工具栏 -->
+                    <div class="toolbar">
+                        <div class="toolbar-left">
+                            <div class="search-input-wrapper">
+                                <span class="search-icon">🔍</span>
+                                <input type="text" class="search-input" placeholder="搜索料号、名称...">
+                            </div>
+                            <select class="form-select">
+                                <option>全部状态</option>
+                                <option>已确认</option>
+                                <option>待确认</option>
+                            </select>
+                            <select class="form-select">
+                                <option>全部月份</option>
+                                <option>2026-09</option>
+                                <option>2026-10</option>
+                                <option>2026-11</option>
+                            </select>
+                        </div>
+                        <div class="toolbar-right">
+                            <button class="btn btn-secondary btn-sm">导出</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 经营计划表格 -->
+                    <div class="card">
+                        <div class="card-body" style="padding: 0;">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="col-checkbox"><input type="checkbox" /></th>
+                                        <th class="col-code">整机料号</th>
+                                        <th>机型</th>
+                                        <th>版本</th>
+                                        <th>业务线</th>
+                                        <th class="col-number text-right">9月</th>
+                                        <th class="col-number text-right">10月</th>
+                                        <th class="col-number text-right">11月</th>
+                                        <th class="col-number text-right">12月</th>
+                                        <th class="col-number text-right">1月</th>
+                                        <th class="col-number text-right">2月</th>
+                                        <th class="col-status">状态</th>
+                                        <th class="col-action">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><input type="checkbox" /></td>
+                                        <td class="text-code">6830AA800561</td>
+                                        <td>BYC_DR1400_A01</td>
+                                        <td>黑色国内版 2K版</td>
+                                        <td>永惠</td>
+                                        <td class="text-number">6,000</td>
+                                        <td class="text-number">5,000</td>
+                                        <td class="text-number">4,000</td>
+                                        <td class="text-number">3,000</td>
+                                        <td class="text-number">3,000</td>
+                                        <td class="text-number">2,000</td>
+                                        <td><span class="status status-completed">已确认</span></td>
+                                        <td>
+                                            <button class="btn btn-text btn-sm">查看</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" /></td>
+                                        <td class="text-code">6830AA800678</td>
+                                        <td>BYC_DR1400_B02</td>
+                                        <td>白色国内版 4K版</td>
+                                        <td>永惠</td>
+                                        <td class="text-number">4,500</td>
+                                        <td class="text-number">3,500</td>
+                                        <td class="text-number">3,000</td>
+                                        <td class="text-number">2,500</td>
+                                        <td class="text-number">2,000</td>
+                                        <td class="text-number">1,500</td>
+                                        <td><span class="status status-completed">已确认</span></td>
+                                        <td>
+                                            <button class="btn btn-text btn-sm">查看</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" /></td>
+                                        <td class="text-code">6830AA800789</td>
+                                        <td>BYC_DT2800_C03</td>
+                                        <td>黑色海外版</td>
+                                        <td>爱培科</td>
+                                        <td class="text-number">8,000</td>
+                                        <td class="text-number">6,000</td>
+                                        <td class="text-number">5,000</td>
+                                        <td class="text-number">4,000</td>
+                                        <td class="text-number">3,000</td>
+                                        <td class="text-number">2,000</td>
+                                        <td><span class="status status-completed">已确认</span></td>
+                                        <td>
+                                            <button class="btn btn-text btn-sm">查看</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" /></td>
+                                        <td class="text-code">6830AA800890</td>
+                                        <td>BYC_DR1400_D04</td>
+                                        <td>金色国内版</td>
+                                        <td>永惠</td>
+                                        <td class="text-number">3,000</td>
+                                        <td class="text-number">2,500</td>
+                                        <td class="text-number">2,000</td>
+                                        <td class="text-number">1,500</td>
+                                        <td class="text-number">1,500</td>
+                                        <td class="text-number">1,000</td>
+                                        <td><span class="status status-pending">待确认</span></td>
+                                        <td>
+                                            <button class="btn btn-text btn-sm">查看</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="table-footer">
+                            <div class="pagination-info">
+                                共 <strong>4</strong> 条记录
+                            </div>
+                            <div class="pagination">
+                                <button class="btn-page">上一页</button>
+                                <button class="btn-page active">1</button>
+                                <button class="btn-page">下一页</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ============================================
+                     库存管理页面
+                     ============================================ -->
+                <div class="page" id="page-inventory">
+                    <div class="page-header">
+                        <div class="page-header-left">
+                            <div class="page-title">库存管理</div>
+                            <div class="version-tag">快照日期: 2026-08-28</div>
+                        </div>
+                        <div class="page-actions">
+                            <button class="btn btn-secondary btn-sm">导入库存</button>
+                            <button class="btn btn-secondary btn-sm">导出</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 工具栏 -->
+                    <div class="toolbar">
+                        <div class="toolbar-left">
+                            <div class="search-input-wrapper">
+                                <span class="search-icon">🔍</span>
+                                <input type="text" class="search-input" placeholder="搜索料号、名称...">
+                            </div>
+                            <select class="form-select">
+                                <option>全部仓库</option>
+                                <option>永惠原材料仓</option>
+                                <option>永惠成品仓</option>
+                                <option>爱培科原材料仓</option>
+                                <option>爱培科成品仓</option>
+                            </select>
+                            <select class="form-select">
+                                <option>全部状态</option>
+                                <option>正常</option>
+                                <option>低于安全库存</option>
+                                <option>缺货</option>
+                            </select>
+                        </div>
+                        <div class="toolbar-right">
+                            <button class="btn btn-secondary btn-sm">同步BOM</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 库存表格 -->
+                    <div class="card">
+                        <div class="card-body" style="padding: 0;">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="col-checkbox"><input type="checkbox" /></th>
+                                        <th class="col-code">物料编码</th>
+                                        <th>物料名称</th>
+                                        <th>规格型号</th>
+                                        <th>仓库</th>
+                                        <th class="col-number text-right">当前库存</th>
+                                        <th class="col-number text-right">在途数量</th>
+                                        <th class="col-number text-right">安全库存</th>
+                                        <th class="col-number text-right">可用库存</th>
+                                        <th class="col-status">状态</th>
+                                        <th class="col-date">最后更新</th>
+                                        <th class="col-action">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><input type="checkbox" /></td>
+                                        <td class="text-code">MAT-100023</td>
+                                        <td>伺服电机</td>
+                                        <td>750W / 220V</td>
+                                        <td>永惠原材料仓</td>
+                                        <td class="text-number">36</td>
+                                        <td class="text-number">40</td>
+                                        <td class="text-number">50</td>
+                                        <td class="text-number" style="color: #ff4d4f;">-14</td>
+                                        <td><span class="status status-shortage">缺料</span></td>
+                                        <td>2026-08-28</td>
+                                        <td>
+                                            <button class="btn btn-text btn-sm">详情</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" /></td>
+                                        <td class="text-code">MAT-200056</td>
+                                        <td>PLC控制器</td>
+                                        <td>FX3U-48MT</td>
+                                        <td>永惠原材料仓</td>
+                                        <td class="text-number">12</td>
+                                        <td class="text-number">15</td>
+                                        <td class="text-number">20</td>
+                                        <td class="text-number" style="color: #faad14;">-8</td>
+                                        <td><span class="status status-warning">预警</span></td>
+                                        <td>2026-08-28</td>
+                                        <td>
+                                            <button class="btn btn-text btn-sm">详情</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" /></td>
+                                        <td class="text-code">MAT-300128</td>
+                                        <td>触摸屏模组</td>
+                                        <td>7寸 800x480</td>
+                                        <td>爱培科原材料仓</td>
+                                        <td class="text-number">0</td>
+                                        <td class="text-number">50</td>
+                                        <td class="text-number">100</td>
+                                        <td class="text-number" style="color: #ff4d4f;">-50</td>
+                                        <td><span class="status status-shortage">缺料</span></td>
+                                        <td>2026-08-28</td>
+                                        <td>
+                                            <button class="btn btn-text btn-sm">详情</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" /></td>
+                                        <td class="text-code">MAT-400256</td>
+                                        <td>电源适配器</td>
+                                        <td>12V/3A</td>
+                                        <td>永惠成品仓</td>
+                                        <td class="text-number">250</td>
+                                        <td class="text-number">0</td>
+                                        <td class="text-number">100</td>
+                                        <td class="text-number" style="color: #52c41a;">250</td>
+                                        <td><span class="status status-completed">正常</span></td>
+                                        <td>2026-08-28</td>
+                                        <td>
+                                            <button class="btn btn-text btn-sm">详情</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" /></td>
+                                        <td class="text-code">MAT-500389</td>
+                                        <td>包装盒</td>
+                                        <td>A4 彩盒</td>
+                                        <td>永惠成品仓</td>
+                                        <td class="text-number">500</td>
+                                        <td class="text-number">200</td>
+                                        <td class="text-number">300</td>
+                                        <td class="text-number" style="color: #52c41a;">400</td>
+                                        <td><span class="status status-completed">正常</span></td>
+                                        <td>2026-08-28</td>
+                                        <td>
+                                            <button class="btn btn-text btn-sm">详情</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="table-footer">
+                            <div class="pagination-info">
+                                共 <strong>5</strong> 条记录，已选择 <strong>0</strong> 条
+                                <span style="margin-left: 16px; color: #ff4d4f;">
+                                    ⚠️ 2种物料缺料，1种物料预警
+                                </span>
+                            </div>
+                            <div class="pagination">
+                                <button class="btn-page">上一页</button>
+                                <button class="btn-page active">1</button>
+                                <button class="btn-page">2</button>
+                                <button class="btn-page">...</button>
+                                <button class="btn-page">10</button>
+                                <button class="btn-page">下一页</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ============================================
+                     数据导入页面
+                     ============================================ -->
+                <div class="page" id="page-import">
+                    <div class="page-header">
+                        <div class="page-header-left">
+                            <div class="page-title">数据导入</div>
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+                        <!-- 经营计划导入 -->
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">导入经营计划</div>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label class="form-label">选择文件</label>
+                                    <input type="file" class="form-input" accept=".xlsx,.xls">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">导入模式</label>
+                                    <select class="form-select" style="width: 100%;">
+                                        <option>覆盖导入（替换当前版本）</option>
+                                        <option>追加导入（新增版本）</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <input type="checkbox" checked> 导入后自动触发排产重算
+                                    </label>
+                                </div>
+                                <button class="btn btn-primary" style="width: 100%;">开始导入</button>
+                            </div>
+                            <div class="card-footer">
+                                <div style="font-size: 12px; color: #8c8c8c;">
+                                    支持格式：Excel (.xlsx, .xls) | 最新版本：PLN-2026-0089 v1.2
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 库存快照导入 -->
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">导入库存快照</div>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label class="form-label">选择文件</label>
+                                    <input type="file" class="form-input" accept=".xlsx,.xls">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">快照日期</label>
+                                    <input type="date" class="form-input" value="2026-08-28">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <input type="checkbox" checked> 导入后自动触发排产重算
+                                    </label>
+                                </div>
+                                <button class="btn btn-primary" style="width: 100%;">开始导入</button>
+                            </div>
+                            <div class="card-footer">
+                                <div style="font-size: 12px; color: #8c8c8c;">
+                                    支持格式：Excel (.xlsx, .xls) | 每日更新
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 已出货数据同步 -->
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">同步已出货数据</div>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label class="form-label">数据来源</label>
+                                    <select class="form-select" style="width: 100%;">
+                                        <option>CRM 接口自动同步</option>
+                                        <option>手动导入 Excel</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">同步范围</label>
+                                    <select class="form-select" style="width: 100%;">
+                                        <option>全部数据</option>
+                                        <option>本月数据</option>
+                                        <option>指定月份</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-primary" style="width: 100%;">开始同步</button>
+                            </div>
+                            <div class="card-footer">
+                                <div style="font-size: 12px; color: #8c8c8c;">
+                                    最后同步：2026-08-28 08:00:00
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- BOM 同步 -->
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">同步 BOM 数据</div>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label class="form-label">同步方式</label>
+                                    <select class="form-select" style="width: 100%;">
+                                        <option>增量同步（仅更新变更）</option>
+                                        <option>全量同步（重新拉取）</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">数据来源</label>
+                                    <select class="form-select" style="width: 100%;">
+                                        <option>NC 系统</option>
+                                        <option>手动导入 Excel</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-primary" style="width: 100%;">开始同步</button>
+                            </div>
+                            <div class="card-footer">
+                                <div style="font-size: 12px; color: #8c8c8c;">
+                                    最后同步：2026-08-27 22:00:00 | 增量更新
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ============================================
+                     数据导出页面
+                     ============================================ -->
+                <div class="page" id="page-export">
+                    <div class="page-header">
+                        <div class="page-header-left">
+                            <div class="page-title">数据导出</div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">排产数据导出</div>
+                        </div>
+                        <div class="card-body">
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px;">
+                                <div>
+                                    <div class="form-group">
+                                        <label class="form-label">导出范围</label>
+                                        <select class="form-select" style="width: 100%;">
+                                            <option>当前排产计划</option>
+                                            <option>历史版本</option>
+                                            <option>指定时间范围</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">时间范围</label>
+                                        <div style="display: flex; gap: 8px;">
+                                            <input type="date" class="form-input" value="2026-09-01">
+                                            <span style="line-height: 32px;">至</span>
+                                            <input type="date" class="form-input" value="2026-11-30">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">导出格式</label>
+                                        <select class="form-select" style="width: 100%;">
+                                            <option>Excel (.xlsx)</option>
+                                            <option>CSV (.csv)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="form-group">
+                                        <label class="form-label">导出字段</label>
+                                        <div style="display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto; padding: 12px; background: #fafafa; border-radius: 4px;">
+                                            <label><input type="checkbox" checked> 机型</label>
+                                            <label><input type="checkbox" checked> 版本</label>
+                                            <label><input type="checkbox" checked> 机头料号</label>
+                                            <label><input type="checkbox" checked> 整机料号</label>
+                                            <label><input type="checkbox" checked> 备注</label>
+                                            <label><input type="checkbox" checked> 各周排产数量</label>
+                                            <label><input type="checkbox" checked> 合计</label>
+                                            <label><input type="checkbox"> 优先级</label>
+                                            <label><input type="checkbox"> 实际完成数量</label>
+                                            <label><input type="checkbox"> 来源月份</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="margin-top: 16px; display: flex; gap: 8px;">
+                                <button class="btn btn-primary">导出数据</button>
+                                <button class="btn btn-secondary">保存为模板</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ============================================
+                     产能配置页面
+                     ============================================ -->
+                <div class="page" id="page-capacity">
+                    <div class="page-header">
+                        <div class="page-header-left">
+                            <div class="page-title">产能配置</div>
+                        </div>
+                        <div class="page-actions">
+                            <button class="btn btn-primary btn-sm">新增产线</button>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-body" style="padding: 0;">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="col-checkbox"><input type="checkbox" /></th>
+                                        <th class="col-code">产线编码</th>
+                                        <th>产线名称</th>
+                                        <th>工厂</th>
+                                        <th class="col-number text-right">日产能</th>
+                                        <th class="col-number text-right">周产能</th>
+                                        <th class="col-status">状态</th>
+                                        <th class="col-date">最后更新</th>
+                                        <th class="col-action">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><input type="checkbox" /></td>
+                                        <td class="text-code">LINE-001</td>
+                                        <td>A线 - 总装</td>
+                                        <td>深圳工厂</td>
+                                        <td class="text-number">120</td>
+                                        <td class="text-number">600</td>
+                                        <td><span class="status status-completed">启用</span></td>
+                                        <td>2026-08-28</td>
+                                        <td>
+                                            <button class="btn btn-text btn-sm">编辑</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" /></td>
+                                        <td class="text-code">LINE-002</td>
+                                        <td>B线 - 总装</td>
+                                        <td>深圳工厂</td>
+                                        <td class="text-number">100</td>
+                                        <td class="text-number">500</td>
+                                        <td><span class="status status-completed">启用</span></td>
+                                        <td>2026-08-28</td>
+                                        <td>
+                                            <button class="btn btn-text btn-sm">编辑</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" /></td>
+                                        <td class="text-code">LINE-003</td>
+                                        <td>C线 - PCBA</td>
+                                        <td>东莞工厂</td>
+                                        <td class="text-number">200</td>
+                                        <td class="text-number">1000</td>
+                                        <td><span class="status status-completed">启用</span></td>
+                                        <td>2026-08-28</td>
+                                        <td>
+                                            <button class="btn btn-text btn-sm">编辑</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" /></td>
+                                        <td class="text-code">LINE-004</td>
+                                        <td>D线 - 包装</td>
+                                        <td>深圳工厂</td>
+                                        <td class="text-number">300</td>
+                                        <td class="text-number">1500</td>
+                                        <td><span class="status status-draft">停用</span></td>
+                                        <td>2026-08-20</td>
+                                        <td>
+                                            <button class="btn btn-text btn-sm">编辑</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="table-footer">
+                            <div class="pagination-info">
+                                共 <strong>4</strong> 条记录
+                            </div>
+                            <div class="pagination">
+                                <button class="btn-page">上一页</button>
+                                <button class="btn-page active">1</button>
+                                <button class="btn-page">下一页</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ============================================
+                     版本管理页面
+                     ============================================ -->
+                <div class="page" id="page-version">
+                    <div class="page-header">
+                        <div class="page-header-left">
+                            <div class="page-title">版本管理</div>
+                        </div>
+                    </div>
+                    
+                    <div class="tabs">
+                        <div class="tab active">排产版本</div>
+                        <div class="tab">经营计划版本</div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-body" style="padding: 0;">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="col-code">版本号</th>
+                                        <th>版本类型</th>
+                                        <th class="col-date">创建时间</th>
+                                        <th>创建人</th>
+                                        <th>变更说明</th>
+                                        <th class="col-status">状态</th>
+                                        <th class="col-action">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="text-code">v2026.08.28-003</td>
+                                        <td>排产版本</td>
+                                        <td>2026-08-28 15:30:00</td>
+                                        <td>肖芳</td>
+                                        <td>人工调整排产数量</td>
+                                        <td><span class="status status-running">当前版本</span></td>
+                                        <td>
+                                            <button class="btn btn-text btn-sm">查看</button>
+                                            <button class="btn btn-text btn-sm">对比</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-code">v2026.08.28-002</td>
+                                        <td>排产版本</td>
+                                        <td>2026-08-28 10:15:00</td>
+                                        <td>系统</td>
+                                        <td>经营计划变更自动重算</td>
+                                        <td><span class="status status-completed">历史版本</span></td>
+                                        <td>
+                                            <button class="btn btn-text btn-sm">查看</button>
+                                            <button class="btn btn-text btn-sm">对比</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-code">v2026.08.28-001</td>
+                                        <td>排产版本</td>
+                                        <td>2026-08-28 08:00:00</td>
+                                        <td>系统</td>
+                                        <td>库存快照更新自动重算</td>
+                                        <td><span class="status status-completed">历史版本</span></td>
+                                        <td>
+                                            <button class="btn btn-text btn-sm">查看</button>
+                                            <button class="btn btn-text btn-sm">对比</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-code">v2026.08.27-001</td>
+                                        <td>排产版本</td>
+                                        <td>2026-08-27 18:00:00</td>
+                                        <td>系统</td>
+                                        <td>首次生成排产计划</td>
+                                        <td><span class="status status-completed">历史版本</span></td>
+                                        <td>
+                                            <button class="btn btn-text btn-sm">查看</button>
+                                            <button class="btn btn-text btn-sm">对比</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="table-footer">
+                            <div class="pagination-info">
+                                共 <strong>4</strong> 条记录
+                            </div>
+                            <div class="pagination">
+                                <button class="btn-page">上一页</button>
+                                <button class="btn-page active">1</button>
+                                <button class="btn-page">下一页</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 版本对比模态框 -->
+    <div class="modal-overlay" id="version-compare-modal">
+        <div class="modal" style="width: 900px;">
+            <div class="modal-header">
+                <div class="modal-title">版本对比</div>
+                <button class="modal-close" onclick="closeModal('version-compare-modal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div style="display: flex; gap: 16px; margin-bottom: 16px;">
+                    <div style="flex: 1;">
+                        <label class="form-label">基准版本</label>
+                        <select class="form-select" style="width: 100%;">
+                            <option>v2026.08.28-002 (历史版本)</option>
+                        </select>
+                    </div>
+                    <div style="flex: 1;">
+                        <label class="form-label">对比版本</label>
+                        <select class="form-select" style="width: 100%;">
+                            <option>v2026.08.28-003 (当前版本)</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>机型</th>
+                                <th>整机料号</th>
+                                <th>周次</th>
+                                <th class="text-right">基准版本</th>
+                                <th class="text-right">对比版本</th>
+                                <th class="text-right">差异</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="background: #fff2f0;">
+                                <td>BYC_DR1400_A01</td>
+                                <td class="text-code">6830AA800561</td>
+                                <td>9月 W1</td>
+                                <td class="text-number">333</td>
+                                <td class="text-number">333</td>
+                                <td class="text-number" style="color: #8c8c8c;">0</td>
+                            </tr>
+                            <tr style="background: #fff2f0;">
+                                <td>BYC_DR1400_A01</td>
+                                <td class="text-code">6830AA800561</td>
+                                <td>10月 W1</td>
+                                <td class="text-number">400</td>
+                                <td class="text-number">500</td>
+                                <td class="text-number" style="color: #ff4d4f;">+100</td>
+                            </tr>
+                            <tr>
+                                <td>BYC_DR1400_B02</td>
+                                <td class="text-code">6830AA800678</td>
+                                <td>9月 W1</td>
+                                <td class="text-number">375</td>
+                                <td class="text-number">375</td>
+                                <td class="text-number" style="color: #8c8c8c;">0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('version-compare-modal')">关闭</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 修改历史模态框 -->
+    <div class="modal-overlay" id="history-modal">
+        <div class="modal" style="width: 600px;">
+            <div class="modal-header">
+                <div class="modal-title">修改历史</div>
+                <button class="modal-close" onclick="closeModal('history-modal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="history-panel" style="background: transparent; padding: 0;">
+                    <div class="history-list">
+                        <div class="history-item">
+                            <span class="history-time">2026-08-28 15:30</span>
+                            <span class="history-user">肖芳</span>
+                            <span class="history-action">修改 9月W1 数量: 300 → 375</span>
+                        </div>
+                        <div class="history-item">
+                            <span class="history-time">2026-08-28 15:28</span>
+                            <span class="history-user">肖芳</span>
+                            <span class="history-action">修改 10月W1 数量: 350 → 400</span>
+                        </div>
+                        <div class="history-item">
+                            <span class="history-time">2026-08-28 10:15</span>
+                            <span class="history-user">系统</span>
+                            <span class="history-action">经营计划变更自动重算</span>
+                        </div>
+                        <div class="history-item">
+                            <span class="history-time">2026-08-28 08:00</span>
+                            <span class="history-user">系统</span>
+                            <span class="history-action">库存快照更新自动重算</span>
+                        </div>
+                        <div class="history-item">
+                            <span class="history-time">2026-08-27 18:00</span>
+                            <span class="history-user">系统</span>
+                            <span class="history-action">首次生成排产计划</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('history-modal')">关闭</button>
+                <button class="btn btn-primary">恢复到此版本</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 页面切换
+        function showPage(pageName, navItem) {
+            // 隐藏所有页面
+            document.querySelectorAll('.page').forEach(function(page) {
+                page.classList.remove('active');
+            });
+            
+            // 显示目标页面
+            document.getElementById('page-' + pageName).classList.add('active');
+            
+            // 更新导航状态
+            document.querySelectorAll('.nav-item').forEach(function(item) {
+                item.classList.remove('active');
+            });
+            if (navItem) {
+                navItem.classList.add('active');
+            }
+            
+            // 更新面包屑
+            var titles = {
+                'dashboard': '工作台',
+                'scheduling': '排产管理',
+                'plan': '经营计划',
+                'inventory': '库存管理',
+                'import': '数据导入',
+                'export': '数据导出',
+                'capacity': '产能配置',
+                'version': '版本管理'
+            };
+            document.getElementById('breadcrumb-current').textContent = titles[pageName] || '工作台';
+        }
+        
+        // 显示主布局
+        function showMainLayout() {
+            document.getElementById('login-page').style.display = 'none';
+            document.getElementById('main-layout').style.display = 'flex';
+        }
+        
+        // 打开模态框
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+        
+        // 关闭模态框
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 绑定版本对比按钮
+            document.querySelectorAll('[onclick*="version-compare"]').forEach(function(btn) {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    openModal('version-compare-modal');
+                });
+            });
+            
+            // 绑定修改历史按钮
+            document.querySelectorAll('[onclick*="history"]').forEach(function(btn) {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    openModal('history-modal');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

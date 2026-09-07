@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.planning.repository.PlanMapper">
+
+    <insert id="insertVersion" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO plan_version (version_no, factory_code, forecast_version_id, inventory_snapshot_id,
+            shipment_batch_id, capacity_version_id, rule_version, current_week_start,
+            input_checksum, result_checksum, status, auto_recalc_forecast, auto_recalc_inventory, created_by)
+        VALUES (#{versionNo}, #{factoryCode}, #{forecastVersionId}, #{inventorySnapshotId},
+            #{shipmentBatchId}, #{capacityVersionId}, #{ruleVersion}, #{currentWeekStart},
+            #{inputChecksum}, #{resultChecksum}, #{status}, #{autoRecalcForecast}, #{autoRecalcInventory}, #{createdBy})
+    </insert>
+
+    <update id="updateVersionStatus">
+        UPDATE plan_version SET status = #{status}, result_checksum = #{resultChecksum}, version_no = version_no
+        WHERE id = #{id}
+    </update>
+
+    <select id="selectVersionById" resultType="com.mrp.planning.domain.PlanVersion">
+        SELECT * FROM plan_version WHERE id = #{id}
+    </select>
+
+    <select id="selectLatestVersion" resultType="com.mrp.planning.domain.PlanVersion">
+        SELECT * FROM plan_version WHERE factory_code = #{factoryCode}
+        ORDER BY id DESC LIMIT 1
+    </select>
+
+    <select id="selectVersionsByFactory" resultType="com.mrp.planning.domain.PlanVersion">
+        SELECT * FROM plan_version WHERE factory_code = #{factoryCode} ORDER BY id DESC
+    </select>
+
+    <insert id="insertDetails">
+        INSERT INTO plan_detail (plan_version_id, factory_code, material_id, material_name, model,
+            me_material_id, week_start_date, physical_month, source_month, slot, is_carry, is_locked,
+            system_quantity, manual_quantity, effective_quantity, capacity_exceeded, capacity_excess_qty)
+        VALUES
+        <foreach collection="list" item="d" separator=",">
+            (#{d.planVersionId}, #{d.factoryCode}, #{d.materialId}, #{d.materialName}, #{d.model},
+             #{d.meMaterialId}, #{d.weekStartDate}, #{d.physicalMonth}, #{d.sourceMonth},
+             #{d.slot}, #{d.isCarry}, #{d.isLocked}, #{d.systemQuantity}, #{d.manualQuantity},
+             #{d.effectiveQuantity}, #{d.capacityExceeded}, #{d.capacityExcessQty})
+        </foreach>
+    </insert>
+
+    <select id="selectDetailsByVersionId" resultType="com.mrp.planning.domain.PlanDetail">
+        SELECT * FROM plan_detail WHERE plan_version_id = #{versionId}
+        ORDER BY factory_code, material_id, week_start_date
+    </select>
+
+    <select id="selectDetailsByVersionAndFactory" resultType="com.mrp.planning.domain.PlanDetail">
+        SELECT * FROM plan_detail WHERE plan_version_id = #{versionId} AND factory_code = #{factoryCode}
+        ORDER BY material_id, week_start_date
+    </select>
+
+    <select id="countDetailsByVersionId" resultType="int">
+        SELECT COUNT(*) FROM plan_detail WHERE plan_version_id = #{versionId}
+    </select>
+
+    <delete id="deleteDetailsByVersionId">
+        DELETE FROM plan_detail WHERE plan_version_id = #{versionId}
+    </delete>
+</mapper>

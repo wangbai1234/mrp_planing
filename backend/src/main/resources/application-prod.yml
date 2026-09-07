@@ -1,0 +1,37 @@
+spring:
+  datasource:
+    url: ${MRP_DB_URL}
+    username: ${MRP_DB_USERNAME}
+    password: ${MRP_DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: ${MRP_DB_POOL_SIZE:20}
+      minimum-idle: ${MRP_DB_POOL_MIN:5}
+
+  flyway:
+    enabled: true
+
+  data:
+    redis:
+      host: ${MRP_REDIS_HOST}
+      port: ${MRP_REDIS_PORT:6379}
+      password: ${MRP_REDIS_PASSWORD}
+
+  batch:
+    jdbc:
+      initialize-schema: always
+
+server:
+  port: ${MRP_SERVER_PORT:8080}
+
+mrp:
+  jwt:
+    secret: ${MRP_JWT_SECRET}
+    expiration-seconds: ${MRP_JWT_EXPIRATION:3600}
+  file:
+    upload-dir: ${MRP_FILE_UPLOAD_DIR:/data/mrp/uploads}
+
+logging:
+  level:
+    com.mrp: INFO
+    org.springframework.batch: WARN

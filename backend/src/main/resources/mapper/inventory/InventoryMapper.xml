@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.inventory.repository.InventoryMapper">
+
+    <insert id="insertSnapshot" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO inventory_snapshot (snapshot_date, file_name, file_checksum, status, created_by)
+        VALUES (#{snapshotDate}, #{fileName}, #{fileChecksum}, #{status}, #{createdBy})
+    </insert>
+
+    <select id="selectSnapshotById" resultType="com.mrp.inventory.domain.InventorySnapshot">
+        SELECT * FROM inventory_snapshot WHERE id = #{id}
+    </select>
+
+    <select id="selectLatestSnapshot" resultType="com.mrp.inventory.domain.InventorySnapshot">
+        SELECT * FROM inventory_snapshot ORDER BY id DESC LIMIT 1
+    </select>
+
+    <select id="selectAllSnapshots" resultType="com.mrp.inventory.domain.InventorySnapshot">
+        SELECT * FROM inventory_snapshot ORDER BY id DESC
+    </select>
+
+    <insert id="insertDetails">
+        INSERT INTO inventory_detail (snapshot_id, factory_code, material_id, warehouse_code,
+            warehouse_name, warehouse_type, quantity, is_in_calculation)
+        VALUES
+        <foreach collection="list" item="d" separator=",">
+            (#{d.snapshotId}, #{d.factoryCode}, #{d.materialId}, #{d.warehouseCode},
+             #{d.warehouseName}, #{d.warehouseType}, #{d.quantity}, #{d.isInCalculation})
+        </foreach>
+    </insert>
+
+    <select id="selectDetailsBySnapshotId" resultType="com.mrp.inventory.domain.InventoryDetail">
+        SELECT * FROM inventory_detail WHERE snapshot_id = #{snapshotId} ORDER BY factory_code, material_id
+    </select>
+
+    <select id="selectEffectiveDetailsBySnapshotId" resultType="com.mrp.inventory.domain.InventoryDetail">
+        SELECT * FROM inventory_detail WHERE snapshot_id = #{snapshotId} AND is_in_calculation = 1
+        ORDER BY factory_code, material_id
+    </select>
+
+    <select id="countDetailsBySnapshotId" resultType="int">
+        SELECT COUNT(*) FROM inventory_detail WHERE snapshot_id = #{snapshotId}
+    </select>
+
+    <delete id="deleteDetailsBySnapshotId">
+        DELETE FROM inventory_detail WHERE snapshot_id = #{snapshotId}
+    </delete>
+</mapper>

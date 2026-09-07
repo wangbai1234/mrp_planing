@@ -1,0 +1,1134 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MRP 12 周滚动排产工作台</title>
+  <style>
+    :root {
+      --bg: #f3f5f8;
+      --surface: #ffffff;
+      --surface-soft: #f8fafc;
+      --line: #dfe4ea;
+      --line-strong: #c7d0dc;
+      --text: #172033;
+      --text-2: #4b5870;
+      --text-3: #748096;
+      --primary: #2563eb;
+      --primary-soft: #eef4ff;
+      --primary-line: #b8cdfc;
+      --success: #17803d;
+      --success-soft: #edf9f0;
+      --warning: #b45309;
+      --warning-soft: #fff7e8;
+      --danger: #c3292f;
+      --danger-soft: #fff1f1;
+      --sidebar: 184px;
+      --header: 48px;
+      --radius: 6px;
+      --shadow: 0 8px 24px rgba(30, 42, 66, .12);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 13px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      overflow: hidden;
+    }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    button:focus-visible, input:focus-visible, select:focus-visible {
+      outline: 2px solid #85a8ff;
+      outline-offset: 1px;
+    }
+    svg.icon { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: 0 0 auto; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+    .mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+    .app { display: grid; grid-template-columns: var(--sidebar) 1fr; height: 100vh; }
+    .sidebar { background: #172238; color: #d9e0ec; display: flex; flex-direction: column; min-width: 0; }
+    .brand { height: var(--header); display: flex; align-items: center; gap: 10px; padding: 0 14px; border-bottom: 1px solid rgba(255,255,255,.09); }
+    .brand-mark { width: 28px; height: 28px; border: 1px solid #5c75a4; display: grid; place-items: center; border-radius: 5px; color: #fff; font-weight: 700; letter-spacing: .5px; }
+    .brand strong { font-size: 14px; color: #fff; }
+    .nav { padding: 12px 8px; }
+    .nav-label { padding: 5px 9px; color: #8291a8; font-size: 11px; letter-spacing: .08em; }
+    .nav-item { width: 100%; height: 34px; padding: 0 10px; display: flex; align-items: center; gap: 10px; border: 0; border-radius: 5px; background: transparent; color: #c9d2e2; text-align: left; }
+    .nav-item:hover { background: rgba(255,255,255,.06); }
+    .nav-item.active { color: #fff; background: #2b5fc3; }
+    .sidebar-foot { margin-top: auto; padding: 12px; border-top: 1px solid rgba(255,255,255,.09); color: #a8b4c8; font-size: 12px; }
+    .user { display: flex; align-items: center; gap: 9px; }
+    .avatar { width: 28px; height: 28px; display: grid; place-items: center; background: #385077; color: #fff; border-radius: 50%; font-weight: 600; }
+
+    .workspace { min-width: 0; min-height: 0; overflow: hidden; display: grid; grid-template-rows: var(--header) minmax(0, 1fr); }
+    .topbar { background: var(--surface); border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; padding: 0 18px; }
+    .crumb { display: flex; align-items: center; gap: 7px; color: var(--text-3); }
+    .crumb strong { color: var(--text); font-weight: 600; }
+    .top-meta { display: flex; gap: 14px; align-items: center; color: var(--text-2); font-size: 12px; }
+    .sync-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--success); display: inline-block; margin-right: 5px; }
+
+    .main { min-width: 0; min-height: 0; overflow: auto; padding: 14px 16px 20px; }
+    .page-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 12px; }
+    h1 { margin: 0; font-size: 20px; line-height: 1.3; font-weight: 650; }
+    .subhead { margin-top: 4px; color: var(--text-2); }
+    .head-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .btn { height: 32px; padding: 0 11px; border: 1px solid var(--line-strong); border-radius: 5px; background: var(--surface); color: var(--text); display: inline-flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap; }
+    .btn:hover { border-color: #9babc0; background: #fbfcfe; }
+    .btn.primary { color: #fff; background: var(--primary); border-color: var(--primary); }
+    .btn.primary:hover { background: #1f56ce; }
+    .btn.ghost { border-color: transparent; background: transparent; }
+    .btn.danger { color: var(--danger); border-color: #edb6b8; background: #fffafa; }
+    .btn.small { height: 27px; padding: 0 8px; font-size: 12px; }
+    .btn:disabled { opacity: .5; cursor: not-allowed; }
+    .status { display: inline-flex; align-items: center; gap: 5px; padding: 3px 8px; border-radius: 999px; font-size: 12px; border: 1px solid var(--line); background: var(--surface-soft); }
+    .status.draft { color: #4c5a70; }
+    .status.published { color: var(--success); border-color: #b8dfc2; background: var(--success-soft); }
+
+    .scenario-bar { background: #f8fbff; border: 1px solid #cbdaf5; border-left: 3px solid var(--primary); border-radius: var(--radius); display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 9px 11px; margin-bottom: 10px; }
+    .scenario-copy { display: flex; gap: 9px; align-items: center; min-width: 0; }
+    .scenario-copy strong { white-space: nowrap; }
+    .scenario-copy span { color: var(--text-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .segmented { display: inline-flex; padding: 2px; border: 1px solid var(--line-strong); border-radius: 6px; background: #eef2f7; }
+    .segmented button { height: 27px; border: 0; padding: 0 10px; color: var(--text-2); background: transparent; border-radius: 4px; }
+    .segmented button.active { color: var(--primary); background: var(--surface); box-shadow: 0 1px 3px rgba(20,30,50,.12); font-weight: 600; }
+
+    .metrics { display: grid; grid-template-columns: repeat(5, minmax(150px, 1fr)); gap: 8px; margin-bottom: 10px; }
+    .metric { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); min-height: 64px; padding: 9px 11px; display: grid; grid-template-columns: 28px 1fr; gap: 9px; align-items: center; }
+    .metric-icon { width: 28px; height: 28px; display: grid; place-items: center; border-radius: 5px; color: var(--primary); background: var(--primary-soft); }
+    .metric.warn .metric-icon { color: var(--warning); background: var(--warning-soft); }
+    .metric.danger .metric-icon { color: var(--danger); background: var(--danger-soft); }
+    .metric-label { color: var(--text-3); font-size: 12px; }
+    .metric-value { font: 650 17px/1.2 var(--mono); margin-top: 2px; }
+    .metric-note { color: var(--text-3); font-size: 11px; margin-top: 2px; }
+
+    .panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+    .toolbar { min-height: 44px; padding: 6px 9px; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .toolbar-left, .toolbar-right { display: flex; align-items: center; gap: 7px; min-width: 0; }
+    .search { height: 30px; width: 220px; border: 1px solid var(--line-strong); background: #fff; border-radius: 5px; display: flex; align-items: center; gap: 6px; padding: 0 8px; color: var(--text-3); }
+    .search input { border: 0; outline: 0; min-width: 0; width: 100%; color: var(--text); }
+    select.control { height: 30px; border: 1px solid var(--line-strong); border-radius: 5px; padding: 0 28px 0 8px; color: var(--text); background: #fff; }
+    .window-label { color: var(--text-2); font-size: 12px; white-space: nowrap; }
+    .window-label strong { color: var(--text); }
+
+    .legend { min-height: 34px; padding: 6px 10px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 14px; color: var(--text-2); font-size: 12px; flex-wrap: wrap; }
+    .legend-item { display: inline-flex; align-items: center; gap: 5px; }
+    .swatch { width: 14px; height: 10px; border: 1px solid var(--line-strong); background: #fff; }
+    .swatch.current { border-color: #6d97f1; background: #edf4ff; }
+    .swatch.carry { border-color: #d59a42; background: #fff6e7; }
+    .swatch.manual { border-color: #3573ed; box-shadow: inset 0 -3px #3573ed; }
+    .swatch.locked { background: repeating-linear-gradient(135deg,#f4f5f7,#f4f5f7 3px,#e7e9ed 3px,#e7e9ed 6px); }
+    .swatch.over { border-color: #df8a8e; background: #fff0f0; }
+
+    .grid-wrap { overflow: auto; max-height: 418px; position: relative; }
+    table.plan-grid { border-collapse: separate; border-spacing: 0; min-width: 1580px; width: 100%; table-layout: fixed; }
+    .plan-grid th, .plan-grid td { border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 0; background: #fff; }
+    .plan-grid thead th { position: sticky; top: 0; z-index: 6; height: 62px; background: #f6f8fb; color: var(--text-2); font-weight: 600; vertical-align: middle; }
+    .plan-grid tbody tr:last-child td { border-bottom: 0; }
+    .plan-grid th.sticky, .plan-grid td.sticky { position: sticky; z-index: 5; }
+    .plan-grid thead th.sticky { z-index: 9; }
+    .col-info { left: 0; width: 268px; }
+    .col-line { left: 268px; width: 78px; }
+    .col-cap { left: 346px; width: 78px; }
+    .plan-grid th.sticky, .plan-grid td.sticky { box-shadow: 1px 0 0 var(--line); }
+    .material-cell { height: 64px; padding: 8px 10px; }
+    .material-code { color: var(--primary); font-family: var(--mono); font-size: 12px; }
+    .material-name { margin-top: 3px; font-weight: 600; }
+    .material-meta { margin-top: 3px; color: var(--text-3); font-size: 11px; }
+    .center-cell { text-align: center; color: var(--text-2); }
+    .week-head { height: 62px; display: flex; flex-direction: column; align-items: stretch; justify-content: center; text-align: center; position: relative; }
+    .week-head .top { font: 600 12px/1.2 var(--mono); color: var(--text); }
+    .week-head .range { color: var(--text-3); font-size: 10px; margin-top: 3px; }
+    .week-head .source { font-size: 10px; margin-top: 3px; color: var(--text-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 3px; }
+    th.current-week { background: #eaf2ff !important; box-shadow: inset 0 3px var(--primary); }
+    th.carry-week { background: #fff7e8 !important; }
+    th.month-start { border-left: 2px solid #8da0b8; }
+    .current-badge { position: absolute; top: 2px; right: 3px; font-size: 9px; color: var(--primary); }
+
+    .week-cell { width: 94px; height: 64px; }
+    .cell-btn { width: 100%; height: 64px; border: 0; background: transparent; color: var(--text); padding: 6px 5px; position: relative; display: flex; flex-direction: column; align-items: flex-end; justify-content: center; }
+    .cell-btn:hover { background: #f5f8fd; }
+    .cell-btn .qty { font: 650 14px/1.2 var(--mono); }
+    .cell-btn .cell-note { width: 100%; margin-top: 5px; color: var(--text-3); font-size: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: right; }
+    .cell-btn.carry { background: #fffaf0; }
+    .cell-btn.current { background: #f3f7ff; }
+    .cell-btn.manual { box-shadow: inset 0 -3px var(--primary); }
+    .cell-btn.manual .cell-note { color: var(--primary); }
+    .cell-btn.locked { cursor: not-allowed; background: repeating-linear-gradient(135deg,#fafafa,#fafafa 5px,#f1f2f4 5px,#f1f2f4 10px); color: #687386; }
+    .cell-btn.over { background: var(--danger-soft); color: #a61f26; }
+    .cell-btn.over .cell-note { color: var(--danger); font-weight: 600; }
+    .month-start { border-left: 2px solid #8da0b8 !important; }
+
+    .foot-panels { display: grid; grid-template-columns: minmax(560px, 1.35fr) minmax(360px, .65fr); gap: 10px; margin-top: 10px; }
+    .section-head { height: 39px; padding: 0 11px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
+    .section-head h2 { font-size: 13px; margin: 0; }
+    .balance-body { padding: 9px 10px 10px; }
+    .formula-row { display: flex; align-items: center; gap: 7px; color: var(--text-2); margin-bottom: 8px; flex-wrap: wrap; }
+    .formula-chip { border: 1px solid var(--line); border-radius: 4px; padding: 4px 7px; background: var(--surface-soft); }
+    .formula-chip strong { color: var(--text); font-family: var(--mono); margin-left: 5px; }
+    .month-balances { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; }
+    .balance { border: 1px solid var(--line); border-radius: 5px; padding: 8px; background: #fbfcfe; }
+    .balance.bad { border-color: #e6aaad; background: #fff6f6; }
+    .balance-top { display: flex; justify-content: space-between; gap: 8px; }
+    .balance-top strong { font-family: var(--mono); }
+    .balance-detail { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; margin-top: 7px; font-size: 11px; color: var(--text-3); }
+    .balance-detail b { display: block; margin-top: 2px; color: var(--text); font: 600 12px var(--mono); }
+    .balance.bad .diff { color: var(--danger); }
+
+    .activity { max-height: 164px; overflow: auto; padding: 2px 10px 8px; }
+    .log { display: grid; grid-template-columns: 47px 1fr; gap: 8px; padding: 7px 0; border-bottom: 1px dashed var(--line); }
+    .log:last-child { border-bottom: 0; }
+    .log-time { color: var(--text-3); font-family: var(--mono); font-size: 11px; }
+    .log strong { font-weight: 600; }
+    .log p { margin: 2px 0 0; color: var(--text-2); font-size: 12px; }
+
+    .drawer-mask, .modal-mask { position: fixed; inset: 0; background: rgba(17,28,47,.35); z-index: 30; display: none; }
+    .drawer-mask.open, .modal-mask.open { display: block; }
+    .drawer { position: absolute; top: 0; right: 0; width: 390px; height: 100%; background: #fff; box-shadow: -10px 0 28px rgba(20,30,50,.18); display: flex; flex-direction: column; }
+    .drawer-head, .modal-head { min-height: 52px; padding: 0 15px; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; }
+    .drawer-head h2, .modal-head h2 { margin: 0; font-size: 15px; }
+    .icon-btn { width: 30px; height: 30px; border: 0; border-radius: 4px; background: transparent; color: var(--text-2); display: grid; place-items: center; }
+    .icon-btn:hover { background: var(--surface-soft); }
+    .drawer-body { padding: 14px 15px; overflow: auto; flex: 1; }
+    .drawer-foot, .modal-foot { min-height: 56px; border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: flex-end; gap: 8px; padding: 9px 15px; }
+    .detail-block { border: 1px solid var(--line); border-radius: 5px; margin-bottom: 10px; overflow: hidden; }
+    .detail-title { padding: 7px 9px; background: var(--surface-soft); border-bottom: 1px solid var(--line); font-weight: 600; }
+    .detail-grid { padding: 8px 9px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; }
+    .field label { display: block; color: var(--text-3); font-size: 11px; margin-bottom: 3px; }
+    .field .value { color: var(--text); }
+    .input-number { width: 100%; height: 34px; border: 1px solid var(--line-strong); border-radius: 5px; padding: 0 9px; text-align: right; font-family: var(--mono); }
+    .input-number:disabled { background: #f3f4f6; color: var(--text-3); }
+    .hint { display: flex; gap: 7px; align-items: flex-start; padding: 8px 9px; border-radius: 5px; color: var(--text-2); background: #f6f8fb; margin-top: 8px; font-size: 12px; }
+    .hint.warn { background: var(--warning-soft); color: #86400c; }
+    .hint.danger { background: var(--danger-soft); color: #9f252a; }
+    .history-list { padding: 0 9px 7px; }
+    .history-item { display: grid; grid-template-columns: 94px 1fr; gap: 7px; padding: 7px 0; border-bottom: 1px dashed var(--line); font-size: 12px; }
+    .history-item:last-child { border-bottom: 0; }
+    .history-item time { color: var(--text-3); font-family: var(--mono); font-size: 10px; }
+
+    .modal { width: min(680px, calc(100vw - 40px)); max-height: calc(100vh - 80px); overflow: hidden; background: #fff; border-radius: 7px; box-shadow: var(--shadow); position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); display: flex; flex-direction: column; }
+    .modal-body { padding: 14px 15px; overflow: auto; }
+    .compare-table { width: 100%; border-collapse: collapse; }
+    .compare-table th, .compare-table td { border: 1px solid var(--line); padding: 8px; text-align: left; }
+    .compare-table th { background: var(--surface-soft); color: var(--text-2); }
+    .field-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .check { display: flex; align-items: center; gap: 7px; padding: 8px; border: 1px solid var(--line); border-radius: 5px; }
+
+    .toast { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%) translateY(20px); z-index: 60; min-width: 310px; max-width: 560px; padding: 10px 12px; border-radius: 6px; color: #fff; background: #24324a; box-shadow: var(--shadow); opacity: 0; pointer-events: none; transition: .18s ease; display: flex; align-items: center; gap: 8px; }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    .app-page { display: none; grid-row: 2; min-height: 0; height: 100%; overflow: auto; }
+    .app-page.active { display: block; }
+    .page-description { margin-top: 4px; color: var(--text-2); max-width: 780px; }
+    .content-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 10px; }
+    .span-3 { grid-column: span 3; }
+    .span-4 { grid-column: span 4; }
+    .span-5 { grid-column: span 5; }
+    .span-6 { grid-column: span 6; }
+    .span-7 { grid-column: span 7; }
+    .span-8 { grid-column: span 8; }
+    .span-12 { grid-column: span 12; }
+    .summary-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px; min-height: 92px; }
+    .summary-card .label { color: var(--text-3); font-size: 12px; }
+    .summary-card .number { font: 650 22px/1.25 var(--mono); margin-top: 6px; }
+    .summary-card .note { color: var(--text-2); font-size: 11px; margin-top: 5px; }
+    .data-table-wrap { overflow: auto; }
+    .data-table { width: 100%; border-collapse: collapse; min-width: 760px; }
+    .data-table th, .data-table td { padding: 9px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; }
+    .data-table th { background: #f6f8fb; color: var(--text-2); font-size: 12px; font-weight: 600; white-space: nowrap; }
+    .data-table td.number, .data-table th.number { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+    .data-table tr:last-child td { border-bottom: 0; }
+    .data-table tr:hover td { background: #fafcff; }
+    .table-title { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 11px; border-bottom: 1px solid var(--line); }
+    .table-title h2 { margin: 0; font-size: 14px; }
+    .table-title p { margin: 2px 0 0; color: var(--text-3); font-size: 11px; }
+    .tag { display: inline-flex; align-items: center; gap: 4px; padding: 2px 7px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface-soft); color: var(--text-2); font-size: 11px; white-space: nowrap; }
+    .tag.success { color: var(--success); border-color: #b8dfc2; background: var(--success-soft); }
+    .tag.warning { color: var(--warning); border-color: #efce9e; background: var(--warning-soft); }
+    .tag.danger { color: var(--danger); border-color: #e6aaad; background: var(--danger-soft); }
+    .tag.info { color: var(--primary); border-color: var(--primary-line); background: var(--primary-soft); }
+    .workflow { display: grid; grid-template-columns: repeat(7, minmax(110px, 1fr)); gap: 6px; padding: 12px; overflow: auto; }
+    .workflow-step { min-width: 110px; border: 1px solid var(--line); border-radius: 5px; padding: 9px; background: #fbfcfe; position: relative; }
+    .workflow-step:not(:last-child)::after { content: ''; position: absolute; right: -7px; top: 50%; width: 7px; border-top: 1px solid #9eacc0; }
+    .workflow-step .step-no { color: var(--primary); font: 600 11px var(--mono); }
+    .workflow-step strong { display: block; margin-top: 4px; }
+    .workflow-step span { display: block; margin-top: 3px; color: var(--text-3); font-size: 10px; }
+    .action-list { padding: 3px 11px 9px; }
+    .action-row { display: grid; grid-template-columns: 28px minmax(140px, .8fr) minmax(240px, 1.7fr) auto; gap: 9px; align-items: center; padding: 9px 0; border-bottom: 1px dashed var(--line); }
+    .action-row:last-child { border-bottom: 0; }
+    .action-icon { width: 28px; height: 28px; border-radius: 5px; display: grid; place-items: center; color: var(--primary); background: var(--primary-soft); }
+    .action-row p { margin: 2px 0 0; color: var(--text-2); font-size: 11px; }
+    .quick-link { color: var(--primary); border: 0; background: transparent; padding: 0; font-weight: 600; }
+    .setting-row { display: grid; grid-template-columns: 1fr auto; gap: 12px; padding: 12px; border-bottom: 1px solid var(--line); align-items: center; }
+    .setting-row:last-child { border-bottom: 0; }
+    .setting-row strong { display: block; }
+    .setting-row p { margin: 3px 0 0; color: var(--text-2); font-size: 11px; }
+    .switch { width: 42px; height: 23px; border: 0; padding: 2px; border-radius: 999px; background: #aeb7c5; transition: .16s; }
+    .switch::after { content: ''; display: block; width: 19px; height: 19px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.22); transition: .16s; }
+    .switch.on { background: var(--primary); }
+    .switch.on::after { transform: translateX(19px); }
+    .capacity-input { width: 92px; height: 30px; border: 1px solid var(--line-strong); border-radius: 5px; padding: 0 8px; text-align: right; font-family: var(--mono); }
+    .manual-layout { display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 10px; }
+    .manual-nav { position: sticky; top: 0; align-self: start; }
+    .manual-nav button { width: 100%; border: 0; border-bottom: 1px solid var(--line); background: #fff; padding: 10px 11px; text-align: left; color: var(--text-2); }
+    .manual-nav button:hover { background: var(--surface-soft); color: var(--primary); }
+    .manual-section { scroll-margin-top: 10px; margin-bottom: 10px; }
+    .manual-body { padding: 13px 15px; }
+    .manual-body h2 { margin: 0 0 8px; font-size: 15px; }
+    .manual-body h3 { margin: 14px 0 6px; font-size: 13px; }
+    .manual-body p { color: var(--text-2); }
+    .manual-body ol, .manual-body ul { margin: 7px 0; padding-left: 20px; color: var(--text-2); }
+    .manual-body li { margin: 5px 0; }
+    .callout { border-left: 3px solid var(--primary); background: #f7faff; padding: 9px 10px; color: var(--text-2); margin: 9px 0; }
+    .callout.warn { border-color: var(--warning); background: var(--warning-soft); }
+    .upload-zone { border: 1px dashed #9eacc0; border-radius: 6px; background: #fafcff; padding: 20px; text-align: center; color: var(--text-2); }
+    .upload-zone strong { display: block; color: var(--text); margin: 6px 0 3px; }
+    .plan-settings { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-bottom: 10px; }
+    .plan-setting { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 9px 11px; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 12px; }
+    .plan-setting strong { display: block; font-size: 12px; }
+    .plan-setting span { display: block; margin-top: 2px; color: var(--text-3); font-size: 10px; }
+    .capacity-text { width: 100%; min-width: 90px; height: 30px; border: 1px solid var(--line-strong); border-radius: 5px; padding: 0 7px; }
+    .capacity-select { height: 30px; border: 1px solid var(--line-strong); border-radius: 5px; padding: 0 24px 0 7px; background: #fff; }
+    .template-actions { display: flex; justify-content: center; gap: 8px; margin-top: 12px; }
+
+    @media (max-width: 1360px) {
+      :root { --sidebar: 160px; }
+      .metrics { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+      .metric { min-width: 0; grid-template-columns: 24px minmax(0, 1fr); gap: 7px; padding: 8px; }
+      .metric-icon { width: 24px; height: 24px; }
+      .metric-value { font-size: 15px; }
+      .metric-note { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .foot-panels { grid-template-columns: 1fr; }
+      .col-info { width: 246px; }
+      .col-line { left: 246px; }
+      .col-cap { left: 324px; }
+    }
+
+    @media (max-width: 1280px) {
+      .main { padding-left: 12px; padding-right: 12px; }
+      .page-head { align-items: center; }
+      .subhead { font-size: 12px; }
+      .head-actions { gap: 5px; }
+      .btn { padding-left: 8px; padding-right: 8px; }
+      .scenario-copy span { max-width: 450px; }
+      .search { width: 180px; }
+      .span-3 { grid-column: span 6; }
+      .manual-layout { grid-template-columns: 190px minmax(0, 1fr); }
+      .plan-settings { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <svg aria-hidden="true" class="sr-only">
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></symbol>
+    <symbol id="i-database" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v7c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12v7c0 1.7 3.6 3 8 3s8-1.3 8-3v-7"/></symbol>
+    <symbol id="i-box" viewBox="0 0 24 24"><path d="m4 7 8-4 8 4-8 4-8-4Z"/><path d="m4 7 8 4v10l-8-4V7Zm16 0-8 4v10l8-4V7Z"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H2.8v-4H3a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1a1.7 1.7 0 0 0 1.9.3A1.7 1.7 0 0 0 10 3V2.8h4V3a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1Z"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 6v5h-5M4 18v-5h5"/><path d="M18.5 9A7 7 0 0 0 6.2 6.2L4 8m16 8-2.2 1.8A7 7 0 0 1 5.5 15"/></symbol>
+    <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+    <symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.3 3.7 2.8 17a2 2 0 0 0 1.7 3h15a2 2 0 0 0 1.7-3L13.7 3.7a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4M12 17h.01"/></symbol>
+    <symbol id="i-history" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></symbol>
+    <symbol id="i-compare" viewBox="0 0 24 24"><path d="M8 3 4 7l4 4M4 7h16M16 21l4-4-4-4M20 17H4"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol>
+    <symbol id="i-factory" viewBox="0 0 24 24"><path d="M3 21V9l6 3V9l6 3V5h6v16Z"/><path d="M7 17h.01M11 17h.01M15 17h.01"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5M5 20h14"/></symbol>
+    <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9a2.5 2.5 0 1 1 3.5 2.3c-.8.4-1.1.9-1.1 1.7M12 17h.01"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6Z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></symbol>
+  </svg>
+
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand"><div class="brand-mark">MRP</div><strong>计划协同</strong></div>
+      <nav class="nav" aria-label="主导航">
+        <div class="nav-label">计划</div>
+        <button class="nav-item" data-page="dashboard"><svg class="icon"><use href="#i-grid"/></svg>工作台</button>
+        <button class="nav-item active" data-page="planning"><svg class="icon"><use href="#i-calendar"/></svg>滚动排产</button>
+        <button class="nav-item" data-page="versions"><svg class="icon"><use href="#i-history"/></svg>版本记录</button>
+        <div class="nav-label">数据</div>
+        <button class="nav-item" data-page="forecast"><svg class="icon"><use href="#i-database"/></svg>经营计划</button>
+        <button class="nav-item" data-page="inventory"><svg class="icon"><use href="#i-box"/></svg>库存快照</button>
+        <div class="nav-label">配置</div>
+        <button class="nav-item" data-page="capacity"><svg class="icon"><use href="#i-factory"/></svg>产能配置</button>
+        <button class="nav-item" data-page="manual"><svg class="icon"><use href="#i-help"/></svg>操作手册</button>
+      </nav>
+      <div class="sidebar-foot">
+        <div class="user"><div class="avatar">肖</div><div><strong>肖芳</strong><br>永惠计划员</div></div>
+      </div>
+    </aside>
+
+    <section class="workspace">
+      <header class="topbar">
+        <div class="crumb"><span id="crumbGroup">计划管理</span><span>/</span><strong id="crumbPage">12 周滚动排产</strong></div>
+        <div class="top-meta"><span><span class="sync-dot"></span>数据已同步</span><span id="topInventoryTime">库存快照 2026-08-27 23:40</span><span id="topCrmTime">CRM 2026-08-28 08:30</span></div>
+      </header>
+
+      <main class="main app-page active" id="page-planning" data-page-title="12 周滚动排产" data-page-group="计划管理">
+        <div class="page-head">
+          <div>
+            <h1>12 周滚动排产工作台</h1>
+            <div class="subhead">经营计划 <strong id="forecastVersion">FC-2026-08-15-V6</strong> · 排产版本 <strong id="planVersion">SP-2026-08-V3.2</strong> · <span id="planStatus" class="status draft">草稿</span></div>
+          </div>
+          <div class="head-actions">
+            <button class="btn" id="guideBtn"><svg class="icon"><use href="#i-help"/></svg>怎么操作</button>
+            <button class="btn" id="compareBtn"><svg class="icon"><use href="#i-compare"/></svg>版本对比</button>
+            <button class="btn" id="exportBtn"><svg class="icon"><use href="#i-download"/></svg>导出</button>
+            <button class="btn" id="recalcBtn"><svg class="icon"><use href="#i-refresh"/></svg>重算并生成新版本</button>
+            <button class="btn primary" id="publishBtn"><svg class="icon"><use href="#i-send"/></svg>发布排产</button>
+          </div>
+        </div>
+
+        <div class="scenario-bar">
+          <div class="scenario-copy"><svg class="icon"><use href="#i-info"/></svg><strong id="scenarioTitle">标准滚动场景</strong><span id="scenarioText">当前周为 8 月 W4；本周承接 9 月第一份，之后每个第 4 周继续承接下月。</span></div>
+          <div class="segmented" role="group" aria-label="验收场景">
+            <button class="active" data-scenario="normal">标准滚动</button>
+            <button data-scenario="midmonth">月中变更 TC002a</button>
+          </div>
+        </div>
+
+        <section class="metrics" aria-label="排产概览">
+          <div class="metric"><div class="metric-icon"><svg class="icon"><use href="#i-calendar"/></svg></div><div><div class="metric-label">计划窗口</div><div class="metric-value" id="metricWindow">12 周</div><div class="metric-note" id="metricWindowNote">08/24–11/15</div></div></div>
+          <div class="metric"><div class="metric-icon"><svg class="icon"><use href="#i-compare"/></svg></div><div><div class="metric-label">跨月承接周</div><div class="metric-value" id="metricCarry">3</div><div class="metric-note">按来源月份归集</div></div></div>
+          <div class="metric warn"><div class="metric-icon"><svg class="icon"><use href="#i-edit"/></svg></div><div><div class="metric-label">人工调整</div><div class="metric-value" id="metricManual">0</div><div class="metric-note">编辑不生成版本</div></div></div>
+          <div class="metric danger"><div class="metric-icon"><svg class="icon"><use href="#i-alert"/></svg></div><div><div class="metric-label">产能超限周</div><div class="metric-value" id="metricOver">0</div><div class="metric-note">需计划员人工调整</div></div></div>
+          <div class="metric warn"><div class="metric-icon"><svg class="icon"><use href="#i-alert"/></svg></div><div><div class="metric-label">月度待平衡</div><div class="metric-value" id="metricImbalance">0</div><div class="metric-note">实际合计 ≠ 可排量</div></div></div>
+        </section>
+
+        <section class="plan-settings" aria-label="数据与重算设置">
+          <div class="plan-setting"><div><strong>经营计划导入后自动重算</strong><span>导入生成经营计划新版本后，是否立即生成排产新版本</span></div><button class="switch on" id="forecastAutoSwitch" aria-label="经营计划导入后自动重算" aria-pressed="true"></button></div>
+          <div class="plan-setting"><div><strong>库存快照导入后自动重算</strong><span>库存快照更新后，是否立即按最新库存生成排产新版本</span></div><button class="switch on" id="inventoryAutoSwitch" aria-label="库存快照导入后自动重算" aria-pressed="true"></button></div>
+        </section>
+
+        <section class="panel">
+          <div class="toolbar">
+            <div class="toolbar-left">
+              <label class="search"><svg class="icon"><use href="#i-search"/></svg><span class="sr-only">搜索料号或名称</span><input id="searchInput" placeholder="搜索整机料号 / 机型"></label>
+              <select id="factorySelect" class="control" aria-label="选择工厂"><option value="all">全部工厂</option><option value="永惠">永惠</option><option value="APK">APK</option></select>
+              <select id="issueSelect" class="control" aria-label="选择异常"><option value="all">全部状态</option><option value="over">仅看超产能</option><option value="manual">仅看人工调整</option></select>
+            </div>
+            <div class="toolbar-right">
+              <span class="window-label">窗口：<strong id="windowText"></strong></span>
+              <button class="btn small" id="locateCurrentBtn"><svg class="icon"><use href="#i-calendar"/></svg>定位当前周</button>
+            </div>
+          </div>
+          <div class="legend">
+            <span class="legend-item"><span class="swatch current"></span>当前周</span>
+            <span class="legend-item"><span class="swatch carry"></span>跨月承接周</span>
+            <span class="legend-item"><span class="swatch manual"></span>人工调整</span>
+            <span class="legend-item"><span class="swatch locked"></span>已执行 / 锁定</span>
+            <span class="legend-item"><span class="swatch over"></span>超产能</span>
+            <span>点击任一可编辑数量查看自动值、公式和修改历史</span>
+          </div>
+          <div class="grid-wrap">
+            <table class="plan-grid" aria-label="12 周滚动排产表">
+              <thead id="gridHead"></thead>
+              <tbody id="gridBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <div class="foot-panels">
+          <section class="panel">
+            <div class="section-head"><h2>所选物料 · 来源月份核验</h2><span id="selectedMaterialLabel" class="mono"></span></div>
+            <div class="balance-body">
+              <div class="formula-row" id="formulaRow"></div>
+              <div class="month-balances" id="monthBalances"></div>
+            </div>
+          </section>
+          <section class="panel">
+            <div class="section-head"><h2>操作记录</h2><button class="btn ghost small" id="clearLogBtn">仅保留最近 6 条</button></div>
+            <div class="activity" id="activity"></div>
+          </section>
+        </div>
+      </main>
+
+      <main class="main app-page" id="page-dashboard" data-page-title="工作台" data-page-group="计划管理">
+        <div class="page-head"><div><h1>MRP 工作台</h1><div class="page-description">按 Phase 1 主链路展示今天需要处理的数据、排产风险和下一步动作。</div></div><div class="head-actions"><button class="btn primary" data-goto="planning"><svg class="icon"><use href="#i-calendar"/></svg>进入滚动排产</button></div></div>
+        <div class="content-grid">
+          <div class="summary-card span-3"><div class="label">当前排产版本</div><div class="number" id="dashPlanVersion">V3.2</div><div class="note" id="dashPlanStatus">草稿 · 绑定最新经营计划</div></div>
+          <div class="summary-card span-3"><div class="label">待处理超产能周</div><div class="number" id="dashOver">9</div><div class="note">需要人工调整后再发布</div></div>
+          <div class="summary-card span-3"><div class="label">数据新鲜度</div><div class="number">3 / 3</div><div class="note">经营计划、库存、CRM 均已更新</div></div>
+          <div class="summary-card span-3"><div class="label">待平衡月份</div><div class="number" id="dashImbalance">0</div><div class="note">来源月份当前合计与可排量</div></div>
+
+          <section class="panel span-12"><div class="table-title"><div><h2>Phase 1 核心流程</h2><p>每一步的数据变化会传递到后续排产版本。</p></div></div><div class="workflow">
+            <div class="workflow-step"><span class="step-no">01</span><strong>经营计划导入</strong><span>每次导入生成版本</span></div>
+            <div class="workflow-step"><span class="step-no">02</span><strong>库存快照导入</strong><span>每日更新，分工厂汇总</span></div>
+            <div class="workflow-step"><span class="step-no">03</span><strong>CRM 已出货同步</strong><span>料号 + 月份累计</span></div>
+            <div class="workflow-step"><span class="step-no">04</span><strong>自动生成排产</strong><span>未来连续 12 周</span></div>
+            <div class="workflow-step"><span class="step-no">05</span><strong>人工调整</strong><span>修改留痕，不生成版本</span></div>
+            <div class="workflow-step"><span class="step-no">06</span><strong>发布</strong><span>计划员可直接发布</span></div>
+            <div class="workflow-step"><span class="step-no">07</span><strong>导出</strong><span>自定义字段给工厂使用</span></div>
+          </div></section>
+
+          <section class="panel span-7"><div class="table-title"><div><h2>今天建议处理</h2><p>按照对排产影响的优先级排序。</p></div></div><div class="action-list">
+            <div class="action-row"><span class="action-icon"><svg class="icon"><use href="#i-alert"/></svg></span><div><strong>处理产能超限</strong><p>当前有周排产量超过产线配置上限。</p></div><span class="tag danger">阻断发布前检查</span><button class="quick-link" data-goto="planning">去调整</button></div>
+            <div class="action-row"><span class="action-icon"><svg class="icon"><use href="#i-database"/></svg></span><div><strong>确认经营计划版本</strong><p>当前绑定 FC-2026-08-15-V6。</p></div><span class="tag success">最新</span><button class="quick-link" data-goto="forecast">查看数据</button></div>
+            <div class="action-row"><span class="action-icon"><svg class="icon"><use href="#i-box"/></svg></span><div><strong>检查库存快照口径</strong><p>不良品仓已排除，永惠与 APK 分开计算。</p></div><span class="tag success">已完成</span><button class="quick-link" data-goto="inventory">查看快照</button></div>
+          </div></section>
+          <section class="panel span-5"><div class="table-title"><div><h2>最近活动</h2><p>版本、数据导入和发布操作。</p></div></div><div class="activity" id="dashboardActivity"></div></section>
+        </div>
+      </main>
+
+      <main class="main app-page" id="page-forecast" data-page-title="经营计划" data-page-group="数据管理">
+        <div class="page-head"><div><h1>经营计划</h1><div class="page-description">维护整机料号未来 6 个月 Forecast。先下载标准模板，填写后上传；每次成功导入都会产生新经营计划版本。</div></div><div class="head-actions"><button class="btn" data-goto="versions"><svg class="icon"><use href="#i-history"/></svg>查看历史版本</button><a class="btn" download href="../templates/MRP经营计划导入模板.xlsx"><svg class="icon"><use href="#i-download"/></svg>下载经营计划模板</a><button class="btn primary" id="forecastImportBtn"><svg class="icon"><use href="#i-upload"/></svg>上传填写后的模板</button></div></div>
+        <div class="content-grid">
+          <div class="summary-card span-3"><div class="label">当前版本</div><div class="number" id="forecastPageVersion">V6</div><div class="note">2026-08-15 09:20 · 商务导入</div></div>
+          <div class="summary-card span-3"><div class="label">有效料号</div><div class="number">4</div><div class="note">示例数据共 4 个整机料号</div></div>
+          <div class="summary-card span-3"><div class="label">覆盖月份</div><div class="number">6</div><div class="note">8 月至次年 1 月</div></div>
+          <div class="summary-card span-3"><div class="label">导入后自动重算</div><div class="number" id="forecastAutoState">开启</div><div class="note">可在排产页面调整</div></div>
+          <section class="panel span-12"><div class="table-title"><div><h2>当前版本数据</h2><p>有效字段为整机料号 + 近 6 个月 Forecast；辅助字段用于筛选和识别。</p></div><div class="tag info" id="forecastBindTag">排产绑定 V6</div></div><div class="data-table-wrap"><table class="data-table"><thead><tr><th>整机料号</th><th>机型</th><th>工厂</th><th class="number">8 月</th><th class="number">9 月</th><th class="number">10 月</th><th class="number">11 月</th><th class="number">12 月</th><th class="number">1 月</th></tr></thead><tbody id="forecastTableBody"></tbody></table></div></section>
+        </div>
+      </main>
+
+      <main class="main app-page" id="page-inventory" data-page-title="库存快照" data-page-group="数据管理">
+        <div class="page-head"><div><h1>库存快照</h1><div class="page-description">每日导入前一晚最新库存。永惠和 APK 分开计算，同工厂不同仓库汇总，不良品仓不参与月可排量。</div></div><div class="head-actions"><button class="btn" id="crmSyncBtn"><svg class="icon"><use href="#i-refresh"/></svg>同步 CRM 已出货</button><a class="btn" download href="../templates/MRP库存快照导入模板.xlsx"><svg class="icon"><use href="#i-download"/></svg>下载库存模板</a><button class="btn primary" id="inventoryImportBtn"><svg class="icon"><use href="#i-upload"/></svg>上传填写后的模板</button></div></div>
+        <div class="content-grid">
+          <div class="summary-card span-3"><div class="label">快照时间</div><div class="number" id="inventoryDate">08-27</div><div class="note" id="inventoryDateNote">2026-08-27 23:40</div></div>
+          <div class="summary-card span-3"><div class="label">纳入计算库存</div><div class="number" id="inventoryIncluded">1,320</div><div class="note">良品仓和成品仓汇总</div></div>
+          <div class="summary-card span-3"><div class="label">排除库存</div><div class="number">86</div><div class="note">不良品仓，不参与计算</div></div>
+          <div class="summary-card span-3"><div class="label">导入后自动重算</div><div class="number" id="inventoryAutoState">开启</div><div class="note">可在排产页面调整</div></div>
+          <section class="panel span-12"><div class="table-title"><div><h2>仓库明细</h2><p>“是否计入”直接决定整机库存扣减口径。</p></div><span class="tag success">工厂独立计算</span></div><div class="data-table-wrap"><table class="data-table"><thead><tr><th>工厂</th><th>仓库编码</th><th>仓库名称</th><th>仓库类型</th><th>整机料号</th><th class="number">数量</th><th>是否计入</th><th>快照日期</th></tr></thead><tbody id="inventoryTableBody"></tbody></table></div></section>
+        </div>
+      </main>
+
+      <main class="main app-page" id="page-versions" data-page-title="版本记录" data-page-group="计划管理">
+        <div class="page-head"><div><h1>版本记录</h1><div class="page-description">经营计划每次导入生成版本；排产每次重算生成版本。人工修改只留痕，不单独生成版本，历史版本不可回滚。</div></div><div class="head-actions"><button class="btn" data-goto="planning"><svg class="icon"><use href="#i-calendar"/></svg>返回当前排产</button></div></div>
+        <div class="content-grid">
+          <section class="panel span-12"><div class="table-title"><div><h2>排产版本</h2><p>选择两个版本可查看绑定数据和变化原因；版本记录为只读。</p></div><span class="tag warning">禁止回滚</span></div><div class="data-table-wrap"><table class="data-table"><thead><tr><th>排产版本</th><th>生成时间</th><th>触发原因</th><th>经营计划版本</th><th>库存快照</th><th>状态</th><th>人工覆盖</th><th>操作</th></tr></thead><tbody id="versionsTableBody"></tbody></table></div></section>
+          <section class="panel span-12"><div class="table-title"><div><h2>版本规则</h2><p>避免把“编辑数量”和“重新生成计划”混为一谈。</p></div></div><div class="action-list">
+            <div class="action-row"><span class="action-icon"><svg class="icon"><use href="#i-edit"/></svg></span><div><strong>人工编辑周数量</strong><p>改变当前版本内的值并记录修改人、时间和自动值。</p></div><span class="tag info">不生成版本</span><span></span></div>
+            <div class="action-row"><span class="action-icon"><svg class="icon"><use href="#i-refresh"/></svg></span><div><strong>重算排产</strong><p>按最新 Forecast、库存和已出货重新计算，保留人工覆盖。</p></div><span class="tag warning">生成新版本</span><span></span></div>
+            <div class="action-row"><span class="action-icon"><svg class="icon"><use href="#i-upload"/></svg></span><div><strong>导入经营计划</strong><p>生成经营计划新版本；自动重算开启时继续生成排产新版本。</p></div><span class="tag warning">可能连续生成版本</span><span></span></div>
+          </div></section>
+        </div>
+      </main>
+
+      <main class="main app-page" id="page-capacity" data-page-title="产能配置" data-page-group="配置管理">
+        <div class="page-head"><div><h1>产能配置</h1><div class="page-description">按工厂和产线维护周产能。支持新增与整行编辑；保存后重新标记超限周，但不会自动搬移排产数量。</div></div><div class="head-actions"><button class="btn" data-goto="planning"><svg class="icon"><use href="#i-calendar"/></svg>查看排产影响</button><button class="btn primary" id="addCapacityBtn"><svg class="icon"><use href="#i-edit"/></svg>新增产线</button></div></div>
+        <section class="panel"><div class="table-title"><div><h2>产线周产能</h2><p>系统与业务统一按周使用；真实日排产表只参考字段和布局，不做日能力到周能力换算。</p></div><span class="tag warning">超限后人工调整</span></div><div class="data-table-wrap"><table class="data-table"><thead><tr><th>工厂</th><th>产线编码</th><th>产线名称</th><th class="number">周产能</th><th>生效日期</th><th>启用状态</th><th>备注</th><th>排产影响</th><th>操作</th></tr></thead><tbody id="capacityTableBody"></tbody></table></div></section>
+      </main>
+
+      <main class="main app-page" id="page-manual" data-page-title="排产操作手册" data-page-group="帮助">
+        <div class="page-head"><div><h1>排产页面操作手册</h1><div class="page-description">按推荐顺序使用，不需要一次理解全部按钮。先检查数据，再处理红色超限和月度差异，最后重算、发布和导出。</div></div><div class="head-actions"><button class="btn primary" data-goto="planning"><svg class="icon"><use href="#i-calendar"/></svg>边看手册边操作</button></div></div>
+        <div class="manual-layout">
+          <aside class="panel manual-nav"><button data-manual-target="manual-start">推荐操作顺序</button><button data-manual-target="manual-buttons">顶部按钮说明</button><button data-manual-target="manual-grid">排产表怎么读</button><button data-manual-target="manual-edit">如何调整数量</button><button data-manual-target="manual-cases">常见场景</button><button data-manual-target="manual-rules">版本与状态规则</button></aside>
+          <div>
+            <section class="panel manual-section" id="manual-start"><div class="manual-body"><h2>一、推荐操作顺序</h2><ol><li>先看顶部经营计划版本、排产版本和库存/CRM 更新时间，确认数据是最新的。</li><li>用“仅看超产能”筛选红色单元格，逐个调整到产线允许范围。</li><li>查看下方“来源月份核验”，确保每个月的“当前合计 = 可排量”，差异为 0。</li><li>数据来源发生变化时，点击“重算并生成新版本”；普通人工修改不要点击重算也能保存。</li><li>核验完成后点击“发布排产”，再根据工厂需要选择字段导出。</li></ol><div class="callout">只想查看右侧周数据时，使用表格横向滚动条或触控板左右滑动；“定位当前周”可回到最左侧，不改数据和版本。</div></div></section>
+            <section class="panel manual-section" id="manual-buttons"><div class="manual-body"><h2>二、顶部按钮说明</h2><table class="data-table"><thead><tr><th>按钮</th><th>什么时候用</th><th>会发生什么</th><th>风险级别</th></tr></thead><tbody>
+              <tr><td><strong>怎么操作</strong></td><td>第一次使用或忘记流程时</td><td>打开简明指南，不改变任何数据</td><td><span class="tag success">仅查看</span></td></tr>
+              <tr><td><strong>版本对比</strong></td><td>想知道本版为什么和上一版不同</td><td>只读查看 Forecast、库存、人工覆盖和状态差异；不能回滚</td><td><span class="tag success">仅查看</span></td></tr>
+              <tr><td><strong>导出</strong></td><td>计划核验完成，需要提供给工厂时</td><td>选择字段并生成 Excel；不改变排产数据</td><td><span class="tag info">输出文件</span></td></tr>
+              <tr><td><strong>重算并生成新版本</strong></td><td>经营计划、库存或已出货更新后</td><td>按最新数据重算，排产版本号增加；已有人工覆盖保留</td><td><span class="tag warning">生成新版本</span></td></tr>
+              <tr><td><strong>发布排产</strong></td><td>所有超限和月度差异都处理完成后</td><td>状态从草稿改成已发布；发布后仍可修改，但会留痕</td><td><span class="tag warning">改变状态</span></td></tr>
+              <tr><td><strong>定位当前周</strong></td><td>横向浏览后想返回当前周</td><td>滚动表格回到最左侧，不改变固定 12 周内容</td><td><span class="tag success">仅改变视图</span></td></tr>
+            </tbody></table></div></section>
+            <section class="panel manual-section" id="manual-grid"><div class="manual-body"><h2>三、排产表怎么读</h2><ul><li><strong>黄色“提前量”列：</strong>例如“8 月 W4 / 9 月提前量”表示位置在 8 月，但数量属于 9 月 Forecast。</li><li><strong>红色单元格：</strong>当前周数量超过该产线周上限，需要人工调整。</li><li><strong>蓝色底线：</strong>该值经过人工修改；抽屉中仍能看到系统自动值。</li><li><strong>灰色斜纹：</strong>该周已经执行，在月中重算场景不可编辑。</li><li><strong>来源月份核验：</strong>跨月提前量按来源月份合计，差异必须尽量调整为 0。</li></ul></div></section>
+            <section class="panel manual-section" id="manual-edit"><div class="manual-body"><h2>四、如何调整周排产数量</h2><ol><li>点击表格中的数量单元格。</li><li>在右侧先核对整机料号、显示周和“来源月份”。</li><li>查看系统自动值、当前值和周上限，再输入新的非负整数。</li><li>点击“保存调整”。保存会更新月度差异并记录修改历史，但不会生成新版本。</li><li>如果想取消人工决定，重新打开该单元格，点击“恢复自动值”。</li></ol><div class="callout warn">如果某月显示“待调整”，不要直接发布。继续修改同一来源月份的其他周，直到当前合计与可排量一致。</div></div></section>
+            <section class="panel manual-section" id="manual-cases"><div class="manual-body"><h2>五、常见场景</h2><h3>场景 A：只是想看右侧周数据</h3><p>横向滑动排产表即可；需要返回时点击“定位当前周”。不要点击重算，因为数据没有变化。</p><h3>场景 B：Forecast 或库存刚更新</h3><p>若排产页自动重算开关开启，系统会自动生成排产新版本；若关闭，则点击“重算并生成新版本”。</p><h3>场景 C：某周红色超产能</h3><p>点击红色数量，降低本周数量，并把减少的数量人工分配到同一来源月份的其他可执行周。系统只做核验，不会替你决定挪到哪一周。</p><h3>场景 D：月中 Forecast 增加</h3><p>切换“月中变更 TC002a”可查看示例。已执行周保持锁定，新增可排量只进入尚未执行的周。</p></div></section>
+            <section class="panel manual-section" id="manual-rules"><div class="manual-body"><h2>六、版本与状态规则</h2><ul><li>人工修改周数量：不生成排产版本，只留痕。</li><li>点击重算：生成排产新版本，并保留人工覆盖。</li><li>导入经营计划：生成经营计划新版本；自动重算开启时继续生成排产新版本。</li><li>历史版本只允许比较，不能回滚。</li><li>发布后允许继续修改，系统需要保留发布后修改记录。</li></ul></div></section>
+          </div>
+        </div>
+      </main>
+    </section>
+  </div>
+
+  <div class="drawer-mask" id="drawerMask" aria-hidden="true">
+    <aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle">
+      <div class="drawer-head"><h2 id="drawerTitle">调整周排产数量</h2><button class="icon-btn" id="closeDrawerBtn" aria-label="关闭"><svg class="icon"><use href="#i-close"/></svg></button></div>
+      <div class="drawer-body" id="drawerBody"></div>
+      <div class="drawer-foot"><button class="btn" id="restoreBtn">恢复自动值</button><button class="btn primary" id="saveCellBtn"><svg class="icon"><use href="#i-check"/></svg>保存调整</button></div>
+    </aside>
+  </div>
+
+  <div class="modal-mask" id="compareModal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="compareTitle">
+      <div class="modal-head"><h2 id="compareTitle">排产版本对比（只读）</h2><button class="icon-btn modal-close" aria-label="关闭"><svg class="icon"><use href="#i-close"/></svg></button></div>
+      <div class="modal-body" id="compareBody"></div>
+      <div class="modal-foot"><span style="margin-right:auto;color:var(--text-3)">规则 R012：可比较，不可回滚历史版本</span><button class="btn modal-close">关闭</button></div>
+    </div>
+  </div>
+
+  <div class="modal-mask" id="exportModal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="exportTitle">
+      <div class="modal-head"><h2 id="exportTitle">选择导出字段</h2><button class="icon-btn modal-close" aria-label="关闭"><svg class="icon"><use href="#i-close"/></svg></button></div>
+      <div class="modal-body"><div class="hint" style="margin:0 0 10px"><svg class="icon"><use href="#i-info"/></svg><span>依据 R017 自定义字段。本原型只模拟字段选择和导出结果反馈。</span></div><div class="field-list" id="exportFields"></div></div>
+      <div class="modal-foot"><button class="btn modal-close">取消</button><button class="btn primary" id="confirmExportBtn"><svg class="icon"><use href="#i-download"/></svg>生成 Excel</button></div>
+    </div>
+  </div>
+
+  <div class="modal-mask" id="guideModal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="guideTitle">
+      <div class="modal-head"><h2 id="guideTitle">排产页怎么操作</h2><button class="icon-btn modal-close" aria-label="关闭"><svg class="icon"><use href="#i-close"/></svg></button></div>
+      <div class="modal-body">
+        <div class="callout" style="margin-top:0">推荐顺序：确认数据版本 → 处理红色超产能 → 将月度差异调为 0 → 必要时重算 → 发布 → 导出。</div>
+        <div class="action-list">
+          <div class="action-row"><span class="action-icon"><svg class="icon"><use href="#i-chevron-right"/></svg></span><div><strong>横向查看与定位当前周</strong><p>左右滑动查看固定 12 周；定位按钮只让表格返回最左侧。</p></div><span class="tag success">仅改变视图</span><span></span></div>
+          <div class="action-row"><span class="action-icon"><svg class="icon"><use href="#i-edit"/></svg></span><div><strong>点击周数量</strong><p>打开右侧调整面板；保存后会留痕，但排产版本号不变。</p></div><span class="tag info">修改当前数据</span><span></span></div>
+          <div class="action-row"><span class="action-icon"><svg class="icon"><use href="#i-refresh"/></svg></span><div><strong>重算并生成新版本</strong><p>Forecast、库存或已出货更新后使用；版本号会增加。</p></div><span class="tag warning">生成新版本</span><span></span></div>
+          <div class="action-row"><span class="action-icon"><svg class="icon"><use href="#i-send"/></svg></span><div><strong>发布排产</strong><p>核验完成后使用；状态变为已发布，之后仍能修改并留痕。</p></div><span class="tag warning">改变状态</span><span></span></div>
+        </div>
+      </div>
+      <div class="modal-foot"><button class="btn modal-close">关闭</button><button class="btn primary" id="openManualBtn"><svg class="icon"><use href="#i-help"/></svg>查看完整操作手册</button></div>
+    </div>
+  </div>
+
+  <div class="modal-mask" id="importModal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="importTitle">
+      <div class="modal-head"><h2 id="importTitle">模拟导入</h2><button class="icon-btn modal-close" aria-label="关闭"><svg class="icon"><use href="#i-close"/></svg></button></div>
+      <div class="modal-body" id="importBody"></div>
+      <div class="modal-foot"><button class="btn modal-close">取消</button><button class="btn primary" id="confirmImportBtn"><svg class="icon"><use href="#i-upload"/></svg>确认导入</button></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"><svg class="icon"><use href="#i-check"/></svg><span id="toastText"></span></div>
+
+  <script>
+    const $ = (selector) => document.querySelector(selector);
+    const $$ = (selector) => [...document.querySelectorAll(selector)];
+    const icon = (name) => `<svg class="icon" aria-hidden="true"><use href="#i-${name}"/></svg>`;
+
+    const weeks = [
+      { key:'2026-08-W1', label:'8月 W1', range:'08/03–08/09', physical:'8月', source:'8月', slot:1 },
+      { key:'2026-08-W2', label:'8月 W2', range:'08/10–08/16', physical:'8月', source:'8月', slot:2 },
+      { key:'2026-08-W3', label:'8月 W3', range:'08/17–08/23', physical:'8月', source:'8月', slot:3 },
+      { key:'2026-08-W4', label:'8月 W4', range:'08/24–08/30', physical:'8月', source:'9月', slot:0, carry:true },
+      { key:'2026-09-W1', label:'9月 W1', range:'08/31–09/06', physical:'9月', source:'9月', slot:1, monthStart:true },
+      { key:'2026-09-W2', label:'9月 W2', range:'09/07–09/13', physical:'9月', source:'9月', slot:2 },
+      { key:'2026-09-W3', label:'9月 W3', range:'09/14–09/20', physical:'9月', source:'9月', slot:3 },
+      { key:'2026-09-W4', label:'9月 W4', range:'09/21–09/27', physical:'9月', source:'10月', slot:0, carry:true },
+      { key:'2026-10-W1', label:'10月 W1', range:'09/28–10/04', physical:'10月', source:'10月', slot:1, monthStart:true },
+      { key:'2026-10-W2', label:'10月 W2', range:'10/05–10/11', physical:'10月', source:'10月', slot:2 },
+      { key:'2026-10-W3', label:'10月 W3', range:'10/12–10/18', physical:'10月', source:'10月', slot:3 },
+      { key:'2026-10-W4', label:'10月 W4', range:'10/19–10/25', physical:'10月', source:'11月', slot:0, carry:true },
+      { key:'2026-11-W1', label:'11月 W1', range:'10/26–11/01', physical:'11月', source:'11月', slot:1, monthStart:true },
+      { key:'2026-11-W2', label:'11月 W2', range:'11/02–11/08', physical:'11月', source:'11月', slot:2 },
+      { key:'2026-11-W3', label:'11月 W3', range:'11/09–11/15', physical:'11月', source:'11月', slot:3 },
+      { key:'2026-11-W4', label:'11月 W4', range:'11/16–11/22', physical:'11月', source:'12月', slot:0, carry:true },
+      { key:'2026-12-W1', label:'12月 W1', range:'11/23–11/29', physical:'12月', source:'12月', slot:1, monthStart:true },
+      { key:'2026-12-W2', label:'12月 W2', range:'11/30–12/06', physical:'12月', source:'12月', slot:2 },
+      { key:'2026-12-W3', label:'12月 W3', range:'12/07–12/13', physical:'12月', source:'12月', slot:3 },
+      { key:'2026-12-W4', label:'12月 W4', range:'12/14–12/20', physical:'12月', source:'1月', slot:0, carry:true }
+    ];
+
+    const materials = [
+      { id:'A', code:'6830AA800561', name:'智能安防主机 A3', version:'V3.2', head:'6810AA300128', factory:'永惠', line:'一线', capacity:360,
+        months:{'8月':{forecast:1000,inventory:200,shipped:300},'9月':{forecast:1200,inventory:0,shipped:0},'10月':{forecast:1500,inventory:0,shipped:0},'11月':{forecast:900,inventory:0,shipped:0},'12月':{forecast:600,inventory:0,shipped:0},'1月':{forecast:900,inventory:0,shipped:0}} },
+      { id:'B', code:'6830AA800732', name:'无线门铃套装 V2', version:'V2.4', head:'6810AA300244', factory:'永惠', line:'二线', capacity:320,
+        months:{'8月':{forecast:720,inventory:100,shipped:20},'9月':{forecast:900,inventory:120,shipped:80},'10月':{forecast:1200,inventory:100,shipped:100},'11月':{forecast:900,inventory:120,shipped:80},'12月':{forecast:600,inventory:50,shipped:50},'1月':{forecast:600,inventory:80,shipped:20}} },
+      { id:'C', code:'6830AA800945', name:'网关控制器 Pro', version:'V1.8', head:'6810AA300315', factory:'APK', line:'A线', capacity:300,
+        months:{'8月':{forecast:500,inventory:600,shipped:0},'9月':{forecast:500,inventory:600,shipped:0},'10月':{forecast:800,inventory:100,shipped:50},'11月':{forecast:800,inventory:150,shipped:50},'12月':{forecast:900,inventory:100,shipped:0},'1月':{forecast:900,inventory:120,shipped:80}} },
+      { id:'D', code:'6830AA801126', name:'户外摄像机 4G', version:'V4.1', head:'6810AA300422', factory:'APK', line:'B线', capacity:260,
+        months:{'8月':{forecast:900,inventory:100,shipped:100},'9月':{forecast:1000,inventory:100,shipped:100},'10月':{forecast:1400,inventory:100,shipped:100},'11月':{forecast:1100,inventory:50,shipped:50},'12月':{forecast:900,inventory:0,shipped:0},'1月':{forecast:1200,inventory:100,shipped:100}} }
+    ];
+
+    let scenario = 'normal';
+    let viewStart = 3;
+    let versionMinor = 2;
+    let published = false;
+    let manualValues = {};
+    let cellHistory = {};
+    let selectedMaterialId = 'A';
+    let activeCell = null;
+    let currentPage = 'planning';
+    let forecastVersionNo = 6;
+    let inventorySnapshotNo = 27;
+    let importType = null;
+    let autoRecalcForecast = true;
+    let autoRecalcInventory = true;
+    let editingCapacityId = null;
+    let capacityDraft = null;
+    let capacityRows = [
+      {id:'L001',factory:'永惠',lineCode:'YH-01',lineName:'一线',weeklyCapacity:360,effectiveDate:'2026-09-01',active:true,remark:''},
+      {id:'L002',factory:'永惠',lineCode:'YH-02',lineName:'二线',weeklyCapacity:320,effectiveDate:'2026-09-01',active:true,remark:''},
+      {id:'L003',factory:'APK',lineCode:'APK-A',lineName:'A线',weeklyCapacity:300,effectiveDate:'2026-09-01',active:true,remark:''},
+      {id:'L004',factory:'APK',lineCode:'APK-B',lineName:'B线',weeklyCapacity:260,effectiveDate:'2026-09-01',active:true,remark:''}
+    ];
+    const inventoryRows = [
+      {factory:'永惠',code:'YH-FG-01',name:'永惠成品仓',type:'良品仓',material:'6830AA800561',qty:200,included:true},
+      {factory:'永惠',code:'YH-FG-02',name:'永惠二号成品仓',type:'良品仓',material:'6830AA800732',qty:220,included:true},
+      {factory:'永惠',code:'YH-BAD-01',name:'永惠不良品仓',type:'不良品仓',material:'6830AA800561',qty:46,included:false},
+      {factory:'APK',code:'APK-FG-01',name:'APK 成品仓',type:'良品仓',material:'6830AA800945',qty:600,included:true},
+      {factory:'APK',code:'APK-FG-02',name:'APK 二号仓',type:'良品仓',material:'6830AA801126',qty:300,included:true},
+      {factory:'APK',code:'APK-BAD-01',name:'APK 不良品仓',type:'不良品仓',material:'6830AA801126',qty:40,included:false}
+    ];
+    let versionRecords = [
+      {version:'SP-2026-08-V3.2',time:'2026-08-28 08:42',reason:'库存快照更新后自动重算',forecast:'FC-2026-08-15-V6',snapshot:'2026-08-27',status:'草稿',manual:0},
+      {version:'SP-2026-08-V3.1',time:'2026-08-15 09:28',reason:'经营计划 V6 导入后自动重算',forecast:'FC-2026-08-15-V6',snapshot:'2026-08-14',status:'已发布',manual:2},
+      {version:'SP-2026-08-V3.0',time:'2026-08-01 09:16',reason:'经营计划 V5 导入后自动重算',forecast:'FC-2026-08-01-V5',snapshot:'2026-07-31',status:'已发布',manual:0}
+    ];
+    let logs = [
+      {time:'08:42', title:'系统生成排产版本 SP-2026-08-V3.2', detail:'绑定经营计划 FC-2026-08-15-V6，输出未来 12 周。'},
+      {time:'08:30', title:'CRM 已出货同步完成', detail:'按整机料号 + 月份累计，成功更新 4 条数据。'},
+      {time:'23:40', title:'库存快照导入完成', detail:'永惠与 APK 分开计算，不良品仓已排除。'}
+    ];
+
+    const monthPlan = (material, month) => {
+      const data = material.months[month] || {forecast:0,inventory:0,shipped:0};
+      const total = Math.max(0, data.forecast - data.inventory - data.shipped);
+      return {...data, total};
+    };
+
+    const splitMonth = (total) => {
+      if (!total) return [0,0,0,0];
+      const advance = Math.ceil(total / 3);
+      const rest = total - advance;
+      const base = Math.floor(rest / 3);
+      const remainder = rest % 3;
+      return [advance, base + (remainder > 0 ? 1 : 0), base + (remainder > 1 ? 1 : 0), base];
+    };
+
+    const autoValue = (material, week) => {
+      if (scenario === 'midmonth' && material.id === 'A' && week.source === '8月') {
+        return ({1:167,2:167,3:666})[week.slot] || 0;
+      }
+      return splitMonth(monthPlan(material, week.source).total)[week.slot] || 0;
+    };
+
+    const cellKey = (material, week) => `${scenario}|${material.id}|${week.key}`;
+    const currentValue = (material, week) => manualValues[cellKey(material,week)] ?? autoValue(material,week);
+    const isManual = (material, week) => manualValues[cellKey(material,week)] !== undefined;
+    const isLocked = (material, week) => scenario === 'midmonth' && material.id === 'A' && ['2026-08-W1','2026-08-W2'].includes(week.key);
+    const visibleWeeks = () => weeks.slice(viewStart, viewStart + 12);
+
+    function showToast(message) {
+      $('#toastText').textContent = message;
+      $('#toast').classList.add('show');
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => $('#toast').classList.remove('show'), 2600);
+    }
+
+    function addLog(title, detail) {
+      const now = new Date();
+      logs.unshift({time:`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`, title, detail});
+      renderActivity();
+      renderDashboard();
+    }
+
+    function goToPage(page) {
+      currentPage = page;
+      $$('.app-page').forEach(el => el.classList.toggle('active', el.id === `page-${page}`));
+      $$('.nav-item[data-page]').forEach(btn => btn.classList.toggle('active', btn.dataset.page === page));
+      const target = $(`#page-${page}`);
+      $('#crumbGroup').textContent = target.dataset.pageGroup;
+      $('#crumbPage').textContent = target.dataset.pageTitle;
+      target.scrollTop = 0;
+      if (page === 'dashboard') renderDashboard();
+      if (page === 'forecast') renderForecastPage();
+      if (page === 'inventory') renderInventoryPage();
+      if (page === 'versions') renderVersionsPage();
+      if (page === 'capacity') renderCapacityPage();
+    }
+
+    function renderDashboard() {
+      if (!$('#dashPlanVersion')) return;
+      $('#dashPlanVersion').textContent = `V3.${versionMinor}`;
+      $('#dashPlanStatus').textContent = `${published?'已发布':'草稿'} · 绑定最新经营计划`;
+      $('#dashOver').textContent = $('#metricOver').textContent || '0';
+      $('#dashImbalance').textContent = $('#metricImbalance').textContent || '0';
+      $('#dashboardActivity').innerHTML = logs.slice(0,6).map(log => `<div class="log"><span class="log-time">${log.time}</span><div><strong>${log.title}</strong><p>${log.detail}</p></div></div>`).join('');
+    }
+
+    function renderForecastPage() {
+      $('#forecastPageVersion').textContent = `V${forecastVersionNo}`;
+      $('#forecastAutoState').textContent = autoRecalcForecast ? '开启' : '关闭';
+      $('#forecastBindTag').textContent = `排产绑定 V${forecastVersionNo}`;
+      $('#forecastVersion').textContent = `FC-2026-08-15-V${forecastVersionNo}`;
+      $('#forecastTableBody').innerHTML = materials.map(m => `<tr><td class="mono">${m.code}</td><td>${m.name}</td><td>${m.factory}</td>${['8月','9月','10月','11月','12月','1月'].map(month=>`<td class="number">${m.months[month].forecast.toLocaleString('zh-CN')}</td>`).join('')}</tr>`).join('');
+    }
+
+    function renderInventoryPage() {
+      $('#inventoryDate').textContent = `08-${String(inventorySnapshotNo).padStart(2,'0')}`;
+      $('#inventoryDateNote').textContent = `2026-08-${String(inventorySnapshotNo).padStart(2,'0')} 23:40`;
+      $('#inventoryIncluded').textContent = inventoryRows.filter(r=>r.included).reduce((s,r)=>s+r.qty,0).toLocaleString('zh-CN');
+      $('#inventoryAutoState').textContent = autoRecalcInventory ? '开启' : '关闭';
+      $('#topInventoryTime').textContent = `库存快照 2026-08-${String(inventorySnapshotNo).padStart(2,'0')} 23:40`;
+      $('#inventoryTableBody').innerHTML = inventoryRows.map(r => `<tr><td>${r.factory}</td><td class="mono">${r.code}</td><td>${r.name}</td><td>${r.type}</td><td class="mono">${r.material}</td><td class="number">${r.qty}</td><td><span class="tag ${r.included?'success':'danger'}">${r.included?'计入计算':'排除'}</span></td><td>2026-08-${String(inventorySnapshotNo).padStart(2,'0')}</td></tr>`).join('');
+    }
+
+    function renderVersionsPage() {
+      $('#versionsTableBody').innerHTML = versionRecords.map((v,i) => `<tr><td class="mono">${v.version}${i===0?' <span class="tag info">当前</span>':''}</td><td>${v.time}</td><td>${v.reason}</td><td class="mono">${v.forecast}</td><td>${v.snapshot}</td><td><span class="tag ${v.status==='已发布'?'success':''}">${v.status}</span></td><td>${v.manual} 项</td><td><button class="btn small version-compare-row" data-version="${v.version}">与当前对比</button></td></tr>`).join('');
+      $$('.version-compare-row').forEach(btn => btn.addEventListener('click', renderCompare));
+    }
+
+    function renderPlanSettings() {
+      const bindSwitch = (selector,on) => { const el=$(selector); el.classList.toggle('on',on); el.setAttribute('aria-pressed',String(on)); };
+      bindSwitch('#forecastAutoSwitch',autoRecalcForecast);
+      bindSwitch('#inventoryAutoSwitch',autoRecalcInventory);
+    }
+
+    function capacityImpact(row) {
+      const linked = materials.filter(m => m.factory === row.factory && m.line === row.lineName);
+      return linked.some(m => visibleWeeks().some(w => currentValue(m,w) > row.weeklyCapacity));
+    }
+
+    function renderCapacityPage() {
+      $('#capacityTableBody').innerHTML = capacityRows.map(row => {
+        const editing = editingCapacityId === row.id;
+        const data = editing && capacityDraft ? capacityDraft : row;
+        if (editing) return `<tr data-capacity-id="${row.id}">
+          <td><select class="capacity-select" data-field="factory"><option ${data.factory==='永惠'?'selected':''}>永惠</option><option ${data.factory==='APK'?'selected':''}>APK</option></select></td>
+          <td><input class="capacity-text mono" data-field="lineCode" value="${data.lineCode}" aria-label="产线编码"></td>
+          <td><input class="capacity-text" data-field="lineName" value="${data.lineName}" aria-label="产线名称"></td>
+          <td><input class="capacity-text mono" data-field="weeklyCapacity" type="number" min="1" value="${data.weeklyCapacity || ''}" aria-label="周产能"></td>
+          <td><input class="capacity-text" data-field="effectiveDate" type="date" value="${data.effectiveDate}" aria-label="生效日期"></td>
+          <td><select class="capacity-select" data-field="active"><option value="true" ${data.active?'selected':''}>启用</option><option value="false" ${!data.active?'selected':''}>停用</option></select></td>
+          <td><input class="capacity-text" data-field="remark" value="${data.remark}" aria-label="备注"></td>
+          <td><span class="tag info">保存后校验</span></td>
+          <td><button class="btn small capacity-save" data-id="${row.id}">保存</button> <button class="btn small capacity-cancel">取消</button></td></tr>`;
+        return `<tr><td>${row.factory}</td><td class="mono">${row.lineCode}</td><td>${row.lineName}</td><td class="number">${row.weeklyCapacity}</td><td>${row.effectiveDate}</td><td><span class="tag ${row.active?'success':''}">${row.active?'启用':'停用'}</span></td><td>${row.remark || '—'}</td><td>${capacityImpact(row)?'<span class="tag danger">存在超限周</span>':'<span class="tag success">未超限</span>'}</td><td><button class="btn small capacity-edit" data-id="${row.id}"><svg class="icon"><use href="#i-edit"/></svg>编辑</button></td></tr>`;
+      }).join('');
+      $$('.capacity-edit').forEach(btn => btn.addEventListener('click', () => startCapacityEdit(btn.dataset.id)));
+      $$('.capacity-save').forEach(btn => btn.addEventListener('click', () => saveCapacityRow(btn.dataset.id)));
+      $$('.capacity-cancel').forEach(btn => btn.addEventListener('click', cancelCapacityEdit));
+    }
+
+    function startCapacityEdit(id) {
+      const row = capacityRows.find(item => item.id === id);
+      editingCapacityId = id;
+      capacityDraft = {...row};
+      renderCapacityPage();
+    }
+
+    function cancelCapacityEdit() {
+      if (editingCapacityId?.startsWith('NEW-')) capacityRows = capacityRows.filter(row => row.id !== editingCapacityId);
+      editingCapacityId = null;
+      capacityDraft = null;
+      renderCapacityPage();
+      showToast('已取消未保存的产能修改');
+    }
+
+    function saveCapacityRow(id) {
+      const tr = $(`tr[data-capacity-id="${id}"]`);
+      const read = field => tr.querySelector(`[data-field="${field}"]`).value.trim();
+      const next = {id,factory:read('factory'),lineCode:read('lineCode'),lineName:read('lineName'),weeklyCapacity:Number(read('weeklyCapacity')),effectiveDate:read('effectiveDate'),active:read('active')==='true',remark:read('remark')};
+      if (!next.factory || !next.lineCode || !next.lineName) return showToast('工厂、产线编码和产线名称不能为空');
+      if (!Number.isFinite(next.weeklyCapacity) || next.weeklyCapacity <= 0) return showToast('周产能必须为大于 0 的数字');
+      if (capacityRows.some(row => row.id !== id && row.factory === next.factory && row.lineCode === next.lineCode)) return showToast('同一工厂下产线编码不可重复');
+      const index = capacityRows.findIndex(row => row.id === id);
+      capacityRows[index] = next;
+      materials.filter(m => m.factory === next.factory && m.line === next.lineName).forEach(m => m.capacity = next.weeklyCapacity);
+      editingCapacityId = null;
+      capacityDraft = null;
+      addLog('产能配置已更新', `${next.factory} ${next.lineCode} ${next.lineName} 周产能更新为 ${next.weeklyCapacity}；系统未自动搬移排产数量。`);
+      renderCapacityPage();
+      renderGrid();
+      showToast('产能记录已保存，排产超限标记已重新计算');
+    }
+
+    function filteredMaterials() {
+      const query = $('#searchInput').value.trim().toLowerCase();
+      const factory = $('#factorySelect').value;
+      const issue = $('#issueSelect').value;
+      return materials.filter(material => {
+        const textMatch = !query || `${material.code} ${material.name}`.toLowerCase().includes(query);
+        const factoryMatch = factory === 'all' || material.factory === factory;
+        const issueMatch = issue === 'all' || (issue === 'over' && visibleWeeks().some(w => currentValue(material,w) > material.capacity)) || (issue === 'manual' && visibleWeeks().some(w => isManual(material,w)));
+        return textMatch && factoryMatch && issueMatch;
+      });
+    }
+
+    function renderGrid() {
+      const vw = visibleWeeks();
+      $('#gridHead').innerHTML = `<tr>
+        <th class="sticky col-info">整机料号 / 机型</th>
+        <th class="sticky col-line">工厂 / 产线</th>
+        <th class="sticky col-cap">周上限</th>
+        ${vw.map((w,i) => `<th class="${i===0?'current-week ':''}${w.carry?'carry-week ':''}${w.monthStart?'month-start':''}">
+          <div class="week-head"><span class="top">${w.label}</span><span class="range">${w.range}</span><span class="source">${w.carry?`${w.source}提前量`:`来源 ${w.source}`}</span>${i===0?'<span class="current-badge">当前</span>':''}</div>
+        </th>`).join('')}
+      </tr>`;
+
+      const rows = filteredMaterials();
+      $('#gridBody').innerHTML = rows.length ? rows.map(material => `<tr data-material="${material.id}">
+        <td class="sticky col-info"><div class="material-cell"><div class="material-code">${material.code}</div><div class="material-name">${material.name}</div><div class="material-meta">版本 ${material.version} · 机头 ${material.head}</div></div></td>
+        <td class="sticky col-line center-cell">${material.factory}<br><span style="color:var(--text-3);font-size:11px">${material.line}</span></td>
+        <td class="sticky col-cap center-cell mono">${material.capacity}</td>
+        ${vw.map((week,i) => {
+          const value = currentValue(material,week);
+          const manual = isManual(material,week);
+          const locked = isLocked(material,week);
+          const over = value > material.capacity;
+          const classes = [week.carry?'carry':'',i===0?'current':'',manual?'manual':'',locked?'locked':'',over?'over':''].filter(Boolean).join(' ');
+          let note = week.carry ? `${week.source}提前量` : '系统自动';
+          if (manual) note = `人工 · 自动 ${autoValue(material,week)}`;
+          if (locked) note = '已执行 · 锁定';
+          if (over) note = `超上限 ${value-material.capacity}`;
+          return `<td class="week-cell ${week.monthStart?'month-start':''}"><button class="cell-btn ${classes}" data-material="${material.id}" data-week="${week.key}" aria-label="${material.name} ${week.label} 排产 ${value}${locked?'，已锁定':''}"><span class="qty">${value.toLocaleString('zh-CN')}</span><span class="cell-note">${note}</span></button></td>`;
+        }).join('')}
+      </tr>`).join('') : `<tr><td colspan="15" style="height:120px;text-align:center;color:var(--text-3)">没有符合筛选条件的排产记录</td></tr>`;
+
+      $$('.cell-btn').forEach(btn => btn.addEventListener('click', () => openCell(btn.dataset.material, btn.dataset.week)));
+      $$('#gridBody tr[data-material]').forEach(row => row.addEventListener('click', event => {
+        if (!event.target.closest('.cell-btn')) { selectedMaterialId = row.dataset.material; renderBalances(); }
+      }));
+      renderMetrics();
+      renderBalances();
+    }
+
+    function renderMetrics() {
+      const vw = visibleWeeks();
+      const visible = filteredMaterials();
+      const manualCount = visible.reduce((sum,m) => sum + vw.filter(w => isManual(m,w)).length, 0);
+      const overCount = visible.reduce((sum,m) => sum + vw.filter(w => currentValue(m,w) > m.capacity).length, 0);
+      const months = [...new Set(vw.map(w => w.source))];
+      let imbalance = 0;
+      visible.forEach(m => months.forEach(month => { if (monthActual(m,month) !== monthPlan(m,month).total) imbalance++; }));
+      $('#metricWindow').textContent = `${vw.length} 周`;
+      $('#metricWindowNote').textContent = `${vw[0].range.split('–')[0]}–${vw.at(-1).range.split('–')[1]}`;
+      $('#metricCarry').textContent = vw.filter(w => w.carry).length;
+      $('#metricManual').textContent = manualCount;
+      $('#metricOver').textContent = overCount;
+      $('#metricImbalance').textContent = imbalance;
+      $('#windowText').textContent = `${vw[0].label} 至 ${vw.at(-1).label}`;
+      renderDashboard();
+    }
+
+    function monthWeeks(month) { return weeks.filter(w => w.source === month && w.slot >= 0 && w.slot <= 3); }
+    function monthActual(material, month) { return monthWeeks(month).reduce((sum,w) => sum + currentValue(material,w), 0); }
+
+    function renderBalances() {
+      const material = materials.find(m => m.id === selectedMaterialId) || materials[0];
+      const sourceMonths = [...new Set(visibleWeeks().map(w => w.source))].slice(0,3);
+      const focusMonth = sourceMonths[0];
+      const data = monthPlan(material, focusMonth);
+      $('#selectedMaterialLabel').textContent = `${material.code} · ${material.name}`;
+      $('#formulaRow').innerHTML = `<span>${focusMonth}月可排量</span><span class="formula-chip">Forecast <strong>${data.forecast}</strong></span><span>−</span><span class="formula-chip">整机库存 <strong>${data.inventory}</strong></span><span>−</span><span class="formula-chip">已出货 <strong>${data.shipped}</strong></span><span>=</span><span class="formula-chip">MAX(0, …) <strong>${data.total}</strong></span>`;
+      $('#monthBalances').innerHTML = sourceMonths.map(month => {
+        const expected = monthPlan(material,month).total;
+        const actual = monthActual(material,month);
+        const diff = actual - expected;
+        const carried = monthWeeks(month).find(w => w.slot === 0);
+        return `<div class="balance ${diff!==0?'bad':''}"><div class="balance-top"><span>${month}来源合计</span><strong>${diff===0?'已平衡':'待调整'}</strong></div><div class="balance-detail"><span>可排量<b>${expected}</b></span><span>当前合计<b>${actual}</b></span><span>差异<b class="diff">${diff>0?'+':''}${diff}</b></span></div><div style="margin-top:6px;color:var(--text-3);font-size:10px">提前量位于 ${carried?carried.label:'上月 W4'}，按${month}归集</div></div>`;
+      }).join('');
+    }
+
+    function renderActivity() {
+      $('#activity').innerHTML = logs.slice(0,8).map(log => `<div class="log"><span class="log-time">${log.time}</span><div><strong>${log.title}</strong><p>${log.detail}</p></div></div>`).join('');
+    }
+
+    function openCell(materialId, weekKey) {
+      const material = materials.find(m => m.id === materialId);
+      const week = weeks.find(w => w.key === weekKey);
+      selectedMaterialId = materialId;
+      activeCell = {material,week};
+      const auto = autoValue(material,week);
+      const value = currentValue(material,week);
+      const data = monthPlan(material,week.source);
+      const locked = isLocked(material,week);
+      const history = cellHistory[cellKey(material,week)] || [];
+      $('#drawerBody').innerHTML = `
+        <div class="detail-block"><div class="detail-title">排产对象</div><div class="detail-grid">
+          <div class="field"><label>整机料号</label><div class="value mono">${material.code}</div></div><div class="field"><label>机型</label><div class="value">${material.name}</div></div>
+          <div class="field"><label>显示周</label><div class="value">${week.label} · ${week.range}</div></div><div class="field"><label>来源月份</label><div class="value">${week.source}${week.carry?' · 提前一周承接':''}</div></div>
+          <div class="field"><label>工厂 / 产线</label><div class="value">${material.factory} / ${material.line}</div></div><div class="field"><label>周上限</label><div class="value mono">${material.capacity}</div></div>
+        </div></div>
+        <div class="detail-block"><div class="detail-title">计算依据</div><div class="detail-grid">
+          <div class="field"><label>Forecast</label><div class="value mono">${data.forecast}</div></div><div class="field"><label>整机库存</label><div class="value mono">${data.inventory}</div></div>
+          <div class="field"><label>已出货</label><div class="value mono">${data.shipped}</div></div><div class="field"><label>月可排量</label><div class="value mono">${data.total}</div></div>
+          <div class="field"><label>系统自动值</label><div class="value mono">${auto}</div></div><div class="field"><label>当前值</label><div class="value mono">${value}</div></div>
+        </div></div>
+        <div class="detail-block"><div class="detail-title">人工调整</div><div style="padding:9px">
+          <label for="qtyInput" style="display:block;margin-bottom:5px;color:var(--text-2)">周排产数量</label><input id="qtyInput" class="input-number" type="number" min="0" step="1" value="${value}" ${locked?'disabled':''}>
+          ${locked?`<div class="hint warn">${icon('lock')}<span>该周已执行，月中重算时不可重新均摊。只能调整尚未执行的周。</span></div>`:`<div class="hint">${icon('info')}<span>保存后保留系统自动值并写入修改历史；人工编辑不会生成新排产版本。</span></div>`}
+          ${value>material.capacity?`<div class="hint danger">${icon('alert')}<span>当前值超出周上限 ${value-material.capacity}，需要人工调整后再发布。</span></div>`:''}
+        </div></div>
+        <div class="detail-block"><div class="detail-title">修改历史</div><div class="history-list">${history.length?history.map(h=>`<div class="history-item"><time>${h.time}</time><span>${h.text}</span></div>`).join(''):'<div style="padding:10px 0;color:var(--text-3)">暂无人工修改记录</div>'}</div></div>`;
+      $('#restoreBtn').disabled = locked || !isManual(material,week);
+      $('#saveCellBtn').disabled = locked;
+      $('#drawerMask').classList.add('open');
+      $('#drawerMask').setAttribute('aria-hidden','false');
+      if (!locked) setTimeout(() => $('#qtyInput').focus(), 50);
+      renderBalances();
+    }
+
+    function closeDrawer() {
+      $('#drawerMask').classList.remove('open');
+      $('#drawerMask').setAttribute('aria-hidden','true');
+      activeCell = null;
+    }
+
+    function saveCell() {
+      if (!activeCell) return;
+      const {material,week} = activeCell;
+      const value = Number($('#qtyInput').value);
+      if (!Number.isInteger(value) || value < 0) { showToast('请输入大于等于 0 的整数排产数量'); return; }
+      const key = cellKey(material,week);
+      const old = currentValue(material,week);
+      if (value === autoValue(material,week)) delete manualValues[key]; else manualValues[key] = value;
+      const time = new Date().toLocaleString('zh-CN',{hour12:false});
+      cellHistory[key] = [{time,text:`肖芳将数量从 ${old} 调整为 ${value}；自动值 ${autoValue(material,week)}。`}, ...(cellHistory[key]||[])];
+      addLog(`人工调整 ${material.code} · ${week.label}`, `${old} → ${value}；排产版本仍为 SP-2026-08-V3.${versionMinor}。`);
+      if (published) addLog('已发布计划发生修改', `${material.code} ${week.label} 已留痕，当前计划状态保持已发布。`);
+      closeDrawer();
+      renderGrid();
+      showToast(`已保存人工调整；${week.source}来源合计差异 ${monthActual(material,week.source)-monthPlan(material,week.source).total}`);
+    }
+
+    function restoreAuto() {
+      if (!activeCell) return;
+      const {material,week} = activeCell;
+      const key = cellKey(material,week);
+      const old = currentValue(material,week);
+      delete manualValues[key];
+      const time = new Date().toLocaleString('zh-CN',{hour12:false});
+      cellHistory[key] = [{time,text:`肖芳恢复系统自动值 ${autoValue(material,week)}。`}, ...(cellHistory[key]||[])];
+      addLog(`恢复自动值 ${material.code} · ${week.label}`, `${old} → ${autoValue(material,week)}，重新执行月度守恒核验。`);
+      closeDrawer();
+      renderGrid();
+      showToast('已恢复自动计算值并完成月度核验');
+    }
+
+    function setScenario(next) {
+      scenario = next;
+      viewStart = next === 'normal' ? 3 : 0;
+      $$('.segmented button').forEach(btn => btn.classList.toggle('active', btn.dataset.scenario === next));
+      if (next === 'normal') {
+        $('#scenarioTitle').textContent = '标准滚动场景';
+        $('#scenarioText').textContent = '当前周为 8 月 W4；本周承接 9 月第一份，之后每个第 4 周继续承接下月。';
+        $('#forecastVersion').textContent = 'FC-2026-08-15-V6';
+      } else {
+        $('#scenarioTitle').textContent = '月中 Forecast 变更 · UAT TC002a';
+        $('#scenarioText').textContent = '8 月 Forecast 由 1000 调整为 1500；W1/W2 已执行锁定，只把新增可排量分配到 W3。';
+        $('#forecastVersion').textContent = 'FC-2026-08-15-V7';
+        selectedMaterialId = 'A';
+      }
+      addLog('切换验收场景', next === 'normal' ? '恢复标准 12 周跨月滚动视图。' : '载入 TC002a：W1/W2=167 锁定，W3=666。');
+      renderGrid();
+    }
+
+    function recalc() {
+      versionMinor += 1;
+      $('#planVersion').textContent = `SP-2026-08-V3.${versionMinor}`;
+      addLog(`重算生成 SP-2026-08-V3.${versionMinor}`, `保留 ${Object.keys(manualValues).filter(k=>k.startsWith(scenario+'|')).length} 个人工覆盖值；系统值按最新 Forecast、库存和已出货重算。`);
+      versionRecords.unshift({version:`SP-2026-08-V3.${versionMinor}`,time:new Date().toLocaleString('zh-CN',{hour12:false}),reason:'计划员手动重算',forecast:`FC-2026-08-15-V${forecastVersionNo}`,snapshot:`2026-08-${String(inventorySnapshotNo).padStart(2,'0')}`,status:published?'已发布':'草稿',manual:Object.keys(manualValues).filter(k=>k.startsWith(scenario+'|')).length});
+      renderGrid();
+      showToast(`重算完成，已生成新版本 V3.${versionMinor}；人工调整已保留`);
+    }
+
+    function publishPlan() {
+      published = true;
+      $('#planStatus').className = 'status published';
+      $('#planStatus').textContent = '已发布';
+      $('#publishBtn').innerHTML = `${icon('check')}已发布`;
+      addLog('计划员发布排产', `SP-2026-08-V3.${versionMinor} 已发布；发布后仍允许修改，修改会留痕。`);
+      if (versionRecords[0]) versionRecords[0].status = '已发布';
+      showToast('排产已发布；后续修改仍可进行并会记录操作日志');
+    }
+
+    function openModal(id) { $(id).classList.add('open'); $(id).setAttribute('aria-hidden','false'); }
+    function closeModal(mask) { mask.classList.remove('open'); mask.setAttribute('aria-hidden','true'); }
+
+    function renderCompare() {
+      const manualCount = Object.keys(manualValues).filter(k => k.startsWith(scenario+'|')).length;
+      $('#compareBody').innerHTML = `<div class="hint" style="margin:0 0 10px">${icon('info')}<span>重算生成版本；人工修改只作为当前版本内的覆盖与日志，不单独生成版本。</span></div>
+        <table class="compare-table"><thead><tr><th>对比项</th><th>基线 V3.1</th><th>当前 V3.${versionMinor}</th><th>差异说明</th></tr></thead><tbody>
+          <tr><td>绑定经营计划</td><td>FC-2026-08-01-V5</td><td>${$('#forecastVersion').textContent}</td><td>经营计划版本已更新</td></tr>
+          <tr><td>库存快照</td><td>2026-08-26</td><td>2026-08-27</td><td>使用前一晚最新库存</td></tr>
+          <tr><td>人工覆盖</td><td>0 项</td><td>${manualCount} 项</td><td>不触发版本号变化，重算后保留</td></tr>
+          <tr><td>计划状态</td><td>草稿</td><td>${published?'已发布':'草稿'}</td><td>${published?'计划员已直接发布':'尚未发布'}</td></tr>
+        </tbody></table>`;
+      openModal('#compareModal');
+    }
+
+    const exportFieldNames = ['机型','版本','机头料号','整机料号','备注','各周排产数量','优先级','实际完成数量'];
+    function renderExportFields() {
+      $('#exportFields').innerHTML = exportFieldNames.map((name,i) => `<label class="check"><input type="checkbox" value="${name}" ${i<6?'checked':''}><span>${name}</span></label>`).join('');
+    }
+
+    function openImport(type) {
+      importType = type;
+      const isForecast = type === 'forecast';
+      const template = isForecast ? 'MRP经营计划导入模板.xlsx' : 'MRP库存快照导入模板.xlsx';
+      $('#importTitle').textContent = isForecast ? '上传经营计划模板' : '上传库存快照模板';
+      $('#importBody').innerHTML = `<div class="hint" style="margin:0 0 10px">${icon('info')}<span><strong>步骤 1：</strong>先下载并填写标准模板，保持工作表名称与表头结构不变。</span></div>
+        <div class="upload-zone">${icon('upload')}<strong>${isForecast?'经营计划_2026-09-01.xlsx':'库存快照_2026-08-28.xlsx'}</strong><span><strong>步骤 2：</strong>选择或拖入填写后的 ${template}。本原型已模拟选择文件并完成解析。</span><div class="template-actions"><a class="btn small" download href="../templates/${template}">${icon('download')}重新下载模板</a></div></div>
+        ${isForecast?`<div class="detail-block" style="margin-top:10px"><div class="detail-title">步骤 3 · 解析预览</div><div class="detail-grid"><div class="field"><label>识别月份</label><div class="value mono">2026-08、2026-09、2026-10、2026-11、2026-12、2027-01</div></div><div class="field"><label>月份校验</label><div class="value"><span class="tag success">6 个月连续</span> <span class="tag success">跨年识别正常</span></div></div><div class="field"><label>料号格式</label><div class="value"><span class="tag success">按文本读取</span></div></div><div class="field"><label>有效数据</label><div class="value mono">4 行 · 0 个阻断错误</div></div></div></div>`:`<div class="detail-block" style="margin-top:10px"><div class="detail-title">步骤 3 · 解析预览</div><div class="detail-grid"><div class="field"><label>字段</label><div class="value">物料、仓库编码/名称/类型、工厂、数量、快照日期、是否计入</div></div><div class="field"><label>校验</label><div class="value"><span class="tag success">工厂口径正常</span> <span class="tag success">不良品仓已识别</span></div></div><div class="field"><label>有效数据</label><div class="value mono">6 行 · 0 个阻断错误</div></div><div class="field"><label>快照日期</label><div class="value mono">2026-08-28</div></div></div></div>`}
+        <div class="hint">${icon('info')}<span><strong>步骤 4：</strong>确认导入后，${isForecast?'生成经营计划新版本并保留历史。':'更新库存快照，永惠与 APK 分开汇总，不良品仓排除。'} 当前自动重算：<strong>${(isForecast?autoRecalcForecast:autoRecalcInventory)?'开启':'关闭'}</strong>，可在排产页面调整。</span></div>`;
+      openModal('#importModal');
+    }
+
+    function confirmImport() {
+      if (importType === 'forecast') {
+        forecastVersionNo += 1;
+        materials[0].months['9月'].forecast += 120;
+        addLog(`经营计划 V${forecastVersionNo} 导入完成`, '历史版本已保留，排产绑定最新经营计划版本。');
+        if (autoRecalcForecast) recalc();
+        renderForecastPage();
+        showToast(`经营计划已生成 V${forecastVersionNo}${autoRecalcForecast?'，并自动触发排产重算':'，请手动重算排产'}`);
+      } else {
+        inventorySnapshotNo = Math.min(31, inventorySnapshotNo + 1);
+        inventoryRows[0].qty += 20;
+        materials[0].months['8月'].inventory = inventoryRows[0].qty;
+        addLog(`库存快照 2026-08-${String(inventorySnapshotNo).padStart(2,'0')} 导入完成`, '永惠与 APK 分开汇总，不良品仓未计入。');
+        if (autoRecalcInventory) recalc();
+        renderInventoryPage();
+        showToast(`库存快照已更新${autoRecalcInventory?'，并自动触发排产重算':'，请手动重算排产'}`);
+      }
+      closeModal($('#importModal'));
+      importType = null;
+    }
+
+    $('#locateCurrentBtn').addEventListener('click', () => { $('.grid-wrap').scrollTo({left:0,behavior:'smooth'}); showToast('已定位到当前周；排产数据和版本未改变'); });
+    $('#searchInput').addEventListener('input', renderGrid);
+    $('#factorySelect').addEventListener('change', renderGrid);
+    $('#issueSelect').addEventListener('change', renderGrid);
+    $$('.segmented button').forEach(btn => btn.addEventListener('click', () => setScenario(btn.dataset.scenario)));
+    $('#closeDrawerBtn').addEventListener('click', closeDrawer);
+    $('#drawerMask').addEventListener('click', e => { if (e.target === $('#drawerMask')) closeDrawer(); });
+    $('#saveCellBtn').addEventListener('click', saveCell);
+    $('#restoreBtn').addEventListener('click', restoreAuto);
+    $('#recalcBtn').addEventListener('click', recalc);
+    $('#publishBtn').addEventListener('click', publishPlan);
+    $('#compareBtn').addEventListener('click', renderCompare);
+    $('#exportBtn').addEventListener('click', () => openModal('#exportModal'));
+    $$('.modal-close').forEach(btn => btn.addEventListener('click', () => closeModal(btn.closest('.modal-mask'))));
+    $$('.modal-mask').forEach(mask => mask.addEventListener('click', e => { if (e.target === mask) closeModal(mask); }));
+    $('#confirmExportBtn').addEventListener('click', () => {
+      const fields = $$('#exportFields input:checked').map(input => input.value);
+      if (!fields.length) { showToast('请至少选择一个导出字段'); return; }
+      closeModal($('#exportModal'));
+      addLog('导出排产计划', `已选择 ${fields.length} 个字段：${fields.join('、')}。`);
+      showToast(`已模拟生成 Excel，共 ${fields.length} 个字段`);
+    });
+    $('#clearLogBtn').addEventListener('click', () => { logs = logs.slice(0,6); renderActivity(); showToast('操作记录已收敛为最近 6 条'); });
+    $$('.nav-item[data-page]').forEach(btn => btn.addEventListener('click', () => goToPage(btn.dataset.page)));
+    $$('[data-goto]').forEach(btn => btn.addEventListener('click', () => goToPage(btn.dataset.goto)));
+    $('#guideBtn').addEventListener('click', () => openModal('#guideModal'));
+    $('#openManualBtn').addEventListener('click', () => { closeModal($('#guideModal')); goToPage('manual'); });
+    $('#forecastImportBtn').addEventListener('click', () => openImport('forecast'));
+    $('#inventoryImportBtn').addEventListener('click', () => openImport('inventory'));
+    $('#confirmImportBtn').addEventListener('click', confirmImport);
+    $('#crmSyncBtn').addEventListener('click', () => { const now=new Date(); $('#topCrmTime').textContent=`CRM ${now.toLocaleDateString('zh-CN').replaceAll('/','-')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`; addLog('CRM 已出货手动同步完成','按整机料号 + 月份累计，排产数据源已刷新。'); showToast('CRM 已出货同步完成；请根据数据变化确认是否需要重算'); });
+    $('#addCapacityBtn').addEventListener('click', () => {
+      if (editingCapacityId) return showToast('请先保存或取消当前产能编辑');
+      const id = `NEW-${Date.now()}`;
+      capacityRows.unshift({id,factory:'永惠',lineCode:'',lineName:'',weeklyCapacity:'',effectiveDate:'2026-09-01',active:true,remark:''});
+      startCapacityEdit(id);
+    });
+    $('#forecastAutoSwitch').addEventListener('click', () => { autoRecalcForecast=!autoRecalcForecast; renderPlanSettings(); renderForecastPage(); showToast(`经营计划导入后自动重算已${autoRecalcForecast?'开启':'关闭'}`); });
+    $('#inventoryAutoSwitch').addEventListener('click', () => { autoRecalcInventory=!autoRecalcInventory; renderPlanSettings(); renderInventoryPage(); showToast(`库存导入后自动重算已${autoRecalcInventory?'开启':'关闭'}`); });
+    $$('.manual-nav button').forEach(btn => btn.addEventListener('click', () => $(`#${btn.dataset.manualTarget}`).scrollIntoView({behavior:'smooth',block:'start'})));
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeDrawer(); $$('.modal-mask.open').forEach(closeModal); } });
+
+    renderExportFields();
+    renderActivity();
+    renderGrid();
+    renderForecastPage();
+    renderInventoryPage();
+    renderVersionsPage();
+    renderCapacityPage();
+    renderPlanSettings();
+    renderDashboard();
+  </script>
+</body>
+</html>

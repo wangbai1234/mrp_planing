@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.task.repository.ExportTaskMapper">
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO export_task (task_type, business_scope, request_key, status, priority,
+            worker_id, lease_until, heartbeat_at, progress_current, progress_total,
+            attempt_count, max_attempts, next_run_at, input_payload, input_checksum,
+            result_resource_id, error_code, error_message, created_by)
+        VALUES (#{taskType}, #{businessScope}, #{requestKey}, #{status}, #{priority},
+            #{workerId}, #{leaseUntil}, #{heartbeatAt}, #{progressCurrent}, #{progressTotal},
+            #{attemptCount}, #{maxAttempts},             #{nextRunAt}, #{inputPayload}, #{inputChecksum},
+            #{resultResourceId}, #{errorCode}, #{errorMessage}, #{createdBy})
+    </insert>
+
+    <select id="selectById" resultType="com.mrp.task.domain.ExportTask">
+        SELECT * FROM export_task WHERE id = #{id}
+    </select>
+
+    <select id="selectByRequestKey" resultType="com.mrp.task.domain.ExportTask">
+        SELECT * FROM export_task WHERE request_key = #{requestKey}
+    </select>
+
+    <update id="updateResult">
+        UPDATE export_task SET status = #{status}, result_resource_id = #{resultResourceId},
+            finished_at = CURRENT_TIMESTAMP(3), version = version + 1
+        WHERE id = #{id} AND version = #{version}
+    </update>
+
+    <update id="updateFailure">
+        UPDATE export_task SET status = #{status}, error_code = #{errorCode}, error_message = #{errorMessage},
+            finished_at = CURRENT_TIMESTAMP(3), version = version + 1
+        WHERE id = #{id} AND version = #{version}
+    </update>
+</mapper>

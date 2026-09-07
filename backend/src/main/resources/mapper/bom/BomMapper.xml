@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.bom.repository.BomMapper">
+
+    <resultMap id="materialResultMap" type="com.mrp.bom.domain.BomMaterial">
+        <result column="inv_code" property="invCode"/>
+        <result column="inv_name" property="invName"/>
+        <result column="version" property="version"/>
+        <result column="unit" property="unit"/>
+        <result column="org_name" property="orgName"/>
+        <result column="body_code" property="bodyCode"/>
+        <result column="child_count" property="childCount"/>
+    </resultMap>
+
+    <resultMap id="detailResultMap" type="com.mrp.bom.domain.BomDetail">
+        <result column="parent_code" property="parentCode"/>
+        <result column="parent_name" property="parentName"/>
+        <result column="child_code" property="childCode"/>
+        <result column="child_name" property="childName"/>
+        <result column="material_spec" property="materialSpec"/>
+        <result column="make_factory" property="makeFactory"/>
+        <result column="child_qty" property="childQty"/>
+        <result column="child_note" property="childNote"/>
+        <result column="replace_priority" property="replacePriority"/>
+        <result column="alt_code" property="altCode"/>
+        <result column="alt_name" property="altName"/>
+        <result column="alt_spec" property="altSpec"/>
+        <result column="alt_factory" property="altFactory"/>
+        <result column="alt_qty" property="altQty"/>
+        <result column="is_deliver" property="isDeliver"/>
+        <result column="is_default" property="isDefault"/>
+        <result column="main_status" property="mainStatus"/>
+        <result column="alt_status" property="altStatus"/>
+        <result column="main_rhos_status" property="mainRhosStatus"/>
+        <result column="alt_rhos_status" property="altRhosStatus"/>
+        <result column="admit_note" property="admitNote"/>
+    </resultMap>
+
+    <resultMap id="treeNodeResultMap" type="com.mrp.bom.domain.BomTreeNodeV2">
+        <result column="code" property="code"/>
+        <result column="name" property="name"/>
+        <result column="spec" property="spec"/>
+        <result column="qty" property="qty"/>
+        <result column="version" property="version"/>
+        <result column="has_children" property="hasChildren"/>
+    </resultMap>
+
+    <select id="selectMaterialPage" resultMap="materialResultMap">
+        SELECT * FROM (
+            SELECT t.*, ROWNUM AS rn FROM (
+                SELECT m.inv_code, m.inv_name, m.version, m.org_name, m.body_code,
+                       0 AS child_count
+                FROM (
+                    SELECT DISTINCT
+                        bom.INVCODE AS inv_code,
+                        bom.INVNAME AS inv_name,
+                        bom.HVERSION AS version,
+                        bom.ORGNAME AS org_name,
+                        bom.BODYCODE AS body_code
+                    FROM V_BOM_OUTPUT bom
+                    INNER JOIN (
+                        SELECT INVCODE, MAX(HVERSION) AS MAX_VERSION
+                        FROM V_BOM_OUTPUT
+                        GROUP BY INVCODE
+                    ) latest ON bom.INVCODE = latest.INVCODE
+                        AND bom.HVERSION = latest.MAX_VERSION
+                ) m
+                <where>
+                    <if test="keyword != null and keyword != ''">
+                        AND (m.inv_code LIKE '%' || #{keyword} || '%'
+                            OR m.inv_name LIKE '%' || #{keyword} || '%')
+                    </if>
+                </where>
+                ORDER BY m.inv_code
+            ) t WHERE ROWNUM &lt;= #{offset} + #{limit}
+        ) WHERE rn &gt; #{offset}
+    </select>
+
+    <select id="countMaterials" resultType="int">
+        SELECT COUNT(*) FROM (
+            SELECT DISTINCT bom.INVCODE
+            FROM V_BOM_OUTPUT bom
+            INNER JOIN (
+                SELECT INVCODE, MAX(HVERSION) AS MAX_VERSION
+                FROM V_BOM_OUTPUT
+                GROUP BY INVCODE
+            ) latest ON bom.INVCODE = latest.INVCODE
+                AND bom.HVERSION = latest.MAX_VERSION
+        ) m
+        <where>
+            <if test="keyword != null and keyword != ''">
+                WHERE m.INVCODE LIKE '%' || #{keyword} || '%'
+            </if>
+        </where>
+    </select>
+
+    <select id="selectMaterialByCode" resultMap="materialResultMap" parameterType="String">
+        SELECT inv_code, inv_name, version, org_name, body_code,
+               0 AS child_count
+        FROM (
+            SELECT DISTINCT
+                bom.INVCODE AS inv_code,
+                bom.INVNAME AS inv_name,
+                bom.HVERSION AS version,
+                bom.ORGNAME AS org_name,
+                bom.BODYCODE AS body_code
+            FROM V_BOM_OUTPUT bom
+            WHERE bom.INVCODE = #{invCode}
+        ) m
+    </select>
+
+    <select id="selectDetailByParentCode" resultMap="detailResultMap" parameterType="String">
+        SELECT
+            bom.INVCODE_B AS child_code,
+            bom.INVNAME_B AS child_name,
+            bom.MATERIALSPEC1 AS material_spec,
+            bom.MAKEFACTORY1 AS make_factory,
+            bom.NASSITEMNUM AS child_qty,
+            bom.VNOTE AS child_note,
+            bom.VREPLACEINDEX AS replace_priority,
+            bom.INVCODE_TD AS alt_code,
+            bom.INVNAME_TD AS alt_name,
+            bom.MATERIALSPEC2 AS alt_spec,
+            bom.MAKEFACTORY2 AS alt_factory,
+            bom.NASSITEMNUM2 AS alt_qty,
+            bom.BDELIVER AS is_deliver,
+            bom.HBDEFAULT AS is_default,
+            bom.NAME AS main_status,
+            bom.D3NAME AS alt_status,
+            bom.D4NAME AS main_rhos_status,
+            bom.D5NAME AS alt_rhos_status,
+            bom.M2DEF17 AS admit_note
+        FROM V_BOM_OUTPUT bom
+        INNER JOIN (
+            SELECT INVCODE, INVCODE_B, MAX(HVERSION) AS MAX_VERSION
+            FROM V_BOM_OUTPUT
+            WHERE INVCODE = #{parentCode}
+            GROUP BY INVCODE, INVCODE_B
+        ) latest ON bom.INVCODE = latest.INVCODE
+            AND bom.INVCODE_B = latest.INVCODE_B
+            AND bom.HVERSION = latest.MAX_VERSION
+        WHERE bom.INVCODE = #{parentCode}
+        ORDER BY bom.INVCODE_B
+    </select>
+
+    <select id="selectTreeChildren" resultMap="treeNodeResultMap" parameterType="String">
+        SELECT
+            child.INVCODE_B AS code,
+            child.INVNAME_B AS name,
+            child.MATERIALSPEC1 AS spec,
+            child.NASSITEMNUM AS qty,
+            child.HVERSION AS version,
+            CASE WHEN EXISTS (
+                SELECT 1 FROM V_BOM_OUTPUT sub
+                WHERE sub.INVCODE = child.INVCODE_B
+                AND ROWNUM = 1
+            ) THEN 1 ELSE 0 END AS has_children
+        FROM V_BOM_OUTPUT child
+        INNER JOIN (
+            SELECT INVCODE, INVCODE_B, MAX(HVERSION) AS MAX_VERSION
+            FROM V_BOM_OUTPUT
+            WHERE INVCODE = #{parentCode}
+            GROUP BY INVCODE, INVCODE_B
+        ) latest ON child.INVCODE = latest.INVCODE
+            AND child.INVCODE_B = latest.INVCODE_B
+            AND child.HVERSION = latest.MAX_VERSION
+        WHERE child.INVCODE = #{parentCode}
+        ORDER BY child.INVCODE_B
+    </select>
+
+    <select id="selectAllLatestBom" resultMap="detailResultMap">
+        SELECT
+            bom.INVCODE AS parent_code,
+            bom.INVNAME AS parent_name,
+            bom.INVCODE_B AS child_code,
+            bom.INVNAME_B AS child_name,
+            bom.HVERSION AS version,
+            bom.HNASSPARENTNUM AS parent_qty,
+            bom.CBEGINPERIOD AS effective_date,
+            bom.MATERIALSPEC1 AS material_spec,
+            bom.MAKEFACTORY1 AS make_factory,
+            bom.NASSITEMNUM AS child_qty,
+            bom.VNOTE AS child_note,
+            bom.VREPLACEINDEX AS replace_priority,
+            bom.INVCODE_TD AS alt_code,
+            bom.INVNAME_TD AS alt_name,
+            bom.MATERIALSPEC2 AS alt_spec,
+            bom.MAKEFACTORY2 AS alt_factory,
+            bom.NASSITEMNUM2 AS alt_qty,
+            bom.BDELIVER AS is_deliver,
+            bom.HBDEFAULT AS is_default,
+            bom.NAME AS main_status,
+            bom.D3NAME AS alt_status,
+            bom.D4NAME AS main_rhos_status,
+            bom.D5NAME AS alt_rhos_status,
+            bom.M2DEF17 AS admit_note,
+            bom.ORGNAME AS org_name,
+            bom.BODYCODE AS body_code
+        FROM V_BOM_OUTPUT bom
+        INNER JOIN (
+            SELECT INVCODE, INVCODE_B, MAX(HVERSION) AS MAX_VERSION
+            FROM V_BOM_OUTPUT
+            GROUP BY INVCODE, INVCODE_B
+        ) latest ON bom.INVCODE = latest.INVCODE
+            AND bom.INVCODE_B = latest.INVCODE_B
+            AND bom.HVERSION = latest.MAX_VERSION
+        ORDER BY bom.INVCODE, bom.INVCODE_B
+    </select>
+
+</mapper>

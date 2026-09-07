@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.forecast.repository.ForecastMapper">
+
+    <insert id="insertVersion" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO forecast_version (version_no, file_name, file_checksum, status, created_by)
+        VALUES (#{versionNo}, #{fileName}, #{fileChecksum}, #{status}, #{createdBy})
+    </insert>
+
+    <select id="selectVersionById" resultType="com.mrp.forecast.domain.ForecastVersion">
+        SELECT * FROM forecast_version WHERE id = #{id}
+    </select>
+
+    <select id="selectLatestVersion" resultType="com.mrp.forecast.domain.ForecastVersion">
+        SELECT * FROM forecast_version ORDER BY id DESC LIMIT 1
+    </select>
+
+    <select id="selectAllVersions" resultType="com.mrp.forecast.domain.ForecastVersion">
+        SELECT * FROM forecast_version ORDER BY id DESC
+    </select>
+
+    <insert id="insertDetails">
+        INSERT INTO forecast_detail (version_id, factory_code, material_id, material_name,
+            business_line, form_type, project, platform, mold, status, plan_month, forecast_qty)
+        VALUES
+        <foreach collection="list" item="d" separator=",">
+            (#{d.versionId}, #{d.factoryCode}, #{d.materialId}, #{d.materialName},
+             #{d.businessLine}, #{d.formType}, #{d.project}, #{d.platform}, #{d.mold},
+             #{d.status}, #{d.planMonth}, #{d.forecastQty})
+        </foreach>
+    </insert>
+
+    <select id="selectDetailsByVersionId" resultType="com.mrp.forecast.domain.ForecastDetail">
+        SELECT * FROM forecast_detail WHERE version_id = #{versionId} ORDER BY material_id, plan_month
+    </select>
+
+    <select id="countDetailsByVersionId" resultType="int">
+        SELECT COUNT(*) FROM forecast_detail WHERE version_id = #{versionId}
+    </select>
+
+    <delete id="deleteDetailsByVersionId">
+        DELETE FROM forecast_detail WHERE version_id = #{versionId}
+    </delete>
+</mapper>

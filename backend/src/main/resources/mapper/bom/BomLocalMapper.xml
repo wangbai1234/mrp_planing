@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.bom.local.repository.BomLocalMapper">
+
+    <resultMap id="materialResultMap" type="com.mrp.bom.domain.BomMaterial">
+        <result column="inv_code" property="invCode"/>
+        <result column="inv_name" property="invName"/>
+        <result column="version" property="version"/>
+        <result column="unit" property="unit"/>
+        <result column="org_name" property="orgName"/>
+        <result column="body_code" property="bodyCode"/>
+        <result column="child_count" property="childCount"/>
+    </resultMap>
+
+    <resultMap id="detailResultMap" type="com.mrp.bom.domain.BomDetail">
+        <result column="parent_code" property="parentCode"/>
+        <result column="parent_name" property="parentName"/>
+        <result column="child_code" property="childCode"/>
+        <result column="child_name" property="childName"/>
+        <result column="version" property="version"/>
+        <result column="material_spec" property="materialSpec"/>
+        <result column="make_factory" property="makeFactory"/>
+        <result column="child_qty" property="childQty"/>
+        <result column="child_note" property="childNote"/>
+        <result column="replace_priority" property="replacePriority"/>
+        <result column="alt_code" property="altCode"/>
+        <result column="alt_name" property="altName"/>
+        <result column="alt_spec" property="altSpec"/>
+        <result column="alt_factory" property="altFactory"/>
+        <result column="alt_qty" property="altQty"/>
+        <result column="is_deliver" property="isDeliver"/>
+        <result column="is_default" property="isDefault"/>
+        <result column="main_status" property="mainStatus"/>
+        <result column="alt_status" property="altStatus"/>
+        <result column="main_rhos_status" property="mainRhosStatus"/>
+        <result column="alt_rhos_status" property="altRhosStatus"/>
+        <result column="admit_note" property="admitNote"/>
+    </resultMap>
+
+    <select id="selectMaterialPage" resultMap="materialResultMap">
+        SELECT p.inv_code, p.inv_name, p.version, p.org_name, p.body_code,
+               (SELECT COUNT(*) FROM bom_detail d WHERE d.parent_code = p.inv_code) AS child_count
+        FROM bom_parent p
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND (p.inv_code LIKE CONCAT('%', #{keyword}, '%')
+                    OR p.inv_name LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+        </where>
+        ORDER BY p.inv_code
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="countMaterials" resultType="int">
+        SELECT COUNT(*) FROM bom_parent p
+        <if test="keyword != null and keyword != ''">
+            WHERE (p.inv_code LIKE CONCAT('%', #{keyword}, '%')
+                OR p.inv_name LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+    </select>
+
+    <select id="selectMaterialByCode" resultMap="materialResultMap">
+        SELECT p.inv_code, p.inv_name, p.version, p.org_name, p.body_code,
+               (SELECT COUNT(*) FROM bom_detail d WHERE d.parent_code = p.inv_code) AS child_count
+        FROM bom_parent p
+        WHERE p.inv_code = #{invCode}
+    </select>
+
+    <select id="selectDetailByParentCode" resultMap="detailResultMap">
+        SELECT child_code, child_name, version, material_spec, make_factory, child_qty,
+               child_note, replace_priority, alt_code, alt_name, alt_spec, alt_factory,
+               alt_qty, is_deliver, is_default, main_status, alt_status,
+               main_rhos_status, alt_rhos_status, admit_note
+        FROM bom_detail
+        WHERE parent_code = #{parentCode}
+        ORDER BY child_code
+    </select>
+
+    <insert id="insertParent">
+        INSERT INTO bom_parent (inv_code, inv_name, version, parent_qty, org_name, body_code, synced_at)
+        VALUES (#{invCode}, #{invName}, #{version}, #{parentQty}, #{orgName}, #{bodyCode}, NOW())
+        ON DUPLICATE KEY UPDATE
+            inv_name = VALUES(inv_name),
+            version = VALUES(version),
+            parent_qty = VALUES(parent_qty),
+            org_name = VALUES(org_name),
+            body_code = VALUES(body_code),
+            synced_at = NOW()
+    </insert>
+
+    <insert id="insertDetail">
+        INSERT INTO bom_detail (parent_code, child_code, child_name, version, parent_qty, effective_date,
+            material_spec, make_factory, child_qty, child_note, replace_priority,
+            alt_code, alt_name, alt_spec, alt_factory, alt_qty,
+            is_deliver, is_default, main_status, alt_status,
+            main_rhos_status, alt_rhos_status, admit_note, org_name, body_code, synced_at)
+        VALUES (#{parentCode}, #{childCode}, #{childName}, #{version}, #{parentQty}, #{effectiveDate},
+            #{materialSpec}, #{makeFactory}, #{childQty}, #{childNote}, #{replacePriority},
+            #{altCode}, #{altName}, #{altSpec}, #{altFactory}, #{altQty},
+            #{isDeliver}, #{isDefault}, #{mainStatus}, #{altStatus},
+            #{mainRhosStatus}, #{altRhosStatus}, #{admitNote}, #{orgName}, #{bodyCode}, NOW())
+    </insert>
+
+    <delete id="deleteAllParents">
+        DELETE FROM bom_parent
+    </delete>
+
+    <delete id="deleteAllDetails">
+        DELETE FROM bom_detail
+    </delete>
+
+    <insert id="insertParentBatch">
+        INSERT INTO bom_parent (inv_code, inv_name, version, parent_qty, org_name, body_code, synced_at)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.invCode}, #{item.invName}, #{item.version}, #{item.parentQty}, #{item.orgName}, #{item.bodyCode}, NOW())
+        </foreach>
+    </insert>
+
+    <insert id="insertDetailBatch">
+        INSERT INTO bom_detail (parent_code, child_code, child_name, version, parent_qty, effective_date,
+            material_spec, make_factory, child_qty, child_note, replace_priority,
+            alt_code, alt_name, alt_spec, alt_factory, alt_qty,
+            is_deliver, is_default, main_status, alt_status,
+            main_rhos_status, alt_rhos_status, admit_note, org_name, body_code, synced_at)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.parentCode}, #{item.childCode}, #{item.childName}, #{item.version}, #{item.parentQty}, #{item.effectiveDate},
+            #{item.materialSpec}, #{item.makeFactory}, #{item.childQty}, #{item.childNote}, #{item.replacePriority},
+            #{item.altCode}, #{item.altName}, #{item.altSpec}, #{item.altFactory}, #{item.altQty},
+            #{item.isDeliver}, #{item.isDefault}, #{item.mainStatus}, #{item.altStatus},
+            #{item.mainRhosStatus}, #{item.altRhosStatus}, #{item.admitNote}, #{item.orgName}, #{item.bodyCode}, NOW())
+        </foreach>
+    </insert>
+
+    <select id="isParent" resultType="boolean">
+        SELECT COUNT(*) > 0 FROM bom_parent WHERE inv_code = #{invCode}
+    </select>
+
+</mapper>

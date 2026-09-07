@@ -1,0 +1,7 @@
+interface:
+  display_name: "MRP 滚动排产设计"
+  short_description: "为本项目生成数据真实、可操作、可验收的滚动排产原型"
+  brand_color: "#2563EB"
+  default_prompt: "使用 $mrp-ui-design 设计一版符合 Phase 1 规则、可实际操作和验收的滚动排产页面。"
+policy:
+  allow_implicit_invocation: true

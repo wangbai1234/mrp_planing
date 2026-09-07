@@ -1,0 +1,32 @@
+spring:
+  datasource:
+    url: ${MRP_DB_URL:jdbc:mysql://localhost:3307/mrp_test?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&characterEncoding=UTF-8}
+    username: ${MRP_DB_USERNAME:mrp}
+    password: ${MRP_DB_PASSWORD:mrp_dev}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  flyway:
+    enabled: true
+
+  data:
+    redis:
+      host: ${MRP_REDIS_HOST:localhost}
+      port: ${MRP_REDIS_PORT:6379}
+
+  batch:
+    jdbc:
+      initialize-schema: always
+
+server:
+  port: 0
+
+mrp:
+  jwt:
+    secret: test-only-secret-key-must-be-at-least-256-bits-long-for-hmac
+    expiration: 3600
+  file:
+    upload-dir: ./data/test-uploads
+
+logging:
+  level:
+    com.mrp: DEBUG
