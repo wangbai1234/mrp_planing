@@ -11,6 +11,15 @@ public final class PlanningCalculator {
     private PlanningCalculator() {}
 
     /**
+     * 月度预测数据，用于12周排产。
+     */
+    public record MonthlyForecast(YearMonth month, long forecast, long inventory, long shipped, long available) {
+        public static MonthlyForecast of(YearMonth month, long forecast, long inventory, long shipped) {
+            return new MonthlyForecast(month, forecast, inventory, shipped, monthlyAvailable(forecast, inventory, shipped));
+        }
+    }
+
+    /**
      * 月可排量 = MAX(0, forecast - inventory - shipped)
      */
     public static long monthlyAvailable(long forecast, long inventory, long shipped) {
@@ -49,81 +58,94 @@ public final class PlanningCalculator {
     }
 
     /**
-     * 计算拆分数量。余数前置。
-     * carry = ceil(available / 3)
-     * rest = available - carry
-     * base = floor(rest / 3)
-     * remainder = rest % 3
+     * 计算拆分数量。余数前置到第一周。
+     * 将 available 平均分到3周，余数加到前面的周。
+     * 返回 [W1, W2, W3]，不含 carry。
      */
     public static long[] splitQuantities(long available) {
-        if (available <= 0) return new long[]{0, 0, 0, 0};
+        if (available <= 0) return new long[]{0, 0, 0};
 
-        long carry = (available + 2) / 3; // ceil(available/3)
-        long rest = available - carry;
-        long base = rest / 3;
-        long remainder = rest % 3;
+        long base = available / 3;
+        long remainder = available % 3;
 
         long w1 = base + (remainder >= 1 ? 1 : 0);
         long w2 = base + (remainder >= 2 ? 1 : 0);
         long w3 = base;
 
-        return new long[]{carry, w1, w2, w3};
+        return new long[]{w1, w2, w3};
     }
 
     /**
-     * 为多个来源月份生成 12 周排产计划。
-     * 从 currentWeekStart 开始，输出连续 12 周。
+     * 为多个来源月份生成12周排产计划。
+     * 从 currentWeekStart 开始，输出连续12周。
+     * 月拆周规则（需求文档4.2）：月可排量平均分到W1-W3，余数前置到W1，W4为空。
+     * 提前一周滚动（需求文档4.3）：下月W1排入上月W4位置。
+     * 总量守恒：sum(12周) = sum(各月available)。
+     *
+     * 实现：每月4周。W1-W3来自本月available，W4=下月W1（carry）。
+     * 当某月W1被carry到上月W4时，该月W1设为0避免重复。
      */
     public static List<WeekPlan> generate12WeekPlan(
-            long available,
-            List<YearMonth> sourceMonths,
+            List<MonthlyForecast> monthlyForecasts,
             LocalDate currentWeekStart,
             List<Long> existingManualOverrides,
             List<Boolean> lockedWeeks,
             List<Long> weeklyCapacities
     ) {
-        List<WeekPlan> plans = new ArrayList<>();
-
-        // Generate week slots for each source month
-        List<WeekSlot> allSlots = new ArrayList<>();
-        for (YearMonth ym : sourceMonths) {
-            allSlots.addAll(splitMonthToWeeks(ym, currentWeekStart));
+        List<long[]> monthSplits = new ArrayList<>();
+        for (MonthlyForecast mf : monthlyForecasts) {
+            monthSplits.add(splitQuantities(mf.available()));
         }
 
-        // Sort by week start date and take first 12
-        allSlots.sort((a, b) -> a.weekStartDate().compareTo(b.weekStartDate()));
-
-        // Calculate quantities per source month
-        long perMonth = sourceMonths.isEmpty() ? 0 : available / sourceMonths.size();
-        // For simplicity, distribute available evenly across months
-        // In real scenario, each month has its own forecast/inventory/shipped
+        // Track which months have W1 carried into previous month's W4
+        boolean[] w1CarriedOut = new boolean[monthlyForecasts.size()];
+        for (int m = 0; m < monthlyForecasts.size() - 1; m++) {
+            w1CarriedOut[m + 1] = true; // month (m+1)'s W1 goes to month m's W4
+        }
 
         List<WeekPlan> result = new ArrayList<>();
-        int weekIndex = 0;
-        for (int m = 0; m < sourceMonths.size() && result.size() < 12; m++) {
-            YearMonth ym = sourceMonths.get(m);
-            long[] quantities = splitQuantities(perMonth);
 
-            // Carry (slot 0) - placed in previous month's W4
+        for (int m = 0; m < monthlyForecasts.size() && result.size() < 12; m++) {
+            MonthlyForecast mf = monthlyForecasts.get(m);
+            YearMonth ym = mf.month();
+            long[] quantities = monthSplits.get(m);
+            LocalDate firstDay = ym.atDay(1);
+            LocalDate w1Start = firstOfMonday(firstDay);
+
+            // W1: if this month's W1 is carried out, set to0
+            long w1Qty = w1CarriedOut[m] ? 0 : quantities[0];
             if (result.size() < 12) {
-                LocalDate prevW4 = ym.atDay(1).minusWeeks(1);
-                LocalDate monPrevW4 = firstOfMonday(prevW4);
-                boolean locked = isWeekLocked(monPrevW4, currentWeekStart);
-                Long manual = getManual(existingManualOverrides, weekIndex);
-                result.add(WeekPlan.auto(monPrevW4, ym.minusMonths(1).atDay(1), ym.atDay(1), 0, true, locked, quantities[0])
+                LocalDate weekStart = w1Start;
+                boolean locked = isWeekLocked(weekStart, currentWeekStart);
+                Long manual = getManual(existingManualOverrides, result.size());
+                result.add(WeekPlan.auto(weekStart, firstDay, firstDay, 1, false, locked, w1Qty)
                         .withManual(manual));
-                weekIndex++;
             }
 
-            // Ordinary weeks (slots 1, 2, 3)
-            for (int s = 1; s <= 3 && result.size() < 12; s++) {
-                LocalDate weekStart = ym.atDay(1).plusWeeks(s - 1);
-                LocalDate monday = firstOfMonday(weekStart);
-                boolean locked = isWeekLocked(monday, currentWeekStart);
-                Long manual = getManual(existingManualOverrides, weekIndex);
-                result.add(WeekPlan.auto(monday, ym.atDay(1), ym.atDay(1), s, false, locked, quantities[s])
+            // W2, W3
+            for (int s = 1; s < 3 && result.size() < 12; s++) {
+                LocalDate weekStart = w1Start.plusWeeks(s);
+                boolean locked = isWeekLocked(weekStart, currentWeekStart);
+                Long manual = getManual(existingManualOverrides, result.size());
+                result.add(WeekPlan.auto(weekStart, firstDay, firstDay, s + 1, false, locked, quantities[s])
                         .withManual(manual));
-                weekIndex++;
+            }
+
+            // W4: carry from next month's W1, or0 for last month
+            if (result.size() < 12) {
+                LocalDate w4Start = w1Start.plusWeeks(3);
+                boolean locked = isWeekLocked(w4Start, currentWeekStart);
+                Long manual = getManual(existingManualOverrides, result.size());
+                long w4Qty = 0;
+                boolean w4IsCarry = false;
+                YearMonth w4SourceMonth = ym;
+                if (m + 1 < monthlyForecasts.size()) {
+                    w4Qty = monthSplits.get(m + 1)[0]; // next month's W1
+                    w4SourceMonth = monthlyForecasts.get(m + 1).month();
+                    w4IsCarry = true;
+                }
+                result.add(WeekPlan.auto(w4Start, firstDay, w4SourceMonth.atDay(1), 4, w4IsCarry, locked, w4Qty)
+                        .withManual(manual));
             }
         }
 

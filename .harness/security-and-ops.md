@@ -33,3 +33,50 @@
 ## 6. 依赖和数据安全
 
 上传文件限制扩展名、大小、sheet 数量和行数；拒绝宏执行；导出文件使用随机文件名；下载接口校验用户数据域。SQL 必须参数化，禁止字符串拼接用户输入。
+
+---
+
+## 7. 权限开发规则（强制执行）
+
+### 7.1 新增页面/按钮必须定义权限码
+
+开发任何新页面或关键操作按钮时，必须：
+
+1. **定义权限码**：在 `permission` 表中插入对应记录
+   - 页面权限：`{module}:view`（如 `report:view`）
+   - 按钮权限：`{module}:{action}`（如 `report:export`）
+
+2. **前端使用权限组件**：
+   ```vue
+   <PermissionButton permission="report:export">导出</PermissionButton>
+   ```
+
+3. **路由配置页面权限**：
+   ```typescript
+   { path: '/reports', meta: { permission: 'report:view' } }
+   ```
+
+4. **后端 API 鉴权**：
+   ```java
+   @PreAuthorize("hasPermission('report:export')")
+   ```
+
+### 7.2 权限码命名规范
+
+- 格式：`{module}:{action}`
+- 模块名小写，动作名小写，用下划线分隔单词
+- 示例：`schedule:view`、`inventory:template_download`、`user:assign_role`
+
+### 7.3 权限分配流程
+
+| 步骤 | 谁做 | 做什么 |
+|------|------|--------|
+| 1 | 开发者 | 在代码中使用权限码（前端+后端） |
+| 2 | 开发者 | 通过 Flyway 迁移在 `permission` 表中插入权限码定义 |
+| 3 | 管理员 | 在权限管理页面给角色分配权限 |
+| 4 | 系统 | 用户刷新后自动生效 |
+
+**禁止：**
+- ❌ 在代码中硬编码角色判断（如 `if (role === 'ADMIN')`）
+- ❌ 使用中文名称作为权限判断条件
+- ❌ 跳过权限码定义直接在页面做判断

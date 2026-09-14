@@ -54,4 +54,8 @@
     <select id="countLinesByVersionId" resultType="int">
         SELECT COUNT(*) FROM capacity_line WHERE version_id = #{versionId}
     </select>
+
+    <delete id="deleteLineById">
+        DELETE FROM capacity_line WHERE id = #{id}
+    </delete>
 </mapper>

@@ -4,6 +4,7 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [vue()],
   server: {
+    port: 5180,
     proxy: {
       '/api': {
         target: 'http://localhost:8080',

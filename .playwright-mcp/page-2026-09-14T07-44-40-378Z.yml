@@ -1,0 +1,83 @@
+- generic [ref=f12e3]:
+  - complementary [ref=f12e4]:
+    - generic [ref=f12e5]:
+      - generic [ref=f12e6]: MRP
+      - generic [ref=f12e7]: 计划协同
+    - menubar [ref=f12e8]:
+      - generic [ref=f12e9]: 计划
+      - menuitem "看板" [ref=f12e10] [cursor=pointer]
+      - menuitem "排产计划" [ref=f12e17] [cursor=pointer]
+      - generic [ref=f12e22]: 数据
+      - menuitem "经营计划" [ref=f12e23] [cursor=pointer]
+      - menuitem "库存快照" [ref=f12e28] [cursor=pointer]
+      - menuitem "物料管理" [ref=f12e35] [cursor=pointer]
+      - menuitem "BOM管理" [ref=f12e40] [cursor=pointer]
+      - generic [ref=f12e45]: 配置
+      - menuitem "产能配置" [ref=f12e46] [cursor=pointer]
+      - generic [ref=f12e51]: 系统
+      - menuitem "用户与权限" [ref=f12e52] [cursor=pointer]
+  - generic [ref=f12e57]:
+    - generic [ref=f12e58]:
+      - generic [ref=f12e59]:
+        - generic [ref=f12e60]: 计划管理
+        - generic [ref=f12e61]: /
+        - strong [ref=f12e62]: 排产计划
+      - generic [ref=f12e63]:
+        - generic [ref=f12e64]: 数据已同步
+        - button "系 系统管理员" [ref=f12e67] [cursor=pointer]:
+          - generic [ref=f12e68]: 系
+          - generic [ref=f12e69]: 系统管理员
+    - main [ref=f12e70]:
+      - generic [ref=f12e71]:
+        - generic [ref=f12e72]:
+          - heading "排产计划" [level=1] [ref=f12e73]
+          - generic [ref=f12e74]:
+            - button "设置" [ref=f12e75] [cursor=pointer]
+            - button "版本对比" [ref=f12e80] [cursor=pointer]
+            - button "导出" [ref=f12e85] [cursor=pointer]
+            - button "重算" [disabled]
+            - button "发布" [disabled] [ref=f12e90]
+        - generic [ref=f12e96]:
+          - generic [ref=f12e98]:
+            - generic [ref=f12e100] [cursor=pointer]:
+              - generic:
+                - combobox [ref=f12e102]
+                - generic [ref=f12e103]: 全部工厂
+            - textbox "搜索整机料号 / 机型" [ref=f12e114]
+            - generic [ref=f12e117] [cursor=pointer]:
+              - generic:
+                - combobox [ref=f12e119]
+                - generic [ref=f12e120]: 全部状态
+          - generic [ref=f12e125]:
+            - generic [ref=f12e126]: 当前周
+            - generic [ref=f12e128]: 人工调整
+            - generic [ref=f12e130]: 已执行 / 锁定
+            - generic [ref=f12e132]: 超产能
+            - generic [ref=f12e134]: 点击数量可编辑，点击料号查看详情
+          - table [ref=f12e136]:
+            - rowgroup [ref=f12e137]:
+              - row [ref=f12e138]:
+                - columnheader "整机料号 / 名称" [ref=f12e139]
+                - columnheader "工厂" [ref=f12e140]
+            - rowgroup [ref=f12e141]:
+              - row [ref=f12e142]:
+                - cell [ref=f12e143]:
+                  - paragraph [ref=f12e163]: 暂无排产数据
+        - generic [ref=f12e164]:
+          - generic [ref=f12e166]:
+            - generic [ref=f12e167]: 历史版本
+            - generic: 禁止回滚
+          - generic [ref=f12e170]:
+            - table [ref=f12e172]:
+              - rowgroup [ref=f12e180]:
+                - row [ref=f12e181]:
+                  - columnheader "排产版本" [ref=f12e182]
+                  - columnheader "工厂" [ref=f12e184]
+                  - columnheader "生成时间" [ref=f12e186]
+                  - columnheader "经营计划版本" [ref=f12e188]
+                  - columnheader "状态" [ref=f12e190]
+                  - columnheader "操作" [ref=f12e192]
+            - generic [ref=f12e197]:
+              - table:
+                - rowgroup
+              - generic [ref=f12e198]: 暂无数据

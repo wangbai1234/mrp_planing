@@ -23,17 +23,13 @@ public class JwtService {
         this.expirationMs = expirationSeconds * 1000;
     }
 
-    public String generateToken(Long userId, String username, String role, String factoryScope) {
+    public String generateToken(Long userId, String username) {
         Date now = new Date();
         Date expiry = new Date(now.getTime() + expirationMs);
 
         return Jwts.builder()
                 .subject(username)
-                .claims(Map.of(
-                        "userId", userId,
-                        "role", role,
-                        "factoryScope", factoryScope != null ? factoryScope : ""
-                ))
+                .claims(Map.of("userId", userId))
                 .issuedAt(now)
                 .expiration(expiry)
                 .signWith(key)

@@ -2,16 +2,25 @@ package com.mrp.planning.controller;
 
 import com.mrp.common.exception.BusinessException;
 import com.mrp.common.response.ApiResponse;
+import com.mrp.common.security.CurrentUser;
 import com.mrp.importexport.service.ExportService;
 import com.mrp.planning.domain.*;
+import com.mrp.planning.service.AsyncCalculationService;
 import com.mrp.planning.service.PlanningDomainService;
 import com.mrp.planning.service.PlanningService;
 import com.mrp.task.domain.CalcTask;
 import com.mrp.task.domain.ExportTask;
 import com.mrp.task.repository.CalcTaskMapper;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -20,27 +29,37 @@ import java.util.Map;
 @RequestMapping("/api/v1")
 public class PlanningController {
 
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(PlanningController.class);
+
     private final PlanningService planningService;
     private final PlanningDomainService domainService;
     private final ExportService exportService;
     private final CalcTaskMapper calcTaskMapper;
+    private final AsyncCalculationService asyncCalculationService;
 
     public PlanningController(PlanningService planningService, PlanningDomainService domainService,
-                              ExportService exportService, CalcTaskMapper calcTaskMapper) {
+                              ExportService exportService, CalcTaskMapper calcTaskMapper,
+                              AsyncCalculationService asyncCalculationService) {
         this.planningService = planningService;
         this.domainService = domainService;
         this.exportService = exportService;
         this.calcTaskMapper = calcTaskMapper;
+        this.asyncCalculationService = asyncCalculationService;
     }
 
     // === 版本列表 ===
 
     @GetMapping("/plans")
     public ResponseEntity<ApiResponse<List<PlanVersion>>> listVersions(
-            @RequestParam String factoryCode,
+            @RequestParam(required = false) String factoryCode,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "20") int pageSize) {
-        List<PlanVersion> versions = domainService.listVersions(factoryCode);
+        List<PlanVersion> versions;
+        if (factoryCode != null && !factoryCode.isBlank()) {
+            versions = domainService.listVersions(factoryCode);
+        } else {
+            versions = domainService.listVersions(null);
+        }
         int from = Math.min((page - 1) * pageSize, versions.size());
         int to = Math.min(from + pageSize, versions.size());
         return ResponseEntity.ok(ApiResponse.ok(versions.subList(from, to)));
@@ -49,10 +68,16 @@ public class PlanningController {
     // === 当前排产 ===
 
     @GetMapping("/plans/current")
-    public ResponseEntity<ApiResponse<PlanVersion>> getCurrentPlan(
-            @RequestParam String factoryCode) {
-        PlanVersion version = planningService.getLatestPlan(factoryCode);
-        return ResponseEntity.ok(ApiResponse.ok(version));
+    public ResponseEntity<ApiResponse<List<PlanVersion>>> getCurrentPlan(
+            @RequestParam(required = false) String factoryCode) {
+        List<PlanVersion> versions;
+        if (factoryCode != null && !factoryCode.isBlank()) {
+            PlanVersion version = planningService.getLatestPlan(factoryCode);
+            versions = version != null ? List.of(version) : List.of();
+        } else {
+            versions = planningService.getAllLatestPlans();
+        }
+        return ResponseEntity.ok(ApiResponse.ok(versions));
     }
 
     // === 12 周网格（带 override） ===
@@ -67,41 +92,76 @@ public class PlanningController {
     @PostMapping("/recalculations")
     public ResponseEntity<ApiResponse<Map<String, Object>>> recalculate(
             @RequestBody Map<String, Object> request) {
-        Long forecastVersionId = Long.valueOf(request.get("forecastVersionId").toString());
+        log.info("收到重算请求: {}", request);
+        
+        String factoryCode = request.get("factoryCode") != null ? request.get("factoryCode").toString() : null;
+        LocalDate currentWeekStart = LocalDate.parse(request.get("currentWeekStart").toString());
+        
+        // 如果没有提供 forecastVersionId，自动获取最新版本
+        Long forecastVersionId;
+        if (request.get("forecastVersionId") != null) {
+            forecastVersionId = Long.valueOf(request.get("forecastVersionId").toString());
+        } else {
+            forecastVersionId = planningService.getLatestForecastVersionId();
+            if (forecastVersionId == null) {
+                throw new BusinessException("NO_FORECAST", "请先导入经营计划");
+            }
+        }
+        
         Long inventorySnapshotId = request.get("inventorySnapshotId") != null
                 ? Long.valueOf(request.get("inventorySnapshotId").toString()) : null;
         Long shipmentBatchId = request.get("shipmentBatchId") != null
                 ? Long.valueOf(request.get("shipmentBatchId").toString()) : null;
         Long capacityVersionId = request.get("capacityVersionId") != null
                 ? Long.valueOf(request.get("capacityVersionId").toString()) : null;
-        String factoryCode = request.get("factoryCode").toString();
-        LocalDate currentWeekStart = LocalDate.parse(request.get("currentWeekStart").toString());
 
-        String requestKey = "recalc:" + forecastVersionId + ":" + inventorySnapshotId + ":" + currentWeekStart;
+        // 当 factoryCode 为空时，为所有工厂生成排产版本
+        if (factoryCode == null || factoryCode.isBlank()) {
+            log.info("factoryCode 为空，为所有工厂生成排产版本");
+            String requestKey = "recalc:all:" + forecastVersionId + ":" + inventorySnapshotId + ":" + currentWeekStart;
+            CalcTask existing = calcTaskMapper.selectByRequestKey(requestKey);
+            if (existing != null && CalcTask.STATUS_SUCCEEDED.equals(existing.status())) {
+                return ResponseEntity.accepted().body(ApiResponse.ok(Map.of(
+                        "taskId", existing.id(), "status", existing.status(),
+                        "planVersionId", existing.resultResourceId())));
+            }
+
+            CalcTask task = new CalcTask(null, "RECALCULATION", "ALL", requestKey,
+                    CalcTask.STATUS_PENDING, 0, null, null, null, 0, 0, 0, 3, null,
+                    null, null, null, null, null, CurrentUser.getUserId(), null, null, null, 0);
+            calcTaskMapper.insert(task);
+
+            Long userId = CurrentUser.getUserId();
+            asyncCalculationService.executeRecalculationAllFactories(
+                    task.id(), forecastVersionId, inventorySnapshotId, shipmentBatchId,
+                    capacityVersionId, currentWeekStart, userId);
+
+            return ResponseEntity.accepted().body(ApiResponse.ok(Map.of(
+                    "taskId", task.id(), "status", CalcTask.STATUS_PENDING)));
+        }
+
+        String requestKey = "recalc:" + forecastVersionId + ":" + factoryCode + ":" + inventorySnapshotId + ":" + currentWeekStart;
+        log.info("请求键: {}, forecastVersionId: {}", requestKey, forecastVersionId);
+        
         CalcTask existing = calcTaskMapper.selectByRequestKey(requestKey);
         if (existing != null && CalcTask.STATUS_SUCCEEDED.equals(existing.status())) {
-            return ResponseEntity.ok(ApiResponse.ok(Map.of(
+            return ResponseEntity.accepted().body(ApiResponse.ok(Map.of(
                     "taskId", existing.id(), "status", existing.status(),
                     "planVersionId", existing.resultResourceId())));
         }
 
         CalcTask task = new CalcTask(null, "RECALCULATION", factoryCode, requestKey,
                 CalcTask.STATUS_PENDING, 0, null, null, null, 0, 0, 0, 3, null,
-                null, null, null, null, null, 1L, null, null, null, 0);
+                null, null, null, null, null, CurrentUser.getUserId(), null, null, null, 0);
         calcTaskMapper.insert(task);
 
-        try {
-            PlanVersion version = planningService.recalculate(
-                    forecastVersionId, inventorySnapshotId, shipmentBatchId,
-                    capacityVersionId, factoryCode, currentWeekStart, 1L);
-            calcTaskMapper.updateResult(task.id(), CalcTask.STATUS_SUCCEEDED, version.id(), 0);
-            return ResponseEntity.accepted().body(ApiResponse.ok(Map.of(
-                    "taskId", task.id(), "status", CalcTask.STATUS_SUCCEEDED,
-                    "planVersionId", version.id())));
-        } catch (Exception e) {
-            calcTaskMapper.updateFailure(task.id(), CalcTask.STATUS_FAILED, "MRP_CALC_ERROR", e.getMessage(), 0);
-            throw new BusinessException("MRP_CALC_ERROR", "Recalculation failed: " + e.getMessage());
-        }
+        Long userId = CurrentUser.getUserId();
+        asyncCalculationService.executeRecalculation(
+                task.id(), forecastVersionId, inventorySnapshotId, shipmentBatchId,
+                capacityVersionId, factoryCode, currentWeekStart, userId);
+
+        return ResponseEntity.accepted().body(ApiResponse.ok(Map.of(
+                "taskId", task.id(), "status", CalcTask.STATUS_PENDING)));
     }
 
     @GetMapping("/recalculations/{id}")
@@ -119,7 +179,7 @@ public class PlanningController {
         Long manualQuantity = Long.valueOf(request.get("manualQuantity").toString());
         String reason = request.get("reason") != null ? request.get("reason").toString() : null;
 
-        PlanOverride ov = domainService.saveOverride(id, materialId, weekStartDate, manualQuantity, reason, 1L);
+        PlanOverride ov = domainService.saveOverride(id, materialId, weekStartDate, manualQuantity, reason, CurrentUser.getUserId());
         return ResponseEntity.ok(ApiResponse.ok(ov));
     }
 
@@ -127,7 +187,7 @@ public class PlanningController {
     public ResponseEntity<ApiResponse<Void>> restoreAutoValue(
             @PathVariable Long id, @PathVariable String materialId,
             @RequestParam String weekStartDate) {
-        domainService.restoreAutoValue(id, materialId, LocalDate.parse(weekStartDate), 1L);
+        domainService.restoreAutoValue(id, materialId, LocalDate.parse(weekStartDate), CurrentUser.getUserId());
         return ResponseEntity.ok(ApiResponse.ok());
     }
 
@@ -135,7 +195,7 @@ public class PlanningController {
 
     @PostMapping("/plans/{id}/publish")
     public ResponseEntity<ApiResponse<PlanVersion>> publish(@PathVariable Long id) {
-        PlanVersion version = domainService.publish(id, 1L);
+        PlanVersion version = domainService.publish(id, CurrentUser.getUserId());
         return ResponseEntity.ok(ApiResponse.ok(version));
     }
 
@@ -156,8 +216,9 @@ public class PlanningController {
         List<String> fields = (List<String>) request.get("fields");
         boolean includePriority = Boolean.TRUE.equals(request.get("includePriority"));
         boolean includeActual = Boolean.TRUE.equals(request.get("includeActual"));
+        String factoryCode = request.get("factoryCode") != null ? request.get("factoryCode").toString() : null;
 
-        ExportTask task = exportService.createExportTask(id, fields, includePriority, includeActual, 1L);
+        ExportTask task = exportService.createExportTask(id, factoryCode, fields, includePriority, includeActual, CurrentUser.getUserId());
         return ResponseEntity.accepted().body(ApiResponse.ok(task));
     }
 
@@ -165,5 +226,25 @@ public class PlanningController {
     public ResponseEntity<ApiResponse<ExportTask>> getExportTask(@PathVariable Long id) {
         // TODO: implement ExportTaskMapper.selectById
         return ResponseEntity.ok(ApiResponse.ok(null));
+    }
+
+    @GetMapping("/export-tasks/{id}/download")
+    public ResponseEntity<Resource> downloadExport(@PathVariable Long id) {
+        ExportTask task = exportService.getExportTask(id);
+        if (task == null || task.getFilePath() == null) {
+            throw new BusinessException("MRP_NOT_FOUND", "Export file not found");
+        }
+        
+        Path filePath = Paths.get(task.getFilePath());
+        File file = filePath.toFile();
+        if (!file.exists()) {
+            throw new BusinessException("MRP_NOT_FOUND", "Export file not found on disk");
+        }
+        
+        FileSystemResource resource = new FileSystemResource(file);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(resource);
     }
 }

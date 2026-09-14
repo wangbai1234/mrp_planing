@@ -29,4 +29,6 @@ public interface CapacityMapper {
     CapacityLine selectLineById(@Param("id") Long id);
 
     int countLinesByVersionId(@Param("versionId") Long versionId);
+
+    int deleteLineById(@Param("id") Long id);
 }

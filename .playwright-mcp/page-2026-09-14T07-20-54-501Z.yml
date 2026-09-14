@@ -1,0 +1,78 @@
+- generic [ref=f5e3]:
+  - complementary [ref=f5e4]:
+    - generic [ref=f5e5]:
+      - generic [ref=f5e6]: MRP
+      - generic [ref=f5e7]: 计划协同
+    - menubar [ref=f5e8]:
+      - generic [ref=f5e9]: 计划
+      - menuitem "看板" [ref=f5e10] [cursor=pointer]
+      - menuitem "排产计划" [ref=f5e17] [cursor=pointer]
+      - generic [ref=f5e22]: 数据
+      - menuitem "经营计划" [ref=f5e23] [cursor=pointer]
+      - menuitem "库存快照" [ref=f5e28] [cursor=pointer]
+      - menuitem "物料管理" [ref=f5e35] [cursor=pointer]
+      - menuitem "BOM管理" [ref=f5e40] [cursor=pointer]
+      - generic [ref=f5e45]: 配置
+      - menuitem "产能配置" [ref=f5e46] [cursor=pointer]
+      - generic [ref=f5e51]: 系统
+      - menuitem "用户与权限" [ref=f5e52] [cursor=pointer]
+  - generic [ref=f5e57]:
+    - generic [ref=f5e58]:
+      - generic [ref=f5e59]:
+        - generic [ref=f5e60]: 计划管理
+        - generic [ref=f5e61]: /
+        - strong [ref=f5e62]: 12 周滚动排产
+      - generic [ref=f5e63]:
+        - generic [ref=f5e64]: 数据已同步
+        - button "系 系统管理员" [ref=f5e67] [cursor=pointer]:
+          - generic [ref=f5e68]: 系
+          - generic [ref=f5e69]: 系统管理员
+    - main [ref=f5e70]:
+      - generic [ref=f5e71]:
+        - generic [ref=f5e72]:
+          - generic [ref=f5e73]: 用户与权限
+          - menubar [ref=f5e74]:
+            - menuitem "用户" [ref=f5e75] [cursor=pointer]
+            - menuitem "角色" [ref=f5e80] [cursor=pointer]
+            - menuitem "操作日志" [ref=f5e85] [cursor=pointer]
+        - generic [ref=f5e91]:
+          - generic [ref=f5e92]:
+            - heading "用户管理" [level=2] [ref=f5e93]
+            - button "新增用户" [ref=f5e94] [cursor=pointer]
+          - generic [ref=f5e99]:
+            - textbox "搜索姓名/账号/部门" [ref=f5e106]
+            - generic [ref=f5e109] [cursor=pointer]:
+              - generic:
+                - combobox [ref=f5e111]
+                - generic [ref=f5e112]: 状态
+            - generic [ref=f5e118] [cursor=pointer]:
+              - generic:
+                - combobox [ref=f5e120]
+                - generic [ref=f5e121]: 角色
+            - button "查询" [ref=f5e126] [cursor=pointer]
+          - generic [ref=f5e129]:
+            - table [ref=f5e131]:
+              - rowgroup [ref=f5e141]:
+                - row [ref=f5e142]:
+                  - columnheader "用户姓名" [ref=f5e143]
+                  - columnheader "登录账号" [ref=f5e145]
+                  - columnheader "所属角色" [ref=f5e147]
+                  - columnheader "所属部门" [ref=f5e149]
+                  - columnheader "状态" [ref=f5e151]
+                  - columnheader "最近登录" [ref=f5e153]
+                  - columnheader "创建时间" [ref=f5e155]
+                  - columnheader "操作" [ref=f5e157]
+            - generic [ref=f5e162]:
+              - table:
+                - rowgroup
+              - generic [ref=f5e163]: 暂无数据
+          - generic [ref=f5e170]:
+            - generic [ref=f5e171]: 共 0 条
+            - generic [ref=f5e174] [cursor=pointer]:
+              - generic:
+                - combobox [ref=f5e176]
+                - generic [ref=f5e177]: 20条/页
+            - button "上一页" [disabled] [ref=f5e182]
+            - list [ref=f5e183]:
+              - listitem "第 1 页" [ref=f5e184]: "1"
+            - button "下一页" [disabled] [ref=f5e185]

@@ -21,8 +21,18 @@
         SELECT * FROM export_task WHERE request_key = #{requestKey}
     </select>
 
+    <delete id="deleteById">
+        DELETE FROM export_task WHERE id = #{id}
+    </delete>
+
     <update id="updateResult">
         UPDATE export_task SET status = #{status}, result_resource_id = #{resultResourceId},
+            finished_at = CURRENT_TIMESTAMP(3), version = version + 1
+        WHERE id = #{id} AND version = #{version}
+    </update>
+
+    <update id="updateResultWithFile">
+        UPDATE export_task SET status = #{status}, file_path = #{filePath},
             finished_at = CURRENT_TIMESTAMP(3), version = version + 1
         WHERE id = #{id} AND version = #{version}
     </update>

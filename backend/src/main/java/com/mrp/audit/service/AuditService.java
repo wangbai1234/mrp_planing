@@ -33,7 +33,7 @@ public class AuditService {
             jdbcTemplate.update("""
                 INSERT INTO audit_log (operator_id, operator_role, factory_scope, action,
                     resource_type, resource_id, before_value, after_value, trace_id, ip_address)
-                VALUES (?, ?, ?, ?, ?, ?, ?::json, ?::json, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """, operatorId, operatorRole, factoryScope, action,
                 resourceType, resourceId, beforeJson, afterJson, traceId, ipAddress);
 

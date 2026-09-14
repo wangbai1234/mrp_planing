@@ -1,0 +1,10 @@
+- generic [ref=f3e4]:
+  - generic [ref=f3e6]:
+    - heading "MRP 排产系统" [level=2] [ref=f3e7]
+    - paragraph [ref=f3e8]: 请登录
+  - generic [ref=f3e10]:
+    - textbox "用户名" [ref=f3e19]: admin
+    - generic [ref=f3e23]:
+      - textbox "密码" [ref=f3e29]: admin123
+      - generic [ref=f3e31] [cursor=pointer]
+    - button "登录" [ref=f3e37] [cursor=pointer]

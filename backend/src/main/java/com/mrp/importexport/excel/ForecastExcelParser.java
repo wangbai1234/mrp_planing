@@ -1,6 +1,8 @@
 package com.mrp.importexport.excel;
 
 import com.mrp.forecast.domain.ForecastDetail;
+import com.mrp.masterdata.domain.Material;
+import com.mrp.masterdata.repository.MaterialMapper;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xssf.eventusermodel.XSSFReader;
 import org.apache.poi.xssf.model.SharedStrings;
@@ -15,6 +17,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import javax.xml.parsers.SAXParserFactory;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -27,23 +30,28 @@ public class ForecastExcelParser {
 
     private static final Logger log = LoggerFactory.getLogger(ForecastExcelParser.class);
 
+    private final MaterialMapper materialMapper;
+
+    public ForecastExcelParser(MaterialMapper materialMapper) {
+        this.materialMapper = materialMapper;
+    }
+
     private static final int HEADER_ROW = 0;
-    private static final int DATA_START_ROW = 1;
-    private static final int COL_BUSINESS_LINE = 0;
+    private static final int DATA_START_ROW = 2; // Row 0=header, Row 1=tips, Row 2+=data
+    private static final int COL_FACTORY = 0;
     private static final int COL_FORM_TYPE = 1;
     private static final int COL_MATERIAL_ID = 2;
-    private static final int COL_MATERIAL_NAME = 3;
-    private static final int COL_PROJECT = 4;
-    private static final int COL_PLATFORM = 5;
-    private static final int COL_MOLD = 6;
-    private static final int COL_STATUS = 7;
-    private static final int COL_FCST_START = 8;
+    private static final int COL_MOLD = 3;
+    private static final int COL_STATUS = 4;
+    private static final int COL_FCST_START = 5;
     private static final int FCST_MONTHS = 6;
 
     public ParseResult<ForecastDetail> parse(Path file, Long versionId) {
         List<ForecastDetail> rows = new ArrayList<>();
         List<ParseError> errors = new ArrayList<>();
         List<String> recognizedMonths = new ArrayList<>();
+        List<List<String>> rawRows = new ArrayList<>();
+        List<String> headers = new ArrayList<>();
         int totalRows = 0;
 
         try (OPCPackage pkg = OPCPackage.open(file.toFile())) {
@@ -54,7 +62,7 @@ public class ForecastExcelParser {
             XSSFReader.SheetIterator sheets = (XSSFReader.SheetIterator) reader.getSheetsData();
             if (!sheets.hasNext()) {
                 errors.add(ParseError.of(0, "sheet", "", "NO_SHEET", "No sheet found"));
-                return new ParseResult<>(rows, errors, recognizedMonths, 0, 0, 1);
+                return new ParseResult<>(rows, errors, recognizedMonths, 0, 0, 1, rawRows, headers);
             }
 
             InputStream sheetStream = sheets.next();
@@ -62,7 +70,7 @@ public class ForecastExcelParser {
             factory.setNamespaceAware(true);
             XMLReader xmlReader = factory.newSAXParser().getXMLReader();
 
-            ForecastSheetHandler handler = new ForecastSheetHandler(sst, styles, versionId, rows, errors, recognizedMonths);
+            ForecastSheetHandler handler = new ForecastSheetHandler(sst, styles, versionId, rows, errors, recognizedMonths, materialMapper, rawRows, headers);
             xmlReader.setContentHandler(handler);
             xmlReader.parse(new InputSource(sheetStream));
 
@@ -76,7 +84,7 @@ public class ForecastExcelParser {
 
         int errorRows = errors.size();
         int successRows = rows.size();
-        return new ParseResult<>(rows, errors, recognizedMonths, totalRows, successRows, errorRows);
+        return new ParseResult<>(rows, errors, recognizedMonths, totalRows, successRows, errorRows, rawRows, headers);
     }
 
     private static class ForecastSheetHandler extends DefaultHandler {
@@ -86,6 +94,9 @@ public class ForecastExcelParser {
         private final List<ForecastDetail> rows;
         private final List<ParseError> errors;
         private final List<String> recognizedMonths;
+        private final MaterialMapper materialMapper;
+        private final List<List<String>> rawRows;
+        private final List<String> headers;
 
         private int currentRow = -1;
         private int currentCol = 0;
@@ -98,13 +109,17 @@ public class ForecastExcelParser {
         private List<Object> currentRowData = new ArrayList<>();
 
         ForecastSheetHandler(SharedStrings sst, StylesTable styles, Long versionId,
-                            List<ForecastDetail> rows, List<ParseError> errors, List<String> recognizedMonths) {
+                            List<ForecastDetail> rows, List<ParseError> errors, List<String> recognizedMonths,
+                            MaterialMapper materialMapper, List<List<String>> rawRows, List<String> headers) {
             this.sst = sst;
             this.styles = styles;
             this.versionId = versionId;
             this.rows = rows;
             this.errors = errors;
             this.recognizedMonths = recognizedMonths;
+            this.materialMapper = materialMapper;
+            this.rawRows = rawRows;
+            this.headers = headers;
         }
 
         int getDataRowCount() { return currentRow; }
@@ -163,10 +178,28 @@ public class ForecastExcelParser {
         private void processRow() {
             if (currentRow == HEADER_ROW) {
                 parseHeader();
+                // Save headers
+                headers.clear();
+                for (Object cell : currentRowData) {
+                    headers.add(cell != null ? cell.toString() : "");
+                }
                 return;
             }
             if (currentRow < DATA_START_ROW) return;
             if (currentRowData.isEmpty()) return;
+
+            // Save raw row data for error report (pad to expected column count)
+            List<String> rawRow = new ArrayList<>();
+            int totalCols = COL_FCST_START + FCST_MONTHS + 1; // 5 + 6 + 1(fcst-total) = 12
+            for (int i = 0; i < totalCols; i++) {
+                if (i < currentRowData.size()) {
+                    Object cell = currentRowData.get(i);
+                    rawRow.add(cell != null ? cell.toString() : "");
+                } else {
+                    rawRow.add("");
+                }
+            }
+            rawRows.add(rawRow);
 
             String materialId = getString(COL_MATERIAL_ID);
             if (materialId == null || materialId.isBlank()) return;
@@ -177,11 +210,18 @@ public class ForecastExcelParser {
                 return;
             }
 
-            String businessLine = getString(COL_BUSINESS_LINE);
+            // Validate material exists in material master data
+            Material material = materialMapper.selectByCode(materialId);
+            if (material == null) {
+                errors.add(ParseError.of(currentRow + 1, "material_id", materialId, "MATERIAL_NOT_FOUND", "未找到该料号，请先维护再导入"));
+                return;
+            }
+
+            String factoryCode = getString(COL_FACTORY);
             String formType = getString(COL_FORM_TYPE);
-            String materialName = getString(COL_MATERIAL_NAME);
-            String project = getString(COL_PROJECT);
-            String platform = getString(COL_PLATFORM);
+            String materialName = material.materialName();
+            String project = material.projectModel();
+            String platform = material.specModel();
             String mold = getString(COL_MOLD);
             String status = getString(COL_STATUS);
 
@@ -194,10 +234,10 @@ public class ForecastExcelParser {
                 }
 
                 String qtyStr = getString(COL_FCST_START + i);
-                long qty = 0;
+                BigDecimal qty = BigDecimal.ZERO;
                 if (qtyStr != null && !qtyStr.isBlank()) {
                     try {
-                        qty = Long.parseLong(qtyStr.replaceAll("\\.0+$", ""));
+                        qty = new BigDecimal(qtyStr);
                     } catch (NumberFormatException e) {
                         errors.add(ParseError.of(currentRow + 1, "fcst_" + monthStr, qtyStr, "INVALID_QTY", "数量格式错误"));
                         continue;
@@ -205,8 +245,8 @@ public class ForecastExcelParser {
                 }
 
                 rows.add(new ForecastDetail(
-                        null, versionId, null, materialId, materialName,
-                        businessLine, formType, project, platform, mold, status,
+                        null, versionId, factoryCode, materialId, materialName,
+                        null, formType, project, platform, mold, status,
                         ym.atDay(1), qty
                 ));
             }

@@ -21,6 +21,8 @@ public interface PlanMapper {
 
     List<PlanVersion> selectVersionsByFactory(@Param("factoryCode") String factoryCode);
 
+    List<PlanVersion> selectAllLatestVersions();
+
     int insertDetails(@Param("list") List<PlanDetail> details);
 
     List<PlanDetail> selectDetailsByVersionId(@Param("versionId") Long versionId);

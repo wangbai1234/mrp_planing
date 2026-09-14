@@ -1,0 +1,96 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e39]:
+    - complementary [ref=e40]:
+      - generic [ref=e41]:
+        - generic [ref=e42]: MRP
+        - generic [ref=e43]: 计划协同
+      - menubar [ref=e44]:
+        - generic [ref=e45]: 计划
+        - menuitem "工作台" [ref=e46] [cursor=pointer]
+        - menuitem "滚动排产" [ref=e51] [cursor=pointer]
+        - menuitem "版本记录" [ref=e56] [cursor=pointer]
+        - generic [ref=e63]: 数据
+        - menuitem "经营计划" [ref=e64] [cursor=pointer]
+        - menuitem "库存快照" [ref=e69] [cursor=pointer]
+        - menuitem "物料管理" [ref=e76] [cursor=pointer]
+        - generic [ref=e81]: 配置
+        - menuitem "产能配置" [ref=e82] [cursor=pointer]
+        - menuitem "操作手册" [ref=e87] [cursor=pointer]
+    - generic [ref=e92]:
+      - generic [ref=e93]:
+        - generic [ref=e94]:
+          - generic [ref=e95]: 计划管理
+          - generic [ref=e96]: /
+          - strong [ref=e97]: 12 周滚动排产
+        - generic [ref=e98]:
+          - generic [ref=e99]: 数据已同步
+          - generic [ref=e101]: 库存快照 2026-08-27 23:40
+          - generic [ref=e102]: CRM 2026-08-28 08:30
+          - button "肖 肖芳" [ref=e104] [cursor=pointer]:
+            - generic [ref=e105]: 肖
+            - generic [ref=e106]: 肖芳
+      - main [ref=e107]:
+        - generic [ref=e108]:
+          - generic [ref=e109]:
+            - heading "12 周滚动排产" [level=1] [ref=e110]
+            - generic [ref=e111]:
+              - button "怎么操作" [ref=e112] [cursor=pointer]
+              - button "版本对比" [ref=e117] [cursor=pointer]
+              - button "导出" [ref=e122] [cursor=pointer]
+              - button "重算" [ref=e127] [cursor=pointer]
+              - button "发布" [disabled] [ref=e132]
+          - generic [ref=e137]:
+            - text: 经营计划
+            - strong [ref=e138]: "-"
+            - text: · 排产版本
+            - strong [ref=e139]: "-"
+            - text: ·
+            - generic [ref=e140]: 无数据
+          - generic [ref=e142]:
+            - generic [ref=e145]:
+              - generic [ref=e146]:
+                - generic [ref=e147]: 经营计划导入后自动重算
+                - generic [ref=e148]: 导入生成经营计划新版本后，是否立即生成排产新版本
+              - generic [ref=e149]:
+                - switch
+                - generic [ref=e150] [cursor=pointer]
+            - generic [ref=e154]:
+              - generic [ref=e155]:
+                - generic [ref=e156]: 库存快照导入后自动重算
+                - generic [ref=e157]: 库存快照更新后，是否立即按最新库存生成排产新版本
+              - generic [ref=e158]:
+                - switch
+                - generic [ref=e159] [cursor=pointer]
+          - generic [ref=e162]:
+            - generic [ref=e163]:
+              - generic [ref=e164]:
+                - textbox "搜索整机料号 / 机型" [ref=e171]
+                - generic [ref=e174] [cursor=pointer]:
+                  - generic:
+                    - combobox [ref=e176]
+                    - generic [ref=e177]: 全部工厂
+                - generic [ref=e183] [cursor=pointer]:
+                  - generic:
+                    - combobox [ref=e185]
+                    - generic [ref=e186]: 全部状态
+              - generic [ref=e191]:
+                - generic [ref=e192]:
+                  - text: 窗口：
+                  - strong [ref=e193]: 0 周
+                - button "定位当前周" [ref=e194] [cursor=pointer]
+            - generic [ref=e199]:
+              - generic [ref=e200]: 当前周
+              - generic [ref=e202]: 人工调整
+              - generic [ref=e204]: 已执行 / 锁定
+              - generic [ref=e206]: 超产能
+              - generic [ref=e208]: 点击可编辑数量查看自动值和修改历史
+            - table [ref=e210]:
+              - rowgroup [ref=e211]:
+                - row [ref=e212]:
+                  - columnheader "整机料号 / 名称" [ref=e213]
+              - rowgroup [ref=e214]:
+                - row [ref=e215]:
+                  - cell [ref=e216]:
+                    - paragraph [ref=e236]: 暂无排产数据
+  - alert [ref=e237]:
+    - paragraph [ref=e241]: 登录成功

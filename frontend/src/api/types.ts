@@ -31,6 +31,7 @@ export interface PlanVersion {
 }
 
 export interface PlanGridRow {
+  planVersionId: number
   materialId: string
   materialName: string
   factoryCode: string
@@ -97,4 +98,34 @@ export interface ParseError {
   originalValue: string
   errorCode: string
   message: string
+}
+
+export interface InventorySnapshot {
+  id: number
+  snapshotDate: string
+  fileName?: string
+  status: string
+  createdAt: string
+}
+
+export interface InventoryItem {
+  id: number
+  productLine: string
+  inventoryCategory: string
+  materialId: string
+  projectModel: string
+  materialName: string
+  supplierName: string
+  productMode: string
+  odmSupplierQty: number
+  xa400Qty: number
+  xa378Qty: number
+  xa226Qty: number
+  shippingAvailableQty: number
+  classification: string
+  barcode: string
+  remark: string
+  orderPendingQty: number
+  salesStatus: string
+  parentRecord: string
 }

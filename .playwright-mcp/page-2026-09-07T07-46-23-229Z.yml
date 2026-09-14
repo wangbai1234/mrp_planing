@@ -1,0 +1,57 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]: MRP
+      - generic [ref=e7]: 计划协同
+    - menubar [ref=e8]:
+      - generic [ref=e9]: 计划
+      - menuitem "工作台" [ref=e10] [cursor=pointer]
+      - menuitem "滚动排产" [ref=e15] [cursor=pointer]
+      - menuitem "版本记录" [ref=e20] [cursor=pointer]
+      - generic [ref=e27]: 数据
+      - menuitem "经营计划" [ref=e28] [cursor=pointer]
+      - menuitem "库存快照" [ref=e33] [cursor=pointer]
+      - menuitem "物料管理" [ref=e40] [cursor=pointer]
+      - generic [ref=e45]: 配置
+      - menuitem "产能配置" [ref=e46] [cursor=pointer]
+      - menuitem "操作手册" [ref=e51] [cursor=pointer]
+  - generic [ref=e56]:
+    - generic [ref=e57]:
+      - generic [ref=e58]:
+        - generic [ref=e59]: 数据管理
+        - generic [ref=e60]: /
+        - strong [ref=e61]: 经营计划
+      - generic [ref=e62]:
+        - generic [ref=e63]: 数据已同步
+        - generic [ref=e65]: 库存快照 2026-08-27 23:40
+        - generic [ref=e66]: CRM 2026-08-28 08:30
+        - button "肖 肖芳" [ref=e68] [cursor=pointer]:
+          - generic [ref=e69]: 肖
+          - generic [ref=e70]: 肖芳
+    - main [ref=e71]:
+      - generic [ref=e72]:
+        - generic [ref=e73]:
+          - heading "经营计划" [level=1] [ref=e74]
+          - button "导入" [ref=e75] [cursor=pointer]
+        - generic [ref=e80]:
+          - generic [ref=e81]: 历史版本
+          - generic [ref=e84]:
+            - table [ref=e86]:
+              - rowgroup [ref=e92]:
+                - row [ref=e93]:
+                  - columnheader "ID" [ref=e94]
+                  - columnheader "版本号" [ref=e96]
+                  - columnheader "状态" [ref=e98]
+                  - columnheader "导入时间" [ref=e100]
+            - table [ref=e106]:
+              - rowgroup [ref=e112]:
+                - row [ref=e113]:
+                  - cell "6" [ref=e114]
+                  - cell "2" [ref=e116]
+                  - cell "已导入" [ref=e118]
+                  - cell "2026-09-06T23:45:10.679Z" [ref=e122]
+                - row [ref=e124]:
+                  - cell "5" [ref=e125]
+                  - cell "1" [ref=e127]
+                  - cell "已导入" [ref=e129]
+                  - cell "2026-09-06T23:36:53.898Z" [ref=e133]

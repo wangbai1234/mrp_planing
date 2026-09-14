@@ -39,7 +39,7 @@ public class InventoryExcelParser {
             XSSFReader.SheetIterator sheets = (XSSFReader.SheetIterator) reader.getSheetsData();
             if (!sheets.hasNext()) {
                 errors.add(ParseError.of(0, "sheet", "", "NO_SHEET", "No sheet found"));
-                return new ParseResult<>(rows, errors, List.of(), 0, 0, 1);
+                return new ParseResult<>(rows, errors, List.of(), 0, 0, 1, List.of(), List.of());
             }
 
             InputStream sheetStream = sheets.next();
@@ -59,7 +59,7 @@ public class InventoryExcelParser {
             errors.add(ParseError.of(0, "file", "", "PARSE_ERROR", e.getMessage()));
         }
 
-        return new ParseResult<>(rows, errors, List.of(), totalRows, rows.size(), errors.size());
+        return new ParseResult<>(rows, errors, List.of(), totalRows, rows.size(), errors.size(), List.of(), List.of());
     }
 
     private static class InventorySheetHandler extends DefaultHandler {

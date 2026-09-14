@@ -39,20 +39,24 @@ public class ExportService {
         try { Files.createDirectories(this.exportDir); } catch (IOException e) { /* ignore */ }
     }
 
-    public ExportTask createExportTask(Long planVersionId, List<String> fields,
+    public ExportTask createExportTask(Long planVersionId, String factoryCode, List<String> fields,
                                        boolean includePriority, boolean includeActual,
                                        Long userId) {
         PlanVersion version = planMapper.selectVersionById(planVersionId);
         if (version == null) throw new BusinessException("MRP_NOT_FOUND", "Plan version not found");
 
-        String requestKey = "export:" + planVersionId + ":" + String.join(",", fields);
+        String requestKey = "export:" + planVersionId + ":" + factoryCode + ":" + String.join(",", fields);
         ExportTask existing = exportTaskMapper.selectByRequestKey(requestKey);
-        if (existing != null && ExportTask.STATUS_SUCCEEDED.equals(existing.status())) {
-            return existing;
+        if (existing != null) {
+            if (ExportTask.STATUS_SUCCEEDED.equals(existing.getStatus()) && existing.getFilePath() != null) {
+                return existing;
+            }
+            // Delete failed/incomplete task to allow retry
+            exportTaskMapper.deleteById(existing.getId());
         }
 
         ExportTask task = new ExportTask(
-                null, "PLAN_EXPORT", version.factoryCode(),
+                null, "PLAN_EXPORT", version.getFactoryCode(),
                 requestKey, ExportTask.STATUS_PENDING, 0,
                 null, null, null, 0, 0, 0, 3, null,
                 null, null, null, null, null,
@@ -62,15 +66,26 @@ public class ExportService {
 
         // Generate Excel synchronously (small datasets)
         try {
-            List<PlanDetail> details = planMapper.selectDetailsByVersionId(planVersionId);
+            List<PlanDetail> details;
+            if (factoryCode != null && !factoryCode.isBlank()) {
+                details = planMapper.selectDetailsByVersionAndFactory(planVersionId, factoryCode);
+            } else {
+                details = planMapper.selectDetailsByVersionId(planVersionId);
+            }
             Path filePath = generateExcel(details, fields, includePriority, includeActual);
-            exportTaskMapper.updateResult(task.id(), ExportTask.STATUS_SUCCEEDED, null, 0);
-            log.info("Export generated: taskId={}, file={}", task.id(), filePath);
-            return exportTaskMapper.selectById(task.id());
+            String filePathStr = filePath.toString();
+            exportTaskMapper.updateResultWithFile(task.getId(), ExportTask.STATUS_SUCCEEDED, filePathStr, 0);
+            log.info("Export generated: taskId={}, file={}", task.getId(), filePath);
+            ExportTask result = exportTaskMapper.selectById(task.getId());
+            return result;
         } catch (Exception e) {
-            exportTaskMapper.updateFailure(task.id(), ExportTask.STATUS_FAILED, "EXPORT_ERROR", e.getMessage(), 0);
+            exportTaskMapper.updateFailure(task.getId(), ExportTask.STATUS_FAILED, "EXPORT_ERROR", e.getMessage(), 0);
             throw new BusinessException("MRP_EXPORT_ERROR", "Export failed: " + e.getMessage());
         }
+    }
+
+    public ExportTask getExportTask(Long id) {
+        return exportTaskMapper.selectById(id);
     }
 
     private Path generateExcel(List<PlanDetail> details, List<String> fields,

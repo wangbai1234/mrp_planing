@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.auth.repository.UserPermissionMapper">
+
+    <resultMap id="userPermissionResult" type="com.mrp.auth.domain.UserPermission">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="permissionId" column="permission_id"/>
+        <result property="effect" column="effect"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="createdBy" column="created_by"/>
+        <result property="permissionCode" column="permission_code"/>
+        <result property="permissionName" column="permission_name"/>
+    </resultMap>
+
+    <select id="selectByUserId" resultMap="userPermissionResult">
+        SELECT up.id, up.user_id, up.permission_id, up.effect, up.created_at, up.created_by,
+               p.code as permission_code, p.name as permission_name
+        FROM user_permission up
+        INNER JOIN permission p ON up.permission_id = p.id
+        WHERE up.user_id = #{userId}
+        ORDER BY p.sort, p.id
+    </select>
+
+    <select id="selectByUserIdAndEffect" resultMap="userPermissionResult">
+        SELECT up.id, up.user_id, up.permission_id, up.effect, up.created_at, up.created_by,
+               p.code as permission_code, p.name as permission_name
+        FROM user_permission up
+        INNER JOIN permission p ON up.permission_id = p.id
+        WHERE up.user_id = #{userId} AND up.effect = #{effect}
+        ORDER BY p.sort, p.id
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO user_permission (user_id, permission_id, effect, created_by)
+        VALUES (#{userId}, #{permissionId}, #{effect}, #{createdBy})
+        ON DUPLICATE KEY UPDATE effect = #{effect}, created_by = #{createdBy}
+    </insert>
+
+    <delete id="delete">
+        DELETE FROM user_permission WHERE user_id = #{userId} AND permission_id = #{permissionId}
+    </delete>
+
+    <delete id="deleteByUserId">
+        DELETE FROM user_permission WHERE user_id = #{userId}
+    </delete>
+
+    <insert id="batchInsert">
+        INSERT INTO user_permission (user_id, permission_id, effect, created_by) VALUES
+        <foreach collection="list" item="up" separator=",">
+            (#{up.userId}, #{up.permissionId}, #{up.effect}, #{up.createdBy})
+        </foreach>
+        ON DUPLICATE KEY UPDATE effect = VALUES(effect), created_by = VALUES(created_by)
+    </insert>
+</mapper>

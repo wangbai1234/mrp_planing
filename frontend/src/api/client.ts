@@ -41,7 +41,15 @@ async function request<T>(url: string, options: RequestInit = {}): Promise<T> {
     throw new Error(error?.error?.message || error?.message || `HTTP ${response.status}`)
   }
 
-  return response.json()
+  const result = await response.json()
+  // If response has ApiResponse wrapper (success, data), return data directly
+  if (result && typeof result === 'object' && 'success' in result) {
+    if (!result.success) {
+      throw new Error(result.error?.message || '请求失败')
+    }
+    return result.data
+  }
+  return result
 }
 
 export function get<T>(url: string): Promise<T> {

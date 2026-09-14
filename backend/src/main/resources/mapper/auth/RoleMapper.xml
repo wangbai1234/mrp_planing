@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.auth.repository.RoleMapper">
+
+    <select id="selectById" resultType="com.mrp.auth.domain.Role">
+        SELECT id, code, name, description, status, created_at, updated_at
+        FROM role
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectByCode" resultType="com.mrp.auth.domain.Role">
+        SELECT id, code, name, description, status, created_at, updated_at
+        FROM role
+        WHERE code = #{code}
+    </select>
+
+    <select id="selectAll" resultType="com.mrp.auth.domain.Role">
+        SELECT r.id, r.code, r.name, r.description, r.status, r.created_at, r.updated_at,
+               (SELECT COUNT(*) FROM user_role ur WHERE ur.role_id = r.id) as user_count
+        FROM role r
+        ORDER BY r.id
+    </select>
+
+    <select id="selectActive" resultType="com.mrp.auth.domain.Role">
+        SELECT id, code, name, description, status, created_at, updated_at
+        FROM role
+        WHERE status = 'ACTIVE'
+        ORDER BY id
+    </select>
+
+    <select id="selectByUserId" resultType="com.mrp.auth.domain.Role">
+        SELECT r.id, r.code, r.name, r.description, r.status, r.created_at, r.updated_at
+        FROM role r
+        INNER JOIN user_role ur ON r.id = ur.role_id
+        WHERE ur.user_id = #{userId}
+        ORDER BY r.id
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO role (code, name, description, status)
+        VALUES (#{code}, #{name}, #{description}, #{status})
+    </insert>
+
+    <update id="update">
+        UPDATE role SET
+            name = #{name},
+            description = #{description},
+            status = #{status}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM role WHERE id = #{id}
+    </delete>
+
+    <insert id="insertUserRole">
+        INSERT IGNORE INTO user_role (user_id, role_id)
+        VALUES (#{userId}, #{roleId})
+    </insert>
+
+    <delete id="deleteUserRole">
+        DELETE FROM user_role WHERE user_id = #{userId} AND role_id = #{roleId}
+    </delete>
+
+    <delete id="deleteUserRoles">
+        DELETE FROM user_role WHERE user_id = #{userId}
+    </delete>
+
+    <insert id="insertRolePermission">
+        INSERT IGNORE INTO role_permission (role_id, permission_id)
+        VALUES (#{roleId}, #{permissionId})
+    </insert>
+
+    <delete id="deleteRolePermissions">
+        DELETE FROM role_permission WHERE role_id = #{roleId}
+    </delete>
+
+    <insert id="batchInsertRolePermissions">
+        INSERT INTO role_permission (role_id, permission_id) VALUES
+        <foreach collection="permissionIds" item="pid" separator=",">
+            (#{roleId}, #{pid})
+        </foreach>
+    </insert>
+
+    <select id="selectPermissionIdsByRoleId" resultType="java.lang.Long">
+        SELECT permission_id FROM role_permission WHERE role_id = #{roleId}
+    </select>
+
+    <select id="selectUserIdsByRoleId" resultType="java.lang.Long">
+        SELECT user_id FROM user_role WHERE role_id = #{roleId}
+    </select>
+</mapper>

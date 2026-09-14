@@ -1,0 +1,93 @@
+- generic [ref=f3e3]:
+  - complementary [ref=f3e4]:
+    - generic [ref=f3e5]:
+      - generic [ref=f3e6]: MRP
+      - generic [ref=f3e7]: 计划协同
+    - menubar [ref=f3e8]:
+      - generic [ref=f3e9]: 计划
+      - menuitem "工作台" [ref=f3e10] [cursor=pointer]
+      - menuitem "滚动排产" [ref=f3e15] [cursor=pointer]
+      - menuitem "版本记录" [ref=f3e20] [cursor=pointer]
+      - generic [ref=f3e27]: 数据
+      - menuitem "经营计划" [ref=f3e28] [cursor=pointer]
+      - menuitem "库存快照" [ref=f3e33] [cursor=pointer]
+      - menuitem "物料管理" [ref=f3e40] [cursor=pointer]
+      - generic [ref=f3e45]: 配置
+      - menuitem "产能配置" [ref=f3e46] [cursor=pointer]
+      - menuitem "操作手册" [ref=f3e51] [cursor=pointer]
+  - generic [ref=f3e56]:
+    - generic [ref=f3e57]:
+      - generic [ref=f3e58]:
+        - generic [ref=f3e59]: 数据管理
+        - generic [ref=f3e60]: /
+        - strong [ref=f3e61]: 经营计划
+      - generic [ref=f3e62]:
+        - generic [ref=f3e63]: 数据已同步
+        - generic [ref=f3e65]: 库存快照 2026-08-27 23:40
+        - generic [ref=f3e66]: CRM 2026-08-28 08:30
+        - button "肖 肖芳" [ref=f3e68] [cursor=pointer]:
+          - generic [ref=f3e69]: 肖
+          - generic [ref=f3e70]: 肖芳
+    - main [ref=f3e71]:
+      - generic [ref=f3e72]:
+        - generic [ref=f3e73]:
+          - heading "经营计划" [level=1] [ref=f3e74]
+          - button "导入" [ref=f3e75] [cursor=pointer]
+        - generic [ref=f3e80]:
+          - generic [ref=f3e81]: 历史版本
+          - generic [ref=f3e84]:
+            - table [ref=f3e86]:
+              - rowgroup [ref=f3e92]:
+                - row [ref=f3e93]:
+                  - columnheader "ID" [ref=f3e94]
+                  - columnheader "版本号" [ref=f3e96]
+                  - columnheader "状态" [ref=f3e98]
+                  - columnheader "导入时间" [ref=f3e100]
+            - table [ref=f3e113]:
+              - rowgroup [active] [ref=f3e119]:
+                - row [ref=f3e120]:
+                  - cell "5" [ref=f3e121]
+                  - cell "1" [ref=f3e123]
+                  - cell "已导入" [ref=f3e125]
+                  - cell "2026-09-06T23:36:53.898Z" [ref=f3e129]
+        - generic [ref=f3e131]:
+          - generic [ref=f3e133]:
+            - generic [ref=f3e134]: 版本详情
+            - button "关闭" [ref=f3e135] [cursor=pointer]
+          - generic [ref=f3e139]:
+            - table [ref=f3e141]:
+              - rowgroup [ref=f3e158]:
+                - row [ref=f3e159]:
+                  - columnheader "业务线/工厂" [ref=f3e160]
+                  - columnheader "形态" [ref=f3e162]
+                  - columnheader "料号" [ref=f3e164]
+                  - columnheader "名称" [ref=f3e166]
+                  - columnheader "项目型号" [ref=f3e168]
+                  - columnheader "规格型号" [ref=f3e170]
+                  - columnheader "模具" [ref=f3e172]
+                  - columnheader "状态" [ref=f3e174]
+                  - columnheader "2026-09-01" [ref=f3e176]
+                  - columnheader "2026-10-01" [ref=f3e178]
+                  - columnheader "2026-11-01" [ref=f3e180]
+                  - columnheader "2026-12-01" [ref=f3e182]
+                  - columnheader "2027-01-01" [ref=f3e184]
+                  - columnheader "2027-02-01" [ref=f3e186]
+                  - columnheader "fcst-total" [ref=f3e188]
+            - table [ref=f3e194]:
+              - rowgroup [ref=f3e211]:
+                - row [ref=f3e212]:
+                  - cell "F001" [ref=f3e213]
+                  - cell "整机" [ref=f3e215]
+                  - cell "test1112" [ref=f3e217]
+                  - cell "测试物料" [ref=f3e219]
+                  - cell "qqqwqw" [ref=f3e221]
+                  - cell "SRM121312" [ref=f3e223]
+                  - cell "模具A" [ref=f3e225]
+                  - cell "正常" [ref=f3e227]
+                  - cell "1000" [ref=f3e229]
+                  - cell "1200" [ref=f3e231]
+                  - cell "1100" [ref=f3e233]
+                  - cell "1300" [ref=f3e235]
+                  - cell "1400" [ref=f3e237]
+                  - cell "1500" [ref=f3e239]
+                  - cell "7500" [ref=f3e241]

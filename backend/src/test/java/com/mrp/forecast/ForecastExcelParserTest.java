@@ -28,8 +28,6 @@ class ForecastExcelParserTest {
         ParseResult<ForecastDetail> result = parser.parse(template, 999L);
 
         assertNotNull(result);
-        // Template may or may not have data rows depending on format
-        // The key is that parsing doesn't throw
         System.out.println("=== Parse Result ===");
         System.out.println("Total rows: " + result.totalRows());
         System.out.println("Success rows: " + result.successRows());
@@ -50,6 +48,55 @@ class ForecastExcelParserTest {
             assertNotNull(detail.materialId(), "material_id should not be null");
             assertFalse(detail.materialId().matches("\\d{4}-\\d{2}-\\d{2}.*"),
                     "material_id should not be date format: " + detail.materialId());
+        }
+    }
+
+    @Test
+    void parseTemplate_recognizedMonthsAreValid() throws Exception {
+        Path template = new ClassPathResource("test-data/MRP经营计划导入模板.xlsx").getFile().toPath();
+
+        ParseResult<ForecastDetail> result = parser.parse(template, 999L);
+
+        // Recognized months should be valid strings like "2026-08"
+        assertNotNull(result.recognizedMonths());
+        for (String ym : result.recognizedMonths()) {
+            assertNotNull(ym, "Recognized month should not be null");
+            assertTrue(ym.matches("\\d{4}-\\d{2}"), "Month should match YYYY-MM format: " + ym);
+        }
+    }
+
+    @Test
+    void parseTemplate_headersNotNull() throws Exception {
+        Path template = new ClassPathResource("test-data/MRP经营计划导入模板.xlsx").getFile().toPath();
+
+        ParseResult<ForecastDetail> result = parser.parse(template, 999L);
+
+        assertNotNull(result.headers(), "Headers should not be null");
+    }
+
+    @Test
+    void parseTemplate_rawRowsNotNull() throws Exception {
+        Path template = new ClassPathResource("test-data/MRP经营计划导入模板.xlsx").getFile().toPath();
+
+        ParseResult<ForecastDetail> result = parser.parse(template, 999L);
+
+        assertNotNull(result.rawRows(), "Raw rows should not be null");
+    }
+
+    @Test
+    void parseTemplate_materialIdIsText() throws Exception {
+        Path template = new ClassPathResource("test-data/MRP经营计划导入模板.xlsx").getFile().toPath();
+
+        ParseResult<ForecastDetail> result = parser.parse(template, 999L);
+
+        for (ForecastDetail detail : result.rows()) {
+            // Material ID should not be scientific notation
+            assertFalse(detail.materialId().matches("\\d\\.\\d+E\\d+"),
+                    "material_id should not be scientific notation: " + detail.materialId());
+            // Material ID should not start with0 followed by digits (unless it's a real leading zero)
+            if (detail.materialId().startsWith("0")) {
+                assertTrue(detail.materialId().length() > 1, "Leading zero material ID should have more digits");
+            }
         }
     }
 }

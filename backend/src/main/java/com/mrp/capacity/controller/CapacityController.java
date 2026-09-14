@@ -36,4 +36,10 @@ public class CapacityController {
     public ResponseEntity<ApiResponse<CapacityLine>> update(@PathVariable Long id, @RequestBody CapacityLine line) {
         return ResponseEntity.ok(ApiResponse.ok(capacityService.updateLine(id, line)));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long id) {
+        capacityService.deleteLine(id);
+        return ResponseEntity.ok(ApiResponse.ok(null));
+    }
 }

@@ -1,0 +1,810 @@
+- generic [active] [ref=f11e1]:
+  - generic [ref=f11e3]:
+    - complementary [ref=f11e4]:
+      - generic [ref=f11e5]:
+        - generic [ref=f11e6]: MRP
+        - generic [ref=f11e7]: 计划协同
+      - menubar [ref=f11e8]:
+        - generic [ref=f11e9]: 计划
+        - menuitem "看板" [ref=f11e10] [cursor=pointer]
+        - menuitem "排产计划" [ref=f11e17] [cursor=pointer]
+        - generic [ref=f11e22]: 数据
+        - menuitem "经营计划" [ref=f11e23] [cursor=pointer]
+        - menuitem "库存快照" [ref=f11e28] [cursor=pointer]
+        - menuitem "物料管理" [ref=f11e35] [cursor=pointer]
+        - menuitem "BOM管理" [ref=f11e40] [cursor=pointer]
+        - generic [ref=f11e45]: 配置
+        - menuitem "产能配置" [ref=f11e46] [cursor=pointer]
+        - generic [ref=f11e51]: 系统
+        - menuitem "用户与权限" [ref=f11e52] [cursor=pointer]
+    - generic [ref=f11e57]:
+      - generic [ref=f11e58]:
+        - generic [ref=f11e59]:
+          - generic [ref=f11e60]: 计划管理
+          - generic [ref=f11e61]: /
+          - strong [ref=f11e62]: 排产计划
+        - generic [ref=f11e63]:
+          - generic [ref=f11e64]: 数据已同步
+          - button "系 系统管理员" [ref=f11e67] [cursor=pointer]:
+            - generic [ref=f11e68]: 系
+            - generic [ref=f11e69]: 系统管理员
+      - main [ref=f11e70]:
+        - generic [ref=f11e71]:
+          - generic [ref=f11e72]:
+            - heading "排产计划" [level=1] [ref=f11e73]
+            - generic [ref=f11e74]:
+              - button "设置" [ref=f11e75] [cursor=pointer]
+              - button "版本对比" [ref=f11e80] [cursor=pointer]
+              - button "导出" [ref=f11e85] [cursor=pointer]
+              - button "重算" [ref=f11e209] [cursor=pointer]
+              - button "发布" [ref=f11e90] [cursor=pointer]
+          - generic [ref=f11e96]:
+            - generic [ref=f11e98]:
+              - generic [ref=f11e100] [cursor=pointer]:
+                - generic:
+                  - combobox [ref=f11e102]
+                  - generic [ref=f11e103]: 全部工厂
+              - textbox "搜索整机料号 / 机型" [ref=f11e114]
+              - generic [ref=f11e117] [cursor=pointer]:
+                - generic:
+                  - combobox [ref=f11e119]
+                  - generic [ref=f11e120]: 全部状态
+            - generic [ref=f11e125]:
+              - generic [ref=f11e126]: 当前周
+              - generic [ref=f11e128]: 人工调整
+              - generic [ref=f11e130]: 已执行 / 锁定
+              - generic [ref=f11e132]: 超产能
+              - generic [ref=f11e134]: 点击数量可编辑，点击料号查看详情
+            - table [ref=f11e136]:
+              - rowgroup [ref=f11e137]:
+                - row [ref=f11e214]:
+                  - columnheader "整机料号 / 名称" [ref=f11e139]
+                  - columnheader "工厂" [ref=f11e140]
+                  - columnheader "2026-08-24 8/24–8/30" [ref=f11e215]:
+                    - generic [ref=f11e216]:
+                      - generic [ref=f11e217]: 2026-08-24
+                      - generic [ref=f11e218]: 8/24–8/30
+                  - columnheader "2026-08-31 8/31–9/6" [ref=f11e219]:
+                    - generic [ref=f11e220]:
+                      - generic [ref=f11e221]: 2026-08-31
+                      - generic [ref=f11e222]: 8/31–9/6
+                  - columnheader "2026-09-07 9/7–9/13" [ref=f11e223]:
+                    - generic [ref=f11e224]:
+                      - generic [ref=f11e225]: 2026-09-07
+                      - generic [ref=f11e226]: 9/7–9/13
+                  - columnheader "2026-09-14 9/14–9/20" [ref=f11e227]:
+                    - generic [ref=f11e228]:
+                      - generic [ref=f11e229]: 2026-09-14
+                      - generic [ref=f11e230]: 9/14–9/20
+                  - columnheader "2026-09-21 9/21–9/27" [ref=f11e231]:
+                    - generic [ref=f11e232]:
+                      - generic [ref=f11e233]: 2026-09-21
+                      - generic [ref=f11e234]: 9/21–9/27
+                  - columnheader "2026-09-28 9/28–10/4" [ref=f11e235]:
+                    - generic [ref=f11e236]:
+                      - generic [ref=f11e237]: 2026-09-28
+                      - generic [ref=f11e238]: 9/28–10/4
+                  - columnheader "2026-10-05 10/5–10/11" [ref=f11e239]:
+                    - generic [ref=f11e240]:
+                      - generic [ref=f11e241]: 2026-10-05
+                      - generic [ref=f11e242]: 10/5–10/11
+                  - columnheader "2026-10-12 10/12–10/18" [ref=f11e243]:
+                    - generic [ref=f11e244]:
+                      - generic [ref=f11e245]: 2026-10-12
+                      - generic [ref=f11e246]: 10/12–10/18
+                  - columnheader "2026-10-19 10/19–10/25" [ref=f11e247]:
+                    - generic [ref=f11e248]:
+                      - generic [ref=f11e249]: 2026-10-19
+                      - generic [ref=f11e250]: 10/19–10/25
+                  - columnheader "2026-10-26 10/26–11/1" [ref=f11e251]:
+                    - generic [ref=f11e252]:
+                      - generic [ref=f11e253]: 2026-10-26
+                      - generic [ref=f11e254]: 10/26–11/1
+                  - columnheader "2026-11-02 11/2–11/8" [ref=f11e255]:
+                    - generic [ref=f11e256]:
+                      - generic [ref=f11e257]: 2026-11-02
+                      - generic [ref=f11e258]: 11/2–11/8
+                  - columnheader "2026-11-09 11/9–11/15" [ref=f11e259]:
+                    - generic [ref=f11e260]:
+                      - generic [ref=f11e261]: 2026-11-09
+                      - generic [ref=f11e262]: 11/9–11/15
+                  - columnheader "2026-11-16 11/16–11/22" [ref=f11e263]:
+                    - generic [ref=f11e264]:
+                      - generic [ref=f11e265]: 2026-11-16
+                      - generic [ref=f11e266]: 11/16–11/22
+              - rowgroup [ref=f11e141]:
+                - row [ref=f11e267]:
+                  - cell "6830AA800117 BYC_DR2500_A11,包装整机（70迈智能记录仪A500S（单机_国内4G DDR_简配版）" [ref=f11e268] [cursor=pointer]
+                  - cell "YH" [ref=f11e270]
+                  - cell [ref=f11e271]:
+                    - button "0" [ref=f11e272]
+                  - cell [ref=f11e275]:
+                    - button "0" [ref=f11e276]
+                  - cell [ref=f11e279]:
+                    - button "0" [ref=f11e280]
+                  - cell [ref=f11e283]:
+                    - button "0" [ref=f11e284] [cursor=pointer]
+                  - cell [ref=f11e287]:
+                    - button "0" [ref=f11e288] [cursor=pointer]
+                  - cell [ref=f11e291]:
+                    - button "0" [ref=f11e292] [cursor=pointer]
+                  - cell [ref=f11e295]:
+                    - button "0" [ref=f11e296] [cursor=pointer]
+                  - cell [ref=f11e299]:
+                    - button "0" [ref=f11e300] [cursor=pointer]
+                  - cell [ref=f11e303]:
+                    - button "0" [ref=f11e304] [cursor=pointer]
+                  - cell [ref=f11e307]:
+                    - button "0" [ref=f11e308] [cursor=pointer]
+                  - cell [ref=f11e311]:
+                    - button "0" [ref=f11e312] [cursor=pointer]
+                  - cell [ref=f11e315]:
+                    - button "0" [ref=f11e316] [cursor=pointer]
+                  - cell [ref=f11e319]
+                - row [ref=f11e320]:
+                  - cell "6830AA800305 BYC_DR1800_A31包装整机 70迈4K智能记录仪M800(128G 国内版)(单机）" [ref=f11e321] [cursor=pointer]
+                  - cell "YH" [ref=f11e323]
+                  - cell [ref=f11e324]:
+                    - button "358" [ref=f11e325]
+                  - cell [ref=f11e328]:
+                    - button "239" [ref=f11e329]
+                  - cell [ref=f11e332]:
+                    - button "238" [ref=f11e333]
+                  - cell [ref=f11e336]:
+                    - button "300 人工" [ref=f11e337] [cursor=pointer]:
+                      - generic [ref=f11e338]:
+                        - generic [ref=f11e339]: "300"
+                        - generic [ref=f11e340]: 人工
+                  - cell [ref=f11e341]:
+                    - button "358" [ref=f11e342] [cursor=pointer]
+                  - cell [ref=f11e345]:
+                    - button "239" [ref=f11e346] [cursor=pointer]
+                  - cell [ref=f11e349]:
+                    - button "238" [ref=f11e350] [cursor=pointer]
+                  - cell [ref=f11e353]:
+                    - button "238" [ref=f11e354] [cursor=pointer]
+                  - cell [ref=f11e357]:
+                    - button "358" [ref=f11e358] [cursor=pointer]
+                  - cell [ref=f11e361]:
+                    - button "239" [ref=f11e362] [cursor=pointer]
+                  - cell [ref=f11e365]:
+                    - button "238" [ref=f11e366] [cursor=pointer]
+                  - cell [ref=f11e369]:
+                    - button "238" [ref=f11e370] [cursor=pointer]
+                  - cell [ref=f11e373]
+                - row [ref=f11e374]:
+                  - cell "6830AA800306 BYC_DR1800_A01包装整机 70迈4K智能记录仪M800(64G 国内版)(单机）" [ref=f11e375] [cursor=pointer]
+                  - cell "YH" [ref=f11e377]
+                  - cell [ref=f11e378]:
+                    - button "102" [ref=f11e379]
+                  - cell [ref=f11e382]:
+                    - button "68" [ref=f11e383]
+                  - cell [ref=f11e386]:
+                    - button "300 人工" [ref=f11e387]:
+                      - generic [ref=f11e388]:
+                        - generic [ref=f11e389]: "300"
+                        - generic [ref=f11e390]: 人工
+                  - cell [ref=f11e391]:
+                    - button "67" [ref=f11e392] [cursor=pointer]
+                  - cell [ref=f11e395]:
+                    - button "102" [ref=f11e396] [cursor=pointer]
+                  - cell [ref=f11e399]:
+                    - button "68" [ref=f11e400] [cursor=pointer]
+                  - cell [ref=f11e403]:
+                    - button "68" [ref=f11e404] [cursor=pointer]
+                  - cell [ref=f11e407]:
+                    - button "67" [ref=f11e408] [cursor=pointer]
+                  - cell [ref=f11e411]:
+                    - button "102" [ref=f11e412] [cursor=pointer]
+                  - cell [ref=f11e415]:
+                    - button "68" [ref=f11e416] [cursor=pointer]
+                  - cell [ref=f11e419]:
+                    - button "68" [ref=f11e420] [cursor=pointer]
+                  - cell [ref=f11e423]:
+                    - button "67" [ref=f11e424] [cursor=pointer]
+                  - cell [ref=f11e427]
+                - row [ref=f11e428]:
+                  - cell "6830AA800318 BYC_DR1800_A41,包装整机（70迈4K智能记录仪M800(256G 国内版)(单机）" [ref=f11e429] [cursor=pointer]
+                  - cell "YH" [ref=f11e431]
+                  - cell [ref=f11e432]:
+                    - button "40" [ref=f11e433]
+                  - cell [ref=f11e436]:
+                    - button "27" [ref=f11e437]
+                  - cell [ref=f11e440]:
+                    - button "26" [ref=f11e441]
+                  - cell [ref=f11e444]:
+                    - button "26" [ref=f11e445] [cursor=pointer]
+                  - cell [ref=f11e448]:
+                    - button "40" [ref=f11e449] [cursor=pointer]
+                  - cell [ref=f11e452]:
+                    - button "27" [ref=f11e453] [cursor=pointer]
+                  - cell [ref=f11e456]:
+                    - button "26" [ref=f11e457] [cursor=pointer]
+                  - cell [ref=f11e460]:
+                    - button "26" [ref=f11e461] [cursor=pointer]
+                  - cell [ref=f11e464]:
+                    - button "40" [ref=f11e465] [cursor=pointer]
+                  - cell [ref=f11e468]:
+                    - button "27" [ref=f11e469] [cursor=pointer]
+                  - cell [ref=f11e472]:
+                    - button "26" [ref=f11e473] [cursor=pointer]
+                  - cell [ref=f11e476]:
+                    - button "26" [ref=f11e477] [cursor=pointer]
+                  - cell [ref=f11e480]
+                - row [ref=f11e481]:
+                  - cell "6830AA800382 BYC_DR4800_A02,包装整机(70迈记录仪X800（国内单机_黑灰）" [ref=f11e482] [cursor=pointer]
+                  - cell "YH" [ref=f11e484]
+                  - cell [ref=f11e485]:
+                    - button "93" [ref=f11e486]
+                  - cell [ref=f11e489]:
+                    - button "62" [ref=f11e490]
+                  - cell [ref=f11e493]:
+                    - button "62" [ref=f11e494]
+                  - cell [ref=f11e497]:
+                    - button "62" [ref=f11e498] [cursor=pointer]
+                  - cell [ref=f11e501]:
+                    - button "93" [ref=f11e502] [cursor=pointer]
+                  - cell [ref=f11e505]:
+                    - button "62" [ref=f11e506] [cursor=pointer]
+                  - cell [ref=f11e509]:
+                    - button "62" [ref=f11e510] [cursor=pointer]
+                  - cell [ref=f11e513]:
+                    - button "62" [ref=f11e514] [cursor=pointer]
+                  - cell [ref=f11e517]:
+                    - button "93" [ref=f11e518] [cursor=pointer]
+                  - cell [ref=f11e521]:
+                    - button "62" [ref=f11e522] [cursor=pointer]
+                  - cell [ref=f11e525]:
+                    - button "62" [ref=f11e526] [cursor=pointer]
+                  - cell [ref=f11e529]:
+                    - button "62" [ref=f11e530] [cursor=pointer]
+                  - cell [ref=f11e533]
+                - row [ref=f11e534]:
+                  - cell "6830AA800384 BYC_DR4800_A02,包装整机(70迈记录仪X800（国内单机_红白）" [ref=f11e535] [cursor=pointer]
+                  - cell "YH" [ref=f11e537]
+                  - cell [ref=f11e538]:
+                    - button "26" [ref=f11e539]
+                  - cell [ref=f11e542]:
+                    - button "17" [ref=f11e543]
+                  - cell [ref=f11e546]:
+                    - button "17" [ref=f11e547]
+                  - cell [ref=f11e550]:
+                    - button "16" [ref=f11e551] [cursor=pointer]
+                  - cell [ref=f11e554]:
+                    - button "26" [ref=f11e555] [cursor=pointer]
+                  - cell [ref=f11e558]:
+                    - button "17" [ref=f11e559] [cursor=pointer]
+                  - cell [ref=f11e562]:
+                    - button "17" [ref=f11e563] [cursor=pointer]
+                  - cell [ref=f11e566]:
+                    - button "16" [ref=f11e567] [cursor=pointer]
+                  - cell [ref=f11e570]:
+                    - button "26" [ref=f11e571] [cursor=pointer]
+                  - cell [ref=f11e574]:
+                    - button "17" [ref=f11e575] [cursor=pointer]
+                  - cell [ref=f11e578]:
+                    - button "17" [ref=f11e579] [cursor=pointer]
+                  - cell [ref=f11e582]:
+                    - button "16" [ref=f11e583] [cursor=pointer]
+                  - cell [ref=f11e586]
+                - row [ref=f11e587]:
+                  - cell "6830AA800405 BYC_DR2510_A01,包装整机（黑色）70迈智能记录仪A510单机版（国内_新机头）" [ref=f11e588] [cursor=pointer]
+                  - cell "YH" [ref=f11e590]
+                  - cell [ref=f11e591]:
+                    - button "125" [ref=f11e592]
+                  - cell [ref=f11e595]:
+                    - button "84" [ref=f11e596]
+                  - cell [ref=f11e599]:
+                    - button "83" [ref=f11e600]
+                  - cell [ref=f11e603]:
+                    - button "83" [ref=f11e604] [cursor=pointer]
+                  - cell [ref=f11e607]:
+                    - button "125" [ref=f11e608] [cursor=pointer]
+                  - cell [ref=f11e611]:
+                    - button "84" [ref=f11e612] [cursor=pointer]
+                  - cell [ref=f11e615]:
+                    - button "83" [ref=f11e616] [cursor=pointer]
+                  - cell [ref=f11e619]:
+                    - button "83" [ref=f11e620] [cursor=pointer]
+                  - cell [ref=f11e623]:
+                    - button "125" [ref=f11e624] [cursor=pointer]
+                  - cell [ref=f11e627]:
+                    - button "84" [ref=f11e628] [cursor=pointer]
+                  - cell [ref=f11e631]:
+                    - button "83" [ref=f11e632] [cursor=pointer]
+                  - cell [ref=f11e635]:
+                    - button "83" [ref=f11e636] [cursor=pointer]
+                  - cell [ref=f11e639]
+                - row [ref=f11e640]:
+                  - cell "6830AA800437 BYC_DR2211_A11,包装整机（黑色）70迈智能记录仪A510 lite（国内单机版_降本）" [ref=f11e641] [cursor=pointer]
+                  - cell "YH" [ref=f11e643]
+                  - cell [ref=f11e644]:
+                    - button "194" [ref=f11e645]
+                  - cell [ref=f11e648]:
+                    - button "129" [ref=f11e649]
+                  - cell [ref=f11e652]:
+                    - button "129" [ref=f11e653]
+                  - cell [ref=f11e656]:
+                    - button "129" [ref=f11e657] [cursor=pointer]
+                  - cell [ref=f11e660]:
+                    - button "194" [ref=f11e661] [cursor=pointer]
+                  - cell [ref=f11e664]:
+                    - button "129" [ref=f11e665] [cursor=pointer]
+                  - cell [ref=f11e668]:
+                    - button "129" [ref=f11e669] [cursor=pointer]
+                  - cell [ref=f11e672]:
+                    - button "129" [ref=f11e673] [cursor=pointer]
+                  - cell [ref=f11e676]:
+                    - button "194" [ref=f11e677] [cursor=pointer]
+                  - cell [ref=f11e680]:
+                    - button "129" [ref=f11e681] [cursor=pointer]
+                  - cell [ref=f11e684]:
+                    - button "129" [ref=f11e685] [cursor=pointer]
+                  - cell [ref=f11e688]:
+                    - button "129" [ref=f11e689] [cursor=pointer]
+                  - cell [ref=f11e692]
+                - row [ref=f11e693]:
+                  - cell "6830AA800438 BYC_DR5800_A01包装整机 70迈智能记录仪T800（国内单机版）" [ref=f11e694] [cursor=pointer]
+                  - cell "YH" [ref=f11e696]
+                  - cell [ref=f11e697]:
+                    - button "81" [ref=f11e698]
+                  - cell [ref=f11e701]:
+                    - button "54" [ref=f11e702]
+                  - cell [ref=f11e705]:
+                    - button "54" [ref=f11e706]
+                  - cell [ref=f11e709]:
+                    - button "53" [ref=f11e710] [cursor=pointer]
+                  - cell [ref=f11e713]:
+                    - button "81" [ref=f11e714] [cursor=pointer]
+                  - cell [ref=f11e717]:
+                    - button "54" [ref=f11e718] [cursor=pointer]
+                  - cell [ref=f11e721]:
+                    - button "54" [ref=f11e722] [cursor=pointer]
+                  - cell [ref=f11e725]:
+                    - button "53" [ref=f11e726] [cursor=pointer]
+                  - cell [ref=f11e729]:
+                    - button "81" [ref=f11e730] [cursor=pointer]
+                  - cell [ref=f11e733]:
+                    - button "54" [ref=f11e734] [cursor=pointer]
+                  - cell [ref=f11e737]:
+                    - button "54" [ref=f11e738] [cursor=pointer]
+                  - cell [ref=f11e741]:
+                    - button "53" [ref=f11e742] [cursor=pointer]
+                  - cell [ref=f11e745]
+                - row [ref=f11e746]:
+                  - cell "6830AA800496 BYC_DR3400_A01,整机包装 70迈流媒体记录仪S400 （国内套装）" [ref=f11e747] [cursor=pointer]
+                  - cell "YH" [ref=f11e749]
+                  - cell [ref=f11e750]:
+                    - button "225" [ref=f11e751]
+                  - cell [ref=f11e754]:
+                    - button "150" [ref=f11e755]
+                  - cell [ref=f11e758]:
+                    - button "149" [ref=f11e759]
+                  - cell [ref=f11e762]:
+                    - button "149" [ref=f11e763] [cursor=pointer]
+                  - cell [ref=f11e766]:
+                    - button "225" [ref=f11e767] [cursor=pointer]
+                  - cell [ref=f11e770]:
+                    - button "150" [ref=f11e771] [cursor=pointer]
+                  - cell [ref=f11e774]:
+                    - button "149" [ref=f11e775] [cursor=pointer]
+                  - cell [ref=f11e778]:
+                    - button "149" [ref=f11e779] [cursor=pointer]
+                  - cell [ref=f11e782]:
+                    - button "225" [ref=f11e783] [cursor=pointer]
+                  - cell [ref=f11e786]:
+                    - button "150" [ref=f11e787] [cursor=pointer]
+                  - cell [ref=f11e790]:
+                    - button "149" [ref=f11e791] [cursor=pointer]
+                  - cell [ref=f11e794]:
+                    - button "149" [ref=f11e795] [cursor=pointer]
+                  - cell [ref=f11e798]
+                - row [ref=f11e799]:
+                  - cell "6830AA800509 BYC_DR2830_A01包装整机_70迈4K智能记录仪A810 Pro（国内单机版）" [ref=f11e800] [cursor=pointer]
+                  - cell "YH" [ref=f11e802]
+                  - cell [ref=f11e803]:
+                    - button "537" [ref=f11e804]
+                  - cell [ref=f11e807]:
+                    - button "358" [ref=f11e808]
+                  - cell [ref=f11e811]:
+                    - button "357" [ref=f11e812]
+                  - cell [ref=f11e815]:
+                    - button "357" [ref=f11e816] [cursor=pointer]
+                  - cell [ref=f11e819]:
+                    - button "537" [ref=f11e820] [cursor=pointer]
+                  - cell [ref=f11e823]:
+                    - button "358" [ref=f11e824] [cursor=pointer]
+                  - cell [ref=f11e827]:
+                    - button "357" [ref=f11e828] [cursor=pointer]
+                  - cell [ref=f11e831]:
+                    - button "357" [ref=f11e832] [cursor=pointer]
+                  - cell [ref=f11e835]:
+                    - button "537" [ref=f11e836] [cursor=pointer]
+                  - cell [ref=f11e839]:
+                    - button "358" [ref=f11e840] [cursor=pointer]
+                  - cell [ref=f11e843]:
+                    - button "357" [ref=f11e844] [cursor=pointer]
+                  - cell [ref=f11e847]:
+                    - button "357" [ref=f11e848] [cursor=pointer]
+                  - cell [ref=f11e851]
+                - row [ref=f11e852]:
+                  - cell "6830AA800530 BYC_DR2840_A01 包装整机（黑色）包装料单（70迈智能记录仪A400 Pro 4K）国内版" [ref=f11e853] [cursor=pointer]
+                  - cell "YH" [ref=f11e855]
+                  - cell [ref=f11e856]:
+                    - button "2,047" [ref=f11e857]
+                  - cell [ref=f11e860]:
+                    - button "1,365" [ref=f11e861]
+                  - cell [ref=f11e864]:
+                    - button "1,365" [ref=f11e865]
+                  - cell [ref=f11e868]:
+                    - button "1,364" [ref=f11e869] [cursor=pointer]
+                  - cell [ref=f11e872]:
+                    - button "2,047" [ref=f11e873] [cursor=pointer]
+                  - cell [ref=f11e876]:
+                    - button "1,365" [ref=f11e877] [cursor=pointer]
+                  - cell [ref=f11e880]:
+                    - button "1,365" [ref=f11e881] [cursor=pointer]
+                  - cell [ref=f11e884]:
+                    - button "1,364" [ref=f11e885] [cursor=pointer]
+                  - cell [ref=f11e888]:
+                    - button "2,047" [ref=f11e889] [cursor=pointer]
+                  - cell [ref=f11e892]:
+                    - button "1,365" [ref=f11e893] [cursor=pointer]
+                  - cell [ref=f11e896]:
+                    - button "1,365" [ref=f11e897] [cursor=pointer]
+                  - cell [ref=f11e900]:
+                    - button "1,364" [ref=f11e901] [cursor=pointer]
+                  - cell [ref=f11e904]
+                - row [ref=f11e905]:
+                  - cell "6830AA800551 BYC_DR2820_A01包装整机_70迈4K智能记录仪A810 SE（国内单机版_弯头）" [ref=f11e906] [cursor=pointer]
+                  - cell "YH" [ref=f11e908]
+                  - cell [ref=f11e909]:
+                    - button "149" [ref=f11e910]
+                  - cell [ref=f11e913]:
+                    - button "99" [ref=f11e914]
+                  - cell [ref=f11e917]:
+                    - button "99" [ref=f11e918]
+                  - cell [ref=f11e921]:
+                    - button "98" [ref=f11e922] [cursor=pointer]
+                  - cell [ref=f11e925]:
+                    - button "149" [ref=f11e926] [cursor=pointer]
+                  - cell [ref=f11e929]:
+                    - button "99" [ref=f11e930] [cursor=pointer]
+                  - cell [ref=f11e933]:
+                    - button "99" [ref=f11e934] [cursor=pointer]
+                  - cell [ref=f11e937]:
+                    - button "98" [ref=f11e938] [cursor=pointer]
+                  - cell [ref=f11e941]:
+                    - button "149" [ref=f11e942] [cursor=pointer]
+                  - cell [ref=f11e945]:
+                    - button "99" [ref=f11e946] [cursor=pointer]
+                  - cell [ref=f11e949]:
+                    - button "99" [ref=f11e950] [cursor=pointer]
+                  - cell [ref=f11e953]:
+                    - button "98" [ref=f11e954] [cursor=pointer]
+                  - cell [ref=f11e957]
+                - row [ref=f11e958]:
+                  - cell "6830AA800559 BYC_DR1400_A61,包装整机_70迈智能记录仪M310 Pro 4K（国内版）新吸塑" [ref=f11e959] [cursor=pointer]
+                  - cell "YH" [ref=f11e961]
+                  - cell [ref=f11e962]:
+                    - button "3,592" [ref=f11e963]
+                  - cell [ref=f11e966]:
+                    - button "2,395" [ref=f11e967]
+                  - cell [ref=f11e970]:
+                    - button "2,395" [ref=f11e971]
+                  - cell [ref=f11e974]:
+                    - button "2,394" [ref=f11e975] [cursor=pointer]
+                  - cell [ref=f11e978]:
+                    - button "3,592" [ref=f11e979] [cursor=pointer]
+                  - cell [ref=f11e982]:
+                    - button "2,395" [ref=f11e983] [cursor=pointer]
+                  - cell [ref=f11e986]:
+                    - button "2,395" [ref=f11e987] [cursor=pointer]
+                  - cell [ref=f11e990]:
+                    - button "2,394" [ref=f11e991] [cursor=pointer]
+                  - cell [ref=f11e994]:
+                    - button "3,592" [ref=f11e995] [cursor=pointer]
+                  - cell [ref=f11e998]:
+                    - button "2,395" [ref=f11e999] [cursor=pointer]
+                  - cell [ref=f11e1002]:
+                    - button "2,395" [ref=f11e1003] [cursor=pointer]
+                  - cell [ref=f11e1006]:
+                    - button "2,394" [ref=f11e1007] [cursor=pointer]
+                  - cell [ref=f11e1010]
+                - row [ref=f11e1011]:
+                  - cell "6830AA800561 BYC_DR1400_A01包装整机_70迈智能记录仪M310 Pro 2K（国内版）新吸塑" [ref=f11e1012] [cursor=pointer]
+                  - cell "YH" [ref=f11e1014]
+                  - cell [ref=f11e1015]:
+                    - button "2,231" [ref=f11e1016]
+                  - cell [ref=f11e1019]:
+                    - button "1,488" [ref=f11e1020]
+                  - cell [ref=f11e1023]:
+                    - button "1,487" [ref=f11e1024]
+                  - cell [ref=f11e1027]:
+                    - button "1,487" [ref=f11e1028] [cursor=pointer]
+                  - cell [ref=f11e1031]:
+                    - button "2,231" [ref=f11e1032] [cursor=pointer]
+                  - cell [ref=f11e1035]:
+                    - button "1,488" [ref=f11e1036] [cursor=pointer]
+                  - cell [ref=f11e1039]:
+                    - button "1,487" [ref=f11e1040] [cursor=pointer]
+                  - cell [ref=f11e1043]:
+                    - button "1,487" [ref=f11e1044] [cursor=pointer]
+                  - cell [ref=f11e1047]:
+                    - button "2,231" [ref=f11e1048] [cursor=pointer]
+                  - cell [ref=f11e1051]:
+                    - button "1,488" [ref=f11e1052] [cursor=pointer]
+                  - cell [ref=f11e1055]:
+                    - button "1,487" [ref=f11e1056] [cursor=pointer]
+                  - cell [ref=f11e1059]:
+                    - button "1,487" [ref=f11e1060] [cursor=pointer]
+                  - cell [ref=f11e1063]
+                - row [ref=f11e1064]:
+                  - cell "6830AA800562 BYC_DR1400_A51包装整机_70迈智能记录仪M310 Pro 3K（国内版）新吸塑" [ref=f11e1065] [cursor=pointer]
+                  - cell "YH" [ref=f11e1067]
+                  - cell [ref=f11e1068]:
+                    - button "2,202" [ref=f11e1069]
+                  - cell [ref=f11e1072]:
+                    - button "1,468" [ref=f11e1073]
+                  - cell [ref=f11e1076]:
+                    - button "1,468" [ref=f11e1077]
+                  - cell [ref=f11e1080]:
+                    - button "1,467" [ref=f11e1081] [cursor=pointer]
+                  - cell [ref=f11e1084]:
+                    - button "2,202" [ref=f11e1085] [cursor=pointer]
+                  - cell [ref=f11e1088]:
+                    - button "1,468" [ref=f11e1089] [cursor=pointer]
+                  - cell [ref=f11e1092]:
+                    - button "1,468" [ref=f11e1093] [cursor=pointer]
+                  - cell [ref=f11e1096]:
+                    - button "1,467" [ref=f11e1097] [cursor=pointer]
+                  - cell [ref=f11e1100]:
+                    - button "2,202" [ref=f11e1101] [cursor=pointer]
+                  - cell [ref=f11e1104]:
+                    - button "1,468" [ref=f11e1105] [cursor=pointer]
+                  - cell [ref=f11e1108]:
+                    - button "1,468" [ref=f11e1109] [cursor=pointer]
+                  - cell [ref=f11e1112]:
+                    - button "1,467" [ref=f11e1113] [cursor=pointer]
+                  - cell [ref=f11e1116]
+                - row [ref=f11e1117]:
+                  - cell "6830AA800563 BYC_DR1400_A52,包装整机_70迈智能记录仪M310X 3K" [ref=f11e1118] [cursor=pointer]
+                  - cell "YH" [ref=f11e1120]
+                  - cell [ref=f11e1121]:
+                    - button "0" [ref=f11e1122]
+                  - cell [ref=f11e1125]:
+                    - button "0" [ref=f11e1126]
+                  - cell [ref=f11e1129]:
+                    - button "0" [ref=f11e1130]
+                  - cell [ref=f11e1133]:
+                    - button "0" [ref=f11e1134] [cursor=pointer]
+                  - cell [ref=f11e1137]:
+                    - button "0" [ref=f11e1138] [cursor=pointer]
+                  - cell [ref=f11e1141]:
+                    - button "0" [ref=f11e1142] [cursor=pointer]
+                  - cell [ref=f11e1145]:
+                    - button "0" [ref=f11e1146] [cursor=pointer]
+                  - cell [ref=f11e1149]:
+                    - button "0" [ref=f11e1150] [cursor=pointer]
+                  - cell [ref=f11e1153]:
+                    - button "0" [ref=f11e1154] [cursor=pointer]
+                  - cell [ref=f11e1157]:
+                    - button "0" [ref=f11e1158] [cursor=pointer]
+                  - cell [ref=f11e1161]:
+                    - button "0" [ref=f11e1162] [cursor=pointer]
+                  - cell [ref=f11e1165]:
+                    - button "0" [ref=f11e1166] [cursor=pointer]
+                  - cell [ref=f11e1169]
+                - row [ref=f11e1170]:
+                  - cell "6830AA800626 BYC_DR2420_A01 包装整机（黑色）70 迈智能记录仪 A400 Pro 3K（国内版）" [ref=f11e1171] [cursor=pointer]
+                  - cell "YH" [ref=f11e1173]
+                  - cell [ref=f11e1174]:
+                    - button "947" [ref=f11e1175]
+                  - cell [ref=f11e1178]:
+                    - button "631" [ref=f11e1179]
+                  - cell [ref=f11e1182]:
+                    - button "631" [ref=f11e1183]
+                  - cell [ref=f11e1186]:
+                    - button "631" [ref=f11e1187] [cursor=pointer]
+                  - cell [ref=f11e1190]:
+                    - button "947" [ref=f11e1191] [cursor=pointer]
+                  - cell [ref=f11e1194]:
+                    - button "631" [ref=f11e1195] [cursor=pointer]
+                  - cell [ref=f11e1198]:
+                    - button "631" [ref=f11e1199] [cursor=pointer]
+                  - cell [ref=f11e1202]:
+                    - button "631" [ref=f11e1203] [cursor=pointer]
+                  - cell [ref=f11e1206]:
+                    - button "947" [ref=f11e1207] [cursor=pointer]
+                  - cell [ref=f11e1210]:
+                    - button "631" [ref=f11e1211] [cursor=pointer]
+                  - cell [ref=f11e1214]:
+                    - button "631" [ref=f11e1215] [cursor=pointer]
+                  - cell [ref=f11e1218]:
+                    - button "631" [ref=f11e1219] [cursor=pointer]
+                  - cell [ref=f11e1222]
+                - row [ref=f11e1223]:
+                  - cell "6830AA800681 BYC_DR1400_A62,包装整机_70迈智能记录仪M310X 4K_国内渠道版_01" [ref=f11e1224] [cursor=pointer]
+                  - cell "YH" [ref=f11e1226]
+                  - cell [ref=f11e1227]:
+                    - button "0" [ref=f11e1228]
+                  - cell [ref=f11e1231]:
+                    - button "0" [ref=f11e1232]
+                  - cell [ref=f11e1235]:
+                    - button "0" [ref=f11e1236]
+                  - cell [ref=f11e1239]:
+                    - button "0" [ref=f11e1240] [cursor=pointer]
+                  - cell [ref=f11e1243]:
+                    - button "0" [ref=f11e1244] [cursor=pointer]
+                  - cell [ref=f11e1247]:
+                    - button "0" [ref=f11e1248] [cursor=pointer]
+                  - cell [ref=f11e1251]:
+                    - button "0" [ref=f11e1252] [cursor=pointer]
+                  - cell [ref=f11e1255]:
+                    - button "0" [ref=f11e1256] [cursor=pointer]
+                  - cell [ref=f11e1259]:
+                    - button "0" [ref=f11e1260] [cursor=pointer]
+                  - cell [ref=f11e1263]:
+                    - button "0" [ref=f11e1264] [cursor=pointer]
+                  - cell [ref=f11e1267]:
+                    - button "0" [ref=f11e1268] [cursor=pointer]
+                  - cell [ref=f11e1271]:
+                    - button "0" [ref=f11e1272] [cursor=pointer]
+                  - cell [ref=f11e1275]
+                - row [ref=f11e1276]:
+                  - cell "6830AA800683 BYC_DR2840_A02 包装整机（黑色）包装料单（70迈智能记录仪A400X 4K）国内版（渠道版）" [ref=f11e1277] [cursor=pointer]
+                  - cell "YH" [ref=f11e1279]
+                  - cell [ref=f11e1280]:
+                    - button "0" [ref=f11e1281]
+                  - cell [ref=f11e1284]:
+                    - button "0" [ref=f11e1285]
+                  - cell [ref=f11e1288]:
+                    - button "0" [ref=f11e1289]
+                  - cell [ref=f11e1292]:
+                    - button "0" [ref=f11e1293] [cursor=pointer]
+                  - cell [ref=f11e1296]:
+                    - button "0" [ref=f11e1297] [cursor=pointer]
+                  - cell [ref=f11e1300]:
+                    - button "0" [ref=f11e1301] [cursor=pointer]
+                  - cell [ref=f11e1304]:
+                    - button "0" [ref=f11e1305] [cursor=pointer]
+                  - cell [ref=f11e1308]:
+                    - button "0" [ref=f11e1309] [cursor=pointer]
+                  - cell [ref=f11e1312]:
+                    - button "0" [ref=f11e1313] [cursor=pointer]
+                  - cell [ref=f11e1316]:
+                    - button "0" [ref=f11e1317] [cursor=pointer]
+                  - cell [ref=f11e1320]:
+                    - button "0" [ref=f11e1321] [cursor=pointer]
+                  - cell [ref=f11e1324]:
+                    - button "0" [ref=f11e1325] [cursor=pointer]
+                  - cell [ref=f11e1328]
+            - generic [ref=f11e1330]:
+              - generic [ref=f11e1331]: 共 81 条
+              - generic [ref=f11e1334] [cursor=pointer]:
+                - generic:
+                  - combobox [ref=f11e1336]
+                  - generic [ref=f11e1337]: 20条/页
+              - button "上一页" [disabled] [ref=f11e1342]
+              - list [ref=f11e1343]:
+                - listitem "第 1 页" [ref=f11e1344]: "1"
+                - listitem "第 2 页" [ref=f11e1345] [cursor=pointer]: "2"
+                - listitem "第 3 页" [ref=f11e1346] [cursor=pointer]: "3"
+                - listitem "第 4 页" [ref=f11e1347] [cursor=pointer]: "4"
+                - listitem "第 5 页" [ref=f11e1348] [cursor=pointer]: "5"
+              - button "下一页" [ref=f11e1349] [cursor=pointer]
+              - generic [ref=f11e1350]:
+                - generic [ref=f11e1351]: 前往
+                - spinbutton "页" [ref=f11e1354]: "1"
+                - generic [ref=f11e1355]: 页
+          - generic [ref=f11e164]:
+            - generic [ref=f11e166]:
+              - generic [ref=f11e167]: 历史版本
+              - generic [ref=f11e1356]: 禁止回滚
+            - generic [ref=f11e168]:
+              - generic [ref=f11e170]:
+                - table [ref=f11e172]:
+                  - rowgroup [ref=f11e180]:
+                    - row [ref=f11e181]:
+                      - columnheader "排产版本" [ref=f11e182]
+                      - columnheader "工厂" [ref=f11e184]
+                      - columnheader "生成时间" [ref=f11e186]
+                      - columnheader "经营计划版本" [ref=f11e188]
+                      - columnheader "状态" [ref=f11e190]
+                      - columnheader "操作" [ref=f11e192]
+                - table [ref=f11e1358]:
+                  - rowgroup [ref=f11e1366]:
+                    - row [ref=f11e1367]:
+                      - cell "V5 当前" [ref=f11e1368]:
+                        - generic [ref=f11e1369]:
+                          - text: V5
+                          - generic [ref=f11e1370]: 当前
+                      - cell "爱培科" [ref=f11e1372]
+                      - cell "2026-09-14 07:27" [ref=f11e1374]
+                      - cell "V8" [ref=f11e1376]
+                      - cell "草稿" [ref=f11e1378]
+                      - cell [ref=f11e1382]:
+                        - button "与当前对比" [ref=f11e1384] [cursor=pointer]
+                    - row [ref=f11e1386]:
+                      - cell "V5" [ref=f11e1387]
+                      - cell "永惠" [ref=f11e1389]
+                      - cell "2026-09-14 07:27" [ref=f11e1391]
+                      - cell "V8" [ref=f11e1393]
+                      - cell "草稿" [ref=f11e1395]
+                      - cell [ref=f11e1399]:
+                        - button "与当前对比" [ref=f11e1401] [cursor=pointer]
+                    - row [ref=f11e1403]:
+                      - cell "V4" [ref=f11e1404]
+                      - cell "爱培科" [ref=f11e1406]
+                      - cell "2026-09-08 09:35" [ref=f11e1408]
+                      - cell "V8" [ref=f11e1410]
+                      - cell "草稿" [ref=f11e1412]
+                      - cell [ref=f11e1416]:
+                        - button "与当前对比" [ref=f11e1418] [cursor=pointer]
+              - generic [ref=f11e1421]:
+                - generic [ref=f11e1422]: 共 6 条
+                - generic [ref=f11e1425] [cursor=pointer]:
+                  - generic:
+                    - combobox [ref=f11e1427]
+                    - generic [ref=f11e1428]: 3条/页
+                - button "上一页" [disabled] [ref=f11e1433]
+                - list [ref=f11e1434]:
+                  - listitem "第 1 页" [ref=f11e1435]: "1"
+                  - listitem "第 2 页" [ref=f11e1436] [cursor=pointer]: "2"
+                - button "下一页" [ref=f11e1437] [cursor=pointer]
+                - generic [ref=f11e1438]:
+                  - generic [ref=f11e1439]: 前往
+                  - spinbutton "页" [ref=f11e1442]: "1"
+                  - generic [ref=f11e1443]: 页
+          - dialog "选择导出字段" [ref=f11e1445]:
+            - generic [ref=f11e1446]:
+              - generic [ref=f11e1447]:
+                - heading "选择导出字段" [level=2] [ref=f11e1448]
+                - button "关闭此对话框" [ref=f11e1449] [cursor=pointer]
+              - generic [ref=f11e1454]:
+                - generic [ref=f11e1455]:
+                  - generic [ref=f11e1456]: 工厂
+                  - generic [ref=f11e1459] [cursor=pointer]:
+                    - generic:
+                      - combobox "工厂" [ref=f11e1461]
+                      - generic [ref=f11e1462]: 全部工厂
+                - generic [ref=f11e1467]:
+                  - generic [ref=f11e1468]: 导出字段
+                  - group "导出字段" [ref=f11e1470]:
+                    - generic [ref=f11e1471] [cursor=pointer]:
+                      - generic [ref=f11e1472]:
+                        - checkbox "机型" [checked]
+                      - generic [ref=f11e1474]: 机型
+                    - generic [ref=f11e1475] [cursor=pointer]:
+                      - generic [ref=f11e1476]:
+                        - checkbox "版本" [checked]
+                      - generic [ref=f11e1478]: 版本
+                    - generic [ref=f11e1479] [cursor=pointer]:
+                      - generic [ref=f11e1480]:
+                        - checkbox "机头料号" [checked]
+                      - generic [ref=f11e1482]: 机头料号
+                    - generic [ref=f11e1483] [cursor=pointer]:
+                      - generic [ref=f11e1484]:
+                        - checkbox "整机料号" [checked]
+                      - generic [ref=f11e1486]: 整机料号
+                    - generic [ref=f11e1487] [cursor=pointer]:
+                      - generic [ref=f11e1488]:
+                        - checkbox "备注" [checked]
+                      - generic [ref=f11e1490]: 备注
+                    - generic [ref=f11e1491] [cursor=pointer]:
+                      - generic [ref=f11e1492]:
+                        - checkbox "各周排产数量" [checked]
+                      - generic [ref=f11e1494]: 各周排产数量
+                    - generic [ref=f11e1495] [cursor=pointer]:
+                      - generic [ref=f11e1496]:
+                        - checkbox "优先级"
+                      - generic [ref=f11e1498]: 优先级
+                    - generic [ref=f11e1499] [cursor=pointer]:
+                      - generic [ref=f11e1500]:
+                        - checkbox "实际完成数量"
+                      - generic [ref=f11e1502]: 实际完成数量
+              - generic [ref=f11e1503]:
+                - button "取消" [ref=f11e1504] [cursor=pointer]
+                - button "生成 Excel" [ref=f11e1506] [cursor=pointer]
+  - alert [ref=f11e1508]:
+    - paragraph [ref=f11e1512]: "导出失败: Internal server error"

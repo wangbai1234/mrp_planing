@@ -1,13 +1,20 @@
 <script setup lang="ts">
 import { ref, inject, onMounted, computed } from 'vue'
 import { ElMessage } from 'element-plus'
-import { get, upload, download } from '../../api/client'
+import { get, post, upload, download } from '../../api/client'
 import type { ForecastVersion } from '../../api/types'
 
 const setCrumb = inject<(g: string, p: string) => void>('setCrumb')!
 
+// 版本列表相关
 const versions = ref<ForecastVersion[]>([])
 const loading = ref(false)
+const page = ref(1)
+const pageSize = ref(3)
+const total = ref(0)
+const keyword = ref('')
+
+// 导入相关
 const importVisible = ref(false)
 const file = ref<File | null>(null)
 const stagingResult = ref<any>(null)
@@ -16,13 +23,31 @@ const confirmLoading = ref(false)
 const isDragOver = ref(false)
 const fileInput = ref<HTMLInputElement | null>(null)
 
+// 版本详情相关
+const selectedVersionId = ref<number | null>(null)
+const versionDetails = ref<any[]>([])
+const detailsLoading = ref(false)
+const recognizedMonths = ref<string[]>([])
+const detailsPage = ref(1)
+const detailsPageSize = ref(20)
+const detailsTotal = ref(0)
+const detailsKeyword = ref('')
+
 const currentStep = computed(() => stagingResult.value ? 1 : 0)
 
 async function loadVersions() {
   loading.value = true
   try {
-    const res = await get<any>('/forecast-versions')
-    versions.value = res.data || []
+    const params = new URLSearchParams({
+      page: page.value.toString(),
+      pageSize: pageSize.value.toString()
+    })
+    if (keyword.value) {
+      params.append('keyword', keyword.value)
+    }
+    const res = await get<any>(`/forecast-versions?${params.toString()}`)
+    versions.value = res?.items || []
+    total.value = res?.total || 0
   } catch (e: any) {
     ElMessage.error('加载版本失败: ' + e.message)
   } finally {
@@ -30,10 +55,109 @@ async function loadVersions() {
   }
 }
 
+async function loadVersionDetails(versionId: number, resetKeyword: boolean = false) {
+  detailsLoading.value = true
+  selectedVersionId.value = versionId
+  if (resetKeyword) {
+    detailsKeyword.value = ''
+  }
+  try {
+    const params = new URLSearchParams({
+      page: detailsPage.value.toString(),
+      pageSize: detailsPageSize.value.toString()
+    })
+    if (detailsKeyword.value) {
+      params.append('keyword', detailsKeyword.value)
+    }
+    const res = await get<any>(`/forecast-versions/${versionId}?${params.toString()}`)
+    const items = res?.items || []
+    detailsTotal.value = res?.total || 0
+    
+    // 提取月份列（从第一个物料的months对象中获取）
+    if (items.length > 0) {
+      const months = Object.keys(items[0].months || {}).sort()
+      recognizedMonths.value = months
+    } else {
+      recognizedMonths.value = []
+    }
+    
+    // 后端已返回聚合数据，直接使用
+    versionDetails.value = items.map((item: any) => ({
+      factoryCode: item.factoryCode,
+      formType: item.formType,
+      materialId: item.materialId,
+      materialName: item.materialName,
+      project: item.project,
+      platform: item.platform,
+      mold: item.mold,
+      status: item.status,
+      months: item.months || {},
+      total: item.total || 0
+    }))
+  } catch (e: any) {
+    ElMessage.error('加载版本详情失败: ' + e.message)
+  } finally {
+    detailsLoading.value = false
+  }
+}
+
+function handleVersionSizeChange(val: number) {
+  pageSize.value = val
+  page.value = 1
+  loadVersions()
+}
+
+function handleVersionPageChange(val: number) {
+  page.value = val
+  loadVersions()
+}
+
+function handleVersionSearch() {
+  page.value = 1
+  loadVersions()
+}
+
+function handleDetailsSizeChange(val: number) {
+  detailsPageSize.value = val
+  detailsPage.value = 1
+  if (selectedVersionId.value) {
+    loadVersionDetails(selectedVersionId.value)
+  }
+}
+
+function handleDetailsPageChange(val: number) {
+  detailsPage.value = val
+  if (selectedVersionId.value) {
+    loadVersionDetails(selectedVersionId.value)
+  }
+}
+
+function handleDetailsSearch() {
+  detailsPage.value = 1
+  if (selectedVersionId.value) {
+    loadVersionDetails(selectedVersionId.value)
+  }
+}
+
+function handleVersionClick(row: any) {
+  detailsPage.value = 1
+  loadVersionDetails(row.id, true)
+}
+
 async function downloadTemplate() {
   try {
     await download('/forecast-imports/template', '经营计划_导入模板.xlsx')
     ElMessage.success('模板下载成功')
+  } catch (e: any) {
+    ElMessage.error('下载失败: ' + e.message)
+  }
+}
+
+async function downloadErrorReport() {
+  if (!stagingResult.value?.taskId) return
+  try {
+    await download(`/forecast-imports/${stagingResult.value.taskId}/errors`, '经营计划_错误数据.xlsx')
+    ElMessage.success('错误报告下载成功')
   } catch (e: any) {
     ElMessage.error('下载失败: ' + e.message)
   }
@@ -85,8 +209,8 @@ async function handleUpload(f: File) {
     formData.append('file', f)
     const res = await upload<any>('/forecast-imports', formData)
     stagingResult.value = res.data
-    if (res.data?.errorRows > 0) {
-      ElMessage.warning(`解析完成: ${res.data.successRows} 行成功, ${res.data.errorRows} 行有错误`)
+    if (res?.errorRows > 0) {
+      ElMessage.warning(`解析完成: ${res.successRows} 行成功, ${res.errorRows} 行有错误`)
     }
   } catch (e: any) {
     ElMessage.error('上传失败: ' + e.message)
@@ -106,7 +230,7 @@ async function handleConfirm() {
   
   confirmLoading.value = true
   try {
-    const res = await get<any>(`/import-tasks/${stagingResult.value.taskId}`)
+    const res = await post<any>(`/forecast-imports/${stagingResult.value.taskId}/confirm`)
     if (res.success) {
       ElMessage.success('导入成功')
       handleClose()
@@ -138,6 +262,20 @@ function formatFileSize(bytes: number): string {
   return (bytes / (1024 * 1024)).toFixed(1) + ' MB'
 }
 
+function formatBeijingTime(utcTime: string): string {
+  if (!utcTime) return ''
+  const date = new Date(utcTime)
+  // 转换为北京时间 (UTC+8)
+  const beijingTime = new Date(date.getTime() + 8 * 60 * 60 * 1000)
+  const year = beijingTime.getUTCFullYear()
+  const month = String(beijingTime.getUTCMonth() + 1).padStart(2, '0')
+  const day = String(beijingTime.getUTCDate()).padStart(2, '0')
+  const hours = String(beijingTime.getUTCHours()).padStart(2, '0')
+  const minutes = String(beijingTime.getUTCMinutes()).padStart(2, '0')
+  const seconds = String(beijingTime.getUTCSeconds()).padStart(2, '0')
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+}
+
 onMounted(() => {
   setCrumb('数据管理', '经营计划')
   loadVersions()
@@ -157,9 +295,26 @@ onMounted(() => {
     <!-- 版本列表 -->
     <el-card shadow="never" v-loading="loading">
       <template #header>
-        <span style="font-weight: 600">历史版本</span>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-weight: 600">历史版本</span>
+          <div style="display: flex; gap: 8px;">
+            <el-input
+              v-model="keyword"
+              placeholder="搜索版本"
+              style="width: 220px"
+              clearable
+              @clear="handleVersionSearch"
+              @keyup.enter="handleVersionSearch"
+            >
+              <template #prefix>
+                <el-icon><Search /></el-icon>
+              </template>
+            </el-input>
+            <el-button type="primary" @click="handleVersionSearch">搜索</el-button>
+          </div>
+        </div>
       </template>
-      <el-table :data="versions" size="default" border>
+      <el-table :data="versions" size="default" border @row-click="handleVersionClick" highlight-current-row>
         <el-table-column prop="id" label="ID" width="80" />
         <el-table-column prop="versionNo" label="版本号" width="100" />
         <el-table-column prop="status" label="状态" width="120">
@@ -169,9 +324,87 @@ onMounted(() => {
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="createdAt" label="导入时间" />
+        <el-table-column prop="createdAt" label="导入时间">
+          <template #default="{ row }">
+            {{ formatBeijingTime(row.createdAt) }}
+          </template>
+        </el-table-column>
       </el-table>
       <el-empty v-if="!loading && versions.length === 0" description="暂无经营计划版本，请先导入" />
+      <div v-if="total > 0" style="margin-top: 16px; display: flex; justify-content: flex-end;">
+        <el-pagination
+          v-model:current-page="page"
+          v-model:page-size="pageSize"
+          :page-sizes="[3, 10, 20, 50]"
+          :total="total"
+          layout="total, sizes, prev, pager, next, jumper"
+          @size-change="handleVersionSizeChange"
+          @current-change="handleVersionPageChange"
+        />
+      </div>
+    </el-card>
+
+    <!-- 版本详情 -->
+    <el-card v-if="selectedVersionId" shadow="never" v-loading="detailsLoading" style="margin-top: 16px;">
+      <template #header>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-weight: 600">版本详情</span>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <el-input
+              v-model="detailsKeyword"
+              placeholder="搜索料号/名称/工厂"
+              style="width: 220px"
+              clearable
+              @clear="handleDetailsSearch"
+              @keyup.enter="handleDetailsSearch"
+            >
+              <template #prefix>
+                <el-icon><Search /></el-icon>
+              </template>
+            </el-input>
+            <el-button type="primary" @click="handleDetailsSearch">搜索</el-button>
+            <el-button @click="selectedVersionId = null">关闭</el-button>
+          </div>
+        </div>
+      </template>
+      <el-table :data="versionDetails" size="default" border max-height="600" style="width: 100%;">
+        <el-table-column prop="factoryCode" label="业务线/工厂" width="100" fixed />
+        <el-table-column prop="formType" label="形态" width="80" fixed />
+        <el-table-column prop="materialId" label="料号" width="120" fixed />
+        <el-table-column prop="materialName" label="名称" width="150" />
+        <el-table-column prop="project" label="项目型号" width="120" />
+        <el-table-column prop="platform" label="规格型号" width="120" />
+        <el-table-column prop="mold" label="模具" width="100" />
+        <el-table-column prop="status" label="状态" width="80" />
+        <el-table-column 
+          v-for="month in recognizedMonths" 
+          :key="month" 
+          :label="month" 
+          width="100"
+          align="right"
+        >
+          <template #default="{ row }">
+            {{ row.months[month] !== undefined && row.months[month] !== null ? row.months[month] : '' }}
+          </template>
+        </el-table-column>
+        <el-table-column label="fcst-total" width="100" align="right" fixed="right">
+          <template #default="{ row }">
+            {{ row.total }}
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-empty v-if="!detailsLoading && versionDetails.length === 0" description="暂无数据" />
+      <div v-if="detailsTotal > 0" style="margin-top: 16px; display: flex; justify-content: flex-end;">
+        <el-pagination
+          v-model:current-page="detailsPage"
+          v-model:page-size="detailsPageSize"
+          :page-sizes="[10, 20, 50, 100]"
+          :total="detailsTotal"
+          layout="total, sizes, prev, pager, next, jumper"
+          @size-change="handleDetailsSizeChange"
+          @current-change="handleDetailsPageChange"
+        />
+      </div>
     </el-card>
 
     <!-- 导入弹窗 -->
@@ -249,6 +482,53 @@ onMounted(() => {
             <span class="summary-label">错误行</span>
             <span class="summary-value" :class="{ error: stagingResult.errorRows > 0 }">{{ stagingResult.errorRows }}</span>
           </div>
+        </div>
+
+        <!-- 错误提示 -->
+        <div v-if="stagingResult && stagingResult.errorRows > 0" class="error-alert">
+          <el-alert
+            type="error"
+            :closable="false"
+            show-icon
+          >
+            <template #title>
+              <span>发现 {{ stagingResult.errorRows }} 条错误数据，无法导入</span>
+            </template>
+            <template #default>
+              <div class="error-actions">
+                <span>请下载错误报告，修正后重新导入</span>
+                <el-button type="primary" size="small" @click="downloadErrorReport">
+                  下载错误数据
+                </el-button>
+              </div>
+            </template>
+          </el-alert>
+        </div>
+
+        <!-- 预览数据表格 -->
+        <div v-if="stagingResult && stagingResult.previewRows && stagingResult.previewRows.length > 0" class="preview-section">
+          <div class="preview-title">数据预览（前10行）</div>
+          <el-table :data="stagingResult.previewRows" size="small" border max-height="300">
+            <el-table-column prop="type" label="状态" width="80">
+              <template #default="{ row }">
+                <el-tag :type="row.type === 'error' ? 'danger' : 'success'" size="small" effect="plain">
+                  {{ row.type === 'error' ? '错误' : '成功' }}
+                </el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column prop="row" label="行号" width="60" />
+            <el-table-column prop="factoryCode" label="工厂" width="80" />
+            <el-table-column prop="formType" label="形态" width="80" />
+            <el-table-column prop="materialId" label="料号" width="120" />
+            <el-table-column prop="materialName" label="名称" width="120" />
+            <el-table-column prop="project" label="项目" width="100" />
+            <el-table-column prop="platform" label="平台" width="100" />
+            <el-table-column prop="mold" label="模具" width="80" />
+            <el-table-column prop="status" label="状态" width="80" />
+            <el-table-column prop="planMonth" label="月份" width="100" />
+            <el-table-column prop="forecastQty" label="数量" width="80" />
+            <el-table-column prop="message" label="错误信息" min-width="150" />
+          </el-table>
         </div>
       </div>
 
@@ -493,6 +773,31 @@ onMounted(() => {
   font-size: 13px;
   color: #4E5969;
   line-height: 28px;
+}
+
+.preview-section {
+  margin-top: 16px;
+  border: 1px solid #E5E6EB;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.preview-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1F2329;
+  margin-bottom: 12px;
+}
+
+.error-alert {
+  margin-top: 16px;
+}
+
+.error-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 8px;
 }
 
 .dialog-footer {

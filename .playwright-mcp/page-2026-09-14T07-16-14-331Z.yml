@@ -1,0 +1,30 @@
+- generic [ref=f4e3]:
+  - complementary [ref=f4e4]:
+    - generic [ref=f4e5]:
+      - generic [ref=f4e6]: MRP
+      - generic [ref=f4e7]: 计划协同
+    - menubar [ref=f4e8]:
+      - generic [ref=f4e9]: 计划
+      - menuitem "看板" [ref=f4e10] [cursor=pointer]
+      - menuitem "排产计划" [ref=f4e17] [cursor=pointer]
+      - generic [ref=f4e22]: 数据
+      - menuitem "经营计划" [ref=f4e23] [cursor=pointer]
+      - menuitem "库存快照" [ref=f4e28] [cursor=pointer]
+      - menuitem "物料管理" [ref=f4e35] [cursor=pointer]
+      - menuitem "BOM管理" [ref=f4e40] [cursor=pointer]
+      - generic [ref=f4e45]: 配置
+      - menuitem "产能配置" [ref=f4e46] [cursor=pointer]
+      - generic [ref=f4e51]: 系统
+      - menuitem "用户与权限" [ref=f4e52] [cursor=pointer]
+  - generic [ref=f4e57]:
+    - generic [ref=f4e58]:
+      - generic [ref=f4e59]:
+        - generic [ref=f4e60]: 计划管理
+        - generic [ref=f4e61]: /
+        - strong [ref=f4e62]: 12 周滚动排产
+      - generic [ref=f4e63]:
+        - generic [ref=f4e64]: 数据已同步
+        - button "系 系统管理员" [ref=f4e67] [cursor=pointer]:
+          - generic [ref=f4e68]: 系
+          - generic [ref=f4e69]: 系统管理员
+    - main [ref=f4e70]

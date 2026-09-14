@@ -1,5 +1,7 @@
 package com.mrp.planning.service;
 
+import com.mrp.capacity.domain.CapacityLine;
+import com.mrp.capacity.repository.CapacityMapper;
 import com.mrp.common.exception.BusinessException;
 import com.mrp.common.exception.NotFoundException;
 import com.mrp.common.exception.ValidationException;
@@ -25,12 +27,14 @@ public class PlanningDomainService {
     private final PlanMapper planMapper;
     private final PlanOverrideMapper overrideMapper;
     private final ImportTaskMapper importTaskMapper;
+    private final CapacityMapper capacityMapper;
 
     public PlanningDomainService(PlanMapper planMapper, PlanOverrideMapper overrideMapper,
-                                 ImportTaskMapper importTaskMapper) {
+                                 ImportTaskMapper importTaskMapper, CapacityMapper capacityMapper) {
         this.planMapper = planMapper;
         this.overrideMapper = overrideMapper;
         this.importTaskMapper = importTaskMapper;
+        this.capacityMapper = capacityMapper;
     }
 
     // === 人工调整 ===
@@ -93,10 +97,42 @@ public class PlanningDomainService {
         }
 
         // Check capacity exceeded (C007: hard block)
+        // Re-check with current capacity config (same logic as getPlanGridWithOverrides)
         List<PlanDetail> details = planMapper.selectDetailsByVersionId(planVersionId);
-        boolean hasExceeded = details.stream().anyMatch(PlanDetail::capacityExceeded);
+        List<PlanOverride> overrides = overrideMapper.selectByVersionId(planVersionId);
+
+        Map<String, PlanOverride> overrideMap = overrides.stream()
+                .collect(Collectors.toMap(
+                        o -> o.materialId() + ":" + o.weekStartDate(),
+                        o -> o, (a, b) -> b));
+
+        // Compute total weekly capacity from active capacity lines
+        long totalWeeklyCapacity = 0;
+        if (version.capacityVersionId() != null) {
+            List<CapacityLine> capacityLines = capacityMapper.selectActiveLinesByFactory(
+                    version.capacityVersionId(), version.factoryCode());
+            totalWeeklyCapacity = capacityLines.stream()
+                    .mapToLong(CapacityLine::weeklyCapacity)
+                    .sum();
+        }
+
+        // Re-check capacity for each detail with overrides applied
+        long finalTotalWeeklyCapacity = totalWeeklyCapacity;
+        boolean hasExceeded = false;
+        long totalExcess = 0;
+        for (PlanDetail d : details) {
+            String key = d.materialId() + ":" + d.weekStartDate();
+            PlanOverride ov = overrideMap.get(key);
+            Long manualQty = ov != null ? ov.manualQuantity() : d.manualQuantity();
+            long effective = manualQty != null ? manualQty : d.systemQuantity();
+
+            if (finalTotalWeeklyCapacity > 0 && effective > finalTotalWeeklyCapacity) {
+                hasExceeded = true;
+                totalExcess += effective - finalTotalWeeklyCapacity;
+            }
+        }
+
         if (hasExceeded) {
-            long totalExcess = details.stream().mapToLong(PlanDetail::capacityExcessQty).sum();
             throw new BusinessException("MRP_CAPACITY_EXCEEDED",
                     "存在超产能排产，差额 " + totalExcess + "，请先调整再发布");
         }
@@ -163,14 +199,35 @@ public class PlanningDomainService {
                         o -> o.materialId() + ":" + o.weekStartDate(),
                         o -> o, (a, b) -> b));
 
-        // Apply overrides to details
+        // Compute total weekly capacity from active capacity lines
+        long totalWeeklyCapacity = 0;
+        if (version.capacityVersionId() != null) {
+            List<CapacityLine> capacityLines = capacityMapper.selectActiveLinesByFactory(
+                    version.capacityVersionId(), version.factoryCode());
+            totalWeeklyCapacity = capacityLines.stream()
+                    .mapToLong(CapacityLine::weeklyCapacity)
+                    .sum();
+        }
+
+        // Apply overrides to details and re-check capacity
+        long finalTotalWeeklyCapacity = totalWeeklyCapacity;
         List<Map<String, Object>> grid = details.stream()
                 .map(d -> {
                     String key = d.materialId() + ":" + d.weekStartDate();
                     PlanOverride ov = overrideMap.get(key);
                     Long manualQty = ov != null ? ov.manualQuantity() : d.manualQuantity();
                     long effective = manualQty != null ? manualQty : d.systemQuantity();
+
+                    // Re-check capacity based on effective quantity
+                    boolean capacityExceeded = false;
+                    long capacityExcessQty = 0;
+                    if (finalTotalWeeklyCapacity > 0 && effective > finalTotalWeeklyCapacity) {
+                        capacityExceeded = true;
+                        capacityExcessQty = effective - finalTotalWeeklyCapacity;
+                    }
+
                     Map<String, Object> m = new java.util.LinkedHashMap<>();
+                    m.put("planVersionId", d.planVersionId());
                     m.put("materialId", d.materialId());
                     m.put("materialName", d.materialName() != null ? d.materialName() : "");
                     m.put("factoryCode", d.factoryCode());
@@ -183,8 +240,8 @@ public class PlanningDomainService {
                     m.put("systemQuantity", d.systemQuantity());
                     m.put("manualQuantity", manualQty != null ? manualQty : "");
                     m.put("effectiveQuantity", effective);
-                    m.put("capacityExceeded", d.capacityExceeded());
-                    m.put("capacityExcessQty", d.capacityExcessQty());
+                    m.put("capacityExceeded", capacityExceeded);
+                    m.put("capacityExcessQty", capacityExcessQty);
                     return m;
                 })
                 .toList();

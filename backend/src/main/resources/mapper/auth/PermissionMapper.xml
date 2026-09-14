@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.auth.repository.PermissionMapper">
+
+    <select id="selectAll" resultType="com.mrp.auth.domain.Permission">
+        SELECT id, code, name, type, parent_id, resource, action, sort, status, description, created_at, updated_at
+        FROM permission
+        ORDER BY sort, id
+    </select>
+
+    <select id="selectActive" resultType="com.mrp.auth.domain.Permission">
+        SELECT id, code, name, type, parent_id, resource, action, sort, status, description, created_at, updated_at
+        FROM permission
+        WHERE status = 'ACTIVE'
+        ORDER BY sort, id
+    </select>
+
+    <select id="selectById" resultType="com.mrp.auth.domain.Permission">
+        SELECT id, code, name, type, parent_id, resource, action, sort, status, description, created_at, updated_at
+        FROM permission
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectByCode" resultType="com.mrp.auth.domain.Permission">
+        SELECT id, code, name, type, parent_id, resource, action, sort, status, description, created_at, updated_at
+        FROM permission
+        WHERE code = #{code}
+    </select>
+
+    <select id="selectByParentId" resultType="com.mrp.auth.domain.Permission">
+        SELECT id, code, name, type, parent_id, resource, action, sort, status, description, created_at, updated_at
+        FROM permission
+        WHERE parent_id = #{parentId}
+        ORDER BY sort, id
+    </select>
+
+    <select id="selectByRoleId" resultType="com.mrp.auth.domain.Permission">
+        SELECT p.id, p.code, p.name, p.type, p.parent_id, p.resource, p.action, p.sort, p.status, p.description, p.created_at, p.updated_at
+        FROM permission p
+        INNER JOIN role_permission rp ON p.id = rp.permission_id
+        WHERE rp.role_id = #{roleId}
+        ORDER BY p.sort, p.id
+    </select>
+
+    <select id="selectByUserId" resultType="com.mrp.auth.domain.Permission">
+        SELECT DISTINCT p.id, p.code, p.name, p.type, p.parent_id, p.resource, p.action, p.sort, p.status, p.description, p.created_at, p.updated_at
+        FROM permission p
+        INNER JOIN role_permission rp ON p.id = rp.permission_id
+        INNER JOIN user_role ur ON rp.role_id = ur.role_id
+        WHERE ur.user_id = #{userId}
+        ORDER BY p.sort, p.id
+    </select>
+
+    <select id="selectCodesByUserId" resultType="java.lang.String">
+        SELECT DISTINCT p.code
+        FROM permission p
+        INNER JOIN role_permission rp ON p.id = rp.permission_id
+        INNER JOIN user_role ur ON rp.role_id = ur.role_id
+        WHERE ur.user_id = #{userId}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO permission (code, name, type, parent_id, resource, action, sort, status, description)
+        VALUES (#{code}, #{name}, #{type}, #{parentId}, #{resource}, #{action}, #{sort}, #{status}, #{description})
+    </insert>
+
+    <update id="update">
+        UPDATE permission SET
+            name = #{name},
+            type = #{type},
+            parent_id = #{parentId},
+            resource = #{resource},
+            action = #{action},
+            sort = #{sort},
+            status = #{status},
+            description = #{description}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM permission WHERE id = #{id}
+    </delete>
+</mapper>

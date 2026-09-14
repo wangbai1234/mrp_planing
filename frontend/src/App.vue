@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { ref, provide } from 'vue'
+import { ref, provide, computed, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { setToken } from './api/client'
+import { usePermissionStore } from './stores/permission'
 
 const router = useRouter()
 const route = useRoute()
+const permissionStore = usePermissionStore()
 
 const crumbGroup = ref('计划管理')
 const crumbPage = ref('12 周滚动排产')
@@ -20,25 +22,78 @@ function navigateTo(path: string) {
 
 function handleLogout() {
   setToken(null)
+  localStorage.removeItem('mrp_user_info')
+  permissionStore.clear()
   router.push('/login')
 }
 
-const menuItems = [
-  { group: '计划', items: [
-    { path: '/dashboard', label: '工作台', icon: 'Grid' },
-    { path: '/planning', label: '滚动排产', icon: 'Calendar' },
-    { path: '/versions', label: '版本记录', icon: 'Clock' },
-  ]},
-  { group: '数据', items: [
-    { path: '/forecast', label: '经营计划', icon: 'Document' },
-    { path: '/inventory', label: '库存快照', icon: 'Box' },
-    { path: '/material', label: '物料管理', icon: 'Files' },
-  ]},
-  { group: '配置', items: [
-    { path: '/capacity', label: '产能配置', icon: 'Setting' },
-    { path: '/manual', label: '操作手册', icon: 'QuestionFilled' },
-  ]},
-]
+// Get user info
+const userInfo = ref<any>(null)
+
+function loadUserInfo() {
+  const info = localStorage.getItem('mrp_user_info')
+  if (info) {
+    userInfo.value = JSON.parse(info)
+  }
+}
+
+onMounted(loadUserInfo)
+
+// Reload user info when route changes (e.g., after login)
+watch(() => route.path, () => {
+  loadUserInfo()
+})
+
+// Dynamic menu based on permissions
+const menuItems = computed(() => {
+  const items = []
+
+  // 计划 group
+  if (permissionStore.hasAnyPermission(['schedule:view'])) {
+    items.push({
+      group: '计划',
+      items: [
+        { path: '/dashboard', label: '看板', icon: 'DataBoard', permission: 'schedule:view' },
+        { path: '/planning', label: '排产计划', icon: 'Calendar', permission: 'schedule:view' }
+      ].filter(item => !item.permission || permissionStore.hasPermission(item.permission))
+    })
+  }
+
+  // 数据 group
+  const dataItems = []
+  if (permissionStore.hasPermission('forecast:view')) {
+    dataItems.push({ path: '/forecast', label: '经营计划', icon: 'Document' })
+  }
+  if (permissionStore.hasPermission('inventory:view')) {
+    dataItems.push({ path: '/inventory', label: '库存快照', icon: 'Box' })
+  }
+  dataItems.push({ path: '/material', label: '物料管理', icon: 'Files' })
+  dataItems.push({ path: '/bom', label: 'BOM管理', icon: 'Share' })
+  if (dataItems.length > 0) {
+    items.push({ group: '数据', items: dataItems })
+  }
+
+  // 配置 group
+  const configItems = []
+  if (permissionStore.hasPermission('capacity:view')) {
+    configItems.push({ path: '/capacity', label: '产能配置', icon: 'Setting' })
+  }
+  if (configItems.length > 0) {
+    items.push({ group: '配置', items: configItems })
+  }
+
+  // 系统管理 group
+  if (permissionStore.hasAnyPermission(['user:view', 'role:view', 'audit:view'])) {
+    items.push({
+      group: '系统',
+      items: [
+        { path: '/admin/users', label: '用户与权限', icon: 'UserFilled' }
+      ]
+    })
+  }
+
+  return items
+})
 </script>
 
 <template>
@@ -74,12 +129,12 @@ const menuItems = [
         </div>
         <div class="top-meta">
           <span><span class="sync-dot"></span>数据已同步</span>
-          <span>库存快照 2026-08-27 23:40</span>
-          <span>CRM 2026-08-28 08:30</span>
           <el-dropdown @command="handleLogout" trigger="click">
             <span class="user-info">
-              <el-avatar :size="28" style="background: #385077; font-size: 12px">肖</el-avatar>
-              <span style="font-size: 12px; margin-left: 6px">肖芳</span>
+              <el-avatar :size="28" style="background: #385077; font-size: 12px">
+                {{ userInfo?.displayName?.[0] || 'U' }}
+              </el-avatar>
+              <span style="font-size: 12px; margin-left: 6px">{{ userInfo?.displayName || userInfo?.username || '用户' }}</span>
             </span>
             <template #dropdown>
               <el-dropdown-menu>

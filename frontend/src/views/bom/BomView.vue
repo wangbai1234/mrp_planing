@@ -2,7 +2,6 @@
 import { ref, inject, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { get, post } from '../../api/client'
-import type { ApiResponse } from '../../api/types'
 import { Search, Refresh, Close, Share, Download } from '@element-plus/icons-vue'
 
 const setCrumb = inject<(g: string, p: string) => void>('setCrumb')!
@@ -46,6 +45,7 @@ interface BomTreeNode {
   qty: number
   version: string
   hasChildren: boolean
+  isLeaf?: boolean
   children?: BomTreeNode[]
 }
 
@@ -81,6 +81,7 @@ const treeRef = ref<any>(null)
 const treeProps = {
   children: 'children',
   label: 'code',
+  isLeaf: 'isLeaf',
 }
 
 async function loadMaterials() {
@@ -91,9 +92,9 @@ async function loadMaterials() {
     params.append('pageSize', materialPageSize.value.toString())
     if (searchKeyword.value) params.append('keyword', searchKeyword.value)
 
-    const res = await get<ApiResponse<PageResult<BomMaterial>>>(`/bom/materials?${params.toString()}`)
-    materials.value = res.data?.items || []
-    materialTotal.value = res.data?.total || 0
+    const res = await get<PageResult<BomMaterial>>(`/bom/materials?${params.toString()}`)
+    materials.value = res?.items || []
+    materialTotal.value = res?.total || 0
   } catch (e: any) {
     ElMessage.error('加载物料列表失败: ' + e.message)
   } finally {
@@ -114,13 +115,9 @@ async function handleSync() {
 
   syncLoading.value = true
   try {
-    const res = await post<ApiResponse<any>>('/bom/sync')
-    if (res.data?.success) {
-      ElMessage.success(`同步完成！父项: ${res.data.parentCount}, 子项: ${res.data.detailCount}, 耗时: ${res.data.elapsed}`)
-      await loadMaterials()
-    } else {
-      ElMessage.error('同步失败: ' + (res.data?.error || '未知错误'))
-    }
+    const res = await post<any>('/bom/sync')
+    ElMessage.success(`同步完成！父项: ${res?.parentCount}, 子项: ${res?.detailCount}, 耗时: ${res?.elapsed}`)
+    await loadMaterials()
   } catch (e: any) {
     ElMessage.error('同步失败: ' + e.message)
   } finally {
@@ -131,8 +128,8 @@ async function handleSync() {
 async function loadDetail(invCode: string) {
   detailLoading.value = true
   try {
-    const res = await get<ApiResponse<BomDetail[]>>(`/bom/detail/${invCode}`)
-    details.value = res.data || []
+    const res = await get<BomDetail[]>(`/bom/detail/${invCode}`)
+    details.value = res || []
   } catch (e: any) {
     ElMessage.error('加载BOM明细失败: ' + e.message)
   } finally {
@@ -211,11 +208,9 @@ async function openBomTree() {
 async function loadTreeRoot(invCode: string) {
   treeLoading.value = true
   try {
-    const materialRes = await get<ApiResponse<BomMaterial>>(`/bom/materials/${invCode}`)
-    const material = materialRes.data
+    const material = await get<BomMaterial>(`/bom/materials/${invCode}`)
 
-    const childrenRes = await get<ApiResponse<BomTreeNode[]>>(`/bom/tree/${invCode}`)
-    const children = childrenRes.data || []
+    const children = await get<BomTreeNode[]>(`/bom/tree/${invCode}`) || []
 
     treeData.value = [{
       code: material?.invCode || invCode,
@@ -224,6 +219,7 @@ async function loadTreeRoot(invCode: string) {
       qty: 1,
       version: material?.version || '',
       hasChildren: children.length > 0,
+      isLeaf: children.length === 0,
       children: children
     }]
   } catch (e: any) {
@@ -233,8 +229,27 @@ async function loadTreeRoot(invCode: string) {
   }
 }
 
+async function loadNode(node: any, resolve: (data: BomTreeNode[]) => void) {
+  if (node.level === 0) {
+    resolve(treeData.value)
+    return
+  }
+  try {
+    const res = await get<BomTreeNode[]>(`/bom/tree/${node.data.code}`)
+    const children = (res || []).map(child => ({
+      ...child,
+      isLeaf: !child.hasChildren
+    }))
+    resolve(children)
+  } catch (e: any) {
+    ElMessage.error('加载子节点失败: ' + e.message)
+    resolve([])
+  }
+}
+
 function expandAll() {
   if (!treeRef.value) return
+  // In lazy mode, we can only expand loaded nodes
   const allNodes = getAllNodeKeys(treeData.value)
   allNodes.forEach(key => {
     treeRef.value.store.nodesMap[key]?.expand()
@@ -253,11 +268,9 @@ function getAllNodeKeys(nodes: BomTreeNode[]): string[] {
   const keys: string[] = []
   const traverse = (list: BomTreeNode[]) => {
     for (const node of list) {
-      if (node.hasChildren) {
-        keys.push(node.code)
-        if (node.children) {
-          traverse(node.children)
-        }
+      keys.push(node.code)
+      if (node.children) {
+        traverse(node.children)
       }
     }
   }
@@ -449,7 +462,8 @@ onMounted(() => {
           v-if="treeData.length > 0"
           :data="treeData"
           node-key="code"
-          default-expand-all
+          lazy
+          :load="loadNode"
           :expand-on-click-node="false"
           :props="treeProps"
           class="bom-tree"

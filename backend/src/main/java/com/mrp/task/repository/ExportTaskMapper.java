@@ -13,7 +13,11 @@ public interface ExportTaskMapper {
 
     ExportTask selectByRequestKey(@Param("requestKey") String requestKey);
 
+    int deleteById(@Param("id") Long id);
+
     int updateResult(@Param("id") Long id, @Param("status") String status, @Param("resultResourceId") Long resultResourceId, @Param("version") Integer version);
+
+    int updateResultWithFile(@Param("id") Long id, @Param("status") String status, @Param("filePath") String filePath, @Param("version") Integer version);
 
     int updateFailure(@Param("id") Long id, @Param("status") String status, @Param("errorCode") String errorCode, @Param("errorMessage") String errorMessage, @Param("version") Integer version);
 }

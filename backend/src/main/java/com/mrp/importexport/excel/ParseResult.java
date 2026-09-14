@@ -8,7 +8,9 @@ public record ParseResult<T>(
         List<String> recognizedMonths,
         int totalRows,
         int successRows,
-        int errorRows
+        int errorRows,
+        List<List<String>> rawRows,
+        List<String> headers
 ) {
     public boolean hasErrors() {
         return !errors.isEmpty();

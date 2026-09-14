@@ -1,6 +1,7 @@
 package com.mrp.planning;
 
 import com.mrp.planning.domain.PlanningCalculator;
+import com.mrp.planning.domain.PlanningCalculator.MonthlyForecast;
 import com.mrp.planning.domain.WeekPlan;
 import org.junit.jupiter.api.Test;
 
@@ -32,73 +33,96 @@ class PlanningCalculatorTest {
         assertEquals(0, PlanningCalculator.monthlyAvailable(100, 200, 300));
     }
 
-    // === R002: 月拆周、余数前置 ===
+    // === R002: 月拆周、余数前置到第一周 ===
+    // 需求文档规则：月可排量平均分到W1-W3，余数放到第一周
 
     @Test
     void splitQuantities_900() {
-        // 900 → carry=300, rest=600, base=200, remainder=0
-        // ordinary=[200, 200, 200]
+        // 900 / 3 = 300, remainder = 0 → W1=300, W2=300, W3=300
         long[] q = PlanningCalculator.splitQuantities(900);
-        assertEquals(300, q[0]); // carry
-        assertEquals(200, q[1]); // W1
-        assertEquals(200, q[2]); // W2
-        assertEquals(200, q[3]); // W3
-        assertEquals(900, q[0] + q[1] + q[2] + q[3]); // conservation
+        assertEquals(3, q.length);
+        assertEquals(300, q[0]); // W1
+        assertEquals(300, q[1]); // W2
+        assertEquals(300, q[2]); // W3
+        assertEquals(900, q[0] + q[1] + q[2]); // conservation
     }
 
     @Test
     void splitQuantities_1000_remainderToFront() {
-        // 1000 → carry=334, rest=666, base=222, remainder=0
+        // 1000 / 3 = 333, remainder = 1 → W1=334, W2=333, W3=333
         long[] q = PlanningCalculator.splitQuantities(1000);
-        assertEquals(334, q[0]); // carry = ceil(1000/3) = 334
-        assertEquals(222, q[1]); // W1
-        assertEquals(222, q[2]); // W2
-        assertEquals(222, q[3]); // W3
-        assertEquals(1000, q[0] + q[1] + q[2] + q[3]);
+        assertEquals(3, q.length);
+        assertEquals(334, q[0]); // W1 gets remainder
+        assertEquals(333, q[1]); // W2
+        assertEquals(333, q[2]); // W3
+        assertEquals(1000, q[0] + q[1] + q[2]); // conservation
     }
 
     @Test
     void splitQuantities_1200() {
-        // 1200 → carry=400, rest=800, base=266, remainder=2
-        // ordinary=[267, 267, 266]
+        // 1200 / 3 = 400, remainder = 0 → W1=400, W2=400, W3=400
         long[] q = PlanningCalculator.splitQuantities(1200);
-        assertEquals(400, q[0]); // carry
-        assertEquals(267, q[1]); // W1 (remainder >= 1)
-        assertEquals(267, q[2]); // W2 (remainder >= 2)
-        assertEquals(266, q[3]); // W3
-        assertEquals(1200, q[0] + q[1] + q[2] + q[3]);
+        assertEquals(3, q.length);
+        assertEquals(400, q[0]); // W1
+        assertEquals(400, q[1]); // W2
+        assertEquals(400, q[2]); // W3
+        assertEquals(1200, q[0] + q[1] + q[2]);
+    }
+
+    @Test
+    void splitQuantities_700() {
+        // TC001: 700 / 3 = 233, remainder = 1 → W1=234, W2=233, W3=233
+        // 但UAT期望 W1=233, W2=233, W3=234 (余数给最后一周?)
+        // 需求文档说"余数放到第一周"，所以应该是 W1=234
+        // 这里测试需求文档规则
+        long[] q = PlanningCalculator.splitQuantities(700);
+        assertEquals(3, q.length);
+        assertEquals(234, q[0]); // W1 gets remainder
+        assertEquals(233, q[1]); // W2
+        assertEquals(233, q[2]); // W3
+        assertEquals(700, q[0] + q[1] + q[2]);
     }
 
     @Test
     void splitQuantities_zero() {
         long[] q = PlanningCalculator.splitQuantities(0);
+        assertEquals(3, q.length);
         assertEquals(0, q[0]);
         assertEquals(0, q[1]);
         assertEquals(0, q[2]);
-        assertEquals(0, q[3]);
     }
 
     @Test
     void splitQuantities_1() {
-        // 1 → carry=1, rest=0, all ordinary=0
+        // 1 / 3 = 0, remainder = 1 → W1=1, W2=0, W3=0
         long[] q = PlanningCalculator.splitQuantities(1);
+        assertEquals(3, q.length);
         assertEquals(1, q[0]);
         assertEquals(0, q[1]);
         assertEquals(0, q[2]);
-        assertEquals(0, q[3]);
+    }
+
+    @Test
+    void splitQuantities_2() {
+        // 2 / 3 = 0, remainder = 2 → W1=1, W2=1, W3=0
+        long[] q = PlanningCalculator.splitQuantities(2);
+        assertEquals(3, q.length);
+        assertEquals(1, q[0]);
+        assertEquals(1, q[1]);
+        assertEquals(0, q[2]);
     }
 
     @Test
     void splitQuantities_conservation() {
         // Conservation: sum of quantities == available
-        for (long available : new long[]{0, 1, 5, 100, 999, 1000, 1200, 5000, 10000}) {
+        for (long available : new long[]{0, 1, 2, 3, 5, 100, 999, 1000, 1200, 5000, 10000}) {
             long[] q = PlanningCalculator.splitQuantities(available);
-            assertEquals(available, q[0] + q[1] + q[2] + q[3],
+            assertEquals(available, q[0] + q[1] + q[2],
                     "Conservation failed for available=" + available);
         }
     }
 
-    // === R003: 提前量来源月份 ===
+    // === R003: 提前一周滚动 ===
 
     @Test
     void splitMonthToWeeks_aug2026() {
@@ -107,7 +131,7 @@ class PlanningCalculatorTest {
 
         var slots = PlanningCalculator.splitMonthToWeeks(aug, currentWeek);
 
-        // Should have 4 slots: carry (prev month W4) + 3 ordinary
+        // Should have 4 slots: 3 ordinary + 1 carry
         assertEquals(4, slots.size());
 
         // Ordinary slots should be in August
@@ -117,24 +141,21 @@ class PlanningCalculatorTest {
         // Carry slot should be in July
         long carryCount = slots.stream().filter(s -> s.isCarry()).count();
         assertEquals(1, carryCount);
-
-        // All source months should be August
-        assertTrue(slots.stream().allMatch(s -> s.sourceMonth().getMonthValue() == 8));
     }
 
-    // === R005: 12 周窗口 ===
+    // === R005: 12周窗口 + 提前一周滚动 ===
 
     @Test
     void generate12WeekPlan_shouldProduce12Weeks() {
         LocalDate currentWeek = LocalDate.of(2026, 8, 3);
-        List<YearMonth> months = List.of(
-                YearMonth.of(2026, 8),
-                YearMonth.of(2026, 9),
-                YearMonth.of(2026, 10)
+        List<MonthlyForecast> forecasts = List.of(
+                MonthlyForecast.of(YearMonth.of(2026, 8), 900, 0, 0),
+                MonthlyForecast.of(YearMonth.of(2026, 9), 1200, 0, 0),
+                MonthlyForecast.of(YearMonth.of(2026, 10), 1500, 0, 0)
         );
 
         List<WeekPlan> plans = PlanningCalculator.generate12WeekPlan(
-                3600, months, currentWeek, null, null, null);
+                forecasts, currentWeek, null, null, null);
 
         assertEquals(12, plans.size());
 
@@ -145,8 +166,61 @@ class PlanningCalculatorTest {
         }
 
         // Conservation: sum of system quantities should equal total available
+        // Total available = 900 + 1200 + 1500 = 3600
         long totalQty = plans.stream().mapToLong(WeekPlan::systemQuantity).sum();
         assertEquals(3600, totalQty, "Total quantity should be conserved");
+    }
+
+    @Test
+    void generate12WeekPlan_carryFromNextMonth() {
+        // 验证提前一周滚动：下月W1排入上月W4
+        LocalDate currentWeek = LocalDate.of(2026, 8, 3);
+        List<MonthlyForecast> forecasts = List.of(
+                MonthlyForecast.of(YearMonth.of(2026, 8), 900, 0, 0),
+                MonthlyForecast.of(YearMonth.of(2026, 9), 1200, 0, 0)
+        );
+
+        List<WeekPlan> plans = PlanningCalculator.generate12WeekPlan(
+                forecasts, currentWeek, null, null, null);
+
+        // Aug has 3 ordinary + 1 carry (Sep W1)
+        // Sep has 3 ordinary + 1 carry (Oct W1 if exists)
+        // Total from Aug: 300(W1) + 300(W2) + 300(W3) + carry(Sep W1=400) = 1300
+        // But carry is from Sep, so Aug's own contribution is 900
+
+        // Find carry week in August
+        WeekPlan augCarry = plans.stream()
+                .filter(p -> p.isCarry() && p.physicalMonth().getMonthValue() == 8)
+                .findFirst().orElse(null);
+        assertNotNull(augCarry, "Should have carry week in August");
+        assertEquals(400, augCarry.systemQuantity(), "Carry should be Sep's W1 (400)");
+    }
+
+    @Test
+    void generate12WeekPlan_lockedWeeks() {
+        // 验证已执行周被锁定
+        // Aug 2026: Mon=Jul27, so weeks are Jul27, Aug3, Aug10, Aug17
+        // Set currentWeek = Aug10, so Jul27 and Aug3 are locked, Aug10 is not
+        LocalDate currentWeek = LocalDate.of(2026, 8, 10); // Monday Aug10
+        List<MonthlyForecast> forecasts = List.of(
+                MonthlyForecast.of(YearMonth.of(2026, 8), 900, 0, 0),
+                MonthlyForecast.of(YearMonth.of(2026, 9), 900, 0, 0)
+        );
+
+        List<WeekPlan> plans = PlanningCalculator.generate12WeekPlan(
+                forecasts, currentWeek, null, null, null);
+
+        // W1 (Jul27) should be locked (before currentWeek Aug10)
+        WeekPlan w1 = plans.get(0);
+        assertTrue(w1.isLocked(), "W1 (Jul27) should be locked");
+
+        // W2 (Aug3) should be locked (before currentWeek Aug10)
+        WeekPlan w2 = plans.get(1);
+        assertTrue(w2.isLocked(), "W2 (Aug3) should be locked");
+
+        // W3 (Aug10) should NOT be locked (same as currentWeek)
+        WeekPlan w3 = plans.get(2);
+        assertFalse(w3.isLocked(), "W3 (Aug10) should not be locked");
     }
 
     // === R013: 负值归零 ===
@@ -163,7 +237,6 @@ class PlanningCalculatorTest {
 
     @Test
     void checkCapacity_shouldMarkExceeded() {
-        // Create plans with known quantities
         LocalDate currentWeek = LocalDate.of(2026, 8, 3);
         List<WeekPlan> plans = List.of(
                 WeekPlan.auto(currentWeek, currentWeek, currentWeek, 1, false, false, 300),
@@ -171,7 +244,6 @@ class PlanningCalculatorTest {
                 WeekPlan.auto(currentWeek.plusWeeks(2), currentWeek, currentWeek, 3, false, false, 200)
         );
 
-        // Capacity = 400
         List<WeekPlan> checked = PlanningCalculator.checkCapacity(plans, 400);
 
         assertFalse(checked.get(0).capacityExceeded()); // 300 <= 400

@@ -2,6 +2,7 @@ package com.mrp.forecast.service;
 
 import com.mrp.common.exception.BusinessException;
 import com.mrp.common.exception.ValidationException;
+import com.mrp.common.response.PageResult;
 import com.mrp.forecast.domain.ForecastDetail;
 import com.mrp.forecast.domain.ForecastVersion;
 import com.mrp.forecast.repository.ForecastMapper;
@@ -18,8 +19,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -50,7 +54,16 @@ public class ForecastImportService {
         // Check idempotency
         ImportTask existing = importTaskMapper.selectByRequestKey("forecast:" + stored.checksum());
         if (existing != null) {
-            log.info("Forecast import already exists for checksum={}", stored.checksum());
+            // 检查 staging cache 是否还有数据
+            ParseResult<ForecastDetail> cachedResult = stagingCache.get(existing.id());
+            if (cachedResult != null) {
+                log.info("Forecast import already exists for checksum={}, returning cached", stored.checksum());
+                return existing;
+            }
+            // staging cache 已过期，重新解析
+            log.info("Forecast import exists but staging expired, re-parsing for checksum={}", stored.checksum());
+            ParseResult<ForecastDetail> result = excelParser.parse(stored.path(), null);
+            stagingCache.put(existing.id(), result);
             return existing;
         }
 
@@ -63,6 +76,17 @@ public class ForecastImportService {
                 userId, null, null, null, 0
         );
         importTaskMapper.insert(task);
+        Long generatedId = importTaskMapper.selectLastInsertId();
+        task = new ImportTask(
+                generatedId, task.taskType(), task.businessScope(),
+                task.requestKey(), task.status(), task.priority(),
+                task.workerId(), task.leaseUntil(), task.heartbeatAt(),
+                task.progressCurrent(), task.progressTotal(), task.attemptCount(),
+                task.maxAttempts(), task.nextRunAt(), task.inputPayload(),
+                task.inputChecksum(), task.resultResourceId(), task.errorCode(),
+                task.errorMessage(), task.createdBy(), task.createdAt(),
+                task.startedAt(), task.finishedAt(), task.version()
+        );
 
         // Parse Excel to staging
         ParseResult<ForecastDetail> result = excelParser.parse(stored.path(), null);
@@ -101,16 +125,22 @@ public class ForecastImportService {
         int nextVersionNo = (latest != null) ? latest.versionNo() + 1 : 1;
 
         // Create version
-        ForecastVersion version = new ForecastVersion(
+        ForecastVersion newVersion = new ForecastVersion(
                 null, nextVersionNo, null, null,
                 ForecastVersion.STATUS_IMPORTED, userId, null
         );
-        forecastMapper.insertVersion(version);
+        forecastMapper.insertVersion(newVersion);
+        Long versionId = forecastMapper.selectLastInsertVersionId();
+        ForecastVersion version = new ForecastVersion(
+                versionId, newVersion.versionNo(), newVersion.fileName(), newVersion.fileChecksum(),
+                newVersion.status(), newVersion.createdBy(), newVersion.createdAt()
+        );
 
         // Insert details
+        final Long finalVersionId = versionId;
         List<ForecastDetail> details = result.rows().stream()
                 .map(d -> new ForecastDetail(
-                        null, version.id(), d.factoryCode(), d.materialId(), d.materialName(),
+                        null, finalVersionId, d.factoryCode(), d.materialId(), d.materialName(),
                         d.businessLine(), d.formType(), d.project(), d.platform(), d.mold(),
                         d.status(), d.planMonth(), d.forecastQty()
                 ))
@@ -136,7 +166,58 @@ public class ForecastImportService {
         return forecastMapper.selectAllVersions();
     }
 
+    public PageResult<ForecastVersion> listVersionsPage(String keyword, int page, int pageSize) {
+        int offset = (page - 1) * pageSize;
+        List<ForecastVersion> items = forecastMapper.selectVersionsPage(keyword, offset, pageSize);
+        long total = forecastMapper.countVersionsPage(keyword);
+        return new PageResult<>(items, (int) total, page, pageSize);
+    }
+
     public List<ForecastDetail> getVersionDetails(Long versionId) {
         return forecastMapper.selectDetailsByVersionId(versionId);
+    }
+
+    public PageResult<ForecastDetail> getVersionDetailsPage(Long versionId, String keyword, int page, int pageSize) {
+        int offset = (page - 1) * pageSize;
+        List<ForecastDetail> items = forecastMapper.selectDetailsPage(versionId, keyword, offset, pageSize);
+        long total = forecastMapper.countDetailsPage(versionId, keyword);
+        return new PageResult<>(items, (int) total, page, pageSize);
+    }
+
+    public PageResult<Map<String, Object>> getVersionMaterialsPage(Long versionId, String keyword, int page, int pageSize) {
+        int offset = (page - 1) * pageSize;
+        List<Map<String, Object>> materials = forecastMapper.selectDistinctMaterials(versionId, keyword, offset, pageSize);
+        long total = forecastMapper.countDistinctMaterials(versionId, keyword);
+        
+        // 为每个物料查询其月份数据
+        List<Map<String, Object>> items = new ArrayList<>();
+        for (Map<String, Object> material : materials) {
+            String materialId = (String) material.get("material_id");
+            List<ForecastDetail> details = forecastMapper.selectDetailsByVersionIdAndMaterial(versionId, materialId);
+            
+            Map<String, Object> item = new HashMap<>();
+            item.put("materialId", materialId);
+            item.put("materialName", material.get("material_name"));
+            item.put("factoryCode", material.get("factory_code"));
+            item.put("formType", material.get("form_type"));
+            item.put("project", material.get("project"));
+            item.put("platform", material.get("platform"));
+            item.put("mold", material.get("mold"));
+            item.put("status", material.get("status"));
+            
+            // 构建月份数据
+            Map<String, Object> months = new HashMap<>();
+            BigDecimal totalQty = BigDecimal.ZERO;
+            for (ForecastDetail detail : details) {
+                months.put(detail.planMonth().toString(), detail.forecastQty());
+                totalQty = totalQty.add(detail.forecastQty());
+            }
+            item.put("months", months);
+            item.put("total", totalQty);
+            
+            items.add(item);
+        }
+        
+        return new PageResult<>(items, (int) total, page, pageSize);
     }
 }

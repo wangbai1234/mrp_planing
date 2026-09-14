@@ -1,5 +1,6 @@
 package com.mrp.forecast.domain;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public record ForecastDetail(
@@ -15,5 +16,5 @@ public record ForecastDetail(
         String mold,
         String status,
         LocalDate planMonth,
-        Long forecastQty
+        BigDecimal forecastQty
 ) {}

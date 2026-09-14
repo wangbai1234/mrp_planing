@@ -42,8 +42,8 @@ async function loadMaterials() {
     params.append('page', currentPage.value.toString())
     params.append('pageSize', pageSize.value.toString())
     const res = await get<any>(`/materials?${params.toString()}`)
-    materials.value = res.data?.items || []
-    total.value = res.data?.total || 0
+    materials.value = res?.items || []
+    total.value = res?.total || 0
   } catch (e: any) {
     ElMessage.error('加载物料失败: ' + e.message)
   } finally {
@@ -189,8 +189,8 @@ async function handleUpload(f: File) {
     formData.append('file', f)
     const res = await upload<any>('/materials/import', formData)
     stagingResult.value = res.data
-    if (res.data?.errorRows > 0) {
-      ElMessage.warning(`解析完成: ${res.data.successRows} 行成功, ${res.data.errorRows} 行有错误`)
+    if (res?.errorRows > 0) {
+      ElMessage.warning(`解析完成: ${res.successRows} 行成功, ${res.errorRows} 行有错误`)
     }
   } catch (e: any) {
     ElMessage.error('上传失败: ' + e.message)
@@ -214,7 +214,7 @@ async function handleImportConfirm() {
       checksum: stagingResult.value.checksum,
       skipDuplicates: true
     })
-    ElMessage.success(`导入成功: ${res.data?.imported} 条`)
+    ElMessage.success(`导入成功: ${res?.imported} 条`)
     handleImportClose()
     currentPage.value = 1
     await loadMaterials()

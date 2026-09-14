@@ -1,0 +1,1572 @@
+- generic [ref=f9e3]:
+  - complementary [ref=f9e4]:
+    - generic [ref=f9e5]:
+      - generic [ref=f9e6]: MRP
+      - generic [ref=f9e7]: 计划协同
+    - menubar [ref=f9e8]:
+      - generic [ref=f9e9]: 计划
+      - menuitem "看板" [ref=f9e10] [cursor=pointer]
+      - menuitem "排产计划" [ref=f9e17] [cursor=pointer]
+      - generic [ref=f9e22]: 数据
+      - menuitem "经营计划" [ref=f9e23] [cursor=pointer]
+      - menuitem "库存快照" [ref=f9e28] [cursor=pointer]
+      - menuitem "物料管理" [ref=f9e35] [cursor=pointer]
+      - menuitem "BOM管理" [ref=f9e40] [cursor=pointer]
+      - generic [ref=f9e45]: 配置
+      - menuitem "产能配置" [ref=f9e46] [cursor=pointer]
+      - generic [ref=f9e51]: 系统
+      - menuitem "用户与权限" [ref=f9e52] [cursor=pointer]
+  - generic [ref=f9e57]:
+    - generic [ref=f9e58]:
+      - generic [ref=f9e59]:
+        - generic [ref=f9e60]: 计划管理
+        - generic [ref=f9e61]: /
+        - strong [ref=f9e62]: 排产计划
+      - generic [ref=f9e63]:
+        - generic [ref=f9e64]: 数据已同步
+        - button "系 系统管理员" [ref=f9e67] [cursor=pointer]:
+          - generic [ref=f9e68]: 系
+          - generic [ref=f9e69]: 系统管理员
+    - main [ref=f9e70]:
+      - generic [ref=f9e71]:
+        - generic [ref=f9e72]:
+          - heading "排产计划" [level=1] [ref=f9e73]
+          - generic [ref=f9e74]:
+            - button "设置" [ref=f9e75] [cursor=pointer]
+            - button "版本对比" [ref=f9e80] [cursor=pointer]
+            - button "导出" [ref=f9e85] [cursor=pointer]
+            - button "重算" [ref=f9e209] [cursor=pointer]
+            - button "发布" [ref=f9e90] [cursor=pointer]
+        - generic [ref=f9e96]:
+          - generic [ref=f9e98]:
+            - generic [ref=f9e100] [cursor=pointer]:
+              - generic:
+                - combobox [ref=f9e102]
+                - generic [ref=f9e103]: 全部工厂
+            - textbox "搜索整机料号 / 机型" [ref=f9e114]
+            - generic [ref=f9e117] [cursor=pointer]:
+              - generic:
+                - combobox [ref=f9e119]
+                - generic [ref=f9e120]: 全部状态
+          - generic [ref=f9e125]:
+            - generic [ref=f9e126]: 当前周
+            - generic [ref=f9e128]: 人工调整
+            - generic [ref=f9e130]: 已执行 / 锁定
+            - generic [ref=f9e132]: 超产能
+            - generic [ref=f9e134]: 点击数量可编辑，点击料号查看详情
+          - table [ref=f9e136]:
+            - rowgroup [ref=f9e137]:
+              - row [ref=f9e214]:
+                - columnheader "整机料号 / 名称" [ref=f9e139]
+                - columnheader "工厂" [ref=f9e140]
+                - columnheader "2026-08-24 8/24–8/30" [ref=f9e215]:
+                  - generic [ref=f9e216]:
+                    - generic [ref=f9e217]: 2026-08-24
+                    - generic [ref=f9e218]: 8/24–8/30
+                - columnheader "2026-08-31 8/31–9/6" [ref=f9e219]:
+                  - generic [ref=f9e220]:
+                    - generic [ref=f9e221]: 2026-08-31
+                    - generic [ref=f9e222]: 8/31–9/6
+                - columnheader "2026-09-07 9/7–9/13" [ref=f9e223]:
+                  - generic [ref=f9e224]:
+                    - generic [ref=f9e225]: 2026-09-07
+                    - generic [ref=f9e226]: 9/7–9/13
+                - columnheader "2026-09-14 9/14–9/20" [ref=f9e227]:
+                  - generic [ref=f9e228]:
+                    - generic [ref=f9e229]: 2026-09-14
+                    - generic [ref=f9e230]: 9/14–9/20
+                - columnheader "2026-09-21 9/21–9/27" [ref=f9e231]:
+                  - generic [ref=f9e232]:
+                    - generic [ref=f9e233]: 2026-09-21
+                    - generic [ref=f9e234]: 9/21–9/27
+                - columnheader "2026-09-28 9/28–10/4" [ref=f9e235]:
+                  - generic [ref=f9e236]:
+                    - generic [ref=f9e237]: 2026-09-28
+                    - generic [ref=f9e238]: 9/28–10/4
+                - columnheader "2026-10-05 10/5–10/11" [ref=f9e239]:
+                  - generic [ref=f9e240]:
+                    - generic [ref=f9e241]: 2026-10-05
+                    - generic [ref=f9e242]: 10/5–10/11
+                - columnheader "2026-10-12 10/12–10/18" [ref=f9e243]:
+                  - generic [ref=f9e244]:
+                    - generic [ref=f9e245]: 2026-10-12
+                    - generic [ref=f9e246]: 10/12–10/18
+                - columnheader "2026-10-19 10/19–10/25" [ref=f9e247]:
+                  - generic [ref=f9e248]:
+                    - generic [ref=f9e249]: 2026-10-19
+                    - generic [ref=f9e250]: 10/19–10/25
+                - columnheader "2026-10-26 10/26–11/1" [ref=f9e251]:
+                  - generic [ref=f9e252]:
+                    - generic [ref=f9e253]: 2026-10-26
+                    - generic [ref=f9e254]: 10/26–11/1
+                - columnheader "2026-11-02 11/2–11/8" [ref=f9e255]:
+                  - generic [ref=f9e256]:
+                    - generic [ref=f9e257]: 2026-11-02
+                    - generic [ref=f9e258]: 11/2–11/8
+                - columnheader "2026-11-09 11/9–11/15" [ref=f9e259]:
+                  - generic [ref=f9e260]:
+                    - generic [ref=f9e261]: 2026-11-09
+                    - generic [ref=f9e262]: 11/9–11/15
+                - columnheader "2026-11-16 11/16–11/22" [ref=f9e263]:
+                  - generic [ref=f9e264]:
+                    - generic [ref=f9e265]: 2026-11-16
+                    - generic [ref=f9e266]: 11/16–11/22
+            - rowgroup [ref=f9e141]:
+              - row [ref=f9e267]:
+                - cell "6830AA800117 BYC_DR2500_A11,包装整机（70迈智能记录仪A500S（单机_国内4G DDR_简配版）" [ref=f9e268] [cursor=pointer]
+                - cell "YH" [ref=f9e270]
+                - cell [ref=f9e271]:
+                  - button "0" [ref=f9e272]
+                - cell [ref=f9e275]:
+                  - button "0" [ref=f9e276]
+                - cell [ref=f9e279]:
+                  - button "0" [ref=f9e280]
+                - cell [ref=f9e283]:
+                  - button "0" [ref=f9e284] [cursor=pointer]
+                - cell [ref=f9e287]:
+                  - button "0" [ref=f9e288] [cursor=pointer]
+                - cell [ref=f9e291]:
+                  - button "0" [ref=f9e292] [cursor=pointer]
+                - cell [ref=f9e295]:
+                  - button "0" [ref=f9e296] [cursor=pointer]
+                - cell [ref=f9e299]:
+                  - button "0" [ref=f9e300] [cursor=pointer]
+                - cell [ref=f9e303]:
+                  - button "0" [ref=f9e304] [cursor=pointer]
+                - cell [ref=f9e307]:
+                  - button "0" [ref=f9e308] [cursor=pointer]
+                - cell [ref=f9e311]:
+                  - button "0" [ref=f9e312] [cursor=pointer]
+                - cell [ref=f9e315]:
+                  - button "0" [ref=f9e316] [cursor=pointer]
+                - cell [ref=f9e319]
+              - row [ref=f9e320]:
+                - cell "6830AA800305 BYC_DR1800_A31包装整机 70迈4K智能记录仪M800(128G 国内版)(单机）" [ref=f9e321] [cursor=pointer]
+                - cell "YH" [ref=f9e323]
+                - cell [ref=f9e324]:
+                  - button "358" [ref=f9e325]
+                - cell [ref=f9e328]:
+                  - button "239" [ref=f9e329]
+                - cell [ref=f9e332]:
+                  - button "238" [ref=f9e333]
+                - cell [ref=f9e336]:
+                  - button "238" [ref=f9e337] [cursor=pointer]
+                - cell [ref=f9e340]:
+                  - button "358" [ref=f9e341] [cursor=pointer]
+                - cell [ref=f9e344]:
+                  - button "239" [ref=f9e345] [cursor=pointer]
+                - cell [ref=f9e348]:
+                  - button "238" [ref=f9e349] [cursor=pointer]
+                - cell [ref=f9e352]:
+                  - button "238" [ref=f9e353] [cursor=pointer]
+                - cell [ref=f9e356]:
+                  - button "358" [ref=f9e357] [cursor=pointer]
+                - cell [ref=f9e360]:
+                  - button "239" [ref=f9e361] [cursor=pointer]
+                - cell [ref=f9e364]:
+                  - button "238" [ref=f9e365] [cursor=pointer]
+                - cell [ref=f9e368]:
+                  - button "238" [ref=f9e369] [cursor=pointer]
+                - cell [ref=f9e372]
+              - row [ref=f9e373]:
+                - cell "6830AA800306 BYC_DR1800_A01包装整机 70迈4K智能记录仪M800(64G 国内版)(单机）" [ref=f9e374] [cursor=pointer]
+                - cell "YH" [ref=f9e376]
+                - cell [ref=f9e377]:
+                  - button "102" [ref=f9e378]
+                - cell [ref=f9e381]:
+                  - button "68" [ref=f9e382]
+                - cell [ref=f9e385]:
+                  - button "300 人工" [ref=f9e386]:
+                    - generic [ref=f9e387]:
+                      - generic [ref=f9e388]: "300"
+                      - generic [ref=f9e389]: 人工
+                - cell [ref=f9e390]:
+                  - button "67" [ref=f9e391] [cursor=pointer]
+                - cell [ref=f9e394]:
+                  - button "102" [ref=f9e395] [cursor=pointer]
+                - cell [ref=f9e398]:
+                  - button "68" [ref=f9e399] [cursor=pointer]
+                - cell [ref=f9e402]:
+                  - button "68" [ref=f9e403] [cursor=pointer]
+                - cell [ref=f9e406]:
+                  - button "67" [ref=f9e407] [cursor=pointer]
+                - cell [ref=f9e410]:
+                  - button "102" [ref=f9e411] [cursor=pointer]
+                - cell [ref=f9e414]:
+                  - button "68" [ref=f9e415] [cursor=pointer]
+                - cell [ref=f9e418]:
+                  - button "68" [ref=f9e419] [cursor=pointer]
+                - cell [ref=f9e422]:
+                  - button "67" [ref=f9e423] [cursor=pointer]
+                - cell [ref=f9e426]
+              - row [ref=f9e427]:
+                - cell "6830AA800318 BYC_DR1800_A41,包装整机（70迈4K智能记录仪M800(256G 国内版)(单机）" [ref=f9e428] [cursor=pointer]
+                - cell "YH" [ref=f9e430]
+                - cell [ref=f9e431]:
+                  - button "40" [ref=f9e432]
+                - cell [ref=f9e435]:
+                  - button "27" [ref=f9e436]
+                - cell [ref=f9e439]:
+                  - button "26" [ref=f9e440]
+                - cell [ref=f9e443]:
+                  - button "26" [ref=f9e444] [cursor=pointer]
+                - cell [ref=f9e447]:
+                  - button "40" [ref=f9e448] [cursor=pointer]
+                - cell [ref=f9e451]:
+                  - button "27" [ref=f9e452] [cursor=pointer]
+                - cell [ref=f9e455]:
+                  - button "26" [ref=f9e456] [cursor=pointer]
+                - cell [ref=f9e459]:
+                  - button "26" [ref=f9e460] [cursor=pointer]
+                - cell [ref=f9e463]:
+                  - button "40" [ref=f9e464] [cursor=pointer]
+                - cell [ref=f9e467]:
+                  - button "27" [ref=f9e468] [cursor=pointer]
+                - cell [ref=f9e471]:
+                  - button "26" [ref=f9e472] [cursor=pointer]
+                - cell [ref=f9e475]:
+                  - button "26" [ref=f9e476] [cursor=pointer]
+                - cell [ref=f9e479]
+              - row [ref=f9e480]:
+                - cell "6830AA800382 BYC_DR4800_A02,包装整机(70迈记录仪X800（国内单机_黑灰）" [ref=f9e481] [cursor=pointer]
+                - cell "YH" [ref=f9e483]
+                - cell [ref=f9e484]:
+                  - button "93" [ref=f9e485]
+                - cell [ref=f9e488]:
+                  - button "62" [ref=f9e489]
+                - cell [ref=f9e492]:
+                  - button "62" [ref=f9e493]
+                - cell [ref=f9e496]:
+                  - button "62" [ref=f9e497] [cursor=pointer]
+                - cell [ref=f9e500]:
+                  - button "93" [ref=f9e501] [cursor=pointer]
+                - cell [ref=f9e504]:
+                  - button "62" [ref=f9e505] [cursor=pointer]
+                - cell [ref=f9e508]:
+                  - button "62" [ref=f9e509] [cursor=pointer]
+                - cell [ref=f9e512]:
+                  - button "62" [ref=f9e513] [cursor=pointer]
+                - cell [ref=f9e516]:
+                  - button "93" [ref=f9e517] [cursor=pointer]
+                - cell [ref=f9e520]:
+                  - button "62" [ref=f9e521] [cursor=pointer]
+                - cell [ref=f9e524]:
+                  - button "62" [ref=f9e525] [cursor=pointer]
+                - cell [ref=f9e528]:
+                  - button "62" [ref=f9e529] [cursor=pointer]
+                - cell [ref=f9e532]
+              - row [ref=f9e533]:
+                - cell "6830AA800384 BYC_DR4800_A02,包装整机(70迈记录仪X800（国内单机_红白）" [ref=f9e534] [cursor=pointer]
+                - cell "YH" [ref=f9e536]
+                - cell [ref=f9e537]:
+                  - button "26" [ref=f9e538]
+                - cell [ref=f9e541]:
+                  - button "17" [ref=f9e542]
+                - cell [ref=f9e545]:
+                  - button "17" [ref=f9e546]
+                - cell [ref=f9e549]:
+                  - button "16" [ref=f9e550] [cursor=pointer]
+                - cell [ref=f9e553]:
+                  - button "26" [ref=f9e554] [cursor=pointer]
+                - cell [ref=f9e557]:
+                  - button "17" [ref=f9e558] [cursor=pointer]
+                - cell [ref=f9e561]:
+                  - button "17" [ref=f9e562] [cursor=pointer]
+                - cell [ref=f9e565]:
+                  - button "16" [ref=f9e566] [cursor=pointer]
+                - cell [ref=f9e569]:
+                  - button "26" [ref=f9e570] [cursor=pointer]
+                - cell [ref=f9e573]:
+                  - button "17" [ref=f9e574] [cursor=pointer]
+                - cell [ref=f9e577]:
+                  - button "17" [ref=f9e578] [cursor=pointer]
+                - cell [ref=f9e581]:
+                  - button "16" [ref=f9e582] [cursor=pointer]
+                - cell [ref=f9e585]
+              - row [ref=f9e586]:
+                - cell "6830AA800405 BYC_DR2510_A01,包装整机（黑色）70迈智能记录仪A510单机版（国内_新机头）" [ref=f9e587] [cursor=pointer]
+                - cell "YH" [ref=f9e589]
+                - cell [ref=f9e590]:
+                  - button "125" [ref=f9e591]
+                - cell [ref=f9e594]:
+                  - button "84" [ref=f9e595]
+                - cell [ref=f9e598]:
+                  - button "83" [ref=f9e599]
+                - cell [ref=f9e602]:
+                  - button "83" [ref=f9e603] [cursor=pointer]
+                - cell [ref=f9e606]:
+                  - button "125" [ref=f9e607] [cursor=pointer]
+                - cell [ref=f9e610]:
+                  - button "84" [ref=f9e611] [cursor=pointer]
+                - cell [ref=f9e614]:
+                  - button "83" [ref=f9e615] [cursor=pointer]
+                - cell [ref=f9e618]:
+                  - button "83" [ref=f9e619] [cursor=pointer]
+                - cell [ref=f9e622]:
+                  - button "125" [ref=f9e623] [cursor=pointer]
+                - cell [ref=f9e626]:
+                  - button "84" [ref=f9e627] [cursor=pointer]
+                - cell [ref=f9e630]:
+                  - button "83" [ref=f9e631] [cursor=pointer]
+                - cell [ref=f9e634]:
+                  - button "83" [ref=f9e635] [cursor=pointer]
+                - cell [ref=f9e638]
+              - row [ref=f9e639]:
+                - cell "6830AA800437 BYC_DR2211_A11,包装整机（黑色）70迈智能记录仪A510 lite（国内单机版_降本）" [ref=f9e640] [cursor=pointer]
+                - cell "YH" [ref=f9e642]
+                - cell [ref=f9e643]:
+                  - button "194" [ref=f9e644]
+                - cell [ref=f9e647]:
+                  - button "129" [ref=f9e648]
+                - cell [ref=f9e651]:
+                  - button "129" [ref=f9e652]
+                - cell [ref=f9e655]:
+                  - button "129" [ref=f9e656] [cursor=pointer]
+                - cell [ref=f9e659]:
+                  - button "194" [ref=f9e660] [cursor=pointer]
+                - cell [ref=f9e663]:
+                  - button "129" [ref=f9e664] [cursor=pointer]
+                - cell [ref=f9e667]:
+                  - button "129" [ref=f9e668] [cursor=pointer]
+                - cell [ref=f9e671]:
+                  - button "129" [ref=f9e672] [cursor=pointer]
+                - cell [ref=f9e675]:
+                  - button "194" [ref=f9e676] [cursor=pointer]
+                - cell [ref=f9e679]:
+                  - button "129" [ref=f9e680] [cursor=pointer]
+                - cell [ref=f9e683]:
+                  - button "129" [ref=f9e684] [cursor=pointer]
+                - cell [ref=f9e687]:
+                  - button "129" [ref=f9e688] [cursor=pointer]
+                - cell [ref=f9e691]
+              - row [ref=f9e692]:
+                - cell "6830AA800438 BYC_DR5800_A01包装整机 70迈智能记录仪T800（国内单机版）" [ref=f9e693] [cursor=pointer]
+                - cell "YH" [ref=f9e695]
+                - cell [ref=f9e696]:
+                  - button "81" [ref=f9e697]
+                - cell [ref=f9e700]:
+                  - button "54" [ref=f9e701]
+                - cell [ref=f9e704]:
+                  - button "54" [ref=f9e705]
+                - cell [ref=f9e708]:
+                  - button "53" [ref=f9e709] [cursor=pointer]
+                - cell [ref=f9e712]:
+                  - button "81" [ref=f9e713] [cursor=pointer]
+                - cell [ref=f9e716]:
+                  - button "54" [ref=f9e717] [cursor=pointer]
+                - cell [ref=f9e720]:
+                  - button "54" [ref=f9e721] [cursor=pointer]
+                - cell [ref=f9e724]:
+                  - button "53" [ref=f9e725] [cursor=pointer]
+                - cell [ref=f9e728]:
+                  - button "81" [ref=f9e729] [cursor=pointer]
+                - cell [ref=f9e732]:
+                  - button "54" [ref=f9e733] [cursor=pointer]
+                - cell [ref=f9e736]:
+                  - button "54" [ref=f9e737] [cursor=pointer]
+                - cell [ref=f9e740]:
+                  - button "53" [ref=f9e741] [cursor=pointer]
+                - cell [ref=f9e744]
+              - row [ref=f9e745]:
+                - cell "6830AA800496 BYC_DR3400_A01,整机包装 70迈流媒体记录仪S400 （国内套装）" [ref=f9e746] [cursor=pointer]
+                - cell "YH" [ref=f9e748]
+                - cell [ref=f9e749]:
+                  - button "225" [ref=f9e750]
+                - cell [ref=f9e753]:
+                  - button "150" [ref=f9e754]
+                - cell [ref=f9e757]:
+                  - button "149" [ref=f9e758]
+                - cell [ref=f9e761]:
+                  - button "149" [ref=f9e762] [cursor=pointer]
+                - cell [ref=f9e765]:
+                  - button "225" [ref=f9e766] [cursor=pointer]
+                - cell [ref=f9e769]:
+                  - button "150" [ref=f9e770] [cursor=pointer]
+                - cell [ref=f9e773]:
+                  - button "149" [ref=f9e774] [cursor=pointer]
+                - cell [ref=f9e777]:
+                  - button "149" [ref=f9e778] [cursor=pointer]
+                - cell [ref=f9e781]:
+                  - button "225" [ref=f9e782] [cursor=pointer]
+                - cell [ref=f9e785]:
+                  - button "150" [ref=f9e786] [cursor=pointer]
+                - cell [ref=f9e789]:
+                  - button "149" [ref=f9e790] [cursor=pointer]
+                - cell [ref=f9e793]:
+                  - button "149" [ref=f9e794] [cursor=pointer]
+                - cell [ref=f9e797]
+              - row [ref=f9e798]:
+                - cell "6830AA800509 BYC_DR2830_A01包装整机_70迈4K智能记录仪A810 Pro（国内单机版）" [ref=f9e799] [cursor=pointer]
+                - cell "YH" [ref=f9e801]
+                - cell [ref=f9e802]:
+                  - button "537" [ref=f9e803]
+                - cell [ref=f9e806]:
+                  - button "358" [ref=f9e807]
+                - cell [ref=f9e810]:
+                  - button "357" [ref=f9e811]
+                - cell [ref=f9e814]:
+                  - button "357" [ref=f9e815] [cursor=pointer]
+                - cell [ref=f9e818]:
+                  - button "537" [ref=f9e819] [cursor=pointer]
+                - cell [ref=f9e822]:
+                  - button "358" [ref=f9e823] [cursor=pointer]
+                - cell [ref=f9e826]:
+                  - button "357" [ref=f9e827] [cursor=pointer]
+                - cell [ref=f9e830]:
+                  - button "357" [ref=f9e831] [cursor=pointer]
+                - cell [ref=f9e834]:
+                  - button "537" [ref=f9e835] [cursor=pointer]
+                - cell [ref=f9e838]:
+                  - button "358" [ref=f9e839] [cursor=pointer]
+                - cell [ref=f9e842]:
+                  - button "357" [ref=f9e843] [cursor=pointer]
+                - cell [ref=f9e846]:
+                  - button "357" [ref=f9e847] [cursor=pointer]
+                - cell [ref=f9e850]
+              - row [ref=f9e851]:
+                - cell "6830AA800530 BYC_DR2840_A01 包装整机（黑色）包装料单（70迈智能记录仪A400 Pro 4K）国内版" [ref=f9e852] [cursor=pointer]
+                - cell "YH" [ref=f9e854]
+                - cell [ref=f9e855]:
+                  - button "2,047" [ref=f9e856]
+                - cell [ref=f9e859]:
+                  - button "1,365" [ref=f9e860]
+                - cell [ref=f9e863]:
+                  - button "1,365" [ref=f9e864]
+                - cell [ref=f9e867]:
+                  - button "1,364" [ref=f9e868] [cursor=pointer]
+                - cell [ref=f9e871]:
+                  - button "2,047" [ref=f9e872] [cursor=pointer]
+                - cell [ref=f9e875]:
+                  - button "1,365" [ref=f9e876] [cursor=pointer]
+                - cell [ref=f9e879]:
+                  - button "1,365" [ref=f9e880] [cursor=pointer]
+                - cell [ref=f9e883]:
+                  - button "1,364" [ref=f9e884] [cursor=pointer]
+                - cell [ref=f9e887]:
+                  - button "2,047" [ref=f9e888] [cursor=pointer]
+                - cell [ref=f9e891]:
+                  - button "1,365" [ref=f9e892] [cursor=pointer]
+                - cell [ref=f9e895]:
+                  - button "1,365" [ref=f9e896] [cursor=pointer]
+                - cell [ref=f9e899]:
+                  - button "1,364" [ref=f9e900] [cursor=pointer]
+                - cell [ref=f9e903]
+              - row [ref=f9e904]:
+                - cell "6830AA800551 BYC_DR2820_A01包装整机_70迈4K智能记录仪A810 SE（国内单机版_弯头）" [ref=f9e905] [cursor=pointer]
+                - cell "YH" [ref=f9e907]
+                - cell [ref=f9e908]:
+                  - button "149" [ref=f9e909]
+                - cell [ref=f9e912]:
+                  - button "99" [ref=f9e913]
+                - cell [ref=f9e916]:
+                  - button "99" [ref=f9e917]
+                - cell [ref=f9e920]:
+                  - button "98" [ref=f9e921] [cursor=pointer]
+                - cell [ref=f9e924]:
+                  - button "149" [ref=f9e925] [cursor=pointer]
+                - cell [ref=f9e928]:
+                  - button "99" [ref=f9e929] [cursor=pointer]
+                - cell [ref=f9e932]:
+                  - button "99" [ref=f9e933] [cursor=pointer]
+                - cell [ref=f9e936]:
+                  - button "98" [ref=f9e937] [cursor=pointer]
+                - cell [ref=f9e940]:
+                  - button "149" [ref=f9e941] [cursor=pointer]
+                - cell [ref=f9e944]:
+                  - button "99" [ref=f9e945] [cursor=pointer]
+                - cell [ref=f9e948]:
+                  - button "99" [ref=f9e949] [cursor=pointer]
+                - cell [ref=f9e952]:
+                  - button "98" [ref=f9e953] [cursor=pointer]
+                - cell [ref=f9e956]
+              - row [ref=f9e957]:
+                - cell "6830AA800559 BYC_DR1400_A61,包装整机_70迈智能记录仪M310 Pro 4K（国内版）新吸塑" [ref=f9e958] [cursor=pointer]
+                - cell "YH" [ref=f9e960]
+                - cell [ref=f9e961]:
+                  - button "3,592" [ref=f9e962]
+                - cell [ref=f9e965]:
+                  - button "2,395" [ref=f9e966]
+                - cell [ref=f9e969]:
+                  - button "2,395" [ref=f9e970]
+                - cell [ref=f9e973]:
+                  - button "2,394" [ref=f9e974] [cursor=pointer]
+                - cell [ref=f9e977]:
+                  - button "3,592" [ref=f9e978] [cursor=pointer]
+                - cell [ref=f9e981]:
+                  - button "2,395" [ref=f9e982] [cursor=pointer]
+                - cell [ref=f9e985]:
+                  - button "2,395" [ref=f9e986] [cursor=pointer]
+                - cell [ref=f9e989]:
+                  - button "2,394" [ref=f9e990] [cursor=pointer]
+                - cell [ref=f9e993]:
+                  - button "3,592" [ref=f9e994] [cursor=pointer]
+                - cell [ref=f9e997]:
+                  - button "2,395" [ref=f9e998] [cursor=pointer]
+                - cell [ref=f9e1001]:
+                  - button "2,395" [ref=f9e1002] [cursor=pointer]
+                - cell [ref=f9e1005]:
+                  - button "2,394" [ref=f9e1006] [cursor=pointer]
+                - cell [ref=f9e1009]
+              - row [ref=f9e1010]:
+                - cell "6830AA800561 BYC_DR1400_A01包装整机_70迈智能记录仪M310 Pro 2K（国内版）新吸塑" [ref=f9e1011] [cursor=pointer]
+                - cell "YH" [ref=f9e1013]
+                - cell [ref=f9e1014]:
+                  - button "2,231" [ref=f9e1015]
+                - cell [ref=f9e1018]:
+                  - button "1,488" [ref=f9e1019]
+                - cell [ref=f9e1022]:
+                  - button "1,487" [ref=f9e1023]
+                - cell [ref=f9e1026]:
+                  - button "1,487" [ref=f9e1027] [cursor=pointer]
+                - cell [ref=f9e1030]:
+                  - button "2,231" [ref=f9e1031] [cursor=pointer]
+                - cell [ref=f9e1034]:
+                  - button "1,488" [ref=f9e1035] [cursor=pointer]
+                - cell [ref=f9e1038]:
+                  - button "1,487" [ref=f9e1039] [cursor=pointer]
+                - cell [ref=f9e1042]:
+                  - button "1,487" [ref=f9e1043] [cursor=pointer]
+                - cell [ref=f9e1046]:
+                  - button "2,231" [ref=f9e1047] [cursor=pointer]
+                - cell [ref=f9e1050]:
+                  - button "1,488" [ref=f9e1051] [cursor=pointer]
+                - cell [ref=f9e1054]:
+                  - button "1,487" [ref=f9e1055] [cursor=pointer]
+                - cell [ref=f9e1058]:
+                  - button "1,487" [ref=f9e1059] [cursor=pointer]
+                - cell [ref=f9e1062]
+              - row [ref=f9e1063]:
+                - cell "6830AA800562 BYC_DR1400_A51包装整机_70迈智能记录仪M310 Pro 3K（国内版）新吸塑" [ref=f9e1064] [cursor=pointer]
+                - cell "YH" [ref=f9e1066]
+                - cell [ref=f9e1067]:
+                  - button "2,202" [ref=f9e1068]
+                - cell [ref=f9e1071]:
+                  - button "1,468" [ref=f9e1072]
+                - cell [ref=f9e1075]:
+                  - button "1,468" [ref=f9e1076]
+                - cell [ref=f9e1079]:
+                  - button "1,467" [ref=f9e1080] [cursor=pointer]
+                - cell [ref=f9e1083]:
+                  - button "2,202" [ref=f9e1084] [cursor=pointer]
+                - cell [ref=f9e1087]:
+                  - button "1,468" [ref=f9e1088] [cursor=pointer]
+                - cell [ref=f9e1091]:
+                  - button "1,468" [ref=f9e1092] [cursor=pointer]
+                - cell [ref=f9e1095]:
+                  - button "1,467" [ref=f9e1096] [cursor=pointer]
+                - cell [ref=f9e1099]:
+                  - button "2,202" [ref=f9e1100] [cursor=pointer]
+                - cell [ref=f9e1103]:
+                  - button "1,468" [ref=f9e1104] [cursor=pointer]
+                - cell [ref=f9e1107]:
+                  - button "1,468" [ref=f9e1108] [cursor=pointer]
+                - cell [ref=f9e1111]:
+                  - button "1,467" [ref=f9e1112] [cursor=pointer]
+                - cell [ref=f9e1115]
+              - row [ref=f9e1116]:
+                - cell "6830AA800563 BYC_DR1400_A52,包装整机_70迈智能记录仪M310X 3K" [ref=f9e1117] [cursor=pointer]
+                - cell "YH" [ref=f9e1119]
+                - cell [ref=f9e1120]:
+                  - button "0" [ref=f9e1121]
+                - cell [ref=f9e1124]:
+                  - button "0" [ref=f9e1125]
+                - cell [ref=f9e1128]:
+                  - button "0" [ref=f9e1129]
+                - cell [ref=f9e1132]:
+                  - button "0" [ref=f9e1133] [cursor=pointer]
+                - cell [ref=f9e1136]:
+                  - button "0" [ref=f9e1137] [cursor=pointer]
+                - cell [ref=f9e1140]:
+                  - button "0" [ref=f9e1141] [cursor=pointer]
+                - cell [ref=f9e1144]:
+                  - button "0" [ref=f9e1145] [cursor=pointer]
+                - cell [ref=f9e1148]:
+                  - button "0" [ref=f9e1149] [cursor=pointer]
+                - cell [ref=f9e1152]:
+                  - button "0" [ref=f9e1153] [cursor=pointer]
+                - cell [ref=f9e1156]:
+                  - button "0" [ref=f9e1157] [cursor=pointer]
+                - cell [ref=f9e1160]:
+                  - button "0" [ref=f9e1161] [cursor=pointer]
+                - cell [ref=f9e1164]:
+                  - button "0" [ref=f9e1165] [cursor=pointer]
+                - cell [ref=f9e1168]
+              - row [ref=f9e1169]:
+                - cell "6830AA800626 BYC_DR2420_A01 包装整机（黑色）70 迈智能记录仪 A400 Pro 3K（国内版）" [ref=f9e1170] [cursor=pointer]
+                - cell "YH" [ref=f9e1172]
+                - cell [ref=f9e1173]:
+                  - button "947" [ref=f9e1174]
+                - cell [ref=f9e1177]:
+                  - button "631" [ref=f9e1178]
+                - cell [ref=f9e1181]:
+                  - button "631" [ref=f9e1182]
+                - cell [ref=f9e1185]:
+                  - button "631" [ref=f9e1186] [cursor=pointer]
+                - cell [ref=f9e1189]:
+                  - button "947" [ref=f9e1190] [cursor=pointer]
+                - cell [ref=f9e1193]:
+                  - button "631" [ref=f9e1194] [cursor=pointer]
+                - cell [ref=f9e1197]:
+                  - button "631" [ref=f9e1198] [cursor=pointer]
+                - cell [ref=f9e1201]:
+                  - button "631" [ref=f9e1202] [cursor=pointer]
+                - cell [ref=f9e1205]:
+                  - button "947" [ref=f9e1206] [cursor=pointer]
+                - cell [ref=f9e1209]:
+                  - button "631" [ref=f9e1210] [cursor=pointer]
+                - cell [ref=f9e1213]:
+                  - button "631" [ref=f9e1214] [cursor=pointer]
+                - cell [ref=f9e1217]:
+                  - button "631" [ref=f9e1218] [cursor=pointer]
+                - cell [ref=f9e1221]
+              - row [ref=f9e1222]:
+                - cell "6830AA800681 BYC_DR1400_A62,包装整机_70迈智能记录仪M310X 4K_国内渠道版_01" [ref=f9e1223] [cursor=pointer]
+                - cell "YH" [ref=f9e1225]
+                - cell [ref=f9e1226]:
+                  - button "0" [ref=f9e1227]
+                - cell [ref=f9e1230]:
+                  - button "0" [ref=f9e1231]
+                - cell [ref=f9e1234]:
+                  - button "0" [ref=f9e1235]
+                - cell [ref=f9e1238]:
+                  - button "0" [ref=f9e1239] [cursor=pointer]
+                - cell [ref=f9e1242]:
+                  - button "0" [ref=f9e1243] [cursor=pointer]
+                - cell [ref=f9e1246]:
+                  - button "0" [ref=f9e1247] [cursor=pointer]
+                - cell [ref=f9e1250]:
+                  - button "0" [ref=f9e1251] [cursor=pointer]
+                - cell [ref=f9e1254]:
+                  - button "0" [ref=f9e1255] [cursor=pointer]
+                - cell [ref=f9e1258]:
+                  - button "0" [ref=f9e1259] [cursor=pointer]
+                - cell [ref=f9e1262]:
+                  - button "0" [ref=f9e1263] [cursor=pointer]
+                - cell [ref=f9e1266]:
+                  - button "0" [ref=f9e1267] [cursor=pointer]
+                - cell [ref=f9e1270]:
+                  - button "0" [ref=f9e1271] [cursor=pointer]
+                - cell [ref=f9e1274]
+              - row [ref=f9e1275]:
+                - cell "6830AA800683 BYC_DR2840_A02 包装整机（黑色）包装料单（70迈智能记录仪A400X 4K）国内版（渠道版）" [ref=f9e1276] [cursor=pointer]
+                - cell "YH" [ref=f9e1278]
+                - cell [ref=f9e1279]:
+                  - button "0" [ref=f9e1280]
+                - cell [ref=f9e1283]:
+                  - button "0" [ref=f9e1284]
+                - cell [ref=f9e1287]:
+                  - button "0" [ref=f9e1288]
+                - cell [ref=f9e1291]:
+                  - button "0" [ref=f9e1292] [cursor=pointer]
+                - cell [ref=f9e1295]:
+                  - button "0" [ref=f9e1296] [cursor=pointer]
+                - cell [ref=f9e1299]:
+                  - button "0" [ref=f9e1300] [cursor=pointer]
+                - cell [ref=f9e1303]:
+                  - button "0" [ref=f9e1304] [cursor=pointer]
+                - cell [ref=f9e1307]:
+                  - button "0" [ref=f9e1308] [cursor=pointer]
+                - cell [ref=f9e1311]:
+                  - button "0" [ref=f9e1312] [cursor=pointer]
+                - cell [ref=f9e1315]:
+                  - button "0" [ref=f9e1316] [cursor=pointer]
+                - cell [ref=f9e1319]:
+                  - button "0" [ref=f9e1320] [cursor=pointer]
+                - cell [ref=f9e1323]:
+                  - button "0" [ref=f9e1324] [cursor=pointer]
+                - cell [ref=f9e1327]
+          - generic [ref=f9e1329]:
+            - generic [ref=f9e1330]: 共 81 条
+            - generic [ref=f9e1333] [cursor=pointer]:
+              - generic:
+                - combobox [ref=f9e1335]
+                - generic [ref=f9e1336]: 20条/页
+            - button "上一页" [disabled] [ref=f9e1341]
+            - list [ref=f9e1342]:
+              - listitem "第 1 页" [ref=f9e1343]: "1"
+              - listitem "第 2 页" [ref=f9e1344] [cursor=pointer]: "2"
+              - listitem "第 3 页" [ref=f9e1345] [cursor=pointer]: "3"
+              - listitem "第 4 页" [ref=f9e1346] [cursor=pointer]: "4"
+              - listitem "第 5 页" [ref=f9e1347] [cursor=pointer]: "5"
+            - button "下一页" [ref=f9e1348] [cursor=pointer]
+            - generic [ref=f9e1349]:
+              - generic [ref=f9e1350]: 前往
+              - spinbutton "页" [ref=f9e1353]: "1"
+              - generic [ref=f9e1354]: 页
+        - generic [ref=f9e164]:
+          - generic [ref=f9e166]:
+            - generic [ref=f9e167]: 历史版本
+            - generic [ref=f9e1355]: 禁止回滚
+          - generic [ref=f9e168]:
+            - generic [ref=f9e170]:
+              - table [ref=f9e172]:
+                - rowgroup [ref=f9e180]:
+                  - row [ref=f9e181]:
+                    - columnheader "排产版本" [ref=f9e182]
+                    - columnheader "工厂" [ref=f9e184]
+                    - columnheader "生成时间" [ref=f9e186]
+                    - columnheader "经营计划版本" [ref=f9e188]
+                    - columnheader "状态" [ref=f9e190]
+                    - columnheader "操作" [ref=f9e192]
+              - table [ref=f9e1357]:
+                - rowgroup [ref=f9e1365]:
+                  - row [ref=f9e1366]:
+                    - cell "V5 当前" [ref=f9e1367]:
+                      - generic [ref=f9e1368]:
+                        - text: V5
+                        - generic [ref=f9e1369]: 当前
+                    - cell "爱培科" [ref=f9e1371]
+                    - cell "2026-09-14 07:27" [ref=f9e1373]
+                    - cell "V8" [ref=f9e1375]
+                    - cell "草稿" [ref=f9e1377]
+                    - cell [ref=f9e1381]:
+                      - button "与当前对比" [ref=f9e1383] [cursor=pointer]
+                  - row [ref=f9e1385]:
+                    - cell "V5" [ref=f9e1386]
+                    - cell "永惠" [ref=f9e1388]
+                    - cell "2026-09-14 07:27" [ref=f9e1390]
+                    - cell "V8" [ref=f9e1392]
+                    - cell "草稿" [ref=f9e1394]
+                    - cell [ref=f9e1398]:
+                      - button "与当前对比" [ref=f9e1400] [cursor=pointer]
+                  - row [ref=f9e1402]:
+                    - cell "V4" [ref=f9e1403]
+                    - cell "爱培科" [ref=f9e1405]
+                    - cell "2026-09-08 09:35" [ref=f9e1407]
+                    - cell "V8" [ref=f9e1409]
+                    - cell "草稿" [ref=f9e1411]
+                    - cell [ref=f9e1415]:
+                      - button "与当前对比" [ref=f9e1417] [cursor=pointer]
+            - generic [ref=f9e1420]:
+              - generic [ref=f9e1421]: 共 6 条
+              - generic [ref=f9e1424] [cursor=pointer]:
+                - generic:
+                  - combobox [ref=f9e1426]
+                  - generic [ref=f9e1427]: 3条/页
+              - button "上一页" [disabled] [ref=f9e1432]
+              - list [ref=f9e1433]:
+                - listitem "第 1 页" [ref=f9e1434]: "1"
+                - listitem "第 2 页" [ref=f9e1435] [cursor=pointer]: "2"
+              - button "下一页" [ref=f9e1436] [cursor=pointer]
+              - generic [ref=f9e1437]:
+                - generic [ref=f9e1438]: 前往
+                - spinbutton "页" [ref=f9e1441]: "1"
+                - generic [ref=f9e1442]: 页
+        - dialog "排产版本对比" [ref=f9e1444]:
+          - generic [ref=f9e1445]:
+            - generic [ref=f9e1446]:
+              - heading "排产版本对比" [level=2] [ref=f9e1447]
+              - button "关闭此对话框" [ref=f9e1448] [cursor=pointer]
+            - generic [ref=f9e1452]:
+              - generic [ref=f9e1453]:
+                - generic [ref=f9e1454]:
+                  - generic [ref=f9e1455]: 基线版本
+                  - generic [ref=f9e1457] [cursor=pointer]:
+                    - generic:
+                      - combobox [ref=f9e1459]
+                      - generic [ref=f9e1460]: V4 - 2026-09-08 09:35
+                - generic [ref=f9e1465]:
+                  - generic [ref=f9e1466]: 当前版本
+                  - generic [ref=f9e1468] [cursor=pointer]:
+                    - generic:
+                      - combobox [ref=f9e1470]
+                      - generic [ref=f9e1471]: V5 - 2026-09-14 07:27
+              - button "开始对比" [active] [ref=f9e1476] [cursor=pointer]
+              - generic [ref=f9e1482]:
+                - table [ref=f9e1484]:
+                  - rowgroup [ref=f9e1491]:
+                    - row [ref=f9e1492]:
+                      - columnheader "整机料号" [ref=f9e1493]
+                      - columnheader "周" [ref=f9e1495]
+                      - columnheader "基线数量" [ref=f9e1497]
+                      - columnheader "当前数量" [ref=f9e1499]
+                      - columnheader "差异" [ref=f9e1501]
+                - table [ref=f9e1507]:
+                  - rowgroup [ref=f9e1514]:
+                    - row [ref=f9e1515]:
+                      - cell "6830AA800496" [ref=f9e1516]
+                      - cell "2026-08-31" [ref=f9e1518]
+                      - cell "150" [ref=f9e1520]
+                      - cell "214" [ref=f9e1522]
+                      - cell "+64" [ref=f9e1524]
+                    - row [ref=f9e1526]:
+                      - cell "6830AA800496" [ref=f9e1527]
+                      - cell "2026-09-07" [ref=f9e1529]
+                      - cell "149" [ref=f9e1531]
+                      - cell "213" [ref=f9e1533]
+                      - cell "+64" [ref=f9e1535]
+                    - row [ref=f9e1537]:
+                      - cell "6830AA800496" [ref=f9e1538]
+                      - cell "2026-09-14" [ref=f9e1540]
+                      - cell "149" [ref=f9e1542]
+                      - cell "213" [ref=f9e1544]
+                      - cell "+64" [ref=f9e1546]
+                    - row [ref=f9e1548]:
+                      - cell "6830AA800496" [ref=f9e1549]
+                      - cell "2026-09-21" [ref=f9e1551]
+                      - cell "225" [ref=f9e1553]
+                      - cell "217" [ref=f9e1555]
+                      - cell "-8" [ref=f9e1557]
+                    - row [ref=f9e1559]:
+                      - cell "6830AA800496" [ref=f9e1560]
+                      - cell "2026-09-28" [ref=f9e1562]
+                      - cell "150" [ref=f9e1564]
+                      - cell "0" [ref=f9e1566]
+                      - cell "-150" [ref=f9e1568]
+                    - row [ref=f9e1570]:
+                      - cell "6830AA800496" [ref=f9e1571]
+                      - cell "2026-10-05" [ref=f9e1573]
+                      - cell "149" [ref=f9e1575]
+                      - cell "217" [ref=f9e1577]
+                      - cell "+68" [ref=f9e1579]
+                    - row [ref=f9e1581]:
+                      - cell "6830AA800496" [ref=f9e1582]
+                      - cell "2026-10-12" [ref=f9e1584]
+                      - cell "149" [ref=f9e1586]
+                      - cell "216" [ref=f9e1588]
+                      - cell "+67" [ref=f9e1590]
+                    - row [ref=f9e1592]:
+                      - cell "6830AA800496" [ref=f9e1593]
+                      - cell "2026-10-19" [ref=f9e1595]
+                      - cell "225" [ref=f9e1597]
+                      - cell "237" [ref=f9e1599]
+                      - cell "+12" [ref=f9e1601]
+                    - row [ref=f9e1603]:
+                      - cell "6830AA800496" [ref=f9e1604]
+                      - cell "2026-10-26" [ref=f9e1606]
+                      - cell "150" [ref=f9e1608]
+                      - cell "0" [ref=f9e1610]
+                      - cell "-150" [ref=f9e1612]
+                    - row [ref=f9e1614]:
+                      - cell "6830AA800496" [ref=f9e1615]
+                      - cell "2026-11-02" [ref=f9e1617]
+                      - cell "149" [ref=f9e1619]
+                      - cell "237" [ref=f9e1621]
+                      - cell "+88" [ref=f9e1623]
+                    - row [ref=f9e1625]:
+                      - cell "6830AA800496" [ref=f9e1626]
+                      - cell "2026-11-09" [ref=f9e1628]
+                      - cell "149" [ref=f9e1630]
+                      - cell "236" [ref=f9e1632]
+                      - cell "+87" [ref=f9e1634]
+                    - row [ref=f9e1636]:
+                      - cell "6830AA800496" [ref=f9e1637]
+                      - cell "2026-11-16" [ref=f9e1639]
+                      - cell "0" [ref=f9e1641]
+                      - cell "227" [ref=f9e1643]
+                      - cell "+227" [ref=f9e1645]
+                    - row [ref=f9e1647]:
+                      - cell "6830AA800509" [ref=f9e1648]
+                      - cell "2026-08-31" [ref=f9e1650]
+                      - cell "358" [ref=f9e1652]
+                      - cell "485" [ref=f9e1654]
+                      - cell "+127" [ref=f9e1656]
+                    - row [ref=f9e1658]:
+                      - cell "6830AA800509" [ref=f9e1659]
+                      - cell "2026-09-07" [ref=f9e1661]
+                      - cell "357" [ref=f9e1663]
+                      - cell "485" [ref=f9e1665]
+                      - cell "+128" [ref=f9e1667]
+                    - row [ref=f9e1669]:
+                      - cell "6830AA800509" [ref=f9e1670]
+                      - cell "2026-09-14" [ref=f9e1672]
+                      - cell "357" [ref=f9e1674]
+                      - cell "485" [ref=f9e1676]
+                      - cell "+128" [ref=f9e1678]
+                    - row [ref=f9e1680]:
+                      - cell "6830AA800509" [ref=f9e1681]
+                      - cell "2026-09-21" [ref=f9e1683]
+                      - cell "537" [ref=f9e1685]
+                      - cell "504" [ref=f9e1687]
+                      - cell "-33" [ref=f9e1689]
+                    - row [ref=f9e1691]:
+                      - cell "6830AA800509" [ref=f9e1692]
+                      - cell "2026-09-28" [ref=f9e1694]
+                      - cell "358" [ref=f9e1696]
+                      - cell "0" [ref=f9e1698]
+                      - cell "-358" [ref=f9e1700]
+                    - row [ref=f9e1702]:
+                      - cell "6830AA800509" [ref=f9e1703]
+                      - cell "2026-10-05" [ref=f9e1705]
+                      - cell "357" [ref=f9e1707]
+                      - cell "503" [ref=f9e1709]
+                      - cell "+146" [ref=f9e1711]
+                    - row [ref=f9e1713]:
+                      - cell "6830AA800509" [ref=f9e1714]
+                      - cell "2026-10-12" [ref=f9e1716]
+                      - cell "357" [ref=f9e1718]
+                      - cell "503" [ref=f9e1720]
+                      - cell "+146" [ref=f9e1722]
+                    - row [ref=f9e1724]:
+                      - cell "6830AA800509" [ref=f9e1725]
+                      - cell "2026-10-19" [ref=f9e1727]
+                      - cell "537" [ref=f9e1729]
+                      - cell "704" [ref=f9e1731]
+                      - cell "+167" [ref=f9e1733]
+                    - row [ref=f9e1735]:
+                      - cell "6830AA800509" [ref=f9e1736]
+                      - cell "2026-10-26" [ref=f9e1738]
+                      - cell "358" [ref=f9e1740]
+                      - cell "0" [ref=f9e1742]
+                      - cell "-358" [ref=f9e1744]
+                    - row [ref=f9e1746]:
+                      - cell "6830AA800509" [ref=f9e1747]
+                      - cell "2026-11-02" [ref=f9e1749]
+                      - cell "357" [ref=f9e1751]
+                      - cell "703" [ref=f9e1753]
+                      - cell "+346" [ref=f9e1755]
+                    - row [ref=f9e1757]:
+                      - cell "6830AA800509" [ref=f9e1758]
+                      - cell "2026-11-09" [ref=f9e1760]
+                      - cell "357" [ref=f9e1762]
+                      - cell "703" [ref=f9e1764]
+                      - cell "+346" [ref=f9e1766]
+                    - row [ref=f9e1768]:
+                      - cell "6830AA800509" [ref=f9e1769]
+                      - cell "2026-11-16" [ref=f9e1771]
+                      - cell "0" [ref=f9e1773]
+                      - cell "587" [ref=f9e1775]
+                      - cell "+587" [ref=f9e1777]
+                    - row [ref=f9e1779]:
+                      - cell "6830AA800530" [ref=f9e1780]
+                      - cell "2026-08-31" [ref=f9e1782]
+                      - cell "1365" [ref=f9e1784]
+                      - cell "1734" [ref=f9e1786]
+                      - cell "+369" [ref=f9e1788]
+                    - row [ref=f9e1790]:
+                      - cell "6830AA800530" [ref=f9e1791]
+                      - cell "2026-09-07" [ref=f9e1793]
+                      - cell "1365" [ref=f9e1795]
+                      - cell "1733" [ref=f9e1797]
+                      - cell "+368" [ref=f9e1799]
+                    - row [ref=f9e1801]:
+                      - cell "6830AA800530" [ref=f9e1802]
+                      - cell "2026-09-14" [ref=f9e1804]
+                      - cell "1364" [ref=f9e1806]
+                      - cell "1733" [ref=f9e1808]
+                      - cell "+369" [ref=f9e1810]
+                    - row [ref=f9e1812]:
+                      - cell "6830AA800530" [ref=f9e1813]
+                      - cell "2026-09-21" [ref=f9e1815]
+                      - cell "2047" [ref=f9e1817]
+                      - cell "1984" [ref=f9e1819]
+                      - cell "-63" [ref=f9e1821]
+                    - row [ref=f9e1823]:
+                      - cell "6830AA800530" [ref=f9e1824]
+                      - cell "2026-09-28" [ref=f9e1826]
+                      - cell "1365" [ref=f9e1828]
+                      - cell "0" [ref=f9e1830]
+                      - cell "-1365" [ref=f9e1832]
+                    - row [ref=f9e1834]:
+                      - cell "6830AA800530" [ref=f9e1835]
+                      - cell "2026-10-05" [ref=f9e1837]
+                      - cell "1365" [ref=f9e1839]
+                      - cell "1983" [ref=f9e1841]
+                      - cell "+618" [ref=f9e1843]
+                    - row [ref=f9e1845]:
+                      - cell "6830AA800530" [ref=f9e1846]
+                      - cell "2026-10-12" [ref=f9e1848]
+                      - cell "1364" [ref=f9e1850]
+                      - cell "1983" [ref=f9e1852]
+                      - cell "+619" [ref=f9e1854]
+                    - row [ref=f9e1856]:
+                      - cell "6830AA800530" [ref=f9e1857]
+                      - cell "2026-10-19" [ref=f9e1859]
+                      - cell "2047" [ref=f9e1861]
+                      - cell "2284" [ref=f9e1863]
+                      - cell "+237" [ref=f9e1865]
+                    - row [ref=f9e1867]:
+                      - cell "6830AA800530" [ref=f9e1868]
+                      - cell "2026-10-26" [ref=f9e1870]
+                      - cell "1365" [ref=f9e1872]
+                      - cell "0" [ref=f9e1874]
+                      - cell "-1365" [ref=f9e1876]
+                    - row [ref=f9e1878]:
+                      - cell "6830AA800530" [ref=f9e1879]
+                      - cell "2026-11-02" [ref=f9e1881]
+                      - cell "1365" [ref=f9e1883]
+                      - cell "2283" [ref=f9e1885]
+                      - cell "+918" [ref=f9e1887]
+                    - row [ref=f9e1889]:
+                      - cell "6830AA800530" [ref=f9e1890]
+                      - cell "2026-11-09" [ref=f9e1892]
+                      - cell "1364" [ref=f9e1894]
+                      - cell "2283" [ref=f9e1896]
+                      - cell "+919" [ref=f9e1898]
+                    - row [ref=f9e1900]:
+                      - cell "6830AA800530" [ref=f9e1901]
+                      - cell "2026-11-16" [ref=f9e1903]
+                      - cell "0" [ref=f9e1905]
+                      - cell "2184" [ref=f9e1907]
+                      - cell "+2184" [ref=f9e1909]
+                    - row [ref=f9e1911]:
+                      - cell "6830AA800551" [ref=f9e1912]
+                      - cell "2026-08-31" [ref=f9e1914]
+                      - cell "99" [ref=f9e1916]
+                      - cell "124" [ref=f9e1918]
+                      - cell "+25" [ref=f9e1920]
+                    - row [ref=f9e1922]:
+                      - cell "6830AA800551" [ref=f9e1923]
+                      - cell "2026-09-07" [ref=f9e1925]
+                      - cell "99" [ref=f9e1927]
+                      - cell "123" [ref=f9e1929]
+                      - cell "+24" [ref=f9e1931]
+                    - row [ref=f9e1933]:
+                      - cell "6830AA800551" [ref=f9e1934]
+                      - cell "2026-09-14" [ref=f9e1936]
+                      - cell "98" [ref=f9e1938]
+                      - cell "123" [ref=f9e1940]
+                      - cell "+25" [ref=f9e1942]
+                    - row [ref=f9e1944]:
+                      - cell "6830AA800551" [ref=f9e1945]
+                      - cell "2026-09-21" [ref=f9e1947]
+                      - cell "149" [ref=f9e1949]
+                      - cell "144" [ref=f9e1951]
+                      - cell "-5" [ref=f9e1953]
+                    - row [ref=f9e1955]:
+                      - cell "6830AA800551" [ref=f9e1956]
+                      - cell "2026-09-28" [ref=f9e1958]
+                      - cell "99" [ref=f9e1960]
+                      - cell "0" [ref=f9e1962]
+                      - cell "-99" [ref=f9e1964]
+                    - row [ref=f9e1966]:
+                      - cell "6830AA800551" [ref=f9e1967]
+                      - cell "2026-10-05" [ref=f9e1969]
+                      - cell "99" [ref=f9e1971]
+                      - cell "143" [ref=f9e1973]
+                      - cell "+44" [ref=f9e1975]
+                    - row [ref=f9e1977]:
+                      - cell "6830AA800551" [ref=f9e1978]
+                      - cell "2026-10-12" [ref=f9e1980]
+                      - cell "98" [ref=f9e1982]
+                      - cell "143" [ref=f9e1984]
+                      - cell "+45" [ref=f9e1986]
+                    - row [ref=f9e1988]:
+                      - cell "6830AA800551" [ref=f9e1989]
+                      - cell "2026-10-19" [ref=f9e1991]
+                      - cell "149" [ref=f9e1993]
+                      - cell "177" [ref=f9e1995]
+                      - cell "+28" [ref=f9e1997]
+                    - row [ref=f9e1999]:
+                      - cell "6830AA800551" [ref=f9e2000]
+                      - cell "2026-10-26" [ref=f9e2002]
+                      - cell "99" [ref=f9e2004]
+                      - cell "0" [ref=f9e2006]
+                      - cell "-99" [ref=f9e2008]
+                    - row [ref=f9e2010]:
+                      - cell "6830AA800551" [ref=f9e2011]
+                      - cell "2026-11-02" [ref=f9e2013]
+                      - cell "99" [ref=f9e2015]
+                      - cell "177" [ref=f9e2017]
+                      - cell "+78" [ref=f9e2019]
+                    - row [ref=f9e2021]:
+                      - cell "6830AA800551" [ref=f9e2022]
+                      - cell "2026-11-09" [ref=f9e2024]
+                      - cell "98" [ref=f9e2026]
+                      - cell "176" [ref=f9e2028]
+                      - cell "+78" [ref=f9e2030]
+                    - row [ref=f9e2032]:
+                      - cell "6830AA800551" [ref=f9e2033]
+                      - cell "2026-11-16" [ref=f9e2035]
+                      - cell "0" [ref=f9e2037]
+                      - cell "177" [ref=f9e2039]
+                      - cell "+177" [ref=f9e2041]
+                    - row [ref=f9e2043]:
+                      - cell "6830AA800559" [ref=f9e2044]
+                      - cell "2026-08-31" [ref=f9e2046]
+                      - cell "2395" [ref=f9e2048]
+                      - cell "3137" [ref=f9e2050]
+                      - cell "+742" [ref=f9e2052]
+                    - row [ref=f9e2054]:
+                      - cell "6830AA800559" [ref=f9e2055]
+                      - cell "2026-09-07" [ref=f9e2057]
+                      - cell "2395" [ref=f9e2059]
+                      - cell "3137" [ref=f9e2061]
+                      - cell "+742" [ref=f9e2063]
+                    - row [ref=f9e2065]:
+                      - cell "6830AA800559" [ref=f9e2066]
+                      - cell "2026-09-14" [ref=f9e2068]
+                      - cell "2394" [ref=f9e2070]
+                      - cell "3136" [ref=f9e2072]
+                      - cell "+742" [ref=f9e2074]
+                    - row [ref=f9e2076]:
+                      - cell "6830AA800559" [ref=f9e2077]
+                      - cell "2026-09-21" [ref=f9e2079]
+                      - cell "3592" [ref=f9e2081]
+                      - cell "3454" [ref=f9e2083]
+                      - cell "-138" [ref=f9e2085]
+                    - row [ref=f9e2087]:
+                      - cell "6830AA800559" [ref=f9e2088]
+                      - cell "2026-09-28" [ref=f9e2090]
+                      - cell "2395" [ref=f9e2092]
+                      - cell "0" [ref=f9e2094]
+                      - cell "-2395" [ref=f9e2096]
+                    - row [ref=f9e2098]:
+                      - cell "6830AA800559" [ref=f9e2099]
+                      - cell "2026-10-05" [ref=f9e2101]
+                      - cell "2395" [ref=f9e2103]
+                      - cell "3453" [ref=f9e2105]
+                      - cell "+1058" [ref=f9e2107]
+                    - row [ref=f9e2109]:
+                      - cell "6830AA800559" [ref=f9e2110]
+                      - cell "2026-10-12" [ref=f9e2112]
+                      - cell "2394" [ref=f9e2114]
+                      - cell "3453" [ref=f9e2116]
+                      - cell "+1059" [ref=f9e2118]
+                    - row [ref=f9e2120]:
+                      - cell "6830AA800559" [ref=f9e2121]
+                      - cell "2026-10-19" [ref=f9e2123]
+                      - cell "3592" [ref=f9e2125]
+                      - cell "3870" [ref=f9e2127]
+                      - cell "+278" [ref=f9e2129]
+                    - row [ref=f9e2131]:
+                      - cell "6830AA800559" [ref=f9e2132]
+                      - cell "2026-10-26" [ref=f9e2134]
+                      - cell "2395" [ref=f9e2136]
+                      - cell "0" [ref=f9e2138]
+                      - cell "-2395" [ref=f9e2140]
+                    - row [ref=f9e2142]:
+                      - cell "6830AA800559" [ref=f9e2143]
+                      - cell "2026-11-02" [ref=f9e2145]
+                      - cell "2395" [ref=f9e2147]
+                      - cell "3870" [ref=f9e2149]
+                      - cell "+1475" [ref=f9e2151]
+                    - row [ref=f9e2153]:
+                      - cell "6830AA800559" [ref=f9e2154]
+                      - cell "2026-11-09" [ref=f9e2156]
+                      - cell "2394" [ref=f9e2158]
+                      - cell "3870" [ref=f9e2160]
+                      - cell "+1476" [ref=f9e2162]
+                    - row [ref=f9e2164]:
+                      - cell "6830AA800559" [ref=f9e2165]
+                      - cell "2026-11-16" [ref=f9e2167]
+                      - cell "0" [ref=f9e2169]
+                      - cell "3654" [ref=f9e2171]
+                      - cell "+3654" [ref=f9e2173]
+                    - row [ref=f9e2175]:
+                      - cell "6830AA800561" [ref=f9e2176]
+                      - cell "2026-08-31" [ref=f9e2178]
+                      - cell "1488" [ref=f9e2180]
+                      - cell "2087" [ref=f9e2182]
+                      - cell "+599" [ref=f9e2184]
+                    - row [ref=f9e2186]:
+                      - cell "6830AA800561" [ref=f9e2187]
+                      - cell "2026-09-07" [ref=f9e2189]
+                      - cell "1487" [ref=f9e2191]
+                      - cell "2087" [ref=f9e2193]
+                      - cell "+600" [ref=f9e2195]
+                    - row [ref=f9e2197]:
+                      - cell "6830AA800561" [ref=f9e2198]
+                      - cell "2026-09-14" [ref=f9e2200]
+                      - cell "1487" [ref=f9e2202]
+                      - cell "2086" [ref=f9e2204]
+                      - cell "+599" [ref=f9e2206]
+                    - row [ref=f9e2208]:
+                      - cell "6830AA800561" [ref=f9e2209]
+                      - cell "2026-09-21" [ref=f9e2211]
+                      - cell "2231" [ref=f9e2213]
+                      - cell "2160" [ref=f9e2215]
+                      - cell "-71" [ref=f9e2217]
+                    - row [ref=f9e2219]:
+                      - cell "6830AA800561" [ref=f9e2220]
+                      - cell "2026-09-28" [ref=f9e2222]
+                      - cell "1488" [ref=f9e2224]
+                      - cell "0" [ref=f9e2226]
+                      - cell "-1488" [ref=f9e2228]
+                    - row [ref=f9e2230]:
+                      - cell "6830AA800561" [ref=f9e2231]
+                      - cell "2026-10-05" [ref=f9e2233]
+                      - cell "1487" [ref=f9e2235]
+                      - cell "2160" [ref=f9e2237]
+                      - cell "+673" [ref=f9e2239]
+                    - row [ref=f9e2241]:
+                      - cell "6830AA800561" [ref=f9e2242]
+                      - cell "2026-10-12" [ref=f9e2244]
+                      - cell "1487" [ref=f9e2246]
+                      - cell "2160" [ref=f9e2248]
+                      - cell "+673" [ref=f9e2250]
+                    - row [ref=f9e2252]:
+                      - cell "6830AA800561" [ref=f9e2253]
+                      - cell "2026-10-19" [ref=f9e2255]
+                      - cell "2231" [ref=f9e2257]
+                      - cell "2344" [ref=f9e2259]
+                      - cell "+113" [ref=f9e2261]
+                    - row [ref=f9e2263]:
+                      - cell "6830AA800561" [ref=f9e2264]
+                      - cell "2026-10-26" [ref=f9e2266]
+                      - cell "1488" [ref=f9e2268]
+                      - cell "0" [ref=f9e2270]
+                      - cell "-1488" [ref=f9e2272]
+                    - row [ref=f9e2274]:
+                      - cell "6830AA800561" [ref=f9e2275]
+                      - cell "2026-11-02" [ref=f9e2277]
+                      - cell "1487" [ref=f9e2279]
+                      - cell "2343" [ref=f9e2281]
+                      - cell "+856" [ref=f9e2283]
+                    - row [ref=f9e2285]:
+                      - cell "6830AA800561" [ref=f9e2286]
+                      - cell "2026-11-09" [ref=f9e2288]
+                      - cell "1487" [ref=f9e2290]
+                      - cell "2343" [ref=f9e2292]
+                      - cell "+856" [ref=f9e2294]
+                    - row [ref=f9e2296]:
+                      - cell "6830AA800561" [ref=f9e2297]
+                      - cell "2026-11-16" [ref=f9e2299]
+                      - cell "0" [ref=f9e2301]
+                      - cell "2310" [ref=f9e2303]
+                      - cell "+2310" [ref=f9e2305]
+                    - row [ref=f9e2307]:
+                      - cell "6830AA800562" [ref=f9e2308]
+                      - cell "2026-08-31" [ref=f9e2310]
+                      - cell "1468" [ref=f9e2312]
+                      - cell "2007" [ref=f9e2314]
+                      - cell "+539" [ref=f9e2316]
+                    - row [ref=f9e2318]:
+                      - cell "6830AA800562" [ref=f9e2319]
+                      - cell "2026-09-07" [ref=f9e2321]
+                      - cell "1468" [ref=f9e2323]
+                      - cell "2007" [ref=f9e2325]
+                      - cell "+539" [ref=f9e2327]
+                    - row [ref=f9e2329]:
+                      - cell "6830AA800562" [ref=f9e2330]
+                      - cell "2026-09-14" [ref=f9e2332]
+                      - cell "1467" [ref=f9e2334]
+                      - cell "2006" [ref=f9e2336]
+                      - cell "+539" [ref=f9e2338]
+                    - row [ref=f9e2340]:
+                      - cell "6830AA800562" [ref=f9e2341]
+                      - cell "2026-09-21" [ref=f9e2343]
+                      - cell "2202" [ref=f9e2345]
+                      - cell "2144" [ref=f9e2347]
+                      - cell "-58" [ref=f9e2349]
+                    - row [ref=f9e2351]:
+                      - cell "6830AA800562" [ref=f9e2352]
+                      - cell "2026-09-28" [ref=f9e2354]
+                      - cell "1468" [ref=f9e2356]
+                      - cell "0" [ref=f9e2358]
+                      - cell "-1468" [ref=f9e2360]
+                    - row [ref=f9e2362]:
+                      - cell "6830AA800562" [ref=f9e2363]
+                      - cell "2026-10-05" [ref=f9e2365]
+                      - cell "1468" [ref=f9e2367]
+                      - cell "2143" [ref=f9e2369]
+                      - cell "+675" [ref=f9e2371]
+                    - row [ref=f9e2373]:
+                      - cell "6830AA800562" [ref=f9e2374]
+                      - cell "2026-10-12" [ref=f9e2376]
+                      - cell "1467" [ref=f9e2378]
+                      - cell "2143" [ref=f9e2380]
+                      - cell "+676" [ref=f9e2382]
+                    - row [ref=f9e2384]:
+                      - cell "6830AA800562" [ref=f9e2385]
+                      - cell "2026-10-19" [ref=f9e2387]
+                      - cell "2202" [ref=f9e2389]
+                      - cell "2330" [ref=f9e2391]
+                      - cell "+128" [ref=f9e2393]
+                    - row [ref=f9e2395]:
+                      - cell "6830AA800562" [ref=f9e2396]
+                      - cell "2026-10-26" [ref=f9e2398]
+                      - cell "1468" [ref=f9e2400]
+                      - cell "0" [ref=f9e2402]
+                      - cell "-1468" [ref=f9e2404]
+                    - row [ref=f9e2406]:
+                      - cell "6830AA800562" [ref=f9e2407]
+                      - cell "2026-11-02" [ref=f9e2409]
+                      - cell "1468" [ref=f9e2411]
+                      - cell "2330" [ref=f9e2413]
+                      - cell "+862" [ref=f9e2415]
+                    - row [ref=f9e2417]:
+                      - cell "6830AA800562" [ref=f9e2418]
+                      - cell "2026-11-09" [ref=f9e2420]
+                      - cell "1467" [ref=f9e2422]
+                      - cell "2330" [ref=f9e2424]
+                      - cell "+863" [ref=f9e2426]
+                    - row [ref=f9e2428]:
+                      - cell "6830AA800562" [ref=f9e2429]
+                      - cell "2026-11-16" [ref=f9e2431]
+                      - cell "0" [ref=f9e2433]
+                      - cell "2270" [ref=f9e2435]
+                      - cell "+2270" [ref=f9e2437]
+                    - row [ref=f9e2439]:
+                      - cell "6830AA800626" [ref=f9e2440]
+                      - cell "2026-08-31" [ref=f9e2442]
+                      - cell "631" [ref=f9e2444]
+                      - cell "834" [ref=f9e2446]
+                      - cell "+203" [ref=f9e2448]
+                    - row [ref=f9e2450]:
+                      - cell "6830AA800626" [ref=f9e2451]
+                      - cell "2026-09-07" [ref=f9e2453]
+                      - cell "631" [ref=f9e2455]
+                      - cell "833" [ref=f9e2457]
+                      - cell "+202" [ref=f9e2459]
+                    - row [ref=f9e2461]:
+                      - cell "6830AA800626" [ref=f9e2462]
+                      - cell "2026-09-14" [ref=f9e2464]
+                      - cell "631" [ref=f9e2466]
+                      - cell "833" [ref=f9e2468]
+                      - cell "+202" [ref=f9e2470]
+                    - row [ref=f9e2472]:
+                      - cell "6830AA800626" [ref=f9e2473]
+                      - cell "2026-09-21" [ref=f9e2475]
+                      - cell "947" [ref=f9e2477]
+                      - cell "844" [ref=f9e2479]
+                      - cell "-103" [ref=f9e2481]
+                    - row [ref=f9e2483]:
+                      - cell "6830AA800626" [ref=f9e2484]
+                      - cell "2026-09-28" [ref=f9e2486]
+                      - cell "631" [ref=f9e2488]
+                      - cell "0" [ref=f9e2490]
+                      - cell "-631" [ref=f9e2492]
+                    - row [ref=f9e2494]:
+                      - cell "6830AA800626" [ref=f9e2495]
+                      - cell "2026-10-05" [ref=f9e2497]
+                      - cell "631" [ref=f9e2499]
+                      - cell "843" [ref=f9e2501]
+                      - cell "+212" [ref=f9e2503]
+                    - row [ref=f9e2505]:
+                      - cell "6830AA800626" [ref=f9e2506]
+                      - cell "2026-10-12" [ref=f9e2508]
+                      - cell "631" [ref=f9e2510]
+                      - cell "843" [ref=f9e2512]
+                      - cell "+212" [ref=f9e2514]
+                    - row [ref=f9e2516]:
+                      - cell "6830AA800626" [ref=f9e2517]
+                      - cell "2026-10-19" [ref=f9e2519]
+                      - cell "947" [ref=f9e2521]
+                      - cell "1054" [ref=f9e2523]
+                      - cell "+107" [ref=f9e2525]
+                    - row [ref=f9e2527]:
+                      - cell "6830AA800626" [ref=f9e2528]
+                      - cell "2026-10-26" [ref=f9e2530]
+                      - cell "631" [ref=f9e2532]
+                      - cell "0" [ref=f9e2534]
+                      - cell "-631" [ref=f9e2536]
+                    - row [ref=f9e2538]:
+                      - cell "6830AA800626" [ref=f9e2539]
+                      - cell "2026-11-02" [ref=f9e2541]
+                      - cell "631" [ref=f9e2543]
+                      - cell "1053" [ref=f9e2545]
+                      - cell "+422" [ref=f9e2547]
+                    - row [ref=f9e2549]:
+                      - cell "6830AA800626" [ref=f9e2550]
+                      - cell "2026-11-09" [ref=f9e2552]
+                      - cell "631" [ref=f9e2554]
+                      - cell "1053" [ref=f9e2556]
+                      - cell "+422" [ref=f9e2558]
+                    - row [ref=f9e2560]:
+                      - cell "6830AA800626" [ref=f9e2561]
+                      - cell "2026-11-16" [ref=f9e2563]
+                      - cell "0" [ref=f9e2565]
+                      - cell "1044" [ref=f9e2567]
+                      - cell "+1044" [ref=f9e2569]
+                    - row [ref=f9e2571]:
+                      - cell "6830AA800739" [ref=f9e2572]
+                      - cell "2026-08-31" [ref=f9e2574]
+                      - cell "198" [ref=f9e2576]
+                      - cell "284" [ref=f9e2578]
+                      - cell "+86" [ref=f9e2580]
+                    - row [ref=f9e2582]:
+                      - cell "6830AA800739" [ref=f9e2583]
+                      - cell "2026-09-07" [ref=f9e2585]
+                      - cell "198" [ref=f9e2587]
+                      - cell "283" [ref=f9e2589]
+                      - cell "+85" [ref=f9e2591]
+                    - row [ref=f9e2593]:
+                      - cell "6830AA800739" [ref=f9e2594]
+                      - cell "2026-09-14" [ref=f9e2596]
+                      - cell "198" [ref=f9e2598]
+                      - cell "283" [ref=f9e2600]
+                      - cell "+85" [ref=f9e2602]
+                    - row [ref=f9e2604]:
+                      - cell "6830AA800739" [ref=f9e2605]
+                      - cell "2026-09-21" [ref=f9e2607]
+                      - cell "297" [ref=f9e2609]
+                      - cell "300" [ref=f9e2611]
+                      - cell "+3" [ref=f9e2613]
+                    - row [ref=f9e2615]:
+                      - cell "6830AA800739" [ref=f9e2616]
+                      - cell "2026-09-28" [ref=f9e2618]
+                      - cell "198" [ref=f9e2620]
+                      - cell "0" [ref=f9e2622]
+                      - cell "-198" [ref=f9e2624]
+                    - row [ref=f9e2626]:
+                      - cell "6830AA800739" [ref=f9e2627]
+                      - cell "2026-10-05" [ref=f9e2629]
+                      - cell "198" [ref=f9e2631]
+                      - cell "300" [ref=f9e2633]
+                      - cell "+102" [ref=f9e2635]
+                    - row [ref=f9e2637]:
+                      - cell "6830AA800739" [ref=f9e2638]
+                      - cell "2026-10-12" [ref=f9e2640]
+                      - cell "198" [ref=f9e2642]
+                      - cell "300" [ref=f9e2644]
+                      - cell "+102" [ref=f9e2646]
+                    - row [ref=f9e2648]:
+                      - cell "6830AA800739" [ref=f9e2649]
+                      - cell "2026-10-19" [ref=f9e2651]
+                      - cell "297" [ref=f9e2653]
+                      - cell "300" [ref=f9e2655]
+                      - cell "+3" [ref=f9e2657]
+                    - row [ref=f9e2659]:
+                      - cell "6830AA800739" [ref=f9e2660]
+                      - cell "2026-10-26" [ref=f9e2662]
+                      - cell "198" [ref=f9e2664]
+                      - cell "0" [ref=f9e2666]
+                      - cell "-198" [ref=f9e2668]
+                    - row [ref=f9e2670]:
+                      - cell "6830AA800739" [ref=f9e2671]
+                      - cell "2026-11-02" [ref=f9e2673]
+                      - cell "198" [ref=f9e2675]
+                      - cell "300" [ref=f9e2677]
+                      - cell "+102" [ref=f9e2679]
+                    - row [ref=f9e2681]:
+                      - cell "6830AA800739" [ref=f9e2682]
+                      - cell "2026-11-09" [ref=f9e2684]
+                      - cell "198" [ref=f9e2686]
+                      - cell "300" [ref=f9e2688]
+                      - cell "+102" [ref=f9e2690]
+                    - row [ref=f9e2692]:
+                      - cell "6830AA800739" [ref=f9e2693]
+                      - cell "2026-11-16" [ref=f9e2695]
+                      - cell "0" [ref=f9e2697]
+                      - cell "300" [ref=f9e2699]
+                      - cell "+300" [ref=f9e2701]
+                    - row [ref=f9e2703]:
+                      - cell "6830AA800740" [ref=f9e2704]
+                      - cell "2026-08-31" [ref=f9e2706]
+                      - cell "452" [ref=f9e2708]
+                      - cell "634" [ref=f9e2710]
+                      - cell "+182" [ref=f9e2712]
+                    - row [ref=f9e2714]:
+                      - cell "6830AA800740" [ref=f9e2715]
+                      - cell "2026-09-07" [ref=f9e2717]
+                      - cell "452" [ref=f9e2719]
+                      - cell "633" [ref=f9e2721]
+                      - cell "+181" [ref=f9e2723]
+                    - row [ref=f9e2725]:
+                      - cell "6830AA800740" [ref=f9e2726]
+                      - cell "2026-09-14" [ref=f9e2728]
+                      - cell "451" [ref=f9e2730]
+                      - cell "633" [ref=f9e2732]
+                      - cell "+182" [ref=f9e2734]
+                    - row [ref=f9e2736]:
+                      - cell "6830AA800740" [ref=f9e2737]
+                      - cell "2026-09-21" [ref=f9e2739]
+                      - cell "678" [ref=f9e2741]
+                      - cell "700" [ref=f9e2743]
+                      - cell "+22" [ref=f9e2745]
+                    - row [ref=f9e2747]:
+                      - cell "6830AA800740" [ref=f9e2748]
+                      - cell "2026-09-28" [ref=f9e2750]
+                      - cell "452" [ref=f9e2752]
+                      - cell "0" [ref=f9e2754]
+                      - cell "-452" [ref=f9e2756]
+                    - row [ref=f9e2758]:
+                      - cell "6830AA800740" [ref=f9e2759]
+                      - cell "2026-10-05" [ref=f9e2761]
+                      - cell "452" [ref=f9e2763]
+                      - cell "700" [ref=f9e2765]
+                      - cell "+248" [ref=f9e2767]
+                    - row [ref=f9e2769]:
+                      - cell "6830AA800740" [ref=f9e2770]
+                      - cell "2026-10-12" [ref=f9e2772]
+                      - cell "451" [ref=f9e2774]
+                      - cell "700" [ref=f9e2776]
+                      - cell "+249" [ref=f9e2778]
+                    - row [ref=f9e2780]:
+                      - cell "6830AA800740" [ref=f9e2781]
+                      - cell "2026-10-19" [ref=f9e2783]
+                      - cell "678" [ref=f9e2785]
+                      - cell "684" [ref=f9e2787]
+                      - cell "+6" [ref=f9e2789]
+                    - row [ref=f9e2791]:
+                      - cell "6830AA800740" [ref=f9e2792]
+                      - cell "2026-10-26" [ref=f9e2794]
+                      - cell "452" [ref=f9e2796]
+                      - cell "0" [ref=f9e2798]
+                      - cell "-452" [ref=f9e2800]
+                    - row [ref=f9e2802]:
+                      - cell "6830AA800740" [ref=f9e2803]
+                      - cell "2026-11-02" [ref=f9e2805]
+                      - cell "452" [ref=f9e2807]
+                      - cell "683" [ref=f9e2809]
+                      - cell "+231" [ref=f9e2811]
+                    - row [ref=f9e2813]:
+                      - cell "6830AA800740" [ref=f9e2814]
+                      - cell "2026-11-09" [ref=f9e2816]
+                      - cell "451" [ref=f9e2818]
+                      - cell "683" [ref=f9e2820]
+                      - cell "+232" [ref=f9e2822]
+                    - row [ref=f9e2824]:
+                      - cell "6830AA800740" [ref=f9e2825]
+                      - cell "2026-11-16" [ref=f9e2827]
+                      - cell "0" [ref=f9e2829]
+                      - cell "684" [ref=f9e2831]
+                      - cell "+684" [ref=f9e2833]
+                    - row [ref=f9e2835]:
+                      - cell "6830AA800742" [ref=f9e2836]
+                      - cell "2026-08-31" [ref=f9e2838]
+                      - cell "245" [ref=f9e2840]
+                      - cell "667" [ref=f9e2842]
+                      - cell "+422" [ref=f9e2844]
+                    - row [ref=f9e2846]:
+                      - cell "6830AA800742" [ref=f9e2847]
+                      - cell "2026-09-07" [ref=f9e2849]
+                      - cell "244" [ref=f9e2851]
+                      - cell "667" [ref=f9e2853]
+                      - cell "+423" [ref=f9e2855]
+                    - row [ref=f9e2857]:
+                      - cell "6830AA800742" [ref=f9e2858]
+                      - cell "2026-09-14" [ref=f9e2860]
+                      - cell "244" [ref=f9e2862]
+                      - cell "666" [ref=f9e2864]
+                      - cell "+422" [ref=f9e2866]
+                    - row [ref=f9e2868]:
+                      - cell "6830AA800742" [ref=f9e2869]
+                      - cell "2026-09-21" [ref=f9e2871]
+                      - cell "367" [ref=f9e2873]
+                      - cell "734" [ref=f9e2875]
+                      - cell "+367" [ref=f9e2877]
+                    - row [ref=f9e2879]:
+                      - cell "6830AA800742" [ref=f9e2880]
+                      - cell "2026-09-28" [ref=f9e2882]
+                      - cell "245" [ref=f9e2884]
+                      - cell "0" [ref=f9e2886]
+                      - cell "-245" [ref=f9e2888]
+                    - row [ref=f9e2890]:
+                      - cell "6830AA800742" [ref=f9e2891]
+                      - cell "2026-10-05" [ref=f9e2893]
+                      - cell "244" [ref=f9e2895]
+                      - cell "733" [ref=f9e2897]
+                      - cell "+489" [ref=f9e2899]
+                    - row [ref=f9e2901]:
+                      - cell "6830AA800742" [ref=f9e2902]
+                      - cell "2026-10-12" [ref=f9e2904]
+                      - cell "244" [ref=f9e2906]
+                      - cell "733" [ref=f9e2908]
+                      - cell "+489" [ref=f9e2910]
+                    - row [ref=f9e2912]:
+                      - cell "6830AA800742" [ref=f9e2913]
+                      - cell "2026-10-19" [ref=f9e2915]
+                      - cell "367" [ref=f9e2917]
+                      - cell "800" [ref=f9e2919]
+                      - cell "+433" [ref=f9e2921]
+                    - row [ref=f9e2923]:
+                      - cell "6830AA800742" [ref=f9e2924]
+                      - cell "2026-10-26" [ref=f9e2926]
+                      - cell "245" [ref=f9e2928]
+                      - cell "0" [ref=f9e2930]
+                      - cell "-245" [ref=f9e2932]
+                    - row [ref=f9e2934]:
+                      - cell "6830AA800742" [ref=f9e2935]
+                      - cell "2026-11-02" [ref=f9e2937]
+                      - cell "244" [ref=f9e2939]
+                      - cell "800" [ref=f9e2941]
+                      - cell "+556" [ref=f9e2943]
+                    - row [ref=f9e2945]:
+                      - cell "6830AA800742" [ref=f9e2946]
+                      - cell "2026-11-09" [ref=f9e2948]
+                      - cell "244" [ref=f9e2950]
+                      - cell "800" [ref=f9e2952]
+                      - cell "+556" [ref=f9e2954]
+            - button "关闭" [ref=f9e1479] [cursor=pointer]

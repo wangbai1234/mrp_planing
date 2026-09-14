@@ -52,7 +52,7 @@ public class CapacityService {
         CapacityLine newLine = new CapacityLine(
                 null, version.id(), line.factoryCode(), line.lineCode(),
                 line.lineName(), line.weeklyCapacity(), line.effectiveDate(),
-                line.isActive(), line.remark()
+                line.getIsActive(), line.getRemark()
         );
         capacityMapper.insertLine(newLine);
         return newLine;
@@ -70,10 +70,19 @@ public class CapacityService {
         CapacityLine updated = new CapacityLine(
                 id, existing.versionId(), existing.factoryCode(), existing.lineCode(),
                 line.lineName(), line.weeklyCapacity(), line.effectiveDate(),
-                line.isActive(), line.remark()
+                line.getIsActive(), line.getRemark()
         );
         capacityMapper.updateLine(updated);
         return updated;
+    }
+
+    @Transactional
+    public void deleteLine(Long id) {
+        CapacityLine existing = capacityMapper.selectLineById(id);
+        if (existing == null) {
+            throw new NotFoundException("CapacityLine", id);
+        }
+        capacityMapper.deleteLineById(id);
     }
 
     private void validateLine(CapacityLine line) {

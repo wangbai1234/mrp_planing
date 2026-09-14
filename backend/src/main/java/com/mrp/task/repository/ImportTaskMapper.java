@@ -9,6 +9,8 @@ public interface ImportTaskMapper {
 
     int insert(ImportTask task);
 
+    Long selectLastInsertId();
+
     ImportTask selectById(@Param("id") Long id);
 
     ImportTask selectByRequestKey(@Param("requestKey") String requestKey);

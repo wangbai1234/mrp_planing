@@ -1,8 +1,10 @@
 package com.mrp.planning.service;
 
 import com.mrp.capacity.domain.CapacityLine;
+import com.mrp.capacity.domain.CapacityVersion;
 import com.mrp.capacity.repository.CapacityMapper;
 import com.mrp.forecast.domain.ForecastDetail;
+import com.mrp.forecast.domain.ForecastVersion;
 import com.mrp.forecast.repository.ForecastMapper;
 import com.mrp.inventory.domain.InventoryDetail;
 import com.mrp.inventory.repository.InventoryMapper;
@@ -15,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.*;
@@ -47,6 +50,15 @@ public class PlanningService {
                                    Long shipmentBatchId, Long capacityVersionId,
                                    String factoryCode, LocalDate currentWeekStart,
                                    Long userId) {
+        // Auto-detect latest active capacity version if not provided
+        if (capacityVersionId == null) {
+            CapacityVersion activeCapVersion = capacityMapper.selectActiveVersion();
+            if (activeCapVersion != null) {
+                capacityVersionId = activeCapVersion.id();
+                log.info("Auto-detected active capacity version: {}", capacityVersionId);
+            }
+        }
+
         // 1. Compute input checksum
         String inputChecksum = PlanningCalculator.computeInputChecksum(
                 forecastVersionId, inventorySnapshotId, shipmentBatchId,
@@ -66,7 +78,10 @@ public class PlanningService {
 
         try {
             // 3. Read inputs
-            List<ForecastDetail> forecasts = forecastMapper.selectDetailsByVersionId(forecastVersionId);
+            List<ForecastDetail> forecasts = forecastMapper.selectDetailsByVersionId(forecastVersionId)
+                    .stream()
+                    .filter(f -> factoryCode.equals(f.factoryCode()))
+                    .toList();
             List<InventoryDetail> inventories = inventorySnapshotId != null
                     ? inventoryMapper.selectEffectiveDetailsBySnapshotId(inventorySnapshotId)
                     : List.of();
@@ -78,9 +93,10 @@ public class PlanningService {
                     : List.of();
 
             // 4. Aggregate by material
-            Map<String, Long> forecastByMaterial = forecasts.stream()
+            Map<String, BigDecimal> forecastByMaterial = forecasts.stream()
                     .filter(f -> f.forecastQty() != null)
-                    .collect(Collectors.groupingBy(ForecastDetail::materialId, Collectors.summingLong(ForecastDetail::forecastQty)));
+                    .collect(Collectors.groupingBy(ForecastDetail::materialId, 
+                            Collectors.reducing(BigDecimal.ZERO, ForecastDetail::forecastQty, BigDecimal::add)));
 
             Map<String, Long> inventoryByMaterial = inventories.stream()
                     .filter(i -> factoryCode.equals(i.factoryCode()))
@@ -98,12 +114,6 @@ public class PlanningService {
             Set<String> allMaterials = new HashSet<>(forecastByMaterial.keySet());
 
             for (String materialId : allMaterials) {
-                long forecast = forecastByMaterial.getOrDefault(materialId, 0L);
-                long inventory = inventoryByMaterial.getOrDefault(materialId, 0L);
-                long shipped = shipmentByMaterial.getOrDefault(materialId, 0L);
-
-                long available = PlanningCalculator.monthlyAvailable(forecast, inventory, shipped);
-
                 // Get source months (up to 6 from forecast)
                 List<YearMonth> sourceMonths = forecasts.stream()
                         .filter(f -> materialId.equals(f.materialId()))
@@ -113,9 +123,26 @@ public class PlanningService {
                         .limit(6)
                         .toList();
 
+                // Build per-month forecasts
+                long inventory = inventoryByMaterial.getOrDefault(materialId, 0L);
+                long shipped = shipmentByMaterial.getOrDefault(materialId, 0L);
+
+                List<PlanningCalculator.MonthlyForecast> monthlyForecasts = new ArrayList<>();
+                for (YearMonth ym : sourceMonths) {
+                    long monthForecast = forecasts.stream()
+                            .filter(f -> materialId.equals(f.materialId()) && YearMonth.from(f.planMonth()).equals(ym))
+                            .map(f -> f.forecastQty() != null ? f.forecastQty() : BigDecimal.ZERO)
+                            .reduce(BigDecimal.ZERO, BigDecimal::add)
+                            .longValue();
+                    // Use inventory and shipped for the first month only (as per business rule)
+                    long monthInventory = ym.equals(sourceMonths.get(0)) ? inventory : 0;
+                    long monthShipped = ym.equals(sourceMonths.get(0)) ? shipped : 0;
+                    monthlyForecasts.add(PlanningCalculator.MonthlyForecast.of(ym, monthForecast, monthInventory, monthShipped));
+                }
+
                 // Generate 12-week plan
                 List<WeekPlan> weekPlans = PlanningCalculator.generate12WeekPlan(
-                        available, sourceMonths, currentWeekStart, null, null, null);
+                        monthlyForecasts, currentWeekStart, null, null, null);
 
                 // Check capacity
                 if (totalWeeklyCapacity > 0) {
@@ -175,11 +202,50 @@ public class PlanningService {
         return planMapper.selectLatestVersion(factoryCode);
     }
 
+    public List<PlanVersion> getAllLatestPlans() {
+        return planMapper.selectAllLatestVersions();
+    }
+
+    @Transactional
+    public List<PlanVersion> recalculateAllFactories(Long forecastVersionId, Long inventorySnapshotId,
+                                                      Long shipmentBatchId, Long capacityVersionId,
+                                                      LocalDate currentWeekStart, Long userId) {
+        // Get all factories from forecast
+        List<String> factories = forecastMapper.selectDistinctFactoriesByVersionId(forecastVersionId);
+        if (factories.isEmpty()) {
+            throw new com.mrp.common.exception.BusinessException("NO_FORECAST", "经营计划数据为空");
+        }
+
+        // Validate factory values
+        List<String> validFactories = List.of("永惠", "爱培科");
+        List<String> invalidFactories = factories.stream()
+                .filter(f -> !validFactories.contains(f))
+                .toList();
+        if (!invalidFactories.isEmpty()) {
+            throw new com.mrp.common.exception.BusinessException("INVALID_FACTORY",
+                    "经营计划中存在无效的工厂值: " + String.join(", ", invalidFactories) + "。请修改Excel中的工厂列为「永惠」或「爱培科」后重新导入。");
+        }
+
+        List<PlanVersion> versions = new ArrayList<>();
+        for (String factoryCode : factories) {
+            log.info("Recalculating for factory: {}", factoryCode);
+            PlanVersion version = recalculate(forecastVersionId, inventorySnapshotId,
+                    shipmentBatchId, capacityVersionId, factoryCode, currentWeekStart, userId);
+            versions.add(version);
+        }
+        return versions;
+    }
+
     public List<PlanDetail> getPlanDetails(Long versionId) {
         return planMapper.selectDetailsByVersionId(versionId);
     }
 
     public List<PlanVersion> listVersions(String factoryCode) {
         return planMapper.selectVersionsByFactory(factoryCode);
+    }
+
+    public Long getLatestForecastVersionId() {
+        ForecastVersion version = forecastMapper.selectLatestVersion();
+        return version != null ? version.id() : null;
     }
 }

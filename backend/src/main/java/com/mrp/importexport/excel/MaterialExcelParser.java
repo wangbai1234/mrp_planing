@@ -52,7 +52,7 @@ public class MaterialExcelParser {
             XSSFReader.SheetIterator sheets = (XSSFReader.SheetIterator) reader.getSheetsData();
             if (!sheets.hasNext()) {
                 errors.add(ParseError.of(0, "sheet", "", "NO_SHEET", "No sheet found"));
-                return new ParseResult<>(rows, errors, recognizedMonths, 0, 0, 1);
+                return new ParseResult<>(rows, errors, recognizedMonths, 0, 0, 1, List.of(), List.of());
             }
 
             InputStream sheetStream = sheets.next();
@@ -71,14 +71,14 @@ public class MaterialExcelParser {
             if (!handler.isHeaderValid()) {
                 errors.add(ParseError.of(1, "header", "", "HEADER_MISMATCH", 
                         "表头与模板不匹配，请下载最新模板"));
-                return new ParseResult<>(rows, errors, recognizedMonths, totalRows, 0, 1);
+                return new ParseResult<>(rows, errors, recognizedMonths, totalRows, 0, 1, List.of(), List.of());
             }
 
             // Check row limit
             if (totalRows > MAX_ROWS) {
                 errors.add(ParseError.of(0, "rows", String.valueOf(totalRows), 
                         "ROW_LIMIT_EXCEEDED", "记录数超过" + MAX_ROWS + "条限制"));
-                return new ParseResult<>(rows, errors, recognizedMonths, totalRows, 0, 1);
+                return new ParseResult<>(rows, errors, recognizedMonths, totalRows, 0, 1, List.of(), List.of());
             }
 
         } catch (Exception e) {
@@ -88,7 +88,7 @@ public class MaterialExcelParser {
 
         int errorRows = errors.size();
         int successRows = rows.size();
-        return new ParseResult<>(rows, errors, recognizedMonths, totalRows, successRows, errorRows);
+        return new ParseResult<>(rows, errors, recognizedMonths, totalRows, successRows, errorRows, List.of(), List.of());
     }
 
     private static class MaterialSheetHandler extends DefaultHandler {

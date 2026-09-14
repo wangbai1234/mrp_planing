@@ -1,0 +1,195 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]: MRP
+      - generic [ref=e7]: 计划协同
+    - menubar [ref=e8]:
+      - generic [ref=e9]: 计划
+      - menuitem "工作台" [ref=e10] [cursor=pointer]
+      - menuitem "滚动排产" [ref=e15] [cursor=pointer]
+      - menuitem "版本记录" [ref=e20] [cursor=pointer]
+      - generic [ref=e27]: 数据
+      - menuitem "经营计划" [ref=e28] [cursor=pointer]
+      - menuitem "库存快照" [ref=e33] [cursor=pointer]
+      - menuitem "物料管理" [ref=e40] [cursor=pointer]
+      - generic [ref=e45]: 配置
+      - menuitem "产能配置" [ref=e46] [cursor=pointer]
+      - menuitem "操作手册" [ref=e51] [cursor=pointer]
+  - generic [ref=e56]:
+    - generic [ref=e57]:
+      - generic [ref=e58]:
+        - generic [ref=e59]: 数据管理
+        - generic [ref=e60]: /
+        - strong [ref=e61]: 经营计划
+      - generic [ref=e62]:
+        - generic [ref=e63]: 数据已同步
+        - generic [ref=e65]: 库存快照 2026-08-27 23:40
+        - generic [ref=e66]: CRM 2026-08-28 08:30
+        - button "肖 肖芳" [ref=e68] [cursor=pointer]:
+          - generic [ref=e69]: 肖
+          - generic [ref=e70]: 肖芳
+    - main [ref=e71]:
+      - generic [ref=e72]:
+        - generic [ref=e73]:
+          - heading "经营计划" [level=1] [ref=e74]
+          - button "导入" [ref=e75] [cursor=pointer]
+        - generic [ref=e80]:
+          - generic [ref=e82]:
+            - generic [ref=e83]: 历史版本
+            - generic [ref=e84]:
+              - textbox "搜索版本" [ref=e91]
+              - button "搜索" [ref=e93] [cursor=pointer]
+          - generic [ref=e95]:
+            - generic [ref=e97]:
+              - table [ref=e99]:
+                - rowgroup [ref=e105]:
+                  - row [ref=e106]:
+                    - columnheader "ID" [ref=e107]
+                    - columnheader "版本号" [ref=e109]
+                    - columnheader "状态" [ref=e111]
+                    - columnheader "导入时间" [ref=e113]
+              - table [ref=e119]:
+                - rowgroup [active] [ref=e125]:
+                  - row [ref=e126]:
+                    - cell "7" [ref=e127]
+                    - cell "3" [ref=e129]
+                    - cell "已导入" [ref=e131]
+                    - cell "2026-09-07 07:48:15" [ref=e133]
+                  - row [ref=e135]:
+                    - cell "6" [ref=e136]
+                    - cell "2" [ref=e138]
+                    - cell "已导入" [ref=e140]
+                    - cell "2026-09-07 07:45:10" [ref=e142]
+                  - row [ref=e144]:
+                    - cell "5" [ref=e145]
+                    - cell "1" [ref=e147]
+                    - cell "已导入" [ref=e149]
+                    - cell "2026-09-07 07:36:53" [ref=e151]
+            - generic [ref=e155]:
+              - generic [ref=e156]: 共 3 条
+              - generic [ref=e159] [cursor=pointer]:
+                - generic:
+                  - combobox [ref=e161]
+                  - generic [ref=e162]: 3条/页
+              - button "上一页" [disabled] [ref=e167]
+              - list [ref=e168]:
+                - listitem "第 1 页" [ref=e169]: "1"
+              - button "下一页" [disabled] [ref=e170]
+              - generic [ref=e171]:
+                - generic [ref=e172]: 前往
+                - spinbutton "页" [ref=e175]: "1"
+                - generic [ref=e176]: 页
+        - generic [ref=e187]:
+          - generic [ref=e189]:
+            - generic [ref=e190]: 版本详情
+            - generic [ref=e191]:
+              - textbox "搜索料号/名称/工厂" [ref=e198]
+              - button "搜索" [ref=e200] [cursor=pointer]
+              - button "关闭" [ref=e202] [cursor=pointer]
+          - generic [ref=e204]:
+            - generic [ref=e206]:
+              - table [ref=e208]:
+                - rowgroup [ref=e225]:
+                  - row [ref=e226]:
+                    - columnheader "业务线/工厂" [ref=e227]
+                    - columnheader "形态" [ref=e229]
+                    - columnheader "料号" [ref=e231]
+                    - columnheader "名称" [ref=e233]
+                    - columnheader "项目型号" [ref=e235]
+                    - columnheader "规格型号" [ref=e237]
+                    - columnheader "模具" [ref=e239]
+                    - columnheader "状态" [ref=e241]
+                    - columnheader "2026-09-01" [ref=e243]
+                    - columnheader "2026-10-01" [ref=e245]
+                    - columnheader "2026-11-01" [ref=e247]
+                    - columnheader "2026-12-01" [ref=e249]
+                    - columnheader "2027-01-01" [ref=e251]
+                    - columnheader "2027-02-01" [ref=e253]
+                    - columnheader "fcst-total" [ref=e255]
+              - table [ref=e261]:
+                - rowgroup [ref=e278]:
+                  - row [ref=e279]:
+                    - cell "记录仪-永惠" [ref=e280]
+                    - cell "单机" [ref=e282]
+                    - cell "6830AA800117" [ref=e284]
+                    - cell "BYC_DR2500_A11,包装整机（70迈智能记录仪A500S（单机_国内4G DDR_简配版）" [ref=e286]
+                    - cell "BYC_DR2500_A11" [ref=e288]
+                    - cell "LGDJ465-04" [ref=e290]
+                    - cell "A11" [ref=e292]
+                    - cell "国内" [ref=e294]
+                    - cell "0" [ref=e296]
+                    - cell "0" [ref=e298]
+                    - cell "0" [ref=e300]
+                    - cell "0" [ref=e302]
+                    - cell "0" [ref=e304]
+                    - cell "0" [ref=e306]
+                    - cell "0" [ref=e308]
+                  - row [ref=e310]:
+                    - cell "记录仪-永惠" [ref=e311]
+                    - cell "单机" [ref=e313]
+                    - cell "6830AA800305" [ref=e315]
+                    - cell "BYC_DR1800_A31包装整机 70迈4K智能记录仪M800(128G 国内版)(单机）" [ref=e317]
+                    - cell "BYC_DR1800_A31" [ref=e319]
+                    - cell "70MAIM800 国内 128G" [ref=e321]
+                    - cell "A31" [ref=e323]
+                    - cell "国内" [ref=e325]
+                    - cell "915" [ref=e327]
+                    - cell "1010" [ref=e329]
+                    - cell "1185" [ref=e331]
+                    - cell "1160" [ref=e333]
+                    - cell "1085" [ref=e335]
+                    - cell "1085" [ref=e337]
+                    - cell "6440" [ref=e339]
+                  - row [ref=e341]:
+                    - cell "记录仪-永惠" [ref=e342]
+                    - cell "单机" [ref=e344]
+                    - cell "6830AA800306" [ref=e346]
+                    - cell "BYC_DR1800_A01包装整机 70迈4K智能记录仪M800(64G 国内版)(单机）" [ref=e348]
+                    - cell "BYC_DR1800_A01" [ref=e350]
+                    - cell "70MAIM800 国内 64G" [ref=e352]
+                    - cell "A01" [ref=e354]
+                    - cell "国内" [ref=e356]
+                    - cell "255" [ref=e358]
+                    - cell "285" [ref=e360]
+                    - cell "335" [ref=e362]
+                    - cell "325" [ref=e364]
+                    - cell "315" [ref=e366]
+                    - cell "315" [ref=e368]
+                    - cell "1830" [ref=e370]
+                  - row [ref=e372]:
+                    - cell "记录仪-永惠" [ref=e373]
+                    - cell "单机" [ref=e375]
+                    - cell "6830AA800318" [ref=e377]
+                    - cell "BYC_DR1800_A41,包装整机（70迈4K智能记录仪M800(256G 国内版)(单机）" [ref=e379]
+                    - cell "BYC_DR1800_A41" [ref=e381]
+                    - cell "70MAIM800 国内 256G" [ref=e383]
+                    - cell "A41" [ref=e385]
+                    - cell "国内" [ref=e387]
+                    - cell "95" [ref=e389]
+                    - cell "103" [ref=e391]
+                    - cell [ref=e393]
+                    - cell [ref=e394]
+                    - cell [ref=e395]
+                    - cell [ref=e396]
+                    - cell "198" [ref=e397]
+            - generic [ref=e401]:
+              - generic [ref=e402]: 共 162 条
+              - generic [ref=e405] [cursor=pointer]:
+                - generic:
+                  - combobox [ref=e407]
+                  - generic [ref=e408]: 20条/页
+              - button "上一页" [disabled] [ref=e413]
+              - list [ref=e414]:
+                - listitem "第 1 页" [ref=e415]: "1"
+                - listitem "第 2 页" [ref=e416] [cursor=pointer]: "2"
+                - listitem "第 3 页" [ref=e417] [cursor=pointer]: "3"
+                - listitem "第 4 页" [ref=e418] [cursor=pointer]: "4"
+                - listitem "第 5 页" [ref=e419] [cursor=pointer]: "5"
+                - listitem "第 6 页" [ref=e420] [cursor=pointer]: "6"
+                - listitem "向后 5 页" [ref=e421] [cursor=pointer]
+                - listitem "第 9 页" [ref=e422] [cursor=pointer]: "9"
+              - button "下一页" [ref=e423] [cursor=pointer]
+              - generic [ref=e424]:
+                - generic [ref=e425]: 前往
+                - spinbutton "页" [ref=e428]: "1"
+                - generic [ref=e429]: 页

@@ -1,0 +1,146 @@
+- generic [ref=f4e1]:
+  - generic [ref=f4e3]:
+    - complementary [ref=f4e4]:
+      - generic [ref=f4e5]:
+        - generic [ref=f4e6]: MRP
+        - generic [ref=f4e7]: 计划协同
+      - menubar [ref=f4e8]:
+        - generic [ref=f4e9]: 计划
+        - menuitem "看板" [ref=f4e10] [cursor=pointer]
+        - menuitem "排产计划" [ref=f4e17] [cursor=pointer]
+        - generic [ref=f4e22]: 数据
+        - menuitem "经营计划" [ref=f4e23] [cursor=pointer]
+        - menuitem "库存快照" [ref=f4e28] [cursor=pointer]
+        - menuitem "物料管理" [ref=f4e35] [cursor=pointer]
+        - menuitem "BOM管理" [ref=f4e40] [cursor=pointer]
+        - generic [ref=f4e45]: 配置
+        - menuitem "产能配置" [ref=f4e46] [cursor=pointer]
+        - generic [ref=f4e51]: 系统
+        - menuitem "用户与权限" [ref=f4e52] [cursor=pointer]
+    - generic [ref=f4e57]:
+      - generic [ref=f4e58]:
+        - generic [ref=f4e59]:
+          - generic [ref=f4e60]: 计划管理
+          - generic [ref=f4e61]: /
+          - strong [ref=f4e62]: 12 周滚动排产
+        - generic [ref=f4e63]:
+          - generic [ref=f4e64]: 数据已同步
+          - button "系 系统管理员" [ref=f4e67] [cursor=pointer]:
+            - generic [ref=f4e68]: 系
+            - generic [ref=f4e69]: 系统管理员
+      - main [ref=f4e70]:
+        - generic [ref=f4e71]:
+          - generic [ref=f4e72]:
+            - generic [ref=f4e73]: 用户与权限
+            - menubar [ref=f4e74]:
+              - menuitem "用户" [ref=f4e75] [cursor=pointer]
+              - menuitem "角色" [ref=f4e80] [cursor=pointer]
+              - menuitem "操作日志" [ref=f4e85] [cursor=pointer]
+          - generic [ref=f4e91]:
+            - generic [ref=f4e92]:
+              - heading "用户管理" [level=2] [ref=f4e93]
+              - button "新增用户" [ref=f4e94] [cursor=pointer]
+            - generic [ref=f4e99]:
+              - textbox "搜索姓名/账号/部门" [ref=f4e106]
+              - generic [ref=f4e109] [cursor=pointer]:
+                - generic:
+                  - combobox [ref=f4e111]
+                  - generic [ref=f4e112]: 状态
+              - generic [ref=f4e118] [cursor=pointer]:
+                - generic:
+                  - combobox [ref=f4e120]
+                  - generic [ref=f4e121]: 角色
+              - button "查询" [ref=f4e126] [cursor=pointer]
+            - generic [ref=f4e129]:
+              - table [ref=f4e131]:
+                - rowgroup [ref=f4e141]:
+                  - row [ref=f4e142]:
+                    - columnheader "用户姓名" [ref=f4e143]
+                    - columnheader "登录账号" [ref=f4e145]
+                    - columnheader "所属角色" [ref=f4e147]
+                    - columnheader "所属部门" [ref=f4e149]
+                    - columnheader "状态" [ref=f4e151]
+                    - columnheader "最近登录" [ref=f4e153]
+                    - columnheader "创建时间" [ref=f4e155]
+                    - columnheader "操作" [ref=f4e157]
+              - table [ref=f4e163]:
+                - rowgroup [ref=f4e173]:
+                  - row [ref=f4e569]:
+                    - cell "系统管理员" [ref=f4e570]
+                    - cell "admin" [ref=f4e571]
+                    - cell "-" [ref=f4e179]
+                    - cell [ref=f4e572]
+                    - cell "启用" [ref=f4e182]
+                    - cell "2026/9/14 07:16:10" [ref=f4e573]
+                    - cell "2026/9/4 02:15:18" [ref=f4e574]
+                    - cell [ref=f4e190]:
+                      - generic [ref=f4e191]:
+                        - button "编辑" [ref=f4e192] [cursor=pointer]
+                        - button "分配角色" [ref=f4e194] [cursor=pointer]
+                        - button "禁用" [ref=f4e196] [cursor=pointer]
+                        - button "重置密码" [ref=f4e198] [cursor=pointer]
+                        - button "删除" [ref=f4e203] [cursor=pointer]
+                  - row [ref=f4e575]:
+                    - cell "计划员1" [ref=f4e576]
+                    - cell "planner1" [ref=f4e578]
+                    - cell "-" [ref=f4e580]
+                    - cell "计划部" [ref=f4e582]
+                    - cell "启用" [ref=f4e584]
+                    - cell "2026/9/8 10:19:29" [ref=f4e588]
+                    - cell "2026/9/8 10:17:23" [ref=f4e590]
+                    - cell [ref=f4e592]:
+                      - generic [ref=f4e593]:
+                        - button "编辑" [ref=f4e594] [cursor=pointer]
+                        - button "分配角色" [ref=f4e596] [cursor=pointer]
+                        - button "禁用" [ref=f4e598] [cursor=pointer]
+                        - button "重置密码" [ref=f4e600] [cursor=pointer]
+                        - button "删除" [ref=f4e605] [cursor=pointer]
+                  - row [ref=f4e607]:
+                    - cell "仓库员1" [ref=f4e608]
+                    - cell "warehouse1" [ref=f4e610]
+                    - cell "-" [ref=f4e612]
+                    - cell "仓库部" [ref=f4e614]
+                    - cell "启用" [ref=f4e616]
+                    - cell "2026/9/8 10:17:34" [ref=f4e620]
+                    - cell "2026/9/8 10:17:23" [ref=f4e622]
+                    - cell [ref=f4e624]:
+                      - generic [ref=f4e625]:
+                        - button "编辑" [ref=f4e626] [cursor=pointer]
+                        - button "分配角色" [ref=f4e628] [cursor=pointer]
+                        - button "禁用" [ref=f4e630] [cursor=pointer]
+                        - button "重置密码" [ref=f4e632] [cursor=pointer]
+                        - button "删除" [ref=f4e637] [cursor=pointer]
+                  - row [ref=f4e639]:
+                    - cell "测试用户1" [ref=f4e640]
+                    - cell "testuser1" [ref=f4e642]
+                    - cell "-" [ref=f4e644]
+                    - cell "测试部" [ref=f4e646]
+                    - cell "启用" [ref=f4e648]
+                    - cell "-" [ref=f4e652]
+                    - cell "2026/9/14 07:18:52" [ref=f4e654]
+                    - cell [ref=f4e656]:
+                      - generic [ref=f4e657]:
+                        - button "编辑" [ref=f4e658] [cursor=pointer]
+                        - button "分配角色" [ref=f4e660] [cursor=pointer]
+                        - button "禁用" [ref=f4e662] [cursor=pointer]
+                        - button "重置密码" [ref=f4e664] [cursor=pointer]
+                        - button "删除" [ref=f4e669] [cursor=pointer]
+            - generic [ref=f4e270]:
+              - generic [ref=f4e271]: 共 4 条
+              - generic [ref=f4e274] [cursor=pointer]:
+                - generic:
+                  - combobox [ref=f4e276]
+                  - generic [ref=f4e277]: 20条/页
+              - button "上一页" [disabled] [ref=f4e282]
+              - list [ref=f4e283]:
+                - listitem "第 1 页" [ref=f4e284]: "1"
+              - button "下一页" [disabled] [ref=f4e285]
+  - dialog "确认删除" [ref=f4e672]:
+    - generic [ref=f4e673]:
+      - generic [ref=f4e674]:
+        - generic [ref=f4e675]: 确认删除
+        - button "关闭此对话框" [ref=f4e676] [cursor=pointer]
+      - paragraph [ref=f4e686]: 确定删除用户 "测试用户1" 吗？
+      - generic [ref=f4e687]:
+        - button "取消" [ref=f4e688] [cursor=pointer]
+        - button "确定" [active] [ref=f4e690] [cursor=pointer]

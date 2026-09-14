@@ -1,0 +1,49 @@
+- generic [ref=f2e3]:
+  - complementary [ref=f2e4]:
+    - generic [ref=f2e5]:
+      - generic [ref=f2e6]: MRP
+      - generic [ref=f2e7]: 计划协同
+    - menubar [ref=f2e8]:
+      - generic [ref=f2e9]: 计划
+      - menuitem "工作台" [ref=f2e10] [cursor=pointer]
+      - menuitem "滚动排产" [ref=f2e15] [cursor=pointer]
+      - menuitem "版本记录" [ref=f2e20] [cursor=pointer]
+      - generic [ref=f2e27]: 数据
+      - menuitem "经营计划" [ref=f2e28] [cursor=pointer]
+      - menuitem "库存快照" [ref=f2e33] [cursor=pointer]
+      - menuitem "物料管理" [ref=f2e40] [cursor=pointer]
+      - generic [ref=f2e45]: 配置
+      - menuitem "产能配置" [ref=f2e46] [cursor=pointer]
+      - menuitem "操作手册" [ref=f2e51] [cursor=pointer]
+  - generic [ref=f2e56]:
+    - generic [ref=f2e57]:
+      - generic [ref=f2e58]:
+        - generic [ref=f2e59]: 数据管理
+        - generic [ref=f2e60]: /
+        - strong [ref=f2e61]: 经营计划
+      - generic [ref=f2e62]:
+        - generic [ref=f2e63]: 数据已同步
+        - generic [ref=f2e65]: 库存快照 2026-08-27 23:40
+        - generic [ref=f2e66]: CRM 2026-08-28 08:30
+        - button "肖 肖芳" [ref=f2e68] [cursor=pointer]:
+          - generic [ref=f2e69]: 肖
+          - generic [ref=f2e70]: 肖芳
+    - main [ref=f2e71]:
+      - generic [ref=f2e72]:
+        - generic [ref=f2e73]:
+          - heading "经营计划" [level=1] [ref=f2e74]
+          - button "导入" [ref=f2e75] [cursor=pointer]
+        - generic [ref=f2e80]:
+          - generic [ref=f2e81]: 历史版本
+          - generic [ref=f2e84]:
+            - table [ref=f2e86]:
+              - rowgroup [ref=f2e92]:
+                - row [ref=f2e93]:
+                  - columnheader "ID" [ref=f2e94]
+                  - columnheader "版本号" [ref=f2e96]
+                  - columnheader "状态" [ref=f2e98]
+                  - columnheader "导入时间" [ref=f2e100]
+            - generic [ref=f2e105]:
+              - table:
+                - rowgroup
+              - generic [ref=f2e106]: 暂无数据

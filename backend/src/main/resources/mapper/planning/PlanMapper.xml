@@ -26,7 +26,21 @@
     </select>
 
     <select id="selectVersionsByFactory" resultType="com.mrp.planning.domain.PlanVersion">
-        SELECT * FROM plan_version WHERE factory_code = #{factoryCode} ORDER BY id DESC
+        SELECT * FROM plan_version
+        <where>
+            <if test="factoryCode != null and factoryCode != ''">
+                factory_code = #{factoryCode}
+            </if>
+        </where>
+        ORDER BY id DESC
+    </select>
+
+    <select id="selectAllLatestVersions" resultType="com.mrp.planning.domain.PlanVersion">
+        SELECT * FROM plan_version
+        WHERE id IN (
+            SELECT MAX(id) FROM plan_version GROUP BY factory_code
+        )
+        ORDER BY factory_code
     </select>
 
     <insert id="insertDetails">

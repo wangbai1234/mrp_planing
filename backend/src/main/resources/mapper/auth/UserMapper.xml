@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.auth.repository.UserMapper">
+
+    <select id="selectById" resultType="com.mrp.auth.domain.User">
+        SELECT id, username, password_hash, display_name, department, email, phone,
+               is_active, last_login_at, created_at, updated_at
+        FROM user
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectByUsername" resultType="com.mrp.auth.domain.User">
+        SELECT id, username, password_hash, display_name, department, email, phone,
+               is_active, last_login_at, created_at, updated_at
+        FROM user
+        WHERE username = #{username}
+    </select>
+
+    <select id="selectAll" resultType="com.mrp.auth.domain.User">
+        SELECT id, username, password_hash, display_name, department, email, phone,
+               is_active, last_login_at, created_at, updated_at
+        FROM user
+        ORDER BY id
+    </select>
+
+    <select id="selectWithRoles" resultType="com.mrp.auth.domain.User">
+        SELECT DISTINCT u.id, u.username, u.display_name, u.department, u.email, u.phone,
+               u.is_active, u.last_login_at, u.created_at, u.updated_at
+        FROM user u
+        LEFT JOIN user_role ur ON u.id = ur.user_id
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND (u.username LIKE CONCAT('%', #{keyword}, '%')
+                     OR u.display_name LIKE CONCAT('%', #{keyword}, '%')
+                     OR u.department LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+            <if test="isActive != null">
+                AND u.is_active = #{isActive}
+            </if>
+            <if test="roleId != null">
+                AND ur.role_id = #{roleId}
+            </if>
+        </where>
+        ORDER BY u.id
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="countWithRoles" resultType="int">
+        SELECT COUNT(DISTINCT u.id)
+        FROM user u
+        LEFT JOIN user_role ur ON u.id = ur.user_id
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND (u.username LIKE CONCAT('%', #{keyword}, '%')
+                     OR u.display_name LIKE CONCAT('%', #{keyword}, '%')
+                     OR u.department LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+            <if test="isActive != null">
+                AND u.is_active = #{isActive}
+            </if>
+            <if test="roleId != null">
+                AND ur.role_id = #{roleId}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO user (username, password_hash, display_name, department, email, phone, is_active)
+        VALUES (#{username}, #{passwordHash}, #{displayName}, #{department}, #{email}, #{phone}, #{isActive})
+    </insert>
+
+    <update id="update">
+        UPDATE user SET
+            display_name = #{displayName},
+            department = #{department},
+            email = #{email},
+            phone = #{phone}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateStatus">
+        UPDATE user SET is_active = #{isActive} WHERE id = #{id}
+    </update>
+
+    <update id="updatePassword">
+        UPDATE user SET password_hash = #{passwordHash} WHERE id = #{id}
+    </update>
+
+    <update id="updateLastLoginAt">
+        UPDATE user SET last_login_at = NOW() WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM user WHERE id = #{id}
+    </delete>
+
+    <select id="selectUserIdsByRoleId" resultType="java.lang.Long">
+        SELECT user_id FROM user_role WHERE role_id = #{roleId}
+    </select>
+
+    <select id="hasActiveAdminExcluding" resultType="boolean">
+        SELECT COUNT(*) > 0
+        FROM user_role ur
+        INNER JOIN user u ON ur.user_id = u.id
+        INNER JOIN role r ON ur.role_id = r.id
+        WHERE r.code = 'ADMIN' AND u.is_active = 1
+        <if test="excludeUserId != null">
+            AND u.id != #{excludeUserId}
+        </if>
+    </select>
+</mapper>

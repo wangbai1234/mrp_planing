@@ -1,0 +1,129 @@
+- generic [ref=f2e3]:
+  - complementary [ref=f2e4]:
+    - generic [ref=f2e5]:
+      - generic [ref=f2e6]: MRP
+      - generic [ref=f2e7]: 计划协同
+    - menubar [ref=f2e8]:
+      - generic [ref=f2e9]: 计划
+      - menuitem "工作台" [ref=f2e10] [cursor=pointer]
+      - menuitem "排产计划" [ref=f2e15] [cursor=pointer]
+      - generic [ref=f2e20]: 数据
+      - menuitem "经营计划" [ref=f2e21] [cursor=pointer]
+      - menuitem "库存快照" [ref=f2e26] [cursor=pointer]
+      - menuitem "物料管理" [ref=f2e33] [cursor=pointer]
+      - menuitem "BOM管理" [ref=f2e38] [cursor=pointer]
+      - generic [ref=f2e43]: 配置
+      - menuitem "产能配置" [ref=f2e44] [cursor=pointer]
+      - menuitem "操作手册" [ref=f2e49] [cursor=pointer]
+  - generic [ref=f2e54]:
+    - generic [ref=f2e55]:
+      - generic [ref=f2e56]:
+        - generic [ref=f2e57]: 计划管理
+        - generic [ref=f2e58]: /
+        - strong [ref=f2e59]: 工作台
+      - generic [ref=f2e60]:
+        - generic [ref=f2e61]: 数据已同步
+        - generic [ref=f2e63]: 库存快照 2026-08-27 23:40
+        - generic [ref=f2e64]: CRM 2026-08-28 08:30
+        - button "肖 肖芳" [ref=f2e66] [cursor=pointer]:
+          - generic [ref=f2e67]: 肖
+          - generic [ref=f2e68]: 肖芳
+    - main [ref=f2e69]:
+      - generic [ref=f2e70]:
+        - generic [ref=f2e71]:
+          - heading "MRP 工作台" [level=1] [ref=f2e72]
+          - button "进入滚动排产" [ref=f2e73] [cursor=pointer]
+        - generic [ref=f2e78]:
+          - generic [ref=f2e80]:
+            - generic [ref=f2e81]: 当前排产版本
+            - generic [ref=f2e82]: V3.2
+            - generic [ref=f2e83]: 草稿 · 绑定最新经营计划
+          - generic [ref=f2e85]:
+            - generic [ref=f2e86]: 待处理超产能周
+            - generic [ref=f2e87]: "0"
+            - generic [ref=f2e88]: 需要人工调整后再发布
+          - generic [ref=f2e90]:
+            - generic [ref=f2e91]: 数据新鲜度
+            - generic [ref=f2e92]: 3 / 3
+            - generic [ref=f2e93]: 经营计划、库存、CRM 均已更新
+          - generic [ref=f2e95]:
+            - generic [ref=f2e96]: 待平衡月份
+            - generic [ref=f2e97]: "0"
+            - generic [ref=f2e98]: 来源月份当前合计与可排量
+        - generic [ref=f2e99]:
+          - generic [ref=f2e102]:
+            - generic [ref=f2e103]: Phase 1 核心流程
+            - generic [ref=f2e104]: 每一步的数据变化会传递到后续排产版本。
+          - generic [ref=f2e106]:
+            - generic [ref=f2e107]:
+              - generic [ref=f2e108]: "01"
+              - strong [ref=f2e109]: 经营计划导入
+              - generic [ref=f2e110]: 每次导入生成版本
+            - generic [ref=f2e111]:
+              - generic [ref=f2e112]: "02"
+              - strong [ref=f2e113]: 库存快照导入
+              - generic [ref=f2e114]: 每日更新，分工厂汇总
+            - generic [ref=f2e115]:
+              - generic [ref=f2e116]: "03"
+              - strong [ref=f2e117]: CRM 已出货同步
+              - generic [ref=f2e118]: 料号 + 月份累计
+            - generic [ref=f2e119]:
+              - generic [ref=f2e120]: "04"
+              - strong [ref=f2e121]: 自动生成排产
+              - generic [ref=f2e122]: 未来连续 12 周
+            - generic [ref=f2e123]:
+              - generic [ref=f2e124]: "05"
+              - strong [ref=f2e125]: 人工调整
+              - generic [ref=f2e126]: 修改留痕，不生成版本
+            - generic [ref=f2e127]:
+              - generic [ref=f2e128]: "06"
+              - strong [ref=f2e129]: 发布
+              - generic [ref=f2e130]: 计划员可直接发布
+            - generic [ref=f2e131]:
+              - generic [ref=f2e132]: "07"
+              - strong [ref=f2e133]: 导出
+              - generic [ref=f2e134]: 自定义字段给工厂使用
+        - generic [ref=f2e135]:
+          - generic [ref=f2e136]:
+            - generic [ref=f2e139]:
+              - generic [ref=f2e140]: 今天建议处理
+              - generic [ref=f2e141]: 按照对排产影响的优先级排序。
+            - generic [ref=f2e143]:
+              - generic [ref=f2e144]:
+                - generic [ref=f2e149]:
+                  - strong [ref=f2e150]: 处理产能超限
+                  - paragraph [ref=f2e151]: 当前有周排产量超过产线配置上限。
+                - generic: 阻断发布前检查
+                - button "去调整" [ref=f2e152] [cursor=pointer]
+              - generic [ref=f2e154]:
+                - generic [ref=f2e159]:
+                  - strong [ref=f2e160]: 确认经营计划版本
+                  - paragraph [ref=f2e161]: 当前绑定 FC-2026-08-15-V6。
+                - generic: 最新
+                - button "查看数据" [ref=f2e162] [cursor=pointer]
+              - generic [ref=f2e164]:
+                - generic [ref=f2e171]:
+                  - strong [ref=f2e172]: 检查库存快照口径
+                  - paragraph [ref=f2e173]: 不良品仓已排除，永惠与 APK 分开计算。
+                - generic: 已完成
+                - button "查看快照" [ref=f2e174] [cursor=pointer]
+          - generic [ref=f2e176]:
+            - generic [ref=f2e179]:
+              - generic [ref=f2e180]: 最近活动
+              - generic [ref=f2e181]: 版本、数据导入和发布操作。
+            - generic [ref=f2e183]:
+              - generic [ref=f2e184]:
+                - generic [ref=f2e185]: 08:42
+                - generic [ref=f2e186]:
+                  - strong [ref=f2e187]: 系统生成排产版本 SP-2026-08-V3.2
+                  - paragraph [ref=f2e188]: 绑定经营计划 FC-2026-08-15-V6。
+              - generic [ref=f2e189]:
+                - generic [ref=f2e190]: 08:30
+                - generic [ref=f2e191]:
+                  - strong [ref=f2e192]: CRM 已出货同步完成
+                  - paragraph [ref=f2e193]: 按整机料号 + 月份累计。
+              - generic [ref=f2e194]:
+                - generic [ref=f2e195]: 23:40
+                - generic [ref=f2e196]:
+                  - strong [ref=f2e197]: 库存快照导入完成
+                  - paragraph [ref=f2e198]: 永惠与 APK 分开计算。
