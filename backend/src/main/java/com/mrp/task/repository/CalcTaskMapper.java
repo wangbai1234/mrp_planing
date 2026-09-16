@@ -18,4 +18,12 @@ public interface CalcTaskMapper {
     int updateResult(@Param("id") Long id, @Param("status") String status, @Param("resultResourceId") Long resultResourceId, @Param("version") Integer version);
 
     int updateFailure(@Param("id") Long id, @Param("status") String status, @Param("errorCode") String errorCode, @Param("errorMessage") String errorMessage, @Param("version") Integer version);
+
+    int updateProgress(@Param("id") Long id, @Param("progressCurrent") Integer progressCurrent,
+                       @Param("progressTotal") Integer progressTotal, @Param("phase") String phase,
+                       @Param("successRoots") Integer successRoots, @Param("failedRoots") Integer failedRoots);
+
+    int deleteById(@Param("id") Long id);
+
+    int failStuckTasks(@Param("timeoutMinutes") int timeoutMinutes);
 }

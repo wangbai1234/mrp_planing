@@ -6,11 +6,11 @@
         INSERT INTO calc_task (task_type, business_scope, request_key, status, priority,
             worker_id, lease_until, heartbeat_at, progress_current, progress_total,
             attempt_count, max_attempts, next_run_at, input_payload, input_checksum,
-            result_resource_id, error_code, error_message, created_by)
+            result_resource_id, error_code, error_message, phase, success_roots, failed_roots, created_by)
         VALUES (#{taskType}, #{businessScope}, #{requestKey}, #{status}, #{priority},
             #{workerId}, #{leaseUntil}, #{heartbeatAt}, #{progressCurrent}, #{progressTotal},
-            #{attemptCount}, #{maxAttempts},             #{nextRunAt}, #{inputPayload}, #{inputChecksum},
-            #{resultResourceId}, #{errorCode}, #{errorMessage}, #{createdBy})
+            #{attemptCount}, #{maxAttempts}, #{nextRunAt}, #{inputPayload}, #{inputChecksum},
+            #{resultResourceId}, #{errorCode}, #{errorMessage}, #{phase}, #{successRoots}, #{failedRoots}, #{createdBy})
     </insert>
 
     <select id="selectById" resultType="com.mrp.task.domain.CalcTask">
@@ -36,5 +36,25 @@
         UPDATE calc_task SET status = #{status}, error_code = #{errorCode}, error_message = #{errorMessage},
             finished_at = CURRENT_TIMESTAMP(3), version = version + 1
         WHERE id = #{id} AND version = #{version}
+    </update>
+
+    <update id="updateProgress">
+        UPDATE calc_task SET progress_current = #{progressCurrent}, progress_total = #{progressTotal},
+            phase = #{phase}, success_roots = #{successRoots}, failed_roots = #{failedRoots},
+            heartbeat_at = CURRENT_TIMESTAMP(3)
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM calc_task WHERE id = #{id}
+    </delete>
+
+    <update id="failStuckTasks">
+        UPDATE calc_task
+        SET status = 'FAILED', error_code = 'TIMEOUT',
+            error_message = CONCAT('Task stuck in ', status, ' for more than ', #{timeoutMinutes}, ' minutes'),
+            finished_at = CURRENT_TIMESTAMP(3), version = version + 1
+        WHERE status IN ('PENDING', 'CLAIMED', 'RUNNING')
+          AND created_at < DATE_SUB(NOW(), INTERVAL #{timeoutMinutes} MINUTE)
     </update>
 </mapper>
