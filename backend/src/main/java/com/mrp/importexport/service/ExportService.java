@@ -36,7 +36,11 @@ public class ExportService {
         this.planMapper = planMapper;
         this.exportTaskMapper = exportTaskMapper;
         this.exportDir = Paths.get(uploadDir, "exports");
-        try { Files.createDirectories(this.exportDir); } catch (IOException e) { /* ignore */ }
+        try {
+            Files.createDirectories(this.exportDir);
+        } catch (IOException e) {
+            log.warn("Failed to create export directory: {}", this.exportDir, e);
+        }
     }
 
     public ExportTask createExportTask(Long planVersionId, String factoryCode, List<String> fields,

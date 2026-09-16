@@ -1,0 +1,70 @@
+- generic [ref=f4e3]:
+  - complementary [ref=f4e4]:
+    - generic [ref=f4e5]:
+      - generic [ref=f4e6]: MRP
+      - generic [ref=f4e7]: 计划协同
+    - menubar [ref=f4e8]:
+      - generic [ref=f4e9]: 计划
+      - menuitem "看板" [ref=f4e10] [cursor=pointer]
+      - menuitem "排产计划" [ref=f4e17] [cursor=pointer]
+      - generic [ref=f4e22]: 数据
+      - menuitem "经营计划" [ref=f4e23] [cursor=pointer]
+      - menuitem "库存快照" [ref=f4e28] [cursor=pointer]
+      - menuitem "物料管理" [ref=f4e35] [cursor=pointer]
+      - menuitem "物料分类" [ref=f4e40] [cursor=pointer]
+      - menuitem "BOM管理" [ref=f4e45] [cursor=pointer]
+      - generic [ref=f4e50]: 配置
+      - menuitem "产能配置" [ref=f4e51] [cursor=pointer]
+      - generic [ref=f4e56]: 系统
+      - menuitem "用户与权限" [ref=f4e57] [cursor=pointer]
+  - generic [ref=f4e62]:
+    - generic [ref=f4e63]:
+      - generic [ref=f4e64]:
+        - generic [ref=f4e65]: 数据管理
+        - generic [ref=f4e66]: /
+        - strong [ref=f4e67]: BOM管理
+      - generic [ref=f4e68]:
+        - generic [ref=f4e69]: 数据已同步
+        - button "系 系统管理员" [ref=f4e72] [cursor=pointer]:
+          - generic [ref=f4e73]: 系
+          - generic [ref=f4e74]: 系统管理员
+    - main [ref=f4e75]:
+      - generic [ref=f4e76]:
+        - generic [ref=f4e77]:
+          - heading "BOM管理" [level=1] [ref=f4e78]
+          - generic [ref=f4e79]:
+            - button "从Oracle同步" [ref=f4e80] [cursor=pointer]
+            - button "BOM树展开" [disabled] [ref=f4e85]
+        - generic [ref=f4e90]:
+          - textbox "搜索物料编码/名称" [ref=f4e98]
+          - button "刷新" [ref=f4e101] [cursor=pointer]
+        - generic [ref=f4e107]:
+          - generic [ref=f4e109]:
+            - table [ref=f4e111]:
+              - rowgroup [ref=f4e120]:
+                - row [ref=f4e121]:
+                  - columnheader "编码" [ref=f4e122]
+                  - columnheader "名称" [ref=f4e124]
+                  - columnheader "版本" [ref=f4e126]
+                  - columnheader "单位" [ref=f4e128]
+                  - columnheader "组织" [ref=f4e130]
+                  - columnheader "子项数" [ref=f4e132]
+                  - columnheader "库存组织编码" [ref=f4e134]
+            - generic [ref=f4e139]:
+              - table:
+                - rowgroup
+              - generic [ref=f4e140]: 暂无数据
+          - generic [ref=f4e144]:
+            - generic [ref=f4e145]: 共 0 条
+            - generic [ref=f4e148] [cursor=pointer]:
+              - generic:
+                - combobox [ref=f4e150]
+                - generic [ref=f4e151]: 20条/页
+            - button "上一页" [disabled] [ref=f4e156]
+            - list [ref=f4e157]:
+              - listitem "第 1 页" [ref=f4e158]: "1"
+            - button "下一页" [disabled] [ref=f4e159]
+            - generic [ref=f4e160]:
+              - generic [ref=f4e161]: 前往
+              - spinbutton "页" [ref=f4e164]: "1"
+              - generic [ref=f4e165]: 页

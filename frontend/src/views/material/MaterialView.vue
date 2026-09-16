@@ -22,6 +22,7 @@ const formLoading = ref(false)
 const filterCategory = ref('')
 const filterRegion = ref('')
 const filterKeyword = ref('')
+const filterCategoryId = ref<number | null>(null)
 
 // Pagination
 const currentPage = ref(1)
@@ -32,6 +33,26 @@ const categories = ['原材料', '整机']
 const regions = ['上海', '惠州']
 const attributes = ['限制使用', '差异', '通用']
 
+// Category tree for filter and form
+const categoryTree = ref<any[]>([])
+const categoryMap = ref<Record<number, string>>({})
+
+async function loadCategoryTree() {
+  try {
+    const tree = await get<any[]>('/material-categories/tree')
+    categoryTree.value = tree || []
+    // Build flat map: id -> "name(code)"
+    const flat = await get<any[]>('/material-categories')
+    if (flat) {
+      for (const c of flat) {
+        categoryMap.value[c.id] = `${c.name}（${c.code}）`
+      }
+    }
+  } catch (e: any) {
+    // Silently fail, categories are optional
+  }
+}
+
 async function loadMaterials() {
   loading.value = true
   try {
@@ -39,6 +60,7 @@ async function loadMaterials() {
     if (filterCategory.value) params.append('category', filterCategory.value)
     if (filterRegion.value) params.append('region', filterRegion.value)
     if (filterKeyword.value) params.append('keyword', filterKeyword.value)
+    if (filterCategoryId.value) params.append('materialCategoryId', filterCategoryId.value.toString())
     params.append('page', currentPage.value.toString())
     params.append('pageSize', pageSize.value.toString())
     const res = await get<any>(`/materials?${params.toString()}`)
@@ -246,6 +268,7 @@ function formatFileSize(bytes: number): string {
 
 onMounted(() => {
   setCrumb('数据管理', '物料管理')
+  loadCategoryTree()
   loadMaterials()
 })
 </script>
@@ -267,6 +290,16 @@ onMounted(() => {
 
     <!-- 筛选栏 -->
     <div class="filter-bar">
+      <el-tree-select
+        v-model="filterCategoryId"
+        :data="categoryTree"
+        :props="{ label: (node: any) => `${node.name}（${node.code}）`, value: 'id', children: 'children' }"
+        placeholder="物料二级分类"
+        clearable
+        check-strictly
+        style="width: 220px"
+        @change="handleSearch"
+      />
       <el-select v-model="filterCategory" placeholder="物料类别" clearable style="width: 140px" @change="handleSearch">
         <el-option v-for="c in categories" :key="c" :label="c" :value="c" />
       </el-select>
@@ -292,6 +325,14 @@ onMounted(() => {
         <el-table-column prop="mpq" label="MPQ" width="80" align="right" />
         <el-table-column prop="region" label="所属区域" width="80" align="center" />
         <el-table-column prop="attribute" label="属性" width="90" align="center" />
+        <el-table-column label="物料二级分类" width="160" align="center">
+          <template #default="{ row }">
+            <span v-if="row.materialCategoryId && categoryMap[row.materialCategoryId]">
+              {{ categoryMap[row.materialCategoryId] }}
+            </span>
+            <span v-else style="color: #86909C">-</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="category" label="物料类别" width="90" align="center">
           <template #default="{ row }">
             <el-tag :type="row.category === '整机' ? 'success' : 'info'" size="small" effect="plain">{{ row.category || '-' }}</el-tag>
@@ -372,6 +413,17 @@ onMounted(() => {
             <el-select v-model="formData.category" placeholder="请选择" style="width: 100%">
               <el-option v-for="c in categories" :key="c" :label="c" :value="c" />
             </el-select>
+          </el-form-item>
+          <el-form-item label="物料二级分类">
+            <el-tree-select
+              v-model="formData.materialCategoryId"
+              :data="categoryTree"
+              :props="{ label: (node: any) => `${node.name}（${node.code}）`, value: 'id', children: 'children' }"
+              placeholder="请选择分类"
+              clearable
+              check-strictly
+              style="width: 100%"
+            />
           </el-form-item>
           <el-form-item label="L-T提前期(天)">
             <el-input-number v-model="formData.leadTimeDays" :min="0" :controls="false" placeholder="请输入" style="width: 100%" />

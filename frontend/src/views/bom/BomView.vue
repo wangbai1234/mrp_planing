@@ -36,6 +36,8 @@ interface BomDetail {
   mainRhosStatus: string
   altRhosStatus: string
   admitNote: string
+  materialCategoryId: number | null
+  materialCategoryName: string | null
 }
 
 interface BomTreeNode {
@@ -67,6 +69,22 @@ const details = ref<BomDetail[]>([])
 const detailLoading = ref(false)
 
 const searchKeyword = ref('')
+
+// Category map for display
+const categoryMap = ref<Record<number, string>>({})
+
+async function loadCategoryMap() {
+  try {
+    const flat = await get<any[]>('/material-categories')
+    if (flat) {
+      for (const c of flat) {
+        categoryMap.value[c.id] = `${c.name}（${c.code}）`
+      }
+    }
+  } catch (e: any) {
+    // Silently fail
+  }
+}
 
 const splitRatio = ref(100)
 const isDetailExpanded = ref(false)
@@ -291,6 +309,7 @@ const tableRowClassName = ({ row }: { row: BomMaterial }) => {
 
 onMounted(() => {
   setCrumb('数据管理', 'BOM管理')
+  loadCategoryMap()
   loadMaterials()
 })
 </script>
@@ -408,6 +427,12 @@ onMounted(() => {
         >
           <el-table-column prop="childCode" label="子项编码" width="140" fixed />
           <el-table-column prop="childName" label="子项名称" width="160" />
+          <el-table-column label="物料分类" width="160" align="center">
+            <template #default="{ row }">
+              <span v-if="row.materialCategoryName">{{ row.materialCategoryName }}</span>
+              <span v-else style="color: #86909C">-</span>
+            </template>
+          </el-table-column>
           <el-table-column prop="materialSpec" label="规格（主料）" width="140" />
           <el-table-column prop="makeFactory" label="生产厂家" width="140" />
           <el-table-column prop="childQty" label="数量" width="80" align="right" />

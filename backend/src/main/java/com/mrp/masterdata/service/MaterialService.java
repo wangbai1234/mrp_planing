@@ -40,20 +40,22 @@ public class MaterialService {
         return material;
     }
 
-    public List<Material> list(String category, String region, Boolean isActive, String keyword) {
-        return materialMapper.selectAll(category, region, isActive, keyword);
+    public List<Material> list(String category, String region, Boolean isActive, String keyword,
+                               Long materialCategoryId) {
+        return materialMapper.selectAll(category, region, isActive, keyword, materialCategoryId);
     }
 
     public PageResult<Material> listPage(String category, String region, Boolean isActive, String keyword,
-                                         int page, int pageSize) {
+                                         Long materialCategoryId, int page, int pageSize) {
         // Ensure valid page/pageSize
         if (page < 1) page = 1;
         if (pageSize < 1) pageSize = 20;
         if (pageSize > 100) pageSize = 100;
 
         int offset = (page - 1) * pageSize;
-        List<Material> items = materialMapper.selectPage(category, region, isActive, keyword, offset, pageSize);
-        int total = materialMapper.countTotal(category, region, isActive, keyword);
+        List<Material> items = materialMapper.selectPage(category, region, isActive, keyword,
+                materialCategoryId, offset, pageSize);
+        int total = materialMapper.countTotal(category, region, isActive, keyword, materialCategoryId);
 
         return new PageResult<>(items, total, page, pageSize);
     }
@@ -135,7 +137,7 @@ public class MaterialService {
             // Use count + select to avoid loading all data
             if (materialMapper.countByExternalId(externalId) > 0) {
                 // Find by externalId - use list with filter
-                List<Material> found = materialMapper.selectAll(null, null, null, externalId);
+                List<Material> found = materialMapper.selectAll(null, null, null, externalId, null);
                 existing = found.stream()
                         .filter(m -> externalId.equals(m.externalId()))
                         .findFirst()
@@ -148,7 +150,8 @@ public class MaterialService {
             Material updated = new Material(
                     existing.id(), materialCode, materialName, projectModel, specModel, unit,
                     moq, mpq, region, attribute, category, isActive, leadTimeDays, originPlace,
-                    Material.SOURCE_API_SYNC, externalId, false, existing.createdAt(), null
+                    Material.SOURCE_API_SYNC, externalId, false, existing.createdAt(), null,
+                    existing.materialCategoryId()
             );
             materialMapper.update(updated);
             log.info("Material synced (updated): externalId={}, code={}", externalId, materialCode);
@@ -161,7 +164,8 @@ public class MaterialService {
                 Material updated = new Material(
                         existing.id(), materialCode, materialName, projectModel, specModel, unit,
                         moq, mpq, region, attribute, category, isActive, leadTimeDays, originPlace,
-                        Material.SOURCE_API_SYNC, externalId, false, existing.createdAt(), null
+                        Material.SOURCE_API_SYNC, externalId, false, existing.createdAt(), null,
+                        existing.materialCategoryId()
                 );
                 materialMapper.update(updated);
                 log.info("Material synced (linked): code={}, externalId={}", materialCode, externalId);
@@ -171,7 +175,7 @@ public class MaterialService {
                 Material newMaterial = new Material(
                         null, materialCode, materialName, projectModel, specModel, unit,
                         moq, mpq, region, attribute, category, isActive, leadTimeDays, originPlace,
-                        Material.SOURCE_API_SYNC, externalId, false, null, null
+                        Material.SOURCE_API_SYNC, externalId, false, null, null, null
                 );
                 materialMapper.insert(newMaterial);
                 log.info("Material synced (created): code={}, externalId={}", materialCode, externalId);

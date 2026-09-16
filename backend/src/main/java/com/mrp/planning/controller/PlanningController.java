@@ -224,8 +224,11 @@ public class PlanningController {
 
     @GetMapping("/export-tasks/{id}")
     public ResponseEntity<ApiResponse<ExportTask>> getExportTask(@PathVariable Long id) {
-        // TODO: implement ExportTaskMapper.selectById
-        return ResponseEntity.ok(ApiResponse.ok(null));
+        ExportTask task = exportService.getExportTask(id);
+        if (task == null) {
+            throw new BusinessException("MRP_NOT_FOUND", "Export task not found: " + id);
+        }
+        return ResponseEntity.ok(ApiResponse.ok(task));
     }
 
     @GetMapping("/export-tasks/{id}/download")

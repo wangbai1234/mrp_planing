@@ -38,6 +38,12 @@ const router = createRouter({
       meta: { permission: 'schedule:view' }
     },
     {
+      path: '/material-category',
+      name: 'material-category',
+      component: () => import('../views/material/MaterialCategoryView.vue'),
+      meta: { permission: 'material_category:view' }
+    },
+    {
       path: '/bom',
       name: 'bom',
       component: () => import('../views/bom/BomView.vue'),

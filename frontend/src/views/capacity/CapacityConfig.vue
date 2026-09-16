@@ -2,6 +2,7 @@
 import { ref, inject, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { get, post, put, del } from '../../api/client'
+import { Plus } from '@element-plus/icons-vue'
 import type { CapacityLine } from '../../api/types'
 
 const setCrumb = inject<(g: string, p: string) => void>('setCrumb')!
@@ -78,15 +79,14 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>
-    <div style="display: flex; justify-content: space-between; margin-bottom: 12px">
-      <div>
-        <h1 style="margin: 0; font-size: 20px; font-weight: 650">产能配置</h1>
-        <div style="margin-top: 4px; color: #4b5870; font-size: 13px">按工厂和产线维护周产能。支持新增与整行编辑。</div>
+  <div class="capacity-page">
+    <div class="page-header">
+      <h1 class="page-title">产能配置</h1>
+      <div class="page-actions">
+        <el-button type="primary" @click="startAdd"><el-icon><Plus /></el-icon>新增产线</el-button>
       </div>
-      <el-button type="primary" @click="startAdd"><el-icon><Plus /></el-icon>新增产线</el-button>
     </div>
-    <el-card shadow="never" v-loading="loading">
+    <div class="table-card" v-loading="loading">
       <el-table :data="lines" size="small" border>
         <el-table-column prop="factoryCode" label="工厂" width="80" />
         <el-table-column prop="lineCode" label="产线编码" width="100" />
@@ -105,7 +105,7 @@ onMounted(() => {
         </el-table-column>
       </el-table>
       <el-empty v-if="!loading && lines.length === 0" description="暂无产能配置" />
-    </el-card>
+    </div>
 
     <el-dialog v-model="editDialogVisible" :title="isAdding ? '新增产线' : '编辑产线'" width="500px">
       <el-form v-if="editingLine" label-width="80px">
@@ -123,3 +123,34 @@ onMounted(() => {
     </el-dialog>
   </div>
 </template>
+
+<style scoped>
+.capacity-page {
+  padding: 20px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.page-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1F2329;
+  margin: 0;
+}
+
+.page-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.table-card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+</style>

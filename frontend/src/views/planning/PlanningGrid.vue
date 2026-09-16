@@ -415,7 +415,7 @@ onMounted(() => {
         <el-button @click="settingsVisible = true"><el-icon><Setting /></el-icon>设置</el-button>
         <el-button @click="compareVisible = true"><el-icon><Switch /></el-icon>版本对比</el-button>
         <el-button type="primary" @click="exportVisible = true"><el-icon><Download /></el-icon>导出</el-button>
-        <el-button type="primary" plain @click="handleRecalculate" :loading="loading"><el-icon><Refresh /></el-icon>重算</el-button>
+        <el-button type="primary" @click="handleRecalculate" :loading="loading"><el-icon><Refresh /></el-icon>重算</el-button>
         <el-button type="primary" @click="handlePublish" :disabled="!currentVersion || currentVersion.status === 'PUBLISHED'"><el-icon><Promotion /></el-icon>{{ currentVersion?.status === 'PUBLISHED' ? '已发布' : '发布' }}</el-button>
       </div>
     </div>

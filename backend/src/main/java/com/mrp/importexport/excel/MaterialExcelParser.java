@@ -42,6 +42,8 @@ public class MaterialExcelParser {
         List<Material> rows = new ArrayList<>();
         List<ParseError> errors = new ArrayList<>();
         List<String> recognizedMonths = new ArrayList<>();
+        List<List<String>> rawRows = new ArrayList<>();
+        List<String> headers = new ArrayList<>();
         int totalRows = 0;
 
         try (OPCPackage pkg = OPCPackage.open(file.toFile())) {
@@ -52,7 +54,7 @@ public class MaterialExcelParser {
             XSSFReader.SheetIterator sheets = (XSSFReader.SheetIterator) reader.getSheetsData();
             if (!sheets.hasNext()) {
                 errors.add(ParseError.of(0, "sheet", "", "NO_SHEET", "No sheet found"));
-                return new ParseResult<>(rows, errors, recognizedMonths, 0, 0, 1, List.of(), List.of());
+                return new ParseResult<>(rows, errors, recognizedMonths, 0, 0, 1, rawRows, headers);
             }
 
             InputStream sheetStream = sheets.next();
@@ -60,7 +62,7 @@ public class MaterialExcelParser {
             factory.setNamespaceAware(true);
             XMLReader xmlReader = factory.newSAXParser().getXMLReader();
 
-            MaterialSheetHandler handler = new MaterialSheetHandler(sst, styles, rows, errors);
+            MaterialSheetHandler handler = new MaterialSheetHandler(sst, styles, rows, errors, rawRows, headers);
             xmlReader.setContentHandler(handler);
             xmlReader.parse(new InputSource(sheetStream));
 
@@ -69,16 +71,16 @@ public class MaterialExcelParser {
 
             // Validate header
             if (!handler.isHeaderValid()) {
-                errors.add(ParseError.of(1, "header", "", "HEADER_MISMATCH", 
+                errors.add(ParseError.of(1, "header", "", "HEADER_MISMATCH",
                         "表头与模板不匹配，请下载最新模板"));
-                return new ParseResult<>(rows, errors, recognizedMonths, totalRows, 0, 1, List.of(), List.of());
+                return new ParseResult<>(rows, errors, recognizedMonths, totalRows, 0, 1, rawRows, headers);
             }
 
             // Check row limit
             if (totalRows > MAX_ROWS) {
-                errors.add(ParseError.of(0, "rows", String.valueOf(totalRows), 
+                errors.add(ParseError.of(0, "rows", String.valueOf(totalRows),
                         "ROW_LIMIT_EXCEEDED", "记录数超过" + MAX_ROWS + "条限制"));
-                return new ParseResult<>(rows, errors, recognizedMonths, totalRows, 0, 1, List.of(), List.of());
+                return new ParseResult<>(rows, errors, recognizedMonths, totalRows, 0, 1, rawRows, headers);
             }
 
         } catch (Exception e) {
@@ -86,9 +88,9 @@ public class MaterialExcelParser {
             errors.add(ParseError.of(0, "file", "", "PARSE_ERROR", e.getMessage()));
         }
 
-        int errorRows = errors.size();
+        int errorRows = (int) errors.stream().map(ParseError::rowNumber).distinct().count();
         int successRows = rows.size();
-        return new ParseResult<>(rows, errors, recognizedMonths, totalRows, successRows, errorRows, List.of(), List.of());
+        return new ParseResult<>(rows, errors, recognizedMonths, totalRows, successRows, errorRows, rawRows, headers);
     }
 
     private static class MaterialSheetHandler extends DefaultHandler {
@@ -96,6 +98,8 @@ public class MaterialExcelParser {
         private final StylesTable styles;
         private final List<Material> rows;
         private final List<ParseError> errors;
+        private final List<List<String>> rawRows;
+        private final List<String> headers;
 
         private int currentRow = -1;
         private int currentCol = 0;
@@ -110,11 +114,14 @@ public class MaterialExcelParser {
         private int dataRowCount = 0;
 
         MaterialSheetHandler(SharedStrings sst, StylesTable styles,
-                            List<Material> rows, List<ParseError> errors) {
+                            List<Material> rows, List<ParseError> errors,
+                            List<List<String>> rawRows, List<String> headers) {
             this.sst = sst;
             this.styles = styles;
             this.rows = rows;
             this.errors = errors;
+            this.rawRows = rawRows;
+            this.headers = headers;
         }
 
         int getDataRowCount() { return dataRowCount; }
@@ -171,6 +178,12 @@ public class MaterialExcelParser {
         }
 
         private void processRow() {
+            // Save raw row data for error reports
+            List<String> rawRow = new ArrayList<>();
+            for (Object cell : currentRowData) {
+                rawRow.add(cell != null ? cell.toString() : "");
+            }
+
             // Row 0: Header - validate
             if (currentRow == HEADER_ROW) {
                 validateHeader();
@@ -185,6 +198,7 @@ public class MaterialExcelParser {
 
             // Check row limit during parsing
             if (dataRowCount > MAX_ROWS) {
+                rawRows.add(rawRow);
                 return; // Will be checked after parse
             }
 
@@ -194,6 +208,8 @@ public class MaterialExcelParser {
                 dataRowCount--;
                 return;
             }
+
+            rawRows.add(rawRow);
 
             String materialCode = getString(1); // 料号
             if (materialCode == null || materialCode.isBlank()) return;
@@ -230,16 +246,21 @@ public class MaterialExcelParser {
                     null,
                     false,
                     null,
-                    null
+                    null,
+                    null  // materialCategoryId - to be set after category lookup
             ));
         }
 
         private void validateHeader() {
             headerNames.clear();
+            headers.clear();
             for (int i = 0; i < currentRowData.size(); i++) {
                 String val = getString(i);
                 if (val != null) {
                     headerNames.add(val);
+                    headers.add(val);
+                } else {
+                    headers.add("");
                 }
             }
 

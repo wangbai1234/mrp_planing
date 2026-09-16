@@ -21,7 +21,8 @@ public record Material(
         String externalId,
         Boolean isDeleted,
         Instant createdAt,
-        Instant updatedAt
+        Instant updatedAt,
+        Long materialCategoryId
 ) {
     public static final String SOURCE_EXCEL_IMPORT = "EXCEL_IMPORT";
     public static final String SOURCE_API_SYNC = "API_SYNC";
@@ -29,12 +30,12 @@ public record Material(
     public Material withId(Long id) {
         return new Material(id, materialCode, materialName, projectModel, specModel, unit,
                 moq, mpq, region, attribute, category, isActive, leadTimeDays, originPlace,
-                dataSource, externalId, isDeleted, createdAt, updatedAt);
+                dataSource, externalId, isDeleted, createdAt, updatedAt, materialCategoryId);
     }
 
     public Material markDeleted() {
         return new Material(id, materialCode, materialName, projectModel, specModel, unit,
                 moq, mpq, region, attribute, category, isActive, leadTimeDays, originPlace,
-                dataSource, externalId, true, createdAt, updatedAt);
+                dataSource, externalId, true, createdAt, updatedAt, materialCategoryId);
     }
 }

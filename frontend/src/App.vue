@@ -68,6 +68,9 @@ const menuItems = computed(() => {
     dataItems.push({ path: '/inventory', label: '库存快照', icon: 'Box' })
   }
   dataItems.push({ path: '/material', label: '物料管理', icon: 'Files' })
+  if (permissionStore.hasPermission('material_category:view')) {
+    dataItems.push({ path: '/material-category', label: '物料分类', icon: 'Folder' })
+  }
   dataItems.push({ path: '/bom', label: 'BOM管理', icon: 'Share' })
   if (dataItems.length > 0) {
     items.push({ group: '数据', items: dataItems })

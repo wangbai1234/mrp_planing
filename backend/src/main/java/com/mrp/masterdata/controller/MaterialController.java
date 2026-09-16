@@ -47,10 +47,12 @@ public class MaterialController {
             @RequestParam(required = false) String category,
             @RequestParam(required = false) String region,
             @RequestParam(required = false) Boolean isActive,
+            @RequestParam(required = false) Long materialCategoryId,
             @RequestParam(required = false) String keyword,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "20") int pageSize) {
-        PageResult<Material> result = materialService.listPage(category, region, isActive, keyword, page, pageSize);
+        PageResult<Material> result = materialService.listPage(category, region, isActive, keyword,
+                materialCategoryId, page, pageSize);
         return ResponseEntity.ok(ApiResponse.ok(result));
     }
 

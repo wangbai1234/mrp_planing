@@ -35,6 +35,8 @@
         <result column="main_rhos_status" property="mainRhosStatus"/>
         <result column="alt_rhos_status" property="altRhosStatus"/>
         <result column="admit_note" property="admitNote"/>
+        <result column="material_category_id" property="materialCategoryId"/>
+        <result column="material_category_name" property="materialCategoryName"/>
     </resultMap>
 
     <select id="selectMaterialPage" resultMap="materialResultMap">
@@ -67,13 +69,16 @@
     </select>
 
     <select id="selectDetailByParentCode" resultMap="detailResultMap">
-        SELECT child_code, child_name, version, material_spec, make_factory, child_qty,
-               child_note, replace_priority, alt_code, alt_name, alt_spec, alt_factory,
-               alt_qty, is_deliver, is_default, main_status, alt_status,
-               main_rhos_status, alt_rhos_status, admit_note
-        FROM bom_detail
-        WHERE parent_code = #{parentCode}
-        ORDER BY child_code
+        SELECT d.child_code, d.child_name, d.version, d.material_spec, d.make_factory, d.child_qty,
+               d.child_note, d.replace_priority, d.alt_code, d.alt_name, d.alt_spec, d.alt_factory,
+               d.alt_qty, d.is_deliver, d.is_default, d.main_status, d.alt_status,
+               d.main_rhos_status, d.alt_rhos_status, d.admit_note,
+               m.material_category_id, mc.name AS material_category_name
+        FROM bom_detail d
+        LEFT JOIN material m ON m.material_code = d.child_code AND m.is_deleted = 0
+        LEFT JOIN material_category mc ON mc.id = m.material_category_id AND mc.is_deleted = 0
+        WHERE d.parent_code = #{parentCode}
+        ORDER BY d.child_code
     </select>
 
     <insert id="insertParent">

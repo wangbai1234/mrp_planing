@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.masterdata.repository.MaterialCategoryMapper">
+
+    <resultMap id="categoryResultMap" type="com.mrp.masterdata.domain.MaterialCategory">
+        <result column="id" property="id"/>
+        <result column="code" property="code"/>
+        <result column="name" property="name"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="level" property="level"/>
+        <result column="sort" property="sort"/>
+        <result column="enabled" property="enabled"/>
+        <result column="is_deleted" property="isDeleted"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
+
+    <sql id="selectColumns">
+        id, code, name, parent_id, level, sort, enabled, is_deleted, created_at, updated_at
+    </sql>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO material_category (code, name, parent_id, level, sort, enabled)
+        VALUES (#{code}, #{name}, #{parentId}, #{level}, #{sort}, #{enabled})
+    </insert>
+
+    <select id="selectById" resultMap="categoryResultMap">
+        SELECT <include refid="selectColumns"/> FROM material_category WHERE id = #{id} AND is_deleted = 0
+    </select>
+
+    <select id="selectByCode" resultMap="categoryResultMap">
+        SELECT <include refid="selectColumns"/> FROM material_category WHERE code = #{code} AND is_deleted = 0
+    </select>
+
+    <select id="selectAll" resultMap="categoryResultMap">
+        SELECT <include refid="selectColumns"/> FROM material_category WHERE is_deleted = 0 ORDER BY level, sort, code
+    </select>
+
+    <select id="selectByParentId" resultMap="categoryResultMap">
+        SELECT <include refid="selectColumns"/> FROM material_category
+        WHERE is_deleted = 0
+        <if test="parentId != null">
+            AND parent_id = #{parentId}
+        </if>
+        <if test="parentId == null">
+            AND parent_id IS NULL
+        </if>
+        ORDER BY sort, code
+    </select>
+
+    <select id="selectByLevel" resultMap="categoryResultMap">
+        SELECT <include refid="selectColumns"/> FROM material_category WHERE is_deleted = 0 AND level = #{level} ORDER BY sort, code
+    </select>
+
+    <select id="selectEnabled" resultMap="categoryResultMap">
+        SELECT <include refid="selectColumns"/> FROM material_category WHERE is_deleted = 0 AND enabled = 1 ORDER BY level, sort, code
+    </select>
+
+    <update id="update">
+        UPDATE material_category
+        SET name = #{name}, sort = #{sort}, enabled = #{enabled}
+        WHERE id = #{id} AND is_deleted = 0
+    </update>
+
+    <update id="logicalDelete">
+        UPDATE material_category SET is_deleted = 1 WHERE id = #{id} AND is_deleted = 0
+    </update>
+
+    <select id="countByCode" resultType="int">
+        SELECT COUNT(*) FROM material_category WHERE code = #{code} AND is_deleted = 0
+    </select>
+
+    <select id="countByParentId" resultType="int">
+        SELECT COUNT(*) FROM material_category WHERE parent_id = #{parentId} AND is_deleted = 0
+    </select>
+
+    <select id="countMaterialReferences" resultType="int">
+        SELECT COUNT(*) FROM material WHERE material_category_id = #{categoryId} AND is_deleted = 0
+    </select>
+
+    <select id="selectByCodes" resultMap="categoryResultMap">
+        SELECT <include refid="selectColumns"/> FROM material_category
+        WHERE is_deleted = 0 AND enabled = 1
+        AND code IN
+        <foreach collection="codes" item="code" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+    </select>
+</mapper>

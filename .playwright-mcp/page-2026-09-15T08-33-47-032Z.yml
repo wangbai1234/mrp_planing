@@ -1,0 +1,2818 @@
+- generic [ref=f1e3]:
+  - complementary [ref=f1e4]:
+    - generic [ref=f1e5]:
+      - generic [ref=f1e6]: MRP
+      - generic [ref=f1e7]: 计划协同
+    - menubar [ref=f1e8]:
+      - generic [ref=f1e9]: 计划
+      - menuitem "看板" [ref=f1e10] [cursor=pointer]
+      - menuitem "排产计划" [ref=f1e17] [cursor=pointer]
+      - generic [ref=f1e22]: 数据
+      - menuitem "经营计划" [ref=f1e23] [cursor=pointer]
+      - menuitem "库存快照" [ref=f1e28] [cursor=pointer]
+      - menuitem "物料管理" [ref=f1e35] [cursor=pointer]
+      - menuitem "物料分类" [ref=f1e40] [cursor=pointer]
+      - menuitem "BOM管理" [ref=f1e45] [cursor=pointer]
+      - generic [ref=f1e50]: 配置
+      - menuitem "产能配置" [ref=f1e51] [cursor=pointer]
+      - generic [ref=f1e56]: 系统
+      - menuitem "用户与权限" [ref=f1e57] [cursor=pointer]
+  - generic [ref=f1e62]:
+    - generic [ref=f1e63]:
+      - generic [ref=f1e64]:
+        - generic [ref=f1e65]: 基础数据
+        - generic [ref=f1e66]: /
+        - strong [ref=f1e67]: 物料分类
+      - generic [ref=f1e68]:
+        - generic [ref=f1e69]: 数据已同步
+        - button "系 系统管理员" [ref=f1e72] [cursor=pointer]:
+          - generic [ref=f1e73]: 系
+          - generic [ref=f1e74]: 系统管理员
+    - main [ref=f1e75]:
+      - generic [ref=f1e76]:
+        - generic [ref=f1e77]:
+          - heading "物料分类" [level=1] [ref=f1e78]
+          - button "新增" [active] [ref=f1e80] [cursor=pointer]
+        - generic [ref=f1e85]:
+          - textbox "搜索分类编码/名称" [ref=f1e92]
+          - generic [ref=f1e94]:
+            - switch [checked]
+            - generic [aria-hidden] [ref=f1e96] [cursor=pointer]: 收起
+            - generic [ref=f1e97] [cursor=pointer]
+            - generic [ref=f1e99] [cursor=pointer]: 展开
+        - generic [ref=f1e103]:
+          - table [ref=f1e105]:
+            - rowgroup [ref=f1e113]:
+              - row [ref=f1e114]:
+                - columnheader "分类编码" [ref=f1e115]
+                - columnheader "分类名称" [ref=f1e117]
+                - columnheader "层级" [ref=f1e119]
+                - columnheader "排序" [ref=f1e121]
+                - columnheader "状态" [ref=f1e123]
+                - columnheader "操作" [ref=f1e125]
+          - table [ref=f1e138]:
+            - rowgroup [ref=f1e146]:
+              - row [ref=f1e6157]:
+                - cell [ref=f1e6158]:
+                  - generic [ref=f1e6159]:
+                    - button "收起当前行" [expanded] [ref=f1e6160] [cursor=pointer]
+                    - text: T01
+                - cell "测试一级" [ref=f1e6164]
+                - cell "一级" [ref=f1e6166]
+                - cell "0" [ref=f1e6170]
+                - cell "启用" [ref=f1e6172]
+                - cell [ref=f1e6176]:
+                  - generic [ref=f1e6177]:
+                    - button "添加子分类" [ref=f1e6178] [cursor=pointer]
+                    - button "编辑" [ref=f1e6180] [cursor=pointer]
+                    - button "停用" [ref=f1e6182] [cursor=pointer]
+                    - button "删除" [ref=f1e6184] [cursor=pointer]
+              - row [ref=f1e6186]:
+                - cell "T0101" [ref=f1e6187]
+                - cell "测试二级A" [ref=f1e6190]
+                - cell "二级" [ref=f1e6192]
+                - cell "0" [ref=f1e6196]
+                - cell "启用" [ref=f1e6198]
+                - cell [ref=f1e6202]:
+                  - generic [ref=f1e6203]:
+                    - button "编辑" [ref=f1e6204] [cursor=pointer]
+                    - button "停用" [ref=f1e6206] [cursor=pointer]
+                    - button "删除" [ref=f1e6208] [cursor=pointer]
+              - row [ref=f1e6210]:
+                - cell "T0102" [ref=f1e6211]
+                - cell "测试二级B" [ref=f1e6214]
+                - cell "二级" [ref=f1e6216]
+                - cell "0" [ref=f1e6220]
+                - cell "启用" [ref=f1e6222]
+                - cell [ref=f1e6226]:
+                  - generic [ref=f1e6227]:
+                    - button "编辑" [ref=f1e6228] [cursor=pointer]
+                    - button "停用" [ref=f1e6230] [cursor=pointer]
+                    - button "删除" [ref=f1e6232] [cursor=pointer]
+              - row [ref=f1e6234]:
+                - cell [ref=f1e6235]:
+                  - generic [ref=f1e6236]:
+                    - button "收起当前行" [expanded] [ref=f1e6237] [cursor=pointer]
+                    - text: "01"
+                - cell "PCBA" [ref=f1e6241]
+                - cell "一级" [ref=f1e6243]
+                - cell "1" [ref=f1e6247]
+                - cell "启用" [ref=f1e6249]
+                - cell [ref=f1e6253]:
+                  - generic [ref=f1e6254]:
+                    - button "添加子分类" [ref=f1e6255] [cursor=pointer]
+                    - button "编辑" [ref=f1e6257] [cursor=pointer]
+                    - button "停用" [ref=f1e6259] [cursor=pointer]
+                    - button "删除" [ref=f1e6261] [cursor=pointer]
+              - row [ref=f1e6263]:
+                - cell "01001" [ref=f1e6264]
+                - cell "生产加工项目主板PCBA" [ref=f1e6267]
+                - cell "二级" [ref=f1e6269]
+                - cell "1" [ref=f1e6273]
+                - cell "启用" [ref=f1e6275]
+                - cell [ref=f1e6279]:
+                  - generic [ref=f1e6280]:
+                    - button "编辑" [ref=f1e6281] [cursor=pointer]
+                    - button "停用" [ref=f1e6283] [cursor=pointer]
+                    - button "删除" [ref=f1e6285] [cursor=pointer]
+              - row [ref=f1e6287]:
+                - cell "01002" [ref=f1e6288]
+                - cell "生产加工平台小板PCBA" [ref=f1e6291]
+                - cell "二级" [ref=f1e6293]
+                - cell "2" [ref=f1e6297]
+                - cell "启用" [ref=f1e6299]
+                - cell [ref=f1e6303]:
+                  - generic [ref=f1e6304]:
+                    - button "编辑" [ref=f1e6305] [cursor=pointer]
+                    - button "停用" [ref=f1e6307] [cursor=pointer]
+                    - button "删除" [ref=f1e6309] [cursor=pointer]
+              - row [ref=f1e6311]:
+                - cell "01003" [ref=f1e6312]
+                - cell "外购半成品组件" [ref=f1e6315]
+                - cell "二级" [ref=f1e6317]
+                - cell "3" [ref=f1e6321]
+                - cell "启用" [ref=f1e6323]
+                - cell [ref=f1e6327]:
+                  - generic [ref=f1e6328]:
+                    - button "编辑" [ref=f1e6329] [cursor=pointer]
+                    - button "停用" [ref=f1e6331] [cursor=pointer]
+                    - button "删除" [ref=f1e6333] [cursor=pointer]
+              - row [ref=f1e6335]:
+                - cell "01004" [ref=f1e6336]
+                - cell "项目主板PCBA" [ref=f1e6339]
+                - cell "二级" [ref=f1e6341]
+                - cell "4" [ref=f1e6345]
+                - cell "启用" [ref=f1e6347]
+                - cell [ref=f1e6351]:
+                  - generic [ref=f1e6352]:
+                    - button "编辑" [ref=f1e6353] [cursor=pointer]
+                    - button "停用" [ref=f1e6355] [cursor=pointer]
+                    - button "删除" [ref=f1e6357] [cursor=pointer]
+              - row [ref=f1e6359]:
+                - cell "01005" [ref=f1e6360]
+                - cell "平台非主板PCBA" [ref=f1e6363]
+                - cell "二级" [ref=f1e6365]
+                - cell "5" [ref=f1e6369]
+                - cell "启用" [ref=f1e6371]
+                - cell [ref=f1e6375]:
+                  - generic [ref=f1e6376]:
+                    - button "编辑" [ref=f1e6377] [cursor=pointer]
+                    - button "停用" [ref=f1e6379] [cursor=pointer]
+                    - button "删除" [ref=f1e6381] [cursor=pointer]
+              - row [ref=f1e6383]:
+                - cell "01008" [ref=f1e6384]
+                - cell "生产加工X合一" [ref=f1e6387]
+                - cell "二级" [ref=f1e6389]
+                - cell "6" [ref=f1e6393]
+                - cell "启用" [ref=f1e6395]
+                - cell [ref=f1e6399]:
+                  - generic [ref=f1e6400]:
+                    - button "编辑" [ref=f1e6401] [cursor=pointer]
+                    - button "停用" [ref=f1e6403] [cursor=pointer]
+                    - button "删除" [ref=f1e6405] [cursor=pointer]
+              - row [ref=f1e6407]:
+                - cell "019001" [ref=f1e6408]
+                - cell "太阳能板" [ref=f1e6411]
+                - cell "二级" [ref=f1e6413]
+                - cell "7" [ref=f1e6417]
+                - cell "启用" [ref=f1e6419]
+                - cell [ref=f1e6423]:
+                  - generic [ref=f1e6424]:
+                    - button "编辑" [ref=f1e6425] [cursor=pointer]
+                    - button "停用" [ref=f1e6427] [cursor=pointer]
+                    - button "删除" [ref=f1e6429] [cursor=pointer]
+              - row [ref=f1e6431]:
+                - cell "019101" [ref=f1e6432]
+                - cell "风扇" [ref=f1e6435]
+                - cell "二级" [ref=f1e6437]
+                - cell "8" [ref=f1e6441]
+                - cell "启用" [ref=f1e6443]
+                - cell [ref=f1e6447]:
+                  - generic [ref=f1e6448]:
+                    - button "编辑" [ref=f1e6449] [cursor=pointer]
+                    - button "停用" [ref=f1e6451] [cursor=pointer]
+                    - button "删除" [ref=f1e6453] [cursor=pointer]
+              - row [ref=f1e6455]:
+                - cell [ref=f1e6456]:
+                  - generic [ref=f1e6457]:
+                    - button "收起当前行" [expanded] [ref=f1e6458] [cursor=pointer]
+                    - text: "02"
+                - cell "机头" [ref=f1e6462]
+                - cell "一级" [ref=f1e6464]
+                - cell "2" [ref=f1e6468]
+                - cell "启用" [ref=f1e6470]
+                - cell [ref=f1e6474]:
+                  - generic [ref=f1e6475]:
+                    - button "添加子分类" [ref=f1e6476] [cursor=pointer]
+                    - button "编辑" [ref=f1e6478] [cursor=pointer]
+                    - button "停用" [ref=f1e6480] [cursor=pointer]
+                    - button "删除" [ref=f1e6482] [cursor=pointer]
+              - row [ref=f1e6484]:
+                - cell "02001" [ref=f1e6485]
+                - cell "生产加工机头" [ref=f1e6488]
+                - cell "二级" [ref=f1e6490]
+                - cell "1" [ref=f1e6494]
+                - cell "启用" [ref=f1e6496]
+                - cell [ref=f1e6500]:
+                  - generic [ref=f1e6501]:
+                    - button "编辑" [ref=f1e6502] [cursor=pointer]
+                    - button "停用" [ref=f1e6504] [cursor=pointer]
+                    - button "删除" [ref=f1e6506] [cursor=pointer]
+              - row [ref=f1e498]:
+                - cell [ref=f1e499]:
+                  - generic [ref=f1e500]:
+                    - button "收起当前行" [expanded] [ref=f1e501] [cursor=pointer]
+                    - text: "03"
+                - cell "模具夹具" [ref=f1e505]
+                - cell "一级" [ref=f1e507]
+                - cell "3" [ref=f1e511]
+                - cell "启用" [ref=f1e513]
+                - cell [ref=f1e517]:
+                  - generic [ref=f1e518]:
+                    - button "添加子分类" [ref=f1e519] [cursor=pointer]
+                    - button "编辑" [ref=f1e521] [cursor=pointer]
+                    - button "停用" [ref=f1e523] [cursor=pointer]
+                    - button "删除" [ref=f1e525] [cursor=pointer]
+              - row [ref=f1e6508]:
+                - cell "03001" [ref=f1e6509]
+                - cell "工具(夹具及配套件)" [ref=f1e6512]
+                - cell "二级" [ref=f1e6514]
+                - cell "1" [ref=f1e6518]
+                - cell "启用" [ref=f1e6520]
+                - cell [ref=f1e6524]:
+                  - generic [ref=f1e6525]:
+                    - button "编辑" [ref=f1e6526] [cursor=pointer]
+                    - button "停用" [ref=f1e6528] [cursor=pointer]
+                    - button "删除" [ref=f1e6530] [cursor=pointer]
+              - row [ref=f1e551]:
+                - cell "03002" [ref=f1e552]
+                - cell "模具" [ref=f1e555]
+                - cell "二级" [ref=f1e557]
+                - cell "2" [ref=f1e561]
+                - cell "启用" [ref=f1e563]
+                - cell [ref=f1e567]:
+                  - generic [ref=f1e568]:
+                    - button "编辑" [ref=f1e569] [cursor=pointer]
+                    - button "停用" [ref=f1e571] [cursor=pointer]
+                    - button "删除" [ref=f1e573] [cursor=pointer]
+              - row [ref=f1e6532]:
+                - cell "03003" [ref=f1e6533]
+                - cell "模型机" [ref=f1e6536]
+                - cell "二级" [ref=f1e6538]
+                - cell "3" [ref=f1e6542]
+                - cell "启用" [ref=f1e6544]
+                - cell [ref=f1e6548]:
+                  - generic [ref=f1e6549]:
+                    - button "编辑" [ref=f1e6550] [cursor=pointer]
+                    - button "停用" [ref=f1e6552] [cursor=pointer]
+                    - button "删除" [ref=f1e6554] [cursor=pointer]
+              - row [ref=f1e6556]:
+                - cell "03004" [ref=f1e6557]
+                - cell "手板模型机" [ref=f1e6560]
+                - cell "二级" [ref=f1e6562]
+                - cell "4" [ref=f1e6566]
+                - cell "启用" [ref=f1e6568]
+                - cell [ref=f1e6572]:
+                  - generic [ref=f1e6573]:
+                    - button "编辑" [ref=f1e6574] [cursor=pointer]
+                    - button "停用" [ref=f1e6576] [cursor=pointer]
+                    - button "删除" [ref=f1e6578] [cursor=pointer]
+              - row [ref=f1e6580]:
+                - cell [ref=f1e6581]:
+                  - generic [ref=f1e6582]:
+                    - button "收起当前行" [expanded] [ref=f1e6583] [cursor=pointer]
+                    - text: "08"
+                - cell "物料" [ref=f1e6587]
+                - cell "一级" [ref=f1e6589]
+                - cell "8" [ref=f1e6593]
+                - cell "启用" [ref=f1e6595]
+                - cell [ref=f1e6599]:
+                  - generic [ref=f1e6600]:
+                    - button "添加子分类" [ref=f1e6601] [cursor=pointer]
+                    - button "编辑" [ref=f1e6603] [cursor=pointer]
+                    - button "停用" [ref=f1e6605] [cursor=pointer]
+                    - button "删除" [ref=f1e6607] [cursor=pointer]
+              - row [ref=f1e6609]:
+                - cell "08001" [ref=f1e6610]
+                - cell "SAW/DualSaw" [ref=f1e6613]
+                - cell "二级" [ref=f1e6615]
+                - cell "1" [ref=f1e6619]
+                - cell "启用" [ref=f1e6621]
+                - cell [ref=f1e6625]:
+                  - generic [ref=f1e6626]:
+                    - button "编辑" [ref=f1e6627] [cursor=pointer]
+                    - button "停用" [ref=f1e6629] [cursor=pointer]
+                    - button "删除" [ref=f1e6631] [cursor=pointer]
+              - row [ref=f1e6633]:
+                - cell "08002" [ref=f1e6634]
+                - cell "EMI+ESD器件" [ref=f1e6637]
+                - cell "二级" [ref=f1e6639]
+                - cell "2" [ref=f1e6643]
+                - cell "启用" [ref=f1e6645]
+                - cell [ref=f1e6649]:
+                  - generic [ref=f1e6650]:
+                    - button "编辑" [ref=f1e6651] [cursor=pointer]
+                    - button "停用" [ref=f1e6653] [cursor=pointer]
+                    - button "删除" [ref=f1e6655] [cursor=pointer]
+              - row [ref=f1e6657]:
+                - cell "08003" [ref=f1e6658]
+                - cell "混合电路滤波器_LPF" [ref=f1e6661]
+                - cell "二级" [ref=f1e6663]
+                - cell "3" [ref=f1e6667]
+                - cell "启用" [ref=f1e6669]
+                - cell [ref=f1e6673]:
+                  - generic [ref=f1e6674]:
+                    - button "编辑" [ref=f1e6675] [cursor=pointer]
+                    - button "停用" [ref=f1e6677] [cursor=pointer]
+                    - button "删除" [ref=f1e6679] [cursor=pointer]
+              - row [ref=f1e6681]:
+                - cell "08004" [ref=f1e6682]
+                - cell "混合电路滤波器_Balun" [ref=f1e6685]
+                - cell "二级" [ref=f1e6687]
+                - cell "4" [ref=f1e6691]
+                - cell "启用" [ref=f1e6693]
+                - cell [ref=f1e6697]:
+                  - generic [ref=f1e6698]:
+                    - button "编辑" [ref=f1e6699] [cursor=pointer]
+                    - button "停用" [ref=f1e6701] [cursor=pointer]
+                    - button "删除" [ref=f1e6703] [cursor=pointer]
+              - row [ref=f1e6705]:
+                - cell "08005" [ref=f1e6706]
+                - cell "0402普通电阻" [ref=f1e6709]
+                - cell "二级" [ref=f1e6711]
+                - cell "5" [ref=f1e6715]
+                - cell "启用" [ref=f1e6717]
+                - cell [ref=f1e6721]:
+                  - generic [ref=f1e6722]:
+                    - button "编辑" [ref=f1e6723] [cursor=pointer]
+                    - button "停用" [ref=f1e6725] [cursor=pointer]
+                    - button "删除" [ref=f1e6727] [cursor=pointer]
+              - row [ref=f1e6729]:
+                - cell "08006" [ref=f1e6730]
+                - cell "0603普通电阻" [ref=f1e6733]
+                - cell "二级" [ref=f1e6735]
+                - cell "6" [ref=f1e6739]
+                - cell "启用" [ref=f1e6741]
+                - cell [ref=f1e6745]:
+                  - generic [ref=f1e6746]:
+                    - button "编辑" [ref=f1e6747] [cursor=pointer]
+                    - button "停用" [ref=f1e6749] [cursor=pointer]
+                    - button "删除" [ref=f1e6751] [cursor=pointer]
+              - row [ref=f1e6753]:
+                - cell "08007" [ref=f1e6754]
+                - cell "0805普通电阻" [ref=f1e6757]
+                - cell "二级" [ref=f1e6759]
+                - cell "7" [ref=f1e6763]
+                - cell "启用" [ref=f1e6765]
+                - cell [ref=f1e6769]:
+                  - generic [ref=f1e6770]:
+                    - button "编辑" [ref=f1e6771] [cursor=pointer]
+                    - button "停用" [ref=f1e6773] [cursor=pointer]
+                    - button "删除" [ref=f1e6775] [cursor=pointer]
+              - row [ref=f1e6777]:
+                - cell "08008" [ref=f1e6778]
+                - cell "浪涌管/TVS管" [ref=f1e6781]
+                - cell "二级" [ref=f1e6783]
+                - cell "8" [ref=f1e6787]
+                - cell "启用" [ref=f1e6789]
+                - cell [ref=f1e6793]:
+                  - generic [ref=f1e6794]:
+                    - button "编辑" [ref=f1e6795] [cursor=pointer]
+                    - button "停用" [ref=f1e6797] [cursor=pointer]
+                    - button "删除" [ref=f1e6799] [cursor=pointer]
+              - row [ref=f1e6801]:
+                - cell "08009" [ref=f1e6802]
+                - cell "Sensor" [ref=f1e6805]
+                - cell "二级" [ref=f1e6807]
+                - cell "9" [ref=f1e6811]
+                - cell "启用" [ref=f1e6813]
+                - cell [ref=f1e6817]:
+                  - generic [ref=f1e6818]:
+                    - button "编辑" [ref=f1e6819] [cursor=pointer]
+                    - button "停用" [ref=f1e6821] [cursor=pointer]
+                    - button "删除" [ref=f1e6823] [cursor=pointer]
+              - row [ref=f1e6825]:
+                - cell "08010" [ref=f1e6826]
+                - cell "定向耦合器/双定向耦合器" [ref=f1e6829]
+                - cell "二级" [ref=f1e6831]
+                - cell "10" [ref=f1e6835]
+                - cell "启用" [ref=f1e6837]
+                - cell [ref=f1e6841]:
+                  - generic [ref=f1e6842]:
+                    - button "编辑" [ref=f1e6843] [cursor=pointer]
+                    - button "停用" [ref=f1e6845] [cursor=pointer]
+                    - button "删除" [ref=f1e6847] [cursor=pointer]
+              - row [ref=f1e6849]:
+                - cell "08011" [ref=f1e6850]
+                - cell "混合电路滤波器_BPF" [ref=f1e6853]
+                - cell "二级" [ref=f1e6855]
+                - cell "11" [ref=f1e6859]
+                - cell "启用" [ref=f1e6861]
+                - cell [ref=f1e6865]:
+                  - generic [ref=f1e6866]:
+                    - button "编辑" [ref=f1e6867] [cursor=pointer]
+                    - button "停用" [ref=f1e6869] [cursor=pointer]
+                    - button "删除" [ref=f1e6871] [cursor=pointer]
+              - row [ref=f1e6873]:
+                - cell "08012" [ref=f1e6874]
+                - cell "0402贴片磁珠" [ref=f1e6877]
+                - cell "二级" [ref=f1e6879]
+                - cell "12" [ref=f1e6883]
+                - cell "启用" [ref=f1e6885]
+                - cell [ref=f1e6889]:
+                  - generic [ref=f1e6890]:
+                    - button "编辑" [ref=f1e6891] [cursor=pointer]
+                    - button "停用" [ref=f1e6893] [cursor=pointer]
+                    - button "删除" [ref=f1e6895] [cursor=pointer]
+              - row [ref=f1e6897]:
+                - cell "08013" [ref=f1e6898]
+                - cell "0603贴片磁珠" [ref=f1e6901]
+                - cell "二级" [ref=f1e6903]
+                - cell "13" [ref=f1e6907]
+                - cell "启用" [ref=f1e6909]
+                - cell [ref=f1e6913]:
+                  - generic [ref=f1e6914]:
+                    - button "编辑" [ref=f1e6915] [cursor=pointer]
+                    - button "停用" [ref=f1e6917] [cursor=pointer]
+                    - button "删除" [ref=f1e6919] [cursor=pointer]
+              - row [ref=f1e6921]:
+                - cell "08014" [ref=f1e6922]
+                - cell "Duplexer/Quadplexer" [ref=f1e6925]
+                - cell "二级" [ref=f1e6927]
+                - cell "14" [ref=f1e6931]
+                - cell "启用" [ref=f1e6933]
+                - cell [ref=f1e6937]:
+                  - generic [ref=f1e6938]:
+                    - button "编辑" [ref=f1e6939] [cursor=pointer]
+                    - button "停用" [ref=f1e6941] [cursor=pointer]
+                    - button "删除" [ref=f1e6943] [cursor=pointer]
+              - row [ref=f1e6945]:
+                - cell "08015" [ref=f1e6946]
+                - cell "贴片马达" [ref=f1e6949]
+                - cell "二级" [ref=f1e6951]
+                - cell "15" [ref=f1e6955]
+                - cell "启用" [ref=f1e6957]
+                - cell [ref=f1e6961]:
+                  - generic [ref=f1e6962]:
+                    - button "编辑" [ref=f1e6963] [cursor=pointer]
+                    - button "停用" [ref=f1e6965] [cursor=pointer]
+                    - button "删除" [ref=f1e6967] [cursor=pointer]
+              - row [ref=f1e6969]:
+                - cell "08016" [ref=f1e6970]
+                - cell "硅MIC" [ref=f1e6973]
+                - cell "二级" [ref=f1e6975]
+                - cell "16" [ref=f1e6979]
+                - cell "启用" [ref=f1e6981]
+                - cell [ref=f1e6985]:
+                  - generic [ref=f1e6986]:
+                    - button "编辑" [ref=f1e6987] [cursor=pointer]
+                    - button "停用" [ref=f1e6989] [cursor=pointer]
+                    - button "删除" [ref=f1e6991] [cursor=pointer]
+              - row [ref=f1e6993]:
+                - cell "08017" [ref=f1e6994]
+                - cell "G/M/Gyro-Sensor" [ref=f1e6997]
+                - cell "二级" [ref=f1e6999]
+                - cell "17" [ref=f1e7003]
+                - cell "启用" [ref=f1e7005]
+                - cell [ref=f1e7009]:
+                  - generic [ref=f1e7010]:
+                    - button "编辑" [ref=f1e7011] [cursor=pointer]
+                    - button "停用" [ref=f1e7013] [cursor=pointer]
+                    - button "删除" [ref=f1e7015] [cursor=pointer]
+              - row [ref=f1e7017]:
+                - cell "08018" [ref=f1e7018]
+                - cell "1206贴片磁珠" [ref=f1e7021]
+                - cell "二级" [ref=f1e7023]
+                - cell "18" [ref=f1e7027]
+                - cell "启用" [ref=f1e7029]
+                - cell [ref=f1e7033]:
+                  - generic [ref=f1e7034]:
+                    - button "编辑" [ref=f1e7035] [cursor=pointer]
+                    - button "停用" [ref=f1e7037] [cursor=pointer]
+                    - button "删除" [ref=f1e7039] [cursor=pointer]
+              - row [ref=f1e7041]:
+                - cell "08019" [ref=f1e7042]
+                - cell "EMI+ESD器件_Common Mode" [ref=f1e7045]
+                - cell "二级" [ref=f1e7047]
+                - cell "19" [ref=f1e7051]
+                - cell "启用" [ref=f1e7053]
+                - cell [ref=f1e7057]:
+                  - generic [ref=f1e7058]:
+                    - button "编辑" [ref=f1e7059] [cursor=pointer]
+                    - button "停用" [ref=f1e7061] [cursor=pointer]
+                    - button "删除" [ref=f1e7063] [cursor=pointer]
+              - row [ref=f1e7065]:
+                - cell "08020" [ref=f1e7066]
+                - cell "EMCP" [ref=f1e7069]
+                - cell "二级" [ref=f1e7071]
+                - cell "20" [ref=f1e7075]
+                - cell "启用" [ref=f1e7077]
+                - cell [ref=f1e7081]:
+                  - generic [ref=f1e7082]:
+                    - button "编辑" [ref=f1e7083] [cursor=pointer]
+                    - button "停用" [ref=f1e7085] [cursor=pointer]
+                    - button "删除" [ref=f1e7087] [cursor=pointer]
+              - row [ref=f1e7089]:
+                - cell "08021" [ref=f1e7090]
+                - cell "LED灯驱动" [ref=f1e7093]
+                - cell "二级" [ref=f1e7095]
+                - cell "21" [ref=f1e7099]
+                - cell "启用" [ref=f1e7101]
+                - cell [ref=f1e7105]:
+                  - generic [ref=f1e7106]:
+                    - button "编辑" [ref=f1e7107] [cursor=pointer]
+                    - button "停用" [ref=f1e7109] [cursor=pointer]
+                    - button "删除" [ref=f1e7111] [cursor=pointer]
+              - row [ref=f1e7113]:
+                - cell "08022" [ref=f1e7114]
+                - cell "DC-DC" [ref=f1e7117]
+                - cell "二级" [ref=f1e7119]
+                - cell "22" [ref=f1e7123]
+                - cell "启用" [ref=f1e7125]
+                - cell [ref=f1e7129]:
+                  - generic [ref=f1e7130]:
+                    - button "编辑" [ref=f1e7131] [cursor=pointer]
+                    - button "停用" [ref=f1e7133] [cursor=pointer]
+                    - button "删除" [ref=f1e7135] [cursor=pointer]
+              - row [ref=f1e7137]:
+                - cell "08023" [ref=f1e7138]
+                - cell "PMIC" [ref=f1e7141]
+                - cell "二级" [ref=f1e7143]
+                - cell "23" [ref=f1e7147]
+                - cell "启用" [ref=f1e7149]
+                - cell [ref=f1e7153]:
+                  - generic [ref=f1e7154]:
+                    - button "编辑" [ref=f1e7155] [cursor=pointer]
+                    - button "停用" [ref=f1e7157] [cursor=pointer]
+                    - button "删除" [ref=f1e7159] [cursor=pointer]
+              - row [ref=f1e7161]:
+                - cell "08024" [ref=f1e7162]
+                - cell "BB" [ref=f1e7165]
+                - cell "二级" [ref=f1e7167]
+                - cell "24" [ref=f1e7171]
+                - cell "启用" [ref=f1e7173]
+                - cell [ref=f1e7177]:
+                  - generic [ref=f1e7178]:
+                    - button "编辑" [ref=f1e7179] [cursor=pointer]
+                    - button "停用" [ref=f1e7181] [cursor=pointer]
+                    - button "删除" [ref=f1e7183] [cursor=pointer]
+              - row [ref=f1e7185]:
+                - cell "08025" [ref=f1e7186]
+                - cell "RF" [ref=f1e7189]
+                - cell "二级" [ref=f1e7191]
+                - cell "25" [ref=f1e7195]
+                - cell "启用" [ref=f1e7197]
+                - cell [ref=f1e7201]:
+                  - generic [ref=f1e7202]:
+                    - button "编辑" [ref=f1e7203] [cursor=pointer]
+                    - button "停用" [ref=f1e7205] [cursor=pointer]
+                    - button "删除" [ref=f1e7207] [cursor=pointer]
+              - row [ref=f1e7209]:
+                - cell "08026" [ref=f1e7210]
+                - cell "接口电路/驱动电路" [ref=f1e7213]
+                - cell "二级" [ref=f1e7215]
+                - cell "26" [ref=f1e7219]
+                - cell "启用" [ref=f1e7221]
+                - cell [ref=f1e7225]:
+                  - generic [ref=f1e7226]:
+                    - button "编辑" [ref=f1e7227] [cursor=pointer]
+                    - button "停用" [ref=f1e7229] [cursor=pointer]
+                    - button "删除" [ref=f1e7231] [cursor=pointer]
+              - row [ref=f1e7233]:
+                - cell "08027" [ref=f1e7234]
+                - cell "Breath LED Driver" [ref=f1e7237]
+                - cell "二级" [ref=f1e7239]
+                - cell "27" [ref=f1e7243]
+                - cell "启用" [ref=f1e7245]
+                - cell [ref=f1e7249]:
+                  - generic [ref=f1e7250]:
+                    - button "编辑" [ref=f1e7251] [cursor=pointer]
+                    - button "停用" [ref=f1e7253] [cursor=pointer]
+                    - button "删除" [ref=f1e7255] [cursor=pointer]
+              - row [ref=f1e7257]:
+                - cell "08028" [ref=f1e7258]
+                - cell "OVP" [ref=f1e7261]
+                - cell "二级" [ref=f1e7263]
+                - cell "28" [ref=f1e7267]
+                - cell "启用" [ref=f1e7269]
+                - cell [ref=f1e7273]:
+                  - generic [ref=f1e7274]:
+                    - button "编辑" [ref=f1e7275] [cursor=pointer]
+                    - button "停用" [ref=f1e7277] [cursor=pointer]
+                    - button "删除" [ref=f1e7279] [cursor=pointer]
+              - row [ref=f1e7281]:
+                - cell "08029" [ref=f1e7282]
+                - cell "充电" [ref=f1e7285]
+                - cell "二级" [ref=f1e7287]
+                - cell "29" [ref=f1e7291]
+                - cell "启用" [ref=f1e7293]
+                - cell [ref=f1e7297]:
+                  - generic [ref=f1e7298]:
+                    - button "编辑" [ref=f1e7299] [cursor=pointer]
+                    - button "停用" [ref=f1e7301] [cursor=pointer]
+                    - button "删除" [ref=f1e7303] [cursor=pointer]
+              - row [ref=f1e7305]:
+                - cell "08030" [ref=f1e7306]
+                - cell "Connectivity" [ref=f1e7309]
+                - cell "二级" [ref=f1e7311]
+                - cell "30" [ref=f1e7315]
+                - cell "启用" [ref=f1e7317]
+                - cell [ref=f1e7321]:
+                  - generic [ref=f1e7322]:
+                    - button "编辑" [ref=f1e7323] [cursor=pointer]
+                    - button "停用" [ref=f1e7325] [cursor=pointer]
+                    - button "删除" [ref=f1e7327] [cursor=pointer]
+              - row [ref=f1e7329]:
+                - cell "08031" [ref=f1e7330]
+                - cell "AUDIO PA" [ref=f1e7333]
+                - cell "二级" [ref=f1e7335]
+                - cell "31" [ref=f1e7339]
+                - cell "启用" [ref=f1e7341]
+                - cell [ref=f1e7345]:
+                  - generic [ref=f1e7346]:
+                    - button "编辑" [ref=f1e7347] [cursor=pointer]
+                    - button "停用" [ref=f1e7349] [cursor=pointer]
+                    - button "删除" [ref=f1e7351] [cursor=pointer]
+              - row [ref=f1e7353]:
+                - cell "08032" [ref=f1e7354]
+                - cell "2G/3G/4G PA" [ref=f1e7357]
+                - cell "二级" [ref=f1e7359]
+                - cell "32" [ref=f1e7363]
+                - cell "启用" [ref=f1e7365]
+                - cell [ref=f1e7369]:
+                  - generic [ref=f1e7370]:
+                    - button "编辑" [ref=f1e7371] [cursor=pointer]
+                    - button "停用" [ref=f1e7373] [cursor=pointer]
+                    - button "删除" [ref=f1e7375] [cursor=pointer]
+              - row [ref=f1e7377]:
+                - cell "08033" [ref=f1e7378]
+                - cell "TX-Module" [ref=f1e7381]
+                - cell "二级" [ref=f1e7383]
+                - cell "33" [ref=f1e7387]
+                - cell "启用" [ref=f1e7389]
+                - cell [ref=f1e7393]:
+                  - generic [ref=f1e7394]:
+                    - button "编辑" [ref=f1e7395] [cursor=pointer]
+                    - button "停用" [ref=f1e7397] [cursor=pointer]
+                    - button "删除" [ref=f1e7399] [cursor=pointer]
+              - row [ref=f1e7401]:
+                - cell "08034" [ref=f1e7402]
+                - cell "贴片发光二极管" [ref=f1e7405]
+                - cell "二级" [ref=f1e7407]
+                - cell "34" [ref=f1e7411]
+                - cell "启用" [ref=f1e7413]
+                - cell [ref=f1e7417]:
+                  - generic [ref=f1e7418]:
+                    - button "编辑" [ref=f1e7419] [cursor=pointer]
+                    - button "停用" [ref=f1e7421] [cursor=pointer]
+                    - button "删除" [ref=f1e7423] [cursor=pointer]
+              - row [ref=f1e7425]:
+                - cell "08035" [ref=f1e7426]
+                - cell "Discrete RF" [ref=f1e7429]
+                - cell "二级" [ref=f1e7431]
+                - cell "35" [ref=f1e7435]
+                - cell "启用" [ref=f1e7437]
+                - cell [ref=f1e7441]:
+                  - generic [ref=f1e7442]:
+                    - button "编辑" [ref=f1e7443] [cursor=pointer]
+                    - button "停用" [ref=f1e7445] [cursor=pointer]
+                    - button "删除" [ref=f1e7447] [cursor=pointer]
+              - row [ref=f1e7449]:
+                - cell "08036" [ref=f1e7450]
+                - cell "LNA" [ref=f1e7453]
+                - cell "二级" [ref=f1e7455]
+                - cell "36" [ref=f1e7459]
+                - cell "启用" [ref=f1e7461]
+                - cell [ref=f1e7465]:
+                  - generic [ref=f1e7466]:
+                    - button "编辑" [ref=f1e7467] [cursor=pointer]
+                    - button "停用" [ref=f1e7469] [cursor=pointer]
+                    - button "删除" [ref=f1e7471] [cursor=pointer]
+              - row [ref=f1e7473]:
+                - cell "08037" [ref=f1e7474]
+                - cell "有源晶振_VCTCXO/TCXO" [ref=f1e7477]
+                - cell "二级" [ref=f1e7479]
+                - cell "37" [ref=f1e7483]
+                - cell "启用" [ref=f1e7485]
+                - cell [ref=f1e7489]:
+                  - generic [ref=f1e7490]:
+                    - button "编辑" [ref=f1e7491] [cursor=pointer]
+                    - button "停用" [ref=f1e7493] [cursor=pointer]
+                    - button "删除" [ref=f1e7495] [cursor=pointer]
+              - row [ref=f1e7497]:
+                - cell "08038" [ref=f1e7498]
+                - cell "备份电池" [ref=f1e7501]
+                - cell "二级" [ref=f1e7503]
+                - cell "38" [ref=f1e7507]
+                - cell "启用" [ref=f1e7509]
+                - cell [ref=f1e7513]:
+                  - generic [ref=f1e7514]:
+                    - button "编辑" [ref=f1e7515] [cursor=pointer]
+                    - button "停用" [ref=f1e7517] [cursor=pointer]
+                    - button "删除" [ref=f1e7519] [cursor=pointer]
+              - row [ref=f1e7521]:
+                - cell "08039" [ref=f1e7522]
+                - cell "LDO" [ref=f1e7525]
+                - cell "二级" [ref=f1e7527]
+                - cell "39" [ref=f1e7531]
+                - cell "启用" [ref=f1e7533]
+                - cell [ref=f1e7537]:
+                  - generic [ref=f1e7538]:
+                    - button "编辑" [ref=f1e7539] [cursor=pointer]
+                    - button "停用" [ref=f1e7541] [cursor=pointer]
+                    - button "删除" [ref=f1e7543] [cursor=pointer]
+              - row [ref=f1e7545]:
+                - cell "08040" [ref=f1e7546]
+                - cell "贴片三极管" [ref=f1e7549]
+                - cell "二级" [ref=f1e7551]
+                - cell "40" [ref=f1e7555]
+                - cell "启用" [ref=f1e7557]
+                - cell [ref=f1e7561]:
+                  - generic [ref=f1e7562]:
+                    - button "编辑" [ref=f1e7563] [cursor=pointer]
+                    - button "停用" [ref=f1e7565] [cursor=pointer]
+                    - button "删除" [ref=f1e7567] [cursor=pointer]
+              - row [ref=f1e7569]:
+                - cell "08041" [ref=f1e7570]
+                - cell "模拟开关" [ref=f1e7573]
+                - cell "二级" [ref=f1e7575]
+                - cell "41" [ref=f1e7579]
+                - cell "启用" [ref=f1e7581]
+                - cell [ref=f1e7585]:
+                  - generic [ref=f1e7586]:
+                    - button "编辑" [ref=f1e7587] [cursor=pointer]
+                    - button "停用" [ref=f1e7589] [cursor=pointer]
+                    - button "删除" [ref=f1e7591] [cursor=pointer]
+              - row [ref=f1e7593]:
+                - cell "08042" [ref=f1e7594]
+                - cell "RF Switch_SPxT" [ref=f1e7597]
+                - cell "二级" [ref=f1e7599]
+                - cell "42" [ref=f1e7603]
+                - cell "启用" [ref=f1e7605]
+                - cell [ref=f1e7609]:
+                  - generic [ref=f1e7610]:
+                    - button "编辑" [ref=f1e7611] [cursor=pointer]
+                    - button "停用" [ref=f1e7613] [cursor=pointer]
+                    - button "删除" [ref=f1e7615] [cursor=pointer]
+              - row [ref=f1e7617]:
+                - cell "08043" [ref=f1e7618]
+                - cell "贴片MOS管" [ref=f1e7621]
+                - cell "二级" [ref=f1e7623]
+                - cell "43" [ref=f1e7627]
+                - cell "启用" [ref=f1e7629]
+                - cell [ref=f1e7633]:
+                  - generic [ref=f1e7634]:
+                    - button "编辑" [ref=f1e7635] [cursor=pointer]
+                    - button "停用" [ref=f1e7637] [cursor=pointer]
+                    - button "删除" [ref=f1e7639] [cursor=pointer]
+              - row [ref=f1e7641]:
+                - cell "08044" [ref=f1e7642]
+                - cell "无源晶体_Crystal+Thermistor" [ref=f1e7645]
+                - cell "二级" [ref=f1e7647]
+                - cell "44" [ref=f1e7651]
+                - cell "启用" [ref=f1e7653]
+                - cell [ref=f1e7657]:
+                  - generic [ref=f1e7658]:
+                    - button "编辑" [ref=f1e7659] [cursor=pointer]
+                    - button "停用" [ref=f1e7661] [cursor=pointer]
+                    - button "删除" [ref=f1e7663] [cursor=pointer]
+              - row [ref=f1e7665]:
+                - cell "08045" [ref=f1e7666]
+                - cell "RF Switch-其他" [ref=f1e7669]
+                - cell "二级" [ref=f1e7671]
+                - cell "45" [ref=f1e7675]
+                - cell "启用" [ref=f1e7677]
+                - cell [ref=f1e7681]:
+                  - generic [ref=f1e7682]:
+                    - button "编辑" [ref=f1e7683] [cursor=pointer]
+                    - button "停用" [ref=f1e7685] [cursor=pointer]
+                    - button "删除" [ref=f1e7687] [cursor=pointer]
+              - row [ref=f1e7689]:
+                - cell "08046" [ref=f1e7690]
+                - cell "RF Switch_DPxT" [ref=f1e7693]
+                - cell "二级" [ref=f1e7695]
+                - cell "46" [ref=f1e7699]
+                - cell "启用" [ref=f1e7701]
+                - cell [ref=f1e7705]:
+                  - generic [ref=f1e7706]:
+                    - button "编辑" [ref=f1e7707] [cursor=pointer]
+                    - button "停用" [ref=f1e7709] [cursor=pointer]
+                    - button "删除" [ref=f1e7711] [cursor=pointer]
+              - row [ref=f1e7713]:
+                - cell "08047" [ref=f1e7714]
+                - cell "RF FEM" [ref=f1e7717]
+                - cell "二级" [ref=f1e7719]
+                - cell "47" [ref=f1e7723]
+                - cell "启用" [ref=f1e7725]
+                - cell [ref=f1e7729]:
+                  - generic [ref=f1e7730]:
+                    - button "编辑" [ref=f1e7731] [cursor=pointer]
+                    - button "停用" [ref=f1e7733] [cursor=pointer]
+                    - button "删除" [ref=f1e7735] [cursor=pointer]
+              - row [ref=f1e7737]:
+                - cell "08048" [ref=f1e7738]
+                - cell "贴片开关" [ref=f1e7741]
+                - cell "二级" [ref=f1e7743]
+                - cell "48" [ref=f1e7747]
+                - cell "启用" [ref=f1e7749]
+                - cell [ref=f1e7753]:
+                  - generic [ref=f1e7754]:
+                    - button "编辑" [ref=f1e7755] [cursor=pointer]
+                    - button "停用" [ref=f1e7757] [cursor=pointer]
+                    - button "删除" [ref=f1e7759] [cursor=pointer]
+              - row [ref=f1e7761]:
+                - cell "08049" [ref=f1e7762]
+                - cell "NOR/SPI/NAND" [ref=f1e7765]
+                - cell "二级" [ref=f1e7767]
+                - cell "49" [ref=f1e7771]
+                - cell "启用" [ref=f1e7773]
+                - cell [ref=f1e7777]:
+                  - generic [ref=f1e7778]:
+                    - button "编辑" [ref=f1e7779] [cursor=pointer]
+                    - button "停用" [ref=f1e7781] [cursor=pointer]
+                    - button "删除" [ref=f1e7783] [cursor=pointer]
+              - row [ref=f1e7785]:
+                - cell "08050" [ref=f1e7786]
+                - cell "Schottky二极管" [ref=f1e7789]
+                - cell "二级" [ref=f1e7791]
+                - cell "50" [ref=f1e7795]
+                - cell "启用" [ref=f1e7797]
+                - cell [ref=f1e7801]:
+                  - generic [ref=f1e7802]:
+                    - button "编辑" [ref=f1e7803] [cursor=pointer]
+                    - button "停用" [ref=f1e7805] [cursor=pointer]
+                    - button "删除" [ref=f1e7807] [cursor=pointer]
+              - row [ref=f1e7809]:
+                - cell "08051" [ref=f1e7810]
+                - cell "DDR" [ref=f1e7813]
+                - cell "二级" [ref=f1e7815]
+                - cell "51" [ref=f1e7819]
+                - cell "启用" [ref=f1e7821]
+                - cell [ref=f1e7825]:
+                  - generic [ref=f1e7826]:
+                    - button "编辑" [ref=f1e7827] [cursor=pointer]
+                    - button "停用" [ref=f1e7829] [cursor=pointer]
+                    - button "删除" [ref=f1e7831] [cursor=pointer]
+              - row [ref=f1e7833]:
+                - cell "08052" [ref=f1e7834]
+                - cell "Zener二极管" [ref=f1e7837]
+                - cell "二级" [ref=f1e7839]
+                - cell "52" [ref=f1e7843]
+                - cell "启用" [ref=f1e7845]
+                - cell [ref=f1e7849]:
+                  - generic [ref=f1e7850]:
+                    - button "编辑" [ref=f1e7851] [cursor=pointer]
+                    - button "停用" [ref=f1e7853] [cursor=pointer]
+                    - button "删除" [ref=f1e7855] [cursor=pointer]
+              - row [ref=f1e7857]:
+                - cell "08053" [ref=f1e7858]
+                - cell "EMMC/UFS" [ref=f1e7861]
+                - cell "二级" [ref=f1e7863]
+                - cell "53" [ref=f1e7867]
+                - cell "启用" [ref=f1e7869]
+                - cell [ref=f1e7873]:
+                  - generic [ref=f1e7874]:
+                    - button "编辑" [ref=f1e7875] [cursor=pointer]
+                    - button "停用" [ref=f1e7877] [cursor=pointer]
+                    - button "删除" [ref=f1e7879] [cursor=pointer]
+              - row [ref=f1e7881]:
+                - cell "08054" [ref=f1e7882]
+                - cell "背光" [ref=f1e7885]
+                - cell "二级" [ref=f1e7887]
+                - cell "54" [ref=f1e7891]
+                - cell "启用" [ref=f1e7893]
+                - cell [ref=f1e7897]:
+                  - generic [ref=f1e7898]:
+                    - button "编辑" [ref=f1e7899] [cursor=pointer]
+                    - button "停用" [ref=f1e7901] [cursor=pointer]
+                    - button "删除" [ref=f1e7903] [cursor=pointer]
+              - row [ref=f1e7905]:
+                - cell "08055" [ref=f1e7906]
+                - cell "0201贴片叠层电感" [ref=f1e7909]
+                - cell "二级" [ref=f1e7911]
+                - cell "55" [ref=f1e7915]
+                - cell "启用" [ref=f1e7917]
+                - cell [ref=f1e7921]:
+                  - generic [ref=f1e7922]:
+                    - button "编辑" [ref=f1e7923] [cursor=pointer]
+                    - button "停用" [ref=f1e7925] [cursor=pointer]
+                    - button "删除" [ref=f1e7927] [cursor=pointer]
+              - row [ref=f1e7929]:
+                - cell "08056" [ref=f1e7930]
+                - cell "0402贴片叠层电感" [ref=f1e7933]
+                - cell "二级" [ref=f1e7935]
+                - cell "56" [ref=f1e7939]
+                - cell "启用" [ref=f1e7941]
+                - cell [ref=f1e7945]:
+                  - generic [ref=f1e7946]:
+                    - button "编辑" [ref=f1e7947] [cursor=pointer]
+                    - button "停用" [ref=f1e7949] [cursor=pointer]
+                    - button "删除" [ref=f1e7951] [cursor=pointer]
+              - row [ref=f1e7953]:
+                - cell "08057" [ref=f1e7954]
+                - cell "0402贴片线绕电感" [ref=f1e7957]
+                - cell "二级" [ref=f1e7959]
+                - cell "57" [ref=f1e7963]
+                - cell "启用" [ref=f1e7965]
+                - cell [ref=f1e7969]:
+                  - generic [ref=f1e7970]:
+                    - button "编辑" [ref=f1e7971] [cursor=pointer]
+                    - button "停用" [ref=f1e7973] [cursor=pointer]
+                    - button "删除" [ref=f1e7975] [cursor=pointer]
+              - row [ref=f1e7977]:
+                - cell "08058" [ref=f1e7978]
+                - cell "0603贴片线绕电感" [ref=f1e7981]
+                - cell "二级" [ref=f1e7983]
+                - cell "58" [ref=f1e7987]
+                - cell "启用" [ref=f1e7989]
+                - cell [ref=f1e7993]:
+                  - generic [ref=f1e7994]:
+                    - button "编辑" [ref=f1e7995] [cursor=pointer]
+                    - button "停用" [ref=f1e7997] [cursor=pointer]
+                    - button "删除" [ref=f1e7999] [cursor=pointer]
+              - row [ref=f1e8001]:
+                - cell "08059" [ref=f1e8002]
+                - cell "贴片功率电感" [ref=f1e8005]
+                - cell "二级" [ref=f1e8007]
+                - cell "59" [ref=f1e8011]
+                - cell "启用" [ref=f1e8013]
+                - cell [ref=f1e8017]:
+                  - generic [ref=f1e8018]:
+                    - button "编辑" [ref=f1e8019] [cursor=pointer]
+                    - button "停用" [ref=f1e8021] [cursor=pointer]
+                    - button "删除" [ref=f1e8023] [cursor=pointer]
+              - row [ref=f1e8025]:
+                - cell "08060" [ref=f1e8026]
+                - cell "0402片状电容" [ref=f1e8029]
+                - cell "二级" [ref=f1e8031]
+                - cell "60" [ref=f1e8035]
+                - cell "启用" [ref=f1e8037]
+                - cell [ref=f1e8041]:
+                  - generic [ref=f1e8042]:
+                    - button "编辑" [ref=f1e8043] [cursor=pointer]
+                    - button "停用" [ref=f1e8045] [cursor=pointer]
+                    - button "删除" [ref=f1e8047] [cursor=pointer]
+              - row [ref=f1e8049]:
+                - cell "08061" [ref=f1e8050]
+                - cell "无源晶体_Crystal" [ref=f1e8053]
+                - cell "二级" [ref=f1e8055]
+                - cell "61" [ref=f1e8059]
+                - cell "启用" [ref=f1e8061]
+                - cell [ref=f1e8065]:
+                  - generic [ref=f1e8066]:
+                    - button "编辑" [ref=f1e8067] [cursor=pointer]
+                    - button "停用" [ref=f1e8069] [cursor=pointer]
+                    - button "删除" [ref=f1e8071] [cursor=pointer]
+              - row [ref=f1e8073]:
+                - cell "08062" [ref=f1e8074]
+                - cell "0201普通电阻" [ref=f1e8077]
+                - cell "二级" [ref=f1e8079]
+                - cell "62" [ref=f1e8083]
+                - cell "启用" [ref=f1e8085]
+                - cell [ref=f1e8089]:
+                  - generic [ref=f1e8090]:
+                    - button "编辑" [ref=f1e8091] [cursor=pointer]
+                    - button "停用" [ref=f1e8093] [cursor=pointer]
+                    - button "删除" [ref=f1e8095] [cursor=pointer]
+              - row [ref=f1e8097]:
+                - cell "08063" [ref=f1e8098]
+                - cell "0201片状电容" [ref=f1e8101]
+                - cell "二级" [ref=f1e8103]
+                - cell "63" [ref=f1e8107]
+                - cell "启用" [ref=f1e8109]
+                - cell [ref=f1e8113]:
+                  - generic [ref=f1e8114]:
+                    - button "编辑" [ref=f1e8115] [cursor=pointer]
+                    - button "停用" [ref=f1e8117] [cursor=pointer]
+                    - button "删除" [ref=f1e8119] [cursor=pointer]
+              - row [ref=f1e8121]:
+                - cell "08064" [ref=f1e8122]
+                - cell "0603贴片叠层电感" [ref=f1e8125]
+                - cell "二级" [ref=f1e8127]
+                - cell "64" [ref=f1e8131]
+                - cell "启用" [ref=f1e8133]
+                - cell [ref=f1e8137]:
+                  - generic [ref=f1e8138]:
+                    - button "编辑" [ref=f1e8139] [cursor=pointer]
+                    - button "停用" [ref=f1e8141] [cursor=pointer]
+                    - button "删除" [ref=f1e8143] [cursor=pointer]
+              - row [ref=f1e8145]:
+                - cell "08065" [ref=f1e8146]
+                - cell "0805贴片叠层电感" [ref=f1e8149]
+                - cell "二级" [ref=f1e8151]
+                - cell "65" [ref=f1e8155]
+                - cell "启用" [ref=f1e8157]
+                - cell [ref=f1e8161]:
+                  - generic [ref=f1e8162]:
+                    - button "编辑" [ref=f1e8163] [cursor=pointer]
+                    - button "停用" [ref=f1e8165] [cursor=pointer]
+                    - button "删除" [ref=f1e8167] [cursor=pointer]
+              - row [ref=f1e8169]:
+                - cell "08066" [ref=f1e8170]
+                - cell "0805片状电容" [ref=f1e8173]
+                - cell "二级" [ref=f1e8175]
+                - cell "66" [ref=f1e8179]
+                - cell "启用" [ref=f1e8181]
+                - cell [ref=f1e8185]:
+                  - generic [ref=f1e8186]:
+                    - button "编辑" [ref=f1e8187] [cursor=pointer]
+                    - button "停用" [ref=f1e8189] [cursor=pointer]
+                    - button "删除" [ref=f1e8191] [cursor=pointer]
+              - row [ref=f1e8193]:
+                - cell "08067" [ref=f1e8194]
+                - cell "1206片状电容" [ref=f1e8197]
+                - cell "二级" [ref=f1e8199]
+                - cell "67" [ref=f1e8203]
+                - cell "启用" [ref=f1e8205]
+                - cell [ref=f1e8209]:
+                  - generic [ref=f1e8210]:
+                    - button "编辑" [ref=f1e8211] [cursor=pointer]
+                    - button "停用" [ref=f1e8213] [cursor=pointer]
+                    - button "删除" [ref=f1e8215] [cursor=pointer]
+              - row [ref=f1e8217]:
+                - cell "08068" [ref=f1e8218]
+                - cell "贴片钽电解电容(有机高分子电容)" [ref=f1e8221]
+                - cell "二级" [ref=f1e8223]
+                - cell "68" [ref=f1e8227]
+                - cell "启用" [ref=f1e8229]
+                - cell [ref=f1e8233]:
+                  - generic [ref=f1e8234]:
+                    - button "编辑" [ref=f1e8235] [cursor=pointer]
+                    - button "停用" [ref=f1e8237] [cursor=pointer]
+                    - button "删除" [ref=f1e8239] [cursor=pointer]
+              - row [ref=f1e8241]:
+                - cell "08069" [ref=f1e8242]
+                - cell "1206普通电阻" [ref=f1e8245]
+                - cell "二级" [ref=f1e8247]
+                - cell "69" [ref=f1e8251]
+                - cell "启用" [ref=f1e8253]
+                - cell [ref=f1e8257]:
+                  - generic [ref=f1e8258]:
+                    - button "编辑" [ref=f1e8259] [cursor=pointer]
+                    - button "停用" [ref=f1e8261] [cursor=pointer]
+                    - button "删除" [ref=f1e8263] [cursor=pointer]
+              - row [ref=f1e8265]:
+                - cell "08070" [ref=f1e8266]
+                - cell "排阻" [ref=f1e8269]
+                - cell "二级" [ref=f1e8271]
+                - cell "70" [ref=f1e8275]
+                - cell "启用" [ref=f1e8277]
+                - cell [ref=f1e8281]:
+                  - generic [ref=f1e8282]:
+                    - button "编辑" [ref=f1e8283] [cursor=pointer]
+                    - button "停用" [ref=f1e8285] [cursor=pointer]
+                    - button "删除" [ref=f1e8287] [cursor=pointer]
+              - row [ref=f1e8289]:
+                - cell "08071" [ref=f1e8290]
+                - cell "贴片热敏电阻" [ref=f1e8293]
+                - cell "二级" [ref=f1e8295]
+                - cell "71" [ref=f1e8299]
+                - cell "启用" [ref=f1e8301]
+                - cell [ref=f1e8305]:
+                  - generic [ref=f1e8306]:
+                    - button "编辑" [ref=f1e8307] [cursor=pointer]
+                    - button "停用" [ref=f1e8309] [cursor=pointer]
+                    - button "删除" [ref=f1e8311] [cursor=pointer]
+              - row [ref=f1e8313]:
+                - cell "08072" [ref=f1e8314]
+                - cell "插接式电解电容" [ref=f1e8317]
+                - cell "二级" [ref=f1e8319]
+                - cell "72" [ref=f1e8323]
+                - cell "启用" [ref=f1e8325]
+                - cell [ref=f1e8329]:
+                  - generic [ref=f1e8330]:
+                    - button "编辑" [ref=f1e8331] [cursor=pointer]
+                    - button "停用" [ref=f1e8333] [cursor=pointer]
+                    - button "删除" [ref=f1e8335] [cursor=pointer]
+              - row [ref=f1e8337]:
+                - cell "08073" [ref=f1e8338]
+                - cell "0603片状电容" [ref=f1e8341]
+                - cell "二级" [ref=f1e8343]
+                - cell "73" [ref=f1e8347]
+                - cell "启用" [ref=f1e8349]
+                - cell [ref=f1e8353]:
+                  - generic [ref=f1e8354]:
+                    - button "编辑" [ref=f1e8355] [cursor=pointer]
+                    - button "停用" [ref=f1e8357] [cursor=pointer]
+                    - button "删除" [ref=f1e8359] [cursor=pointer]
+              - row [ref=f1e8361]:
+                - cell "08074" [ref=f1e8362]
+                - cell "其他电阻" [ref=f1e8365]
+                - cell "二级" [ref=f1e8367]
+                - cell "74" [ref=f1e8371]
+                - cell "启用" [ref=f1e8373]
+                - cell [ref=f1e8377]:
+                  - generic [ref=f1e8378]:
+                    - button "编辑" [ref=f1e8379] [cursor=pointer]
+                    - button "停用" [ref=f1e8381] [cursor=pointer]
+                    - button "删除" [ref=f1e8383] [cursor=pointer]
+              - row [ref=f1e8385]:
+                - cell "08075" [ref=f1e8386]
+                - cell "屏蔽罩" [ref=f1e8389]
+                - cell "二级" [ref=f1e8391]
+                - cell "75" [ref=f1e8395]
+                - cell "启用" [ref=f1e8397]
+                - cell [ref=f1e8401]:
+                  - generic [ref=f1e8402]:
+                    - button "编辑" [ref=f1e8403] [cursor=pointer]
+                    - button "停用" [ref=f1e8405] [cursor=pointer]
+                    - button "删除" [ref=f1e8407] [cursor=pointer]
+              - row [ref=f1e8409]:
+                - cell "08076" [ref=f1e8410]
+                - cell "普通电池连接器" [ref=f1e8413]
+                - cell "二级" [ref=f1e8415]
+                - cell "76" [ref=f1e8419]
+                - cell "启用" [ref=f1e8421]
+                - cell [ref=f1e8425]:
+                  - generic [ref=f1e8426]:
+                    - button "编辑" [ref=f1e8427] [cursor=pointer]
+                    - button "停用" [ref=f1e8429] [cursor=pointer]
+                    - button "删除" [ref=f1e8431] [cursor=pointer]
+              - row [ref=f1e8433]:
+                - cell "08077" [ref=f1e8434]
+                - cell "板板连接器" [ref=f1e8437]
+                - cell "二级" [ref=f1e8439]
+                - cell "77" [ref=f1e8443]
+                - cell "启用" [ref=f1e8445]
+                - cell [ref=f1e8449]:
+                  - generic [ref=f1e8450]:
+                    - button "编辑" [ref=f1e8451] [cursor=pointer]
+                    - button "停用" [ref=f1e8453] [cursor=pointer]
+                    - button "删除" [ref=f1e8455] [cursor=pointer]
+              - row [ref=f1e8457]:
+                - cell "08078" [ref=f1e8458]
+                - cell "贴片弹片" [ref=f1e8461]
+                - cell "二级" [ref=f1e8463]
+                - cell "78" [ref=f1e8467]
+                - cell "启用" [ref=f1e8469]
+                - cell [ref=f1e8473]:
+                  - generic [ref=f1e8474]:
+                    - button "编辑" [ref=f1e8475] [cursor=pointer]
+                    - button "停用" [ref=f1e8477] [cursor=pointer]
+                    - button "删除" [ref=f1e8479] [cursor=pointer]
+              - row [ref=f1e8481]:
+                - cell "08079" [ref=f1e8482]
+                - cell "贴片垫片" [ref=f1e8485]
+                - cell "二级" [ref=f1e8487]
+                - cell "79" [ref=f1e8491]
+                - cell "启用" [ref=f1e8493]
+                - cell [ref=f1e8497]:
+                  - generic [ref=f1e8498]:
+                    - button "编辑" [ref=f1e8499] [cursor=pointer]
+                    - button "停用" [ref=f1e8501] [cursor=pointer]
+                    - button "删除" [ref=f1e8503] [cursor=pointer]
+              - row [ref=f1e8505]:
+                - cell "08080" [ref=f1e8506]
+                - cell "同轴线连接器" [ref=f1e8509]
+                - cell "二级" [ref=f1e8511]
+                - cell "80" [ref=f1e8515]
+                - cell "启用" [ref=f1e8517]
+                - cell [ref=f1e8521]:
+                  - generic [ref=f1e8522]:
+                    - button "编辑" [ref=f1e8523] [cursor=pointer]
+                    - button "停用" [ref=f1e8525] [cursor=pointer]
+                    - button "删除" [ref=f1e8527] [cursor=pointer]
+              - row [ref=f1e8529]:
+                - cell "08081" [ref=f1e8530]
+                - cell "射频测试座" [ref=f1e8533]
+                - cell "二级" [ref=f1e8535]
+                - cell "81" [ref=f1e8539]
+                - cell "启用" [ref=f1e8541]
+                - cell [ref=f1e8545]:
+                  - generic [ref=f1e8546]:
+                    - button "编辑" [ref=f1e8547] [cursor=pointer]
+                    - button "停用" [ref=f1e8549] [cursor=pointer]
+                    - button "删除" [ref=f1e8551] [cursor=pointer]
+              - row [ref=f1e8553]:
+                - cell "08082" [ref=f1e8554]
+                - cell "SIM/SD卡座连接器" [ref=f1e8557]
+                - cell "二级" [ref=f1e8559]
+                - cell "82" [ref=f1e8563]
+                - cell "启用" [ref=f1e8565]
+                - cell [ref=f1e8569]:
+                  - generic [ref=f1e8570]:
+                    - button "编辑" [ref=f1e8571] [cursor=pointer]
+                    - button "停用" [ref=f1e8573] [cursor=pointer]
+                    - button "删除" [ref=f1e8575] [cursor=pointer]
+              - row [ref=f1e8577]:
+                - cell "08083" [ref=f1e8578]
+                - cell "耳机座连接器" [ref=f1e8581]
+                - cell "二级" [ref=f1e8583]
+                - cell "83" [ref=f1e8587]
+                - cell "启用" [ref=f1e8589]
+                - cell [ref=f1e8593]:
+                  - generic [ref=f1e8594]:
+                    - button "编辑" [ref=f1e8595] [cursor=pointer]
+                    - button "停用" [ref=f1e8597] [cursor=pointer]
+                    - button "删除" [ref=f1e8599] [cursor=pointer]
+              - row [ref=f1e8601]:
+                - cell "08084" [ref=f1e8602]
+                - cell "USB连接器" [ref=f1e8605]
+                - cell "二级" [ref=f1e8607]
+                - cell "84" [ref=f1e8611]
+                - cell "启用" [ref=f1e8613]
+                - cell [ref=f1e8617]:
+                  - generic [ref=f1e8618]:
+                    - button "编辑" [ref=f1e8619] [cursor=pointer]
+                    - button "停用" [ref=f1e8621] [cursor=pointer]
+                    - button "删除" [ref=f1e8623] [cursor=pointer]
+              - row [ref=f1e8625]:
+                - cell "08085" [ref=f1e8626]
+                - cell "FPC连接器" [ref=f1e8629]
+                - cell "二级" [ref=f1e8631]
+                - cell "85" [ref=f1e8635]
+                - cell "启用" [ref=f1e8637]
+                - cell [ref=f1e8641]:
+                  - generic [ref=f1e8642]:
+                    - button "编辑" [ref=f1e8643] [cursor=pointer]
+                    - button "停用" [ref=f1e8645] [cursor=pointer]
+                    - button "删除" [ref=f1e8647] [cursor=pointer]
+              - row [ref=f1e8649]:
+                - cell "08086" [ref=f1e8650]
+                - cell "不可拆电池连接器" [ref=f1e8653]
+                - cell "二级" [ref=f1e8655]
+                - cell "86" [ref=f1e8659]
+                - cell "启用" [ref=f1e8661]
+                - cell [ref=f1e8665]:
+                  - generic [ref=f1e8666]:
+                    - button "编辑" [ref=f1e8667] [cursor=pointer]
+                    - button "停用" [ref=f1e8669] [cursor=pointer]
+                    - button "删除" [ref=f1e8671] [cursor=pointer]
+              - row [ref=f1e8673]:
+                - cell "08087" [ref=f1e8674]
+                - cell "封箱胶带" [ref=f1e8677]
+                - cell "二级" [ref=f1e8679]
+                - cell "87" [ref=f1e8683]
+                - cell "启用" [ref=f1e8685]
+                - cell [ref=f1e8689]:
+                  - generic [ref=f1e8690]:
+                    - button "编辑" [ref=f1e8691] [cursor=pointer]
+                    - button "停用" [ref=f1e8693] [cursor=pointer]
+                    - button "删除" [ref=f1e8695] [cursor=pointer]
+              - row [ref=f1e8697]:
+                - cell "08088" [ref=f1e8698]
+                - cell "托盘及围套" [ref=f1e8701]
+                - cell "二级" [ref=f1e8703]
+                - cell "88" [ref=f1e8707]
+                - cell "启用" [ref=f1e8709]
+                - cell [ref=f1e8713]:
+                  - generic [ref=f1e8714]:
+                    - button "编辑" [ref=f1e8715] [cursor=pointer]
+                    - button "停用" [ref=f1e8717] [cursor=pointer]
+                    - button "删除" [ref=f1e8719] [cursor=pointer]
+              - row [ref=f1e8721]:
+                - cell "08089" [ref=f1e8722]
+                - cell "通用塑料袋/热缩膜" [ref=f1e8725]
+                - cell "二级" [ref=f1e8727]
+                - cell "89" [ref=f1e8731]
+                - cell "启用" [ref=f1e8733]
+                - cell [ref=f1e8737]:
+                  - generic [ref=f1e8738]:
+                    - button "编辑" [ref=f1e8739] [cursor=pointer]
+                    - button "停用" [ref=f1e8741] [cursor=pointer]
+                    - button "删除" [ref=f1e8743] [cursor=pointer]
+              - row [ref=f1e8745]:
+                - cell "08090" [ref=f1e8746]
+                - cell "标签" [ref=f1e8749]
+                - cell "二级" [ref=f1e8751]
+                - cell "90" [ref=f1e8755]
+                - cell "启用" [ref=f1e8757]
+                - cell [ref=f1e8761]:
+                  - generic [ref=f1e8762]:
+                    - button "编辑" [ref=f1e8763] [cursor=pointer]
+                    - button "停用" [ref=f1e8765] [cursor=pointer]
+                    - button "删除" [ref=f1e8767] [cursor=pointer]
+              - row [ref=f1e8769]:
+                - cell "08091" [ref=f1e8770]
+                - cell "ECM MIC" [ref=f1e8773]
+                - cell "二级" [ref=f1e8775]
+                - cell "91" [ref=f1e8779]
+                - cell "启用" [ref=f1e8781]
+                - cell [ref=f1e8785]:
+                  - generic [ref=f1e8786]:
+                    - button "编辑" [ref=f1e8787] [cursor=pointer]
+                    - button "停用" [ref=f1e8789] [cursor=pointer]
+                    - button "删除" [ref=f1e8791] [cursor=pointer]
+              - row [ref=f1e8793]:
+                - cell "08092" [ref=f1e8794]
+                - cell "螺钉" [ref=f1e8797]
+                - cell "二级" [ref=f1e8799]
+                - cell "92" [ref=f1e8803]
+                - cell "启用" [ref=f1e8805]
+                - cell [ref=f1e8809]:
+                  - generic [ref=f1e8810]:
+                    - button "编辑" [ref=f1e8811] [cursor=pointer]
+                    - button "停用" [ref=f1e8813] [cursor=pointer]
+                    - button "删除" [ref=f1e8815] [cursor=pointer]
+              - row [ref=f1e8817]:
+                - cell "08093" [ref=f1e8818]
+                - cell "扁平马达" [ref=f1e8821]
+                - cell "二级" [ref=f1e8823]
+                - cell "93" [ref=f1e8827]
+                - cell "启用" [ref=f1e8829]
+                - cell [ref=f1e8833]:
+                  - generic [ref=f1e8834]:
+                    - button "编辑" [ref=f1e8835] [cursor=pointer]
+                    - button "停用" [ref=f1e8837] [cursor=pointer]
+                    - button "删除" [ref=f1e8839] [cursor=pointer]
+              - row [ref=f1e8841]:
+                - cell "08094" [ref=f1e8842]
+                - cell "柱状马达" [ref=f1e8845]
+                - cell "二级" [ref=f1e8847]
+                - cell "94" [ref=f1e8851]
+                - cell "启用" [ref=f1e8853]
+                - cell [ref=f1e8857]:
+                  - generic [ref=f1e8858]:
+                    - button "编辑" [ref=f1e8859] [cursor=pointer]
+                    - button "停用" [ref=f1e8861] [cursor=pointer]
+                    - button "删除" [ref=f1e8863] [cursor=pointer]
+              - row [ref=f1e8865]:
+                - cell "08095" [ref=f1e8866]
+                - cell "主板PCB" [ref=f1e8869]
+                - cell "二级" [ref=f1e8871]
+                - cell "95" [ref=f1e8875]
+                - cell "启用" [ref=f1e8877]
+                - cell [ref=f1e8881]:
+                  - generic [ref=f1e8882]:
+                    - button "编辑" [ref=f1e8883] [cursor=pointer]
+                    - button "停用" [ref=f1e8885] [cursor=pointer]
+                    - button "删除" [ref=f1e8887] [cursor=pointer]
+              - row [ref=f1e8889]:
+                - cell "08096" [ref=f1e8890]
+                - cell "同轴电缆" [ref=f1e8893]
+                - cell "二级" [ref=f1e8895]
+                - cell "96" [ref=f1e8899]
+                - cell "启用" [ref=f1e8901]
+                - cell [ref=f1e8905]:
+                  - generic [ref=f1e8906]:
+                    - button "编辑" [ref=f1e8907] [cursor=pointer]
+                    - button "停用" [ref=f1e8909] [cursor=pointer]
+                    - button "删除" [ref=f1e8911] [cursor=pointer]
+              - row [ref=f1e8913]:
+                - cell "08097" [ref=f1e8914]
+                - cell "非手机壳体组件" [ref=f1e8917]
+                - cell "二级" [ref=f1e8919]
+                - cell "97" [ref=f1e8923]
+                - cell "启用" [ref=f1e8925]
+                - cell [ref=f1e8929]:
+                  - generic [ref=f1e8930]:
+                    - button "编辑" [ref=f1e8931] [cursor=pointer]
+                    - button "停用" [ref=f1e8933] [cursor=pointer]
+                    - button "删除" [ref=f1e8935] [cursor=pointer]
+              - row [ref=f1e8937]:
+                - cell "08098" [ref=f1e8938]
+                - cell "缓冲压紧材料（泡棉/海绵/胶垫）" [ref=f1e8941]
+                - cell "二级" [ref=f1e8943]
+                - cell "98" [ref=f1e8947]
+                - cell "启用" [ref=f1e8949]
+                - cell [ref=f1e8953]:
+                  - generic [ref=f1e8954]:
+                    - button "编辑" [ref=f1e8955] [cursor=pointer]
+                    - button "停用" [ref=f1e8957] [cursor=pointer]
+                    - button "删除" [ref=f1e8959] [cursor=pointer]
+              - row [ref=f1e8961]:
+                - cell "08099" [ref=f1e8962]
+                - cell "指纹" [ref=f1e8965]
+                - cell "二级" [ref=f1e8967]
+                - cell "99" [ref=f1e8971]
+                - cell "启用" [ref=f1e8973]
+                - cell [ref=f1e8977]:
+                  - generic [ref=f1e8978]:
+                    - button "编辑" [ref=f1e8979] [cursor=pointer]
+                    - button "停用" [ref=f1e8981] [cursor=pointer]
+                    - button "删除" [ref=f1e8983] [cursor=pointer]
+              - row [ref=f1e8985]:
+                - cell "08100" [ref=f1e8986]
+                - cell "液晶显示模块" [ref=f1e8989]
+                - cell "二级" [ref=f1e8991]
+                - cell "100" [ref=f1e8995]
+                - cell "启用" [ref=f1e8997]
+                - cell [ref=f1e9001]:
+                  - generic [ref=f1e9002]:
+                    - button "编辑" [ref=f1e9003] [cursor=pointer]
+                    - button "停用" [ref=f1e9005] [cursor=pointer]
+                    - button "删除" [ref=f1e9007] [cursor=pointer]
+              - row [ref=f1e9009]:
+                - cell "08101" [ref=f1e9010]
+                - cell "卡托" [ref=f1e9013]
+                - cell "二级" [ref=f1e9015]
+                - cell "101" [ref=f1e9019]
+                - cell "启用" [ref=f1e9021]
+                - cell [ref=f1e9025]:
+                  - generic [ref=f1e9026]:
+                    - button "编辑" [ref=f1e9027] [cursor=pointer]
+                    - button "停用" [ref=f1e9029] [cursor=pointer]
+                    - button "删除" [ref=f1e9031] [cursor=pointer]
+              - row [ref=f1e9033]:
+                - cell "08102" [ref=f1e9034]
+                - cell "其它封装电感" [ref=f1e9037]
+                - cell "二级" [ref=f1e9039]
+                - cell "102" [ref=f1e9043]
+                - cell "启用" [ref=f1e9045]
+                - cell [ref=f1e9049]:
+                  - generic [ref=f1e9050]:
+                    - button "编辑" [ref=f1e9051] [cursor=pointer]
+                    - button "停用" [ref=f1e9053] [cursor=pointer]
+                    - button "删除" [ref=f1e9055] [cursor=pointer]
+              - row [ref=f1e9057]:
+                - cell "08103" [ref=f1e9058]
+                - cell "贴片电解电容" [ref=f1e9061]
+                - cell "二级" [ref=f1e9063]
+                - cell "103" [ref=f1e9067]
+                - cell "启用" [ref=f1e9069]
+                - cell [ref=f1e9073]:
+                  - generic [ref=f1e9074]:
+                    - button "编辑" [ref=f1e9075] [cursor=pointer]
+                    - button "停用" [ref=f1e9077] [cursor=pointer]
+                    - button "删除" [ref=f1e9079] [cursor=pointer]
+              - row [ref=f1e9081]:
+                - cell "08104" [ref=f1e9082]
+                - cell "Diplexer" [ref=f1e9085]
+                - cell "二级" [ref=f1e9087]
+                - cell "104" [ref=f1e9091]
+                - cell "启用" [ref=f1e9093]
+                - cell [ref=f1e9097]:
+                  - generic [ref=f1e9098]:
+                    - button "编辑" [ref=f1e9099] [cursor=pointer]
+                    - button "停用" [ref=f1e9101] [cursor=pointer]
+                    - button "删除" [ref=f1e9103] [cursor=pointer]
+              - row [ref=f1e9105]:
+                - cell "08105" [ref=f1e9106]
+                - cell "密封遮蔽材料（麦拉等）" [ref=f1e9109]
+                - cell "二级" [ref=f1e9111]
+                - cell "105" [ref=f1e9115]
+                - cell "启用" [ref=f1e9117]
+                - cell [ref=f1e9121]:
+                  - generic [ref=f1e9122]:
+                    - button "编辑" [ref=f1e9123] [cursor=pointer]
+                    - button "停用" [ref=f1e9125] [cursor=pointer]
+                    - button "删除" [ref=f1e9127] [cursor=pointer]
+              - row [ref=f1e9129]:
+                - cell "08106" [ref=f1e9130]
+                - cell "支架" [ref=f1e9133]
+                - cell "二级" [ref=f1e9135]
+                - cell "106" [ref=f1e9139]
+                - cell "启用" [ref=f1e9141]
+                - cell [ref=f1e9145]:
+                  - generic [ref=f1e9146]:
+                    - button "编辑" [ref=f1e9147] [cursor=pointer]
+                    - button "停用" [ref=f1e9149] [cursor=pointer]
+                    - button "删除" [ref=f1e9151] [cursor=pointer]
+              - row [ref=f1e9153]:
+                - cell "08107" [ref=f1e9154]
+                - cell "胶套" [ref=f1e9157]
+                - cell "二级" [ref=f1e9159]
+                - cell "107" [ref=f1e9163]
+                - cell "启用" [ref=f1e9165]
+                - cell [ref=f1e9169]:
+                  - generic [ref=f1e9170]:
+                    - button "编辑" [ref=f1e9171] [cursor=pointer]
+                    - button "停用" [ref=f1e9173] [cursor=pointer]
+                    - button "删除" [ref=f1e9175] [cursor=pointer]
+              - row [ref=f1e9177]:
+                - cell "08108" [ref=f1e9178]
+                - cell "金属冲压/压铸件" [ref=f1e9181]
+                - cell "二级" [ref=f1e9183]
+                - cell "108" [ref=f1e9187]
+                - cell "启用" [ref=f1e9189]
+                - cell [ref=f1e9193]:
+                  - generic [ref=f1e9194]:
+                    - button "编辑" [ref=f1e9195] [cursor=pointer]
+                    - button "停用" [ref=f1e9197] [cursor=pointer]
+                    - button "删除" [ref=f1e9199] [cursor=pointer]
+              - row [ref=f1e9201]:
+                - cell "08109" [ref=f1e9202]
+                - cell "同轴线缆连接器" [ref=f1e9205]
+                - cell "二级" [ref=f1e9207]
+                - cell "109" [ref=f1e9211]
+                - cell "启用" [ref=f1e9213]
+                - cell [ref=f1e9217]:
+                  - generic [ref=f1e9218]:
+                    - button "编辑" [ref=f1e9219] [cursor=pointer]
+                    - button "停用" [ref=f1e9221] [cursor=pointer]
+                    - button "删除" [ref=f1e9223] [cursor=pointer]
+              - row [ref=f1e9225]:
+                - cell "08110" [ref=f1e9226]
+                - cell "售后PCBA包装" [ref=f1e9229]
+                - cell "二级" [ref=f1e9231]
+                - cell "110" [ref=f1e9235]
+                - cell "启用" [ref=f1e9237]
+                - cell [ref=f1e9241]:
+                  - generic [ref=f1e9242]:
+                    - button "编辑" [ref=f1e9243] [cursor=pointer]
+                    - button "停用" [ref=f1e9245] [cursor=pointer]
+                    - button "删除" [ref=f1e9247] [cursor=pointer]
+              - row [ref=f1e9249]:
+                - cell "08111" [ref=f1e9250]
+                - cell "导热材料" [ref=f1e9253]
+                - cell "二级" [ref=f1e9255]
+                - cell "111" [ref=f1e9259]
+                - cell "启用" [ref=f1e9261]
+                - cell [ref=f1e9265]:
+                  - generic [ref=f1e9266]:
+                    - button "编辑" [ref=f1e9267] [cursor=pointer]
+                    - button "停用" [ref=f1e9269] [cursor=pointer]
+                    - button "删除" [ref=f1e9271] [cursor=pointer]
+              - row [ref=f1e9273]:
+                - cell "08112" [ref=f1e9274]
+                - cell "喇叭BOX" [ref=f1e9277]
+                - cell "二级" [ref=f1e9279]
+                - cell "112" [ref=f1e9283]
+                - cell "启用" [ref=f1e9285]
+                - cell [ref=f1e9289]:
+                  - generic [ref=f1e9290]:
+                    - button "编辑" [ref=f1e9291] [cursor=pointer]
+                    - button "停用" [ref=f1e9293] [cursor=pointer]
+                    - button "删除" [ref=f1e9295] [cursor=pointer]
+              - row [ref=f1e9297]:
+                - cell "08113" [ref=f1e9298]
+                - cell "彩盒封套/袖套" [ref=f1e9301]
+                - cell "二级" [ref=f1e9303]
+                - cell "113" [ref=f1e9307]
+                - cell "启用" [ref=f1e9309]
+                - cell [ref=f1e9313]:
+                  - generic [ref=f1e9314]:
+                    - button "编辑" [ref=f1e9315] [cursor=pointer]
+                    - button "停用" [ref=f1e9317] [cursor=pointer]
+                    - button "删除" [ref=f1e9319] [cursor=pointer]
+              - row [ref=f1e9321]:
+                - cell "08114" [ref=f1e9322]
+                - cell "混合电路滤波器_HPF" [ref=f1e9325]
+                - cell "二级" [ref=f1e9327]
+                - cell "114" [ref=f1e9331]
+                - cell "启用" [ref=f1e9333]
+                - cell [ref=f1e9337]:
+                  - generic [ref=f1e9338]:
+                    - button "编辑" [ref=f1e9339] [cursor=pointer]
+                    - button "停用" [ref=f1e9341] [cursor=pointer]
+                    - button "删除" [ref=f1e9343] [cursor=pointer]
+              - row [ref=f1e9345]:
+                - cell "08115" [ref=f1e9346]
+                - cell "外购X合一" [ref=f1e9349]
+                - cell "二级" [ref=f1e9351]
+                - cell "115" [ref=f1e9355]
+                - cell "启用" [ref=f1e9357]
+                - cell [ref=f1e9361]:
+                  - generic [ref=f1e9362]:
+                    - button "编辑" [ref=f1e9363] [cursor=pointer]
+                    - button "停用" [ref=f1e9365] [cursor=pointer]
+                    - button "删除" [ref=f1e9367] [cursor=pointer]
+              - row [ref=f1e9369]:
+                - cell "08116" [ref=f1e9370]
+                - cell "背胶" [ref=f1e9373]
+                - cell "二级" [ref=f1e9375]
+                - cell "116" [ref=f1e9379]
+                - cell "启用" [ref=f1e9381]
+                - cell [ref=f1e9385]:
+                  - generic [ref=f1e9386]:
+                    - button "编辑" [ref=f1e9387] [cursor=pointer]
+                    - button "停用" [ref=f1e9389] [cursor=pointer]
+                    - button "删除" [ref=f1e9391] [cursor=pointer]
+              - row [ref=f1e9393]:
+                - cell "08117" [ref=f1e9394]
+                - cell "WIFI/BT/GPS/WIMAX FEM" [ref=f1e9397]
+                - cell "二级" [ref=f1e9399]
+                - cell "117" [ref=f1e9403]
+                - cell "启用" [ref=f1e9405]
+                - cell [ref=f1e9409]:
+                  - generic [ref=f1e9410]:
+                    - button "编辑" [ref=f1e9411] [cursor=pointer]
+                    - button "停用" [ref=f1e9413] [cursor=pointer]
+                    - button "删除" [ref=f1e9415] [cursor=pointer]
+              - row [ref=f1e9417]:
+                - cell "08118" [ref=f1e9418]
+                - cell "编解码器_Codec" [ref=f1e9421]
+                - cell "二级" [ref=f1e9423]
+                - cell "118" [ref=f1e9427]
+                - cell "启用" [ref=f1e9429]
+                - cell [ref=f1e9433]:
+                  - generic [ref=f1e9434]:
+                    - button "编辑" [ref=f1e9435] [cursor=pointer]
+                    - button "停用" [ref=f1e9437] [cursor=pointer]
+                    - button "删除" [ref=f1e9439] [cursor=pointer]
+              - row [ref=f1e9441]:
+                - cell "08119" [ref=f1e9442]
+                - cell "卡通箱隔板/填充板" [ref=f1e9445]
+                - cell "二级" [ref=f1e9447]
+                - cell "119" [ref=f1e9451]
+                - cell "启用" [ref=f1e9453]
+                - cell [ref=f1e9457]:
+                  - generic [ref=f1e9458]:
+                    - button "编辑" [ref=f1e9459] [cursor=pointer]
+                    - button "停用" [ref=f1e9461] [cursor=pointer]
+                    - button "删除" [ref=f1e9463] [cursor=pointer]
+              - row [ref=f1e9465]:
+                - cell "08120" [ref=f1e9466]
+                - cell "结构虚拟件" [ref=f1e9469]
+                - cell "二级" [ref=f1e9471]
+                - cell "120" [ref=f1e9475]
+                - cell "启用" [ref=f1e9477]
+                - cell [ref=f1e9481]:
+                  - generic [ref=f1e9482]:
+                    - button "编辑" [ref=f1e9483] [cursor=pointer]
+                    - button "停用" [ref=f1e9485] [cursor=pointer]
+                    - button "删除" [ref=f1e9487] [cursor=pointer]
+              - row [ref=f1e9489]:
+                - cell "08121" [ref=f1e9490]
+                - cell "FPC" [ref=f1e9493]
+                - cell "二级" [ref=f1e9495]
+                - cell "121" [ref=f1e9499]
+                - cell "启用" [ref=f1e9501]
+                - cell [ref=f1e9505]:
+                  - generic [ref=f1e9506]:
+                    - button "编辑" [ref=f1e9507] [cursor=pointer]
+                    - button "停用" [ref=f1e9509] [cursor=pointer]
+                    - button "删除" [ref=f1e9511] [cursor=pointer]
+              - row [ref=f1e9513]:
+                - cell "08122" [ref=f1e9514]
+                - cell "胶棒/硅脂/灌封胶/胶水" [ref=f1e9517]
+                - cell "二级" [ref=f1e9519]
+                - cell "122" [ref=f1e9523]
+                - cell "启用" [ref=f1e9525]
+                - cell [ref=f1e9529]:
+                  - generic [ref=f1e9530]:
+                    - button "编辑" [ref=f1e9531] [cursor=pointer]
+                    - button "停用" [ref=f1e9533] [cursor=pointer]
+                    - button "删除" [ref=f1e9535] [cursor=pointer]
+              - row [ref=f1e9537]:
+                - cell "08123" [ref=f1e9538]
+                - cell "手机充电器模块" [ref=f1e9541]
+                - cell "二级" [ref=f1e9543]
+                - cell "123" [ref=f1e9547]
+                - cell "启用" [ref=f1e9549]
+                - cell [ref=f1e9553]:
+                  - generic [ref=f1e9554]:
+                    - button "编辑" [ref=f1e9555] [cursor=pointer]
+                    - button "停用" [ref=f1e9557] [cursor=pointer]
+                    - button "删除" [ref=f1e9559] [cursor=pointer]
+              - row [ref=f1e9561]:
+                - cell "08124" [ref=f1e9562]
+                - cell "说明书/附页" [ref=f1e9565]
+                - cell "二级" [ref=f1e9567]
+                - cell "124" [ref=f1e9571]
+                - cell "启用" [ref=f1e9573]
+                - cell [ref=f1e9577]:
+                  - generic [ref=f1e9578]:
+                    - button "编辑" [ref=f1e9579] [cursor=pointer]
+                    - button "停用" [ref=f1e9581] [cursor=pointer]
+                    - button "删除" [ref=f1e9583] [cursor=pointer]
+              - row [ref=f1e9585]:
+                - cell "08125" [ref=f1e9586]
+                - cell "摄像头模块" [ref=f1e9589]
+                - cell "二级" [ref=f1e9591]
+                - cell "125" [ref=f1e9595]
+                - cell "启用" [ref=f1e9597]
+                - cell [ref=f1e9601]:
+                  - generic [ref=f1e9602]:
+                    - button "编辑" [ref=f1e9603] [cursor=pointer]
+                    - button "停用" [ref=f1e9605] [cursor=pointer]
+                    - button "删除" [ref=f1e9607] [cursor=pointer]
+              - row [ref=f1e9609]:
+                - cell "08126" [ref=f1e9610]
+                - cell "HWE" [ref=f1e9613]
+                - cell "二级" [ref=f1e9615]
+                - cell "126" [ref=f1e9619]
+                - cell "启用" [ref=f1e9621]
+                - cell [ref=f1e9625]:
+                  - generic [ref=f1e9626]:
+                    - button "编辑" [ref=f1e9627] [cursor=pointer]
+                    - button "停用" [ref=f1e9629] [cursor=pointer]
+                    - button "删除" [ref=f1e9631] [cursor=pointer]
+              - row [ref=f1e9633]:
+                - cell "08127" [ref=f1e9634]
+                - cell "外箱" [ref=f1e9637]
+                - cell "二级" [ref=f1e9639]
+                - cell "127" [ref=f1e9643]
+                - cell "启用" [ref=f1e9645]
+                - cell [ref=f1e9649]:
+                  - generic [ref=f1e9650]:
+                    - button "编辑" [ref=f1e9651] [cursor=pointer]
+                    - button "停用" [ref=f1e9653] [cursor=pointer]
+                    - button "删除" [ref=f1e9655] [cursor=pointer]
+              - row [ref=f1e9657]:
+                - cell "08128" [ref=f1e9658]
+                - cell "combo RF" [ref=f1e9661]
+                - cell "二级" [ref=f1e9663]
+                - cell "128" [ref=f1e9667]
+                - cell "启用" [ref=f1e9669]
+                - cell [ref=f1e9673]:
+                  - generic [ref=f1e9674]:
+                    - button "编辑" [ref=f1e9675] [cursor=pointer]
+                    - button "停用" [ref=f1e9677] [cursor=pointer]
+                    - button "删除" [ref=f1e9679] [cursor=pointer]
+              - row [ref=f1e9681]:
+                - cell "08129" [ref=f1e9682]
+                - cell "听筒" [ref=f1e9685]
+                - cell "二级" [ref=f1e9687]
+                - cell "129" [ref=f1e9691]
+                - cell "启用" [ref=f1e9693]
+                - cell [ref=f1e9697]:
+                  - generic [ref=f1e9698]:
+                    - button "编辑" [ref=f1e9699] [cursor=pointer]
+                    - button "停用" [ref=f1e9701] [cursor=pointer]
+                    - button "删除" [ref=f1e9703] [cursor=pointer]
+              - row [ref=f1e9705]:
+                - cell "08130" [ref=f1e9706]
+                - cell "1812片状电容" [ref=f1e9709]
+                - cell "二级" [ref=f1e9711]
+                - cell "130" [ref=f1e9715]
+                - cell "启用" [ref=f1e9717]
+                - cell [ref=f1e9721]:
+                  - generic [ref=f1e9722]:
+                    - button "编辑" [ref=f1e9723] [cursor=pointer]
+                    - button "停用" [ref=f1e9725] [cursor=pointer]
+                    - button "删除" [ref=f1e9727] [cursor=pointer]
+              - row [ref=f1e9729]:
+                - cell "08131" [ref=f1e9730]
+                - cell "小米" [ref=f1e9733]
+                - cell "二级" [ref=f1e9735]
+                - cell "131" [ref=f1e9739]
+                - cell "启用" [ref=f1e9741]
+                - cell [ref=f1e9745]:
+                  - generic [ref=f1e9746]:
+                    - button "编辑" [ref=f1e9747] [cursor=pointer]
+                    - button "停用" [ref=f1e9749] [cursor=pointer]
+                    - button "删除" [ref=f1e9751] [cursor=pointer]
+              - row [ref=f1e9753]:
+                - cell "08132" [ref=f1e9754]
+                - cell "编解码器_ISP" [ref=f1e9757]
+                - cell "二级" [ref=f1e9759]
+                - cell "132" [ref=f1e9763]
+                - cell "启用" [ref=f1e9765]
+                - cell [ref=f1e9769]:
+                  - generic [ref=f1e9770]:
+                    - button "编辑" [ref=f1e9771] [cursor=pointer]
+                    - button "停用" [ref=f1e9773] [cursor=pointer]
+                    - button "删除" [ref=f1e9775] [cursor=pointer]
+              - row [ref=f1e9777]:
+                - cell "08133" [ref=f1e9778]
+                - cell "电量计" [ref=f1e9781]
+                - cell "二级" [ref=f1e9783]
+                - cell "133" [ref=f1e9787]
+                - cell "启用" [ref=f1e9789]
+                - cell [ref=f1e9793]:
+                  - generic [ref=f1e9794]:
+                    - button "编辑" [ref=f1e9795] [cursor=pointer]
+                    - button "停用" [ref=f1e9797] [cursor=pointer]
+                    - button "删除" [ref=f1e9799] [cursor=pointer]
+              - row [ref=f1e9801]:
+                - cell "08134" [ref=f1e9802]
+                - cell "纸包装盒/彩盒" [ref=f1e9805]
+                - cell "二级" [ref=f1e9807]
+                - cell "134" [ref=f1e9811]
+                - cell "启用" [ref=f1e9813]
+                - cell [ref=f1e9817]:
+                  - generic [ref=f1e9818]:
+                    - button "编辑" [ref=f1e9819] [cursor=pointer]
+                    - button "停用" [ref=f1e9821] [cursor=pointer]
+                    - button "删除" [ref=f1e9823] [cursor=pointer]
+              - row [ref=f1e9825]:
+                - cell "08135" [ref=f1e9826]
+                - cell "后壳组件" [ref=f1e9829]
+                - cell "二级" [ref=f1e9831]
+                - cell "135" [ref=f1e9835]
+                - cell "启用" [ref=f1e9837]
+                - cell [ref=f1e9841]:
+                  - generic [ref=f1e9842]:
+                    - button "编辑" [ref=f1e9843] [cursor=pointer]
+                    - button "停用" [ref=f1e9845] [cursor=pointer]
+                    - button "删除" [ref=f1e9847] [cursor=pointer]
+              - row [ref=f1e9849]:
+                - cell "08136" [ref=f1e9850]
+                - cell "定制件" [ref=f1e9853]
+                - cell "二级" [ref=f1e9855]
+                - cell "136" [ref=f1e9859]
+                - cell "启用" [ref=f1e9861]
+                - cell [ref=f1e9865]:
+                  - generic [ref=f1e9866]:
+                    - button "编辑" [ref=f1e9867] [cursor=pointer]
+                    - button "停用" [ref=f1e9869] [cursor=pointer]
+                    - button "删除" [ref=f1e9871] [cursor=pointer]
+              - row [ref=f1e9873]:
+                - cell "08137" [ref=f1e9874]
+                - cell "挂绳/皮套/擦拭布/手写笔" [ref=f1e9877]
+                - cell "二级" [ref=f1e9879]
+                - cell "137" [ref=f1e9883]
+                - cell "启用" [ref=f1e9885]
+                - cell [ref=f1e9889]:
+                  - generic [ref=f1e9890]:
+                    - button "编辑" [ref=f1e9891] [cursor=pointer]
+                    - button "停用" [ref=f1e9893] [cursor=pointer]
+                    - button "删除" [ref=f1e9895] [cursor=pointer]
+              - row [ref=f1e9897]:
+                - cell "08138" [ref=f1e9898]
+                - cell "其他组件及包装（皮套、彩盒、电池、模型机等）" [ref=f1e9901]
+                - cell "二级" [ref=f1e9903]
+                - cell "138" [ref=f1e9907]
+                - cell "启用" [ref=f1e9909]
+                - cell [ref=f1e9913]:
+                  - generic [ref=f1e9914]:
+                    - button "编辑" [ref=f1e9915] [cursor=pointer]
+                    - button "停用" [ref=f1e9917] [cursor=pointer]
+                    - button "删除" [ref=f1e9919] [cursor=pointer]
+              - row [ref=f1e9921]:
+                - cell "08139" [ref=f1e9922]
+                - cell "头戴、面贴、魔术贴类" [ref=f1e9925]
+                - cell "二级" [ref=f1e9927]
+                - cell "139" [ref=f1e9931]
+                - cell "启用" [ref=f1e9933]
+                - cell [ref=f1e9937]:
+                  - generic [ref=f1e9938]:
+                    - button "编辑" [ref=f1e9939] [cursor=pointer]
+                    - button "停用" [ref=f1e9941] [cursor=pointer]
+                    - button "删除" [ref=f1e9943] [cursor=pointer]
+              - row [ref=f1e9945]:
+                - cell "08140" [ref=f1e9946]
+                - cell "转接FPC" [ref=f1e9949]
+                - cell "二级" [ref=f1e9951]
+                - cell "140" [ref=f1e9955]
+                - cell "启用" [ref=f1e9957]
+                - cell [ref=f1e9961]:
+                  - generic [ref=f1e9962]:
+                    - button "编辑" [ref=f1e9963] [cursor=pointer]
+                    - button "停用" [ref=f1e9965] [cursor=pointer]
+                    - button "删除" [ref=f1e9967] [cursor=pointer]
+              - row [ref=f1e9969]:
+                - cell "08141" [ref=f1e9970]
+                - cell "门电路" [ref=f1e9973]
+                - cell "二级" [ref=f1e9975]
+                - cell "141" [ref=f1e9979]
+                - cell "启用" [ref=f1e9981]
+                - cell [ref=f1e9985]:
+                  - generic [ref=f1e9986]:
+                    - button "编辑" [ref=f1e9987] [cursor=pointer]
+                    - button "停用" [ref=f1e9989] [cursor=pointer]
+                    - button "删除" [ref=f1e9991] [cursor=pointer]
+              - row [ref=f1e9993]:
+                - cell "08142" [ref=f1e9994]
+                - cell "数据线模块" [ref=f1e9997]
+                - cell "二级" [ref=f1e9999]
+                - cell "142" [ref=f1e10003]
+                - cell "启用" [ref=f1e10005]
+                - cell [ref=f1e10009]:
+                  - generic [ref=f1e10010]:
+                    - button "编辑" [ref=f1e10011] [cursor=pointer]
+                    - button "停用" [ref=f1e10013] [cursor=pointer]
+                    - button "删除" [ref=f1e10015] [cursor=pointer]
+              - row [ref=f1e10017]:
+                - cell "08143" [ref=f1e10018]
+                - cell "子板/上板PCB" [ref=f1e10021]
+                - cell "二级" [ref=f1e10023]
+                - cell "143" [ref=f1e10027]
+                - cell "启用" [ref=f1e10029]
+                - cell [ref=f1e10033]:
+                  - generic [ref=f1e10034]:
+                    - button "编辑" [ref=f1e10035] [cursor=pointer]
+                    - button "停用" [ref=f1e10037] [cursor=pointer]
+                    - button "删除" [ref=f1e10039] [cursor=pointer]
+              - row [ref=f1e10041]:
+                - cell "08144" [ref=f1e10042]
+                - cell "薄膜开关" [ref=f1e10045]
+                - cell "二级" [ref=f1e10047]
+                - cell "144" [ref=f1e10051]
+                - cell "启用" [ref=f1e10053]
+                - cell [ref=f1e10057]:
+                  - generic [ref=f1e10058]:
+                    - button "编辑" [ref=f1e10059] [cursor=pointer]
+                    - button "停用" [ref=f1e10061] [cursor=pointer]
+                    - button "删除" [ref=f1e10063] [cursor=pointer]
+              - row [ref=f1e10065]:
+                - cell "08145" [ref=f1e10066]
+                - cell "非圆形喇叭" [ref=f1e10069]
+                - cell "二级" [ref=f1e10071]
+                - cell "145" [ref=f1e10075]
+                - cell "启用" [ref=f1e10077]
+                - cell [ref=f1e10081]:
+                  - generic [ref=f1e10082]:
+                    - button "编辑" [ref=f1e10083] [cursor=pointer]
+                    - button "停用" [ref=f1e10085] [cursor=pointer]
+                    - button "删除" [ref=f1e10087] [cursor=pointer]
+              - row [ref=f1e10089]:
+                - cell "08146" [ref=f1e10090]
+                - cell "蛋格/吸塑/内托/纸护角/彩盒内卡" [ref=f1e10093]
+                - cell "二级" [ref=f1e10095]
+                - cell "146" [ref=f1e10099]
+                - cell "启用" [ref=f1e10101]
+                - cell [ref=f1e10105]:
+                  - generic [ref=f1e10106]:
+                    - button "编辑" [ref=f1e10107] [cursor=pointer]
+                    - button "停用" [ref=f1e10109] [cursor=pointer]
+                    - button "删除" [ref=f1e10111] [cursor=pointer]
+              - row [ref=f1e10113]:
+                - cell "08147" [ref=f1e10114]
+                - cell "前壳组件" [ref=f1e10117]
+                - cell "二级" [ref=f1e10119]
+                - cell "147" [ref=f1e10123]
+                - cell "启用" [ref=f1e10125]
+                - cell [ref=f1e10129]:
+                  - generic [ref=f1e10130]:
+                    - button "编辑" [ref=f1e10131] [cursor=pointer]
+                    - button "停用" [ref=f1e10133] [cursor=pointer]
+                    - button "删除" [ref=f1e10135] [cursor=pointer]
+              - row [ref=f1e10137]:
+                - cell "08148" [ref=f1e10138]
+                - cell "保护膜/广告膜" [ref=f1e10141]
+                - cell "二级" [ref=f1e10143]
+                - cell "148" [ref=f1e10147]
+                - cell "启用" [ref=f1e10149]
+                - cell [ref=f1e10153]:
+                  - generic [ref=f1e10154]:
+                    - button "编辑" [ref=f1e10155] [cursor=pointer]
+                    - button "停用" [ref=f1e10157] [cursor=pointer]
+                    - button "删除" [ref=f1e10159] [cursor=pointer]
+              - row [ref=f1e10161]:
+                - cell "08149" [ref=f1e10162]
+                - cell "镜片类" [ref=f1e10165]
+                - cell "二级" [ref=f1e10167]
+                - cell "149" [ref=f1e10171]
+                - cell "启用" [ref=f1e10173]
+                - cell [ref=f1e10177]:
+                  - generic [ref=f1e10178]:
+                    - button "编辑" [ref=f1e10179] [cursor=pointer]
+                    - button "停用" [ref=f1e10181] [cursor=pointer]
+                    - button "删除" [ref=f1e10183] [cursor=pointer]
+              - row [ref=f1e10185]:
+                - cell "08150" [ref=f1e10186]
+                - cell "导光、散光类" [ref=f1e10189]
+                - cell "二级" [ref=f1e10191]
+                - cell "150" [ref=f1e10195]
+                - cell "启用" [ref=f1e10197]
+                - cell [ref=f1e10201]:
+                  - generic [ref=f1e10202]:
+                    - button "编辑" [ref=f1e10203] [cursor=pointer]
+                    - button "停用" [ref=f1e10205] [cursor=pointer]
+                    - button "删除" [ref=f1e10207] [cursor=pointer]
+              - row [ref=f1e10209]:
+                - cell "08151" [ref=f1e10210]
+                - cell "泡沫/海绵/珍珠棉/缠绕膜等包装材料" [ref=f1e10213]
+                - cell "二级" [ref=f1e10215]
+                - cell "151" [ref=f1e10219]
+                - cell "启用" [ref=f1e10221]
+                - cell [ref=f1e10225]:
+                  - generic [ref=f1e10226]:
+                    - button "编辑" [ref=f1e10227] [cursor=pointer]
+                    - button "停用" [ref=f1e10229] [cursor=pointer]
+                    - button "删除" [ref=f1e10231] [cursor=pointer]
+              - row [ref=f1e10233]:
+                - cell "08152" [ref=f1e10234]
+                - cell "手机电池模块" [ref=f1e10237]
+                - cell "二级" [ref=f1e10239]
+                - cell "152" [ref=f1e10243]
+                - cell "启用" [ref=f1e10245]
+                - cell [ref=f1e10249]:
+                  - generic [ref=f1e10250]:
+                    - button "编辑" [ref=f1e10251] [cursor=pointer]
+                    - button "停用" [ref=f1e10253] [cursor=pointer]
+                    - button "删除" [ref=f1e10255] [cursor=pointer]
+              - row [ref=f1e10257]:
+                - cell "08153" [ref=f1e10258]
+                - cell "装配类线缆" [ref=f1e10261]
+                - cell "二级" [ref=f1e10263]
+                - cell "153" [ref=f1e10267]
+                - cell "启用" [ref=f1e10269]
+                - cell [ref=f1e10273]:
+                  - generic [ref=f1e10274]:
+                    - button "编辑" [ref=f1e10275] [cursor=pointer]
+                    - button "停用" [ref=f1e10277] [cursor=pointer]
+                    - button "删除" [ref=f1e10279] [cursor=pointer]
+              - row [ref=f1e10281]:
+                - cell "08154" [ref=f1e10282]
+                - cell "散热部件（散热片、铜管）" [ref=f1e10285]
+                - cell "二级" [ref=f1e10287]
+                - cell "154" [ref=f1e10291]
+                - cell "启用" [ref=f1e10293]
+                - cell [ref=f1e10297]:
+                  - generic [ref=f1e10298]:
+                    - button "编辑" [ref=f1e10299] [cursor=pointer]
+                    - button "停用" [ref=f1e10301] [cursor=pointer]
+                    - button "删除" [ref=f1e10303] [cursor=pointer]
+              - row [ref=f1e10305]:
+                - cell "08155" [ref=f1e10306]
+                - cell "屏蔽导电材料（导电布/导电海绵/导电胶）" [ref=f1e10309]
+                - cell "二级" [ref=f1e10311]
+                - cell "155" [ref=f1e10315]
+                - cell "启用" [ref=f1e10317]
+                - cell [ref=f1e10321]:
+                  - generic [ref=f1e10322]:
+                    - button "编辑" [ref=f1e10323] [cursor=pointer]
+                    - button "停用" [ref=f1e10325] [cursor=pointer]
+                    - button "删除" [ref=f1e10327] [cursor=pointer]
+              - row [ref=f1e10329]:
+                - cell "08157" [ref=f1e10330]
+                - cell "存储卡/转接卡" [ref=f1e10333]
+                - cell "二级" [ref=f1e10335]
+                - cell "157" [ref=f1e10339]
+                - cell "启用" [ref=f1e10341]
+                - cell [ref=f1e10345]:
+                  - generic [ref=f1e10346]:
+                    - button "编辑" [ref=f1e10347] [cursor=pointer]
+                    - button "停用" [ref=f1e10349] [cursor=pointer]
+                    - button "删除" [ref=f1e10351] [cursor=pointer]
+              - row [ref=f1e10353]:
+                - cell "08158" [ref=f1e10354]
+                - cell "天线类" [ref=f1e10357]
+                - cell "二级" [ref=f1e10359]
+                - cell "158" [ref=f1e10363]
+                - cell "启用" [ref=f1e10365]
+                - cell [ref=f1e10369]:
+                  - generic [ref=f1e10370]:
+                    - button "编辑" [ref=f1e10371] [cursor=pointer]
+                    - button "停用" [ref=f1e10373] [cursor=pointer]
+                    - button "删除" [ref=f1e10375] [cursor=pointer]
+              - row [ref=f1e10377]:
+                - cell "08159" [ref=f1e10378]
+                - cell "壳体单体" [ref=f1e10381]
+                - cell "二级" [ref=f1e10383]
+                - cell "159" [ref=f1e10387]
+                - cell "启用" [ref=f1e10389]
+                - cell [ref=f1e10393]:
+                  - generic [ref=f1e10394]:
+                    - button "编辑" [ref=f1e10395] [cursor=pointer]
+                    - button "停用" [ref=f1e10397] [cursor=pointer]
+                    - button "删除" [ref=f1e10399] [cursor=pointer]
+              - row [ref=f1e10401]:
+                - cell "08160" [ref=f1e10402]
+                - cell "防尘材料" [ref=f1e10405]
+                - cell "二级" [ref=f1e10407]
+                - cell "160" [ref=f1e10411]
+                - cell "启用" [ref=f1e10413]
+                - cell [ref=f1e10417]:
+                  - generic [ref=f1e10418]:
+                    - button "编辑" [ref=f1e10419] [cursor=pointer]
+                    - button "停用" [ref=f1e10421] [cursor=pointer]
+                    - button "删除" [ref=f1e10423] [cursor=pointer]
+              - row [ref=f1e10425]:
+                - cell "08161" [ref=f1e10426]
+                - cell "玻璃类" [ref=f1e10429]
+                - cell "二级" [ref=f1e10431]
+                - cell "161" [ref=f1e10435]
+                - cell "启用" [ref=f1e10437]
+                - cell [ref=f1e10441]:
+                  - generic [ref=f1e10442]:
+                    - button "编辑" [ref=f1e10443] [cursor=pointer]
+                    - button "停用" [ref=f1e10445] [cursor=pointer]
+                    - button "删除" [ref=f1e10447] [cursor=pointer]
+              - row [ref=f1e10449]:
+                - cell "08162" [ref=f1e10450]
+                - cell "弹簧" [ref=f1e10453]
+                - cell "二级" [ref=f1e10455]
+                - cell "162" [ref=f1e10459]
+                - cell "启用" [ref=f1e10461]
+                - cell [ref=f1e10465]:
+                  - generic [ref=f1e10466]:
+                    - button "编辑" [ref=f1e10467] [cursor=pointer]
+                    - button "停用" [ref=f1e10469] [cursor=pointer]
+                    - button "删除" [ref=f1e10471] [cursor=pointer]
+              - row [ref=f1e10473]:
+                - cell "08163" [ref=f1e10474]
+                - cell "胶纸/胶带/双面胶" [ref=f1e10477]
+                - cell "二级" [ref=f1e10479]
+                - cell "163" [ref=f1e10483]
+                - cell "启用" [ref=f1e10485]
+                - cell [ref=f1e10489]:
+                  - generic [ref=f1e10490]:
+                    - button "编辑" [ref=f1e10491] [cursor=pointer]
+                    - button "停用" [ref=f1e10493] [cursor=pointer]
+                    - button "删除" [ref=f1e10495] [cursor=pointer]
+              - row [ref=f1e10497]:
+                - cell "08164" [ref=f1e10498]
+                - cell "装饰件" [ref=f1e10501]
+                - cell "二级" [ref=f1e10503]
+                - cell "164" [ref=f1e10507]
+                - cell "启用" [ref=f1e10509]
+                - cell [ref=f1e10513]:
+                  - generic [ref=f1e10514]:
+                    - button "编辑" [ref=f1e10515] [cursor=pointer]
+                    - button "停用" [ref=f1e10517] [cursor=pointer]
+                    - button "删除" [ref=f1e10519] [cursor=pointer]
+              - row [ref=f1e10521]:
+                - cell "08165" [ref=f1e10522]
+                - cell "01005片状电容" [ref=f1e10525]
+                - cell "二级" [ref=f1e10527]
+                - cell "165" [ref=f1e10531]
+                - cell "启用" [ref=f1e10533]
+                - cell [ref=f1e10537]:
+                  - generic [ref=f1e10538]:
+                    - button "编辑" [ref=f1e10539] [cursor=pointer]
+                    - button "停用" [ref=f1e10541] [cursor=pointer]
+                    - button "删除" [ref=f1e10543] [cursor=pointer]
+              - row [ref=f1e10545]:
+                - cell "08166" [ref=f1e10546]
+                - cell "圆形喇叭" [ref=f1e10549]
+                - cell "二级" [ref=f1e10551]
+                - cell "166" [ref=f1e10555]
+                - cell "启用" [ref=f1e10557]
+                - cell [ref=f1e10561]:
+                  - generic [ref=f1e10562]:
+                    - button "编辑" [ref=f1e10563] [cursor=pointer]
+                    - button "停用" [ref=f1e10565] [cursor=pointer]
+                    - button "删除" [ref=f1e10567] [cursor=pointer]
+              - row [ref=f1e10569]:
+                - cell "08167" [ref=f1e10570]
+                - cell "电池盖组件" [ref=f1e10573]
+                - cell "二级" [ref=f1e10575]
+                - cell "167" [ref=f1e10579]
+                - cell "启用" [ref=f1e10581]
+                - cell [ref=f1e10585]:
+                  - generic [ref=f1e10586]:
+                    - button "编辑" [ref=f1e10587] [cursor=pointer]
+                    - button "停用" [ref=f1e10589] [cursor=pointer]
+                    - button "删除" [ref=f1e10591] [cursor=pointer]
+              - row [ref=f1e10593]:
+                - cell "08169" [ref=f1e10594]
+                - cell "TP_LENS" [ref=f1e10597]
+                - cell "二级" [ref=f1e10599]
+                - cell "169" [ref=f1e10603]
+                - cell "启用" [ref=f1e10605]
+                - cell [ref=f1e10609]:
+                  - generic [ref=f1e10610]:
+                    - button "编辑" [ref=f1e10611] [cursor=pointer]
+                    - button "停用" [ref=f1e10613] [cursor=pointer]
+                    - button "删除" [ref=f1e10615] [cursor=pointer]
+              - row [ref=f1e10617]:
+                - cell "08170" [ref=f1e10618]
+                - cell "顶针连接器" [ref=f1e10621]
+                - cell "二级" [ref=f1e10623]
+                - cell "170" [ref=f1e10627]
+                - cell "启用" [ref=f1e10629]
+                - cell [ref=f1e10633]:
+                  - generic [ref=f1e10634]:
+                    - button "编辑" [ref=f1e10635] [cursor=pointer]
+                    - button "停用" [ref=f1e10637] [cursor=pointer]
+                    - button "删除" [ref=f1e10639] [cursor=pointer]
+              - row [ref=f1e10641]:
+                - cell "08171" [ref=f1e10642]
+                - cell "01005普通电阻" [ref=f1e10645]
+                - cell "二级" [ref=f1e10647]
+                - cell "171" [ref=f1e10651]
+                - cell "启用" [ref=f1e10653]
+                - cell [ref=f1e10657]:
+                  - generic [ref=f1e10658]:
+                    - button "编辑" [ref=f1e10659] [cursor=pointer]
+                    - button "停用" [ref=f1e10661] [cursor=pointer]
+                    - button "删除" [ref=f1e10663] [cursor=pointer]
+              - row [ref=f1e10665]:
+                - cell "08172" [ref=f1e10666]
+                - cell "模型机" [ref=f1e10669]
+                - cell "二级" [ref=f1e10671]
+                - cell "172" [ref=f1e10675]
+                - cell "启用" [ref=f1e10677]
+                - cell [ref=f1e10681]:
+                  - generic [ref=f1e10682]:
+                    - button "编辑" [ref=f1e10683] [cursor=pointer]
+                    - button "停用" [ref=f1e10685] [cursor=pointer]
+                    - button "删除" [ref=f1e10687] [cursor=pointer]
+              - row [ref=f1e10689]:
+                - cell "08173" [ref=f1e10690]
+                - cell "其他PCB" [ref=f1e10693]
+                - cell "二级" [ref=f1e10695]
+                - cell "173" [ref=f1e10699]
+                - cell "启用" [ref=f1e10701]
+                - cell [ref=f1e10705]:
+                  - generic [ref=f1e10706]:
+                    - button "编辑" [ref=f1e10707] [cursor=pointer]
+                    - button "停用" [ref=f1e10709] [cursor=pointer]
+                    - button "删除" [ref=f1e10711] [cursor=pointer]
+              - row [ref=f1e10713]:
+                - cell "08174" [ref=f1e10714]
+                - cell "Filter（其它EMI滤波器件）" [ref=f1e10717]
+                - cell "二级" [ref=f1e10719]
+                - cell "174" [ref=f1e10723]
+                - cell "启用" [ref=f1e10725]
+                - cell [ref=f1e10729]:
+                  - generic [ref=f1e10730]:
+                    - button "编辑" [ref=f1e10731] [cursor=pointer]
+                    - button "停用" [ref=f1e10733] [cursor=pointer]
+                    - button "删除" [ref=f1e10735] [cursor=pointer]
+              - row [ref=f1e10737]:
+                - cell "08175" [ref=f1e10738]
+                - cell "RF Power Management" [ref=f1e10741]
+                - cell "二级" [ref=f1e10743]
+                - cell "175" [ref=f1e10747]
+                - cell "启用" [ref=f1e10749]
+                - cell [ref=f1e10753]:
+                  - generic [ref=f1e10754]:
+                    - button "编辑" [ref=f1e10755] [cursor=pointer]
+                    - button "停用" [ref=f1e10757] [cursor=pointer]
+                    - button "删除" [ref=f1e10759] [cursor=pointer]
+              - row [ref=f1e10761]:
+                - cell "08176" [ref=f1e10762]
+                - cell "扎带/线扣及塑料辅件" [ref=f1e10765]
+                - cell "二级" [ref=f1e10767]
+                - cell "176" [ref=f1e10771]
+                - cell "启用" [ref=f1e10773]
+                - cell [ref=f1e10777]:
+                  - generic [ref=f1e10778]:
+                    - button "编辑" [ref=f1e10779] [cursor=pointer]
+                    - button "停用" [ref=f1e10781] [cursor=pointer]
+                    - button "删除" [ref=f1e10783] [cursor=pointer]
+              - row [ref=f1e10785]:
+                - cell "08177" [ref=f1e10786]
+                - cell "其他封装磁珠" [ref=f1e10789]
+                - cell "二级" [ref=f1e10791]
+                - cell "177" [ref=f1e10795]
+                - cell "启用" [ref=f1e10797]
+                - cell [ref=f1e10801]:
+                  - generic [ref=f1e10802]:
+                    - button "编辑" [ref=f1e10803] [cursor=pointer]
+                    - button "停用" [ref=f1e10805] [cursor=pointer]
+                    - button "删除" [ref=f1e10807] [cursor=pointer]
+              - row [ref=f1e10809]:
+                - cell "08178" [ref=f1e10810]
+                - cell "01005贴片叠层电感" [ref=f1e10813]
+                - cell "二级" [ref=f1e10815]
+                - cell "178" [ref=f1e10819]
+                - cell "启用" [ref=f1e10821]
+                - cell [ref=f1e10825]:
+                  - generic [ref=f1e10826]:
+                    - button "编辑" [ref=f1e10827] [cursor=pointer]
+                    - button "停用" [ref=f1e10829] [cursor=pointer]
+                    - button "删除" [ref=f1e10831] [cursor=pointer]
+              - row [ref=f1e10833]:
+                - cell "08179" [ref=f1e10834]
+                - cell "化工及工艺材料类（清洗剂/助焊剂/防氧化油/润滑油/酒精/洗洁剂/油漆/锡膏/锡线等）" [ref=f1e10837]
+                - cell "二级" [ref=f1e10839]
+                - cell "179" [ref=f1e10843]
+                - cell "启用" [ref=f1e10845]
+                - cell [ref=f1e10849]:
+                  - generic [ref=f1e10850]:
+                    - button "编辑" [ref=f1e10851] [cursor=pointer]
+                    - button "停用" [ref=f1e10853] [cursor=pointer]
+                    - button "删除" [ref=f1e10855] [cursor=pointer]
+              - row [ref=f1e10857]:
+                - cell "08180" [ref=f1e10858]
+                - cell "其他类电源芯片" [ref=f1e10861]
+                - cell "二级" [ref=f1e10863]
+                - cell "180" [ref=f1e10867]
+                - cell "启用" [ref=f1e10869]
+                - cell [ref=f1e10873]:
+                  - generic [ref=f1e10874]:
+                    - button "编辑" [ref=f1e10875] [cursor=pointer]
+                    - button "停用" [ref=f1e10877] [cursor=pointer]
+                    - button "删除" [ref=f1e10879] [cursor=pointer]
+              - row [ref=f1e10881]:
+                - cell "08181" [ref=f1e10882]
+                - cell "Image-Sensor" [ref=f1e10885]
+                - cell "二级" [ref=f1e10887]
+                - cell "181" [ref=f1e10891]
+                - cell "启用" [ref=f1e10893]
+                - cell [ref=f1e10897]:
+                  - generic [ref=f1e10898]:
+                    - button "编辑" [ref=f1e10899] [cursor=pointer]
+                    - button "停用" [ref=f1e10901] [cursor=pointer]
+                    - button "删除" [ref=f1e10903] [cursor=pointer]
+              - row [ref=f1e10905]:
+                - cell "08182" [ref=f1e10906]
+                - cell "磁铁" [ref=f1e10909]
+                - cell "二级" [ref=f1e10911]
+                - cell "182" [ref=f1e10915]
+                - cell "启用" [ref=f1e10917]
+                - cell [ref=f1e10921]:
+                  - generic [ref=f1e10922]:
+                    - button "编辑" [ref=f1e10923] [cursor=pointer]
+                    - button "停用" [ref=f1e10925] [cursor=pointer]
+                    - button "删除" [ref=f1e10927] [cursor=pointer]
+              - row [ref=f1e10929]:
+                - cell "08183" [ref=f1e10930]
+                - cell "插件式安规电容" [ref=f1e10933]
+                - cell "二级" [ref=f1e10935]
+                - cell "183" [ref=f1e10939]
+                - cell "启用" [ref=f1e10941]
+                - cell [ref=f1e10945]:
+                  - generic [ref=f1e10946]:
+                    - button "编辑" [ref=f1e10947] [cursor=pointer]
+                    - button "停用" [ref=f1e10949] [cursor=pointer]
+                    - button "删除" [ref=f1e10951] [cursor=pointer]
+              - row [ref=f1e10953]:
+                - cell "08184" [ref=f1e10954]
+                - cell "0201贴片磁珠" [ref=f1e10957]
+                - cell "二级" [ref=f1e10959]
+                - cell "184" [ref=f1e10963]
+                - cell "启用" [ref=f1e10965]
+                - cell [ref=f1e10969]:
+                  - generic [ref=f1e10970]:
+                    - button "编辑" [ref=f1e10971] [cursor=pointer]
+                    - button "停用" [ref=f1e10973] [cursor=pointer]
+                    - button "删除" [ref=f1e10975] [cursor=pointer]
+              - row [ref=f1e10977]:
+                - cell "08185" [ref=f1e10978]
+                - cell "螺母" [ref=f1e10981]
+                - cell "二级" [ref=f1e10983]
+                - cell "185" [ref=f1e10987]
+                - cell "启用" [ref=f1e10989]
+                - cell [ref=f1e10993]:
+                  - generic [ref=f1e10994]:
+                    - button "编辑" [ref=f1e10995] [cursor=pointer]
+                    - button "停用" [ref=f1e10997] [cursor=pointer]
+                    - button "删除" [ref=f1e10999] [cursor=pointer]
+              - row [ref=f1e11001]:
+                - cell "08187" [ref=f1e11002]
+                - cell "Filter（LC）" [ref=f1e11005]
+                - cell "二级" [ref=f1e11007]
+                - cell "187" [ref=f1e11011]
+                - cell "启用" [ref=f1e11013]
+                - cell [ref=f1e11017]:
+                  - generic [ref=f1e11018]:
+                    - button "编辑" [ref=f1e11019] [cursor=pointer]
+                    - button "停用" [ref=f1e11021] [cursor=pointer]
+                    - button "删除" [ref=f1e11023] [cursor=pointer]
+              - row [ref=f1e11025]:
+                - cell "08188" [ref=f1e11026]
+                - cell "光耦合器" [ref=f1e11029]
+                - cell "二级" [ref=f1e11031]
+                - cell "188" [ref=f1e11035]
+                - cell "启用" [ref=f1e11037]
+                - cell [ref=f1e11041]:
+                  - generic [ref=f1e11042]:
+                    - button "编辑" [ref=f1e11043] [cursor=pointer]
+                    - button "停用" [ref=f1e11045] [cursor=pointer]
+                    - button "删除" [ref=f1e11047] [cursor=pointer]
+              - row [ref=f1e11049]:
+                - cell "08189" [ref=f1e11050]
+                - cell "HDMI连接器" [ref=f1e11053]
+                - cell "二级" [ref=f1e11055]
+                - cell "189" [ref=f1e11059]
+                - cell "启用" [ref=f1e11061]
+                - cell [ref=f1e11065]:
+                  - generic [ref=f1e11066]:
+                    - button "编辑" [ref=f1e11067] [cursor=pointer]
+                    - button "停用" [ref=f1e11069] [cursor=pointer]
+                    - button "删除" [ref=f1e11071] [cursor=pointer]
+              - row [ref=f1e11073]:
+                - cell "08190" [ref=f1e11074]
+                - cell "DC JACK连接器" [ref=f1e11077]
+                - cell "二级" [ref=f1e11079]
+                - cell "190" [ref=f1e11083]
+                - cell "启用" [ref=f1e11085]
+                - cell [ref=f1e11089]:
+                  - generic [ref=f1e11090]:
+                    - button "编辑" [ref=f1e11091] [cursor=pointer]
+                    - button "停用" [ref=f1e11093] [cursor=pointer]
+                    - button "删除" [ref=f1e11095] [cursor=pointer]
+              - row [ref=f1e11097]:
+                - cell "08191" [ref=f1e11098]
+                - cell "取卡针" [ref=f1e11101]
+                - cell "二级" [ref=f1e11103]
+                - cell "191" [ref=f1e11107]
+                - cell "启用" [ref=f1e11109]
+                - cell [ref=f1e11113]:
+                  - generic [ref=f1e11114]:
+                    - button "编辑" [ref=f1e11115] [cursor=pointer]
+                    - button "停用" [ref=f1e11117] [cursor=pointer]
+                    - button "删除" [ref=f1e11119] [cursor=pointer]
+              - row [ref=f1e11121]:
+                - cell "08192" [ref=f1e11122]
+                - cell "防静电袋/铝薄袋/充气袋" [ref=f1e11125]
+                - cell "二级" [ref=f1e11127]
+                - cell "192" [ref=f1e11131]
+                - cell "启用" [ref=f1e11133]
+                - cell [ref=f1e11137]:
+                  - generic [ref=f1e11138]:
+                    - button "编辑" [ref=f1e11139] [cursor=pointer]
+                    - button "停用" [ref=f1e11141] [cursor=pointer]
+                    - button "删除" [ref=f1e11143] [cursor=pointer]
+              - row [ref=f1e11145]:
+                - cell "08193" [ref=f1e11146]
+                - cell "碳带" [ref=f1e11149]
+                - cell "二级" [ref=f1e11151]
+                - cell "193" [ref=f1e11155]
+                - cell "启用" [ref=f1e11157]
+                - cell [ref=f1e11161]:
+                  - generic [ref=f1e11162]:
+                    - button "编辑" [ref=f1e11163] [cursor=pointer]
+                    - button "停用" [ref=f1e11165] [cursor=pointer]
+                    - button "删除" [ref=f1e11167] [cursor=pointer]
+              - row [ref=f1e11169]:
+                - cell "08194" [ref=f1e11170]
+                - cell "卡塞/胶塞类" [ref=f1e11173]
+                - cell "二级" [ref=f1e11175]
+                - cell "194" [ref=f1e11179]
+                - cell "启用" [ref=f1e11181]
+                - cell [ref=f1e11185]:
+                  - generic [ref=f1e11186]:
+                    - button "编辑" [ref=f1e11187] [cursor=pointer]
+                    - button "停用" [ref=f1e11189] [cursor=pointer]
+                    - button "删除" [ref=f1e11191] [cursor=pointer]
+              - row [ref=f1e11193]:
+                - cell "08195" [ref=f1e11194]
+                - cell "干燥剂" [ref=f1e11197]
+                - cell "二级" [ref=f1e11199]
+                - cell "195" [ref=f1e11203]
+                - cell "启用" [ref=f1e11205]
+                - cell [ref=f1e11209]:
+                  - generic [ref=f1e11210]:
+                    - button "编辑" [ref=f1e11211] [cursor=pointer]
+                    - button "停用" [ref=f1e11213] [cursor=pointer]
+                    - button "删除" [ref=f1e11215] [cursor=pointer]
+              - row [ref=f1e11217]:
+                - cell "08196" [ref=f1e11218]
+                - cell "键盘板PCB" [ref=f1e11221]
+                - cell "二级" [ref=f1e11223]
+                - cell "196" [ref=f1e11227]
+                - cell "启用" [ref=f1e11229]
+                - cell [ref=f1e11233]:
+                  - generic [ref=f1e11234]:
+                    - button "编辑" [ref=f1e11235] [cursor=pointer]
+                    - button "停用" [ref=f1e11237] [cursor=pointer]
+                    - button "删除" [ref=f1e11239] [cursor=pointer]
+              - row [ref=f1e11241]:
+                - cell "08197" [ref=f1e11242]
+                - cell "售后X合一组件" [ref=f1e11245]
+                - cell "二级" [ref=f1e11247]
+                - cell "197" [ref=f1e11251]
+                - cell "启用" [ref=f1e11253]
+                - cell [ref=f1e11257]:
+                  - generic [ref=f1e11258]:
+                    - button "编辑" [ref=f1e11259] [cursor=pointer]
+                    - button "停用" [ref=f1e11261] [cursor=pointer]
+                    - button "删除" [ref=f1e11263] [cursor=pointer]
+              - row [ref=f1e11265]:
+                - cell "08198" [ref=f1e11266]
+                - cell "UMCP" [ref=f1e11269]
+                - cell "二级" [ref=f1e11271]
+                - cell "198" [ref=f1e11275]
+                - cell "启用" [ref=f1e11277]
+                - cell [ref=f1e11281]:
+                  - generic [ref=f1e11282]:
+                    - button "编辑" [ref=f1e11283] [cursor=pointer]
+                    - button "停用" [ref=f1e11285] [cursor=pointer]
+                    - button "删除" [ref=f1e11287] [cursor=pointer]
+              - row [ref=f1e11289]:
+                - cell "08199" [ref=f1e11290]
+                - cell "电子虚拟件" [ref=f1e11293]
+                - cell "二级" [ref=f1e11295]
+                - cell "199" [ref=f1e11299]
+                - cell "启用" [ref=f1e11301]
+                - cell [ref=f1e11305]:
+                  - generic [ref=f1e11306]:
+                    - button "编辑" [ref=f1e11307] [cursor=pointer]
+                    - button "停用" [ref=f1e11309] [cursor=pointer]
+                    - button "删除" [ref=f1e11311] [cursor=pointer]
+              - row [ref=f1e11313]:
+                - cell "08200" [ref=f1e11314]
+                - cell "RF Tuner" [ref=f1e11317]
+                - cell "二级" [ref=f1e11319]
+                - cell "200" [ref=f1e11323]
+                - cell "启用" [ref=f1e11325]
+                - cell [ref=f1e11329]:
+                  - generic [ref=f1e11330]:
+                    - button "编辑" [ref=f1e11331] [cursor=pointer]
+                    - button "停用" [ref=f1e11333] [cursor=pointer]
+                    - button "删除" [ref=f1e11335] [cursor=pointer]
+              - row [ref=f1e11337]:
+                - cell "08201" [ref=f1e11338]
+                - cell "Triplexer" [ref=f1e11341]
+                - cell "二级" [ref=f1e11343]
+                - cell "201" [ref=f1e11347]
+                - cell "启用" [ref=f1e11349]
+                - cell [ref=f1e11353]:
+                  - generic [ref=f1e11354]:
+                    - button "编辑" [ref=f1e11355] [cursor=pointer]
+                    - button "停用" [ref=f1e11357] [cursor=pointer]
+                    - button "删除" [ref=f1e11359] [cursor=pointer]
+              - row [ref=f1e11361]:
+                - cell "08202" [ref=f1e11362]
+                - cell "OCP" [ref=f1e11365]
+                - cell "二级" [ref=f1e11367]
+                - cell "202" [ref=f1e11371]
+                - cell "启用" [ref=f1e11373]
+                - cell [ref=f1e11377]:
+                  - generic [ref=f1e11378]:
+                    - button "编辑" [ref=f1e11379] [cursor=pointer]
+                    - button "停用" [ref=f1e11381] [cursor=pointer]
+                    - button "删除" [ref=f1e11383] [cursor=pointer]
+              - row [ref=f1e11385]:
+                - cell "08203" [ref=f1e11386]
+                - cell "防水标贴" [ref=f1e11389]
+                - cell "二级" [ref=f1e11391]
+                - cell "203" [ref=f1e11395]
+                - cell "启用" [ref=f1e11397]
+                - cell [ref=f1e11401]:
+                  - generic [ref=f1e11402]:
+                    - button "编辑" [ref=f1e11403] [cursor=pointer]
+                    - button "停用" [ref=f1e11405] [cursor=pointer]
+                    - button "删除" [ref=f1e11407] [cursor=pointer]
+              - row [ref=f1e11409]:
+                - cell "08206" [ref=f1e11410]
+                - cell "0805贴片磁珠" [ref=f1e11413]
+                - cell "二级" [ref=f1e11415]
+                - cell "206" [ref=f1e11419]
+                - cell "启用" [ref=f1e11421]
+                - cell [ref=f1e11425]:
+                  - generic [ref=f1e11426]:
+                    - button "编辑" [ref=f1e11427] [cursor=pointer]
+                    - button "停用" [ref=f1e11429] [cursor=pointer]
+                    - button "删除" [ref=f1e11431] [cursor=pointer]
+              - row [ref=f1e11433]:
+                - cell "08207" [ref=f1e11434]
+                - cell "镭雕工艺" [ref=f1e11437]
+                - cell "二级" [ref=f1e11439]
+                - cell "207" [ref=f1e11443]
+                - cell "启用" [ref=f1e11445]
+                - cell [ref=f1e11449]:
+                  - generic [ref=f1e11450]:
+                    - button "编辑" [ref=f1e11451] [cursor=pointer]
+                    - button "停用" [ref=f1e11453] [cursor=pointer]
+                    - button "删除" [ref=f1e11455] [cursor=pointer]
+              - row [ref=f1e11457]:
+                - cell "08208" [ref=f1e11458]
+                - cell "转轴类" [ref=f1e11461]
+                - cell "二级" [ref=f1e11463]
+                - cell "208" [ref=f1e11467]
+                - cell "启用" [ref=f1e11469]
+                - cell [ref=f1e11473]:
+                  - generic [ref=f1e11474]:
+                    - button "编辑" [ref=f1e11475] [cursor=pointer]
+                    - button "停用" [ref=f1e11477] [cursor=pointer]
+                    - button "删除" [ref=f1e11479] [cursor=pointer]
+              - row [ref=f1e11481]:
+                - cell "08209" [ref=f1e11482]
+                - cell "齿轮、丝杆、丝锥类" [ref=f1e11485]
+                - cell "二级" [ref=f1e11487]
+                - cell "209" [ref=f1e11491]
+                - cell "启用" [ref=f1e11493]
+                - cell [ref=f1e11497]:
+                  - generic [ref=f1e11498]:
+                    - button "编辑" [ref=f1e11499] [cursor=pointer]
+                    - button "停用" [ref=f1e11501] [cursor=pointer]
+                    - button "删除" [ref=f1e11503] [cursor=pointer]
+              - row [ref=f1e11505]:
+                - cell "08210" [ref=f1e11506]
+                - cell "标牌" [ref=f1e11509]
+                - cell "二级" [ref=f1e11511]
+                - cell "210" [ref=f1e11515]
+                - cell "启用" [ref=f1e11517]
+                - cell [ref=f1e11521]:
+                  - generic [ref=f1e11522]:
+                    - button "编辑" [ref=f1e11523] [cursor=pointer]
+                    - button "停用" [ref=f1e11525] [cursor=pointer]
+                    - button "删除" [ref=f1e11527] [cursor=pointer]
+              - row [ref=f1e11529]:
+                - cell "08211" [ref=f1e11530]
+                - cell "滑轨类" [ref=f1e11533]
+                - cell "二级" [ref=f1e11535]
+                - cell "211" [ref=f1e11539]
+                - cell "启用" [ref=f1e11541]
+                - cell [ref=f1e11545]:
+                  - generic [ref=f1e11546]:
+                    - button "编辑" [ref=f1e11547] [cursor=pointer]
+                    - button "停用" [ref=f1e11549] [cursor=pointer]
+                    - button "删除" [ref=f1e11551] [cursor=pointer]
+              - row [ref=f1e11553]:
+                - cell "08212" [ref=f1e11554]
+                - cell "耳机模块" [ref=f1e11557]
+                - cell "二级" [ref=f1e11559]
+                - cell "212" [ref=f1e11563]
+                - cell "启用" [ref=f1e11565]
+                - cell [ref=f1e11569]:
+                  - generic [ref=f1e11570]:
+                    - button "编辑" [ref=f1e11571] [cursor=pointer]
+                    - button "停用" [ref=f1e11573] [cursor=pointer]
+                    - button "删除" [ref=f1e11575] [cursor=pointer]
+              - row [ref=f1e11577]:
+                - cell "08213" [ref=f1e11578]
+                - cell "OPPO" [ref=f1e11581]
+                - cell "二级" [ref=f1e11583]
+                - cell "213" [ref=f1e11587]
+                - cell "启用" [ref=f1e11589]
+                - cell [ref=f1e11593]:
+                  - generic [ref=f1e11594]:
+                    - button "编辑" [ref=f1e11595] [cursor=pointer]
+                    - button "停用" [ref=f1e11597] [cursor=pointer]
+                    - button "删除" [ref=f1e11599] [cursor=pointer]
+              - row [ref=f1e11601]:
+                - cell "08214" [ref=f1e11602]
+                - cell "三包凭证/保修卡" [ref=f1e11605]
+                - cell "二级" [ref=f1e11607]
+                - cell "214" [ref=f1e11611]
+                - cell "启用" [ref=f1e11613]
+                - cell [ref=f1e11617]:
+                  - generic [ref=f1e11618]:
+                    - button "编辑" [ref=f1e11619] [cursor=pointer]
+                    - button "停用" [ref=f1e11621] [cursor=pointer]
+                    - button "删除" [ref=f1e11623] [cursor=pointer]
+              - row [ref=f1e11625]:
+                - cell "08216" [ref=f1e11626]
+                - cell "加工费物料" [ref=f1e11629]
+                - cell "二级" [ref=f1e11631]
+                - cell "216" [ref=f1e11635]
+                - cell "启用" [ref=f1e11637]
+                - cell [ref=f1e11641]:
+                  - generic [ref=f1e11642]:
+                    - button "编辑" [ref=f1e11643] [cursor=pointer]
+                    - button "停用" [ref=f1e11645] [cursor=pointer]
+                    - button "删除" [ref=f1e11647] [cursor=pointer]
+              - row [ref=f1e11649]:
+                - cell "08217" [ref=f1e11650]
+                - cell "外购PCBA" [ref=f1e11653]
+                - cell "二级" [ref=f1e11655]
+                - cell "217" [ref=f1e11659]
+                - cell "启用" [ref=f1e11661]
+                - cell [ref=f1e11665]:
+                  - generic [ref=f1e11666]:
+                    - button "编辑" [ref=f1e11667] [cursor=pointer]
+                    - button "停用" [ref=f1e11669] [cursor=pointer]
+                    - button "删除" [ref=f1e11671] [cursor=pointer]
+              - row [ref=f1e11673]:
+                - cell "08218" [ref=f1e11674]
+                - cell "外购机头" [ref=f1e11677]
+                - cell "二级" [ref=f1e11679]
+                - cell "218" [ref=f1e11683]
+                - cell "启用" [ref=f1e11685]
+                - cell [ref=f1e11689]:
+                  - generic [ref=f1e11690]:
+                    - button "编辑" [ref=f1e11691] [cursor=pointer]
+                    - button "停用" [ref=f1e11693] [cursor=pointer]
+                    - button "删除" [ref=f1e11695] [cursor=pointer]
+              - row [ref=f1e11697]:
+                - cell "08219" [ref=f1e11698]
+                - cell "外购整机配件" [ref=f1e11701]
+                - cell "二级" [ref=f1e11703]
+                - cell "219" [ref=f1e11707]
+                - cell "启用" [ref=f1e11709]
+                - cell [ref=f1e11713]:
+                  - generic [ref=f1e11714]:
+                    - button "编辑" [ref=f1e11715] [cursor=pointer]
+                    - button "停用" [ref=f1e11717] [cursor=pointer]
+                    - button "删除" [ref=f1e11719] [cursor=pointer]
+              - row [ref=f1e11721]:
+                - cell "08220" [ref=f1e11722]
+                - cell "按键类" [ref=f1e11725]
+                - cell "二级" [ref=f1e11727]
+                - cell "220" [ref=f1e11731]
+                - cell "启用" [ref=f1e11733]
+                - cell [ref=f1e11737]:
+                  - generic [ref=f1e11738]:
+                    - button "编辑" [ref=f1e11739] [cursor=pointer]
+                    - button "停用" [ref=f1e11741] [cursor=pointer]
+                    - button "删除" [ref=f1e11743] [cursor=pointer]
+              - row [ref=f1e11745]:
+                - cell "08221" [ref=f1e11746]
+                - cell "数码管显示模块" [ref=f1e11749]
+                - cell "二级" [ref=f1e11751]
+                - cell "221" [ref=f1e11755]
+                - cell "启用" [ref=f1e11757]
+                - cell [ref=f1e11761]:
+                  - generic [ref=f1e11762]:
+                    - button "编辑" [ref=f1e11763] [cursor=pointer]
+                    - button "停用" [ref=f1e11765] [cursor=pointer]
+                    - button "删除" [ref=f1e11767] [cursor=pointer]
+              - row [ref=f1e11769]:
+                - cell "08222" [ref=f1e11770]
+                - cell "PHY" [ref=f1e11773]
+                - cell "二级" [ref=f1e11775]
+                - cell "222" [ref=f1e11779]
+                - cell "启用" [ref=f1e11781]
+                - cell [ref=f1e11785]:
+                  - generic [ref=f1e11786]:
+                    - button "编辑" [ref=f1e11787] [cursor=pointer]
+                    - button "停用" [ref=f1e11789] [cursor=pointer]
+                    - button "删除" [ref=f1e11791] [cursor=pointer]
+              - row [ref=f1e11793]:
+                - cell "08223" [ref=f1e11794]
+                - cell "晶闸管" [ref=f1e11797]
+                - cell "二级" [ref=f1e11799]
+                - cell "223" [ref=f1e11803]
+                - cell "启用" [ref=f1e11805]
+                - cell [ref=f1e11809]:
+                  - generic [ref=f1e11810]:
+                    - button "编辑" [ref=f1e11811] [cursor=pointer]
+                    - button "停用" [ref=f1e11813] [cursor=pointer]
+                    - button "删除" [ref=f1e11815] [cursor=pointer]
+              - row [ref=f1e11817]:
+                - cell "08224" [ref=f1e11818]
+                - cell "肖特基整流桥" [ref=f1e11821]
+                - cell "二级" [ref=f1e11823]
+                - cell "224" [ref=f1e11827]
+                - cell "启用" [ref=f1e11829]
+                - cell [ref=f1e11833]:
+                  - generic [ref=f1e11834]:
+                    - button "编辑" [ref=f1e11835] [cursor=pointer]
+                    - button "停用" [ref=f1e11837] [cursor=pointer]
+                    - button "删除" [ref=f1e11839] [cursor=pointer]
+              - row [ref=f1e11841]:
+                - cell "08225" [ref=f1e11842]
+                - cell "国际SIM卡、说明书" [ref=f1e11845]
+                - cell "二级" [ref=f1e11847]
+                - cell "225" [ref=f1e11851]
+                - cell "启用" [ref=f1e11853]
+                - cell [ref=f1e11857]:
+                  - generic [ref=f1e11858]:
+                    - button "编辑" [ref=f1e11859] [cursor=pointer]
+                    - button "停用" [ref=f1e11861] [cursor=pointer]
+                    - button "删除" [ref=f1e11863] [cursor=pointer]
+              - row [ref=f1e11865]:
+                - cell "08226" [ref=f1e11866]
+                - cell "SIM卡" [ref=f1e11869]
+                - cell "二级" [ref=f1e11871]
+                - cell "226" [ref=f1e11875]
+                - cell "启用" [ref=f1e11877]
+                - cell [ref=f1e11881]:
+                  - generic [ref=f1e11882]:
+                    - button "编辑" [ref=f1e11883] [cursor=pointer]
+                    - button "停用" [ref=f1e11885] [cursor=pointer]
+                    - button "删除" [ref=f1e11887] [cursor=pointer]
+              - row [ref=f1e11889]:
+                - cell [ref=f1e11890]:
+                  - generic [ref=f1e11891]:
+                    - button "收起当前行" [expanded] [ref=f1e11892] [cursor=pointer]
+                    - text: "09"
+                - cell "整机" [ref=f1e11896]
+                - cell "一级" [ref=f1e11898]
+                - cell "9" [ref=f1e11902]
+                - cell "启用" [ref=f1e11904]
+                - cell [ref=f1e11908]:
+                  - generic [ref=f1e11909]:
+                    - button "添加子分类" [ref=f1e11910] [cursor=pointer]
+                    - button "编辑" [ref=f1e11912] [cursor=pointer]
+                    - button "停用" [ref=f1e11914] [cursor=pointer]
+                    - button "删除" [ref=f1e11916] [cursor=pointer]
+              - row [ref=f1e11918]:
+                - cell "09001" [ref=f1e11919]
+                - cell "合装整机" [ref=f1e11922]
+                - cell "二级" [ref=f1e11924]
+                - cell "1" [ref=f1e11928]
+                - cell "启用" [ref=f1e11930]
+                - cell [ref=f1e11934]:
+                  - generic [ref=f1e11935]:
+                    - button "编辑" [ref=f1e11936] [cursor=pointer]
+                    - button "停用" [ref=f1e11938] [cursor=pointer]
+                    - button "删除" [ref=f1e11940] [cursor=pointer]
+              - row [ref=f1e11942]:
+                - cell "09002" [ref=f1e11943]
+                - cell "外购整机" [ref=f1e11946]
+                - cell "二级" [ref=f1e11948]
+                - cell "2" [ref=f1e11952]
+                - cell "启用" [ref=f1e11954]
+                - cell [ref=f1e11958]:
+                  - generic [ref=f1e11959]:
+                    - button "编辑" [ref=f1e11960] [cursor=pointer]
+                    - button "停用" [ref=f1e11962] [cursor=pointer]
+                    - button "删除" [ref=f1e11964] [cursor=pointer]
+              - row [ref=f1e11966]:
+                - cell "09003" [ref=f1e11967]
+                - cell "虚拟整机" [ref=f1e11970]
+                - cell "二级" [ref=f1e11972]
+                - cell "3" [ref=f1e11976]
+                - cell "启用" [ref=f1e11978]
+                - cell [ref=f1e11982]:
+                  - generic [ref=f1e11983]:
+                    - button "编辑" [ref=f1e11984] [cursor=pointer]
+                    - button "停用" [ref=f1e11986] [cursor=pointer]
+                    - button "删除" [ref=f1e11988] [cursor=pointer]
+              - row [ref=f1e11990]:
+                - cell "09004" [ref=f1e11991]
+                - cell "其他组件及包装（皮套、彩盒、电池、模型机等）" [ref=f1e11994]
+                - cell "二级" [ref=f1e11996]
+                - cell "4" [ref=f1e12000]
+                - cell "启用" [ref=f1e12002]
+                - cell [ref=f1e12006]:
+                  - generic [ref=f1e12007]:
+                    - button "编辑" [ref=f1e12008] [cursor=pointer]
+                    - button "停用" [ref=f1e12010] [cursor=pointer]
+                    - button "删除" [ref=f1e12012] [cursor=pointer]
+              - row [ref=f1e12014]:
+                - cell "09005" [ref=f1e12015]
+                - cell "售后X合一组件包装" [ref=f1e12018]
+                - cell "二级" [ref=f1e12020]
+                - cell "5" [ref=f1e12024]
+                - cell "启用" [ref=f1e12026]
+                - cell [ref=f1e12030]:
+                  - generic [ref=f1e12031]:
+                    - button "编辑" [ref=f1e12032] [cursor=pointer]
+                    - button "停用" [ref=f1e12034] [cursor=pointer]
+                    - button "删除" [ref=f1e12036] [cursor=pointer]
+              - row [ref=f1e12038]:
+                - cell "09006" [ref=f1e12039]
+                - cell "售后PCBA包装" [ref=f1e12042]
+                - cell "二级" [ref=f1e12044]
+                - cell "6" [ref=f1e12048]
+                - cell "启用" [ref=f1e12050]
+                - cell [ref=f1e12054]:
+                  - generic [ref=f1e12055]:
+                    - button "编辑" [ref=f1e12056] [cursor=pointer]
+                    - button "停用" [ref=f1e12058] [cursor=pointer]
+                    - button "删除" [ref=f1e12060] [cursor=pointer]
+              - row [ref=f1e12062]:
+                - cell "09007" [ref=f1e12063]
+                - cell "售后机头包装" [ref=f1e12066]
+                - cell "二级" [ref=f1e12068]
+                - cell "7" [ref=f1e12072]
+                - cell "启用" [ref=f1e12074]
+                - cell [ref=f1e12078]:
+                  - generic [ref=f1e12079]:
+                    - button "编辑" [ref=f1e12080] [cursor=pointer]
+                    - button "停用" [ref=f1e12082] [cursor=pointer]
+                    - button "删除" [ref=f1e12084] [cursor=pointer]
+              - row [ref=f1e12086]:
+                - cell "09008" [ref=f1e12087]
+                - cell "其他组装整机" [ref=f1e12090]
+                - cell "二级" [ref=f1e12092]
+                - cell "8" [ref=f1e12096]
+                - cell "启用" [ref=f1e12098]
+                - cell [ref=f1e12102]:
+                  - generic [ref=f1e12103]:
+                    - button "编辑" [ref=f1e12104] [cursor=pointer]
+                    - button "停用" [ref=f1e12106] [cursor=pointer]
+                    - button "删除" [ref=f1e12108] [cursor=pointer]
+        - text: "* *"

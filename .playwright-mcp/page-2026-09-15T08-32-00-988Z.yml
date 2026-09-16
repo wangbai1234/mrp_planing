@@ -1,0 +1,17 @@
+- generic [ref=e3]:
+  - generic [ref=e5]:
+    - img "Logo" [ref=e6]
+    - heading "MRP 排产系统" [level=1] [ref=e7]
+  - generic [ref=e9]:
+    - heading "登录" [level=2] [ref=e11]
+    - generic [ref=e12]:
+      - textbox "用户名" [ref=e21]: admin
+      - generic [ref=e25]:
+        - textbox "密码" [ref=e31]: admin123
+        - generic [ref=e33] [cursor=pointer]
+      - generic [ref=e39] [cursor=pointer]:
+        - generic [ref=e40]:
+          - checkbox "记住我"
+        - generic [ref=e42]: 记住我
+      - button "登录" [ref=e45] [cursor=pointer]
+    - generic [ref=e47]: © 2026 MRP 排产系统

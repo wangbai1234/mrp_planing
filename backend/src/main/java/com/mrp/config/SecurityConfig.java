@@ -87,6 +87,13 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/v1/bom/**").hasAuthority("bom:view")
                 .requestMatchers(HttpMethod.POST, "/api/v1/bom/**").hasAuthority("bom:manage")
 
+                // Material Category management
+                .requestMatchers(HttpMethod.GET, "/api/v1/material-categories/**").hasAuthority("material_category:view")
+                .requestMatchers(HttpMethod.POST, "/api/v1/material-categories/**").hasAuthority("material_category:manage")
+                .requestMatchers(HttpMethod.PUT, "/api/v1/material-categories/**").hasAuthority("material_category:manage")
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/material-categories/**").hasAuthority("material_category:manage")
+                .requestMatchers(HttpMethod.PATCH, "/api/v1/material-categories/**").hasAuthority("material_category:manage")
+
                 // Import/Export task status
                 .requestMatchers(HttpMethod.GET, "/api/v1/import-tasks/**").hasAuthority("forecast:view")
                 .requestMatchers(HttpMethod.GET, "/api/v1/inventory-import-tasks/**").hasAuthority("inventory:view")

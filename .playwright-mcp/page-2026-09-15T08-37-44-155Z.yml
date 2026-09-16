@@ -1,0 +1,548 @@
+- generic [ref=f3e3]:
+  - complementary [ref=f3e4]:
+    - generic [ref=f3e5]:
+      - generic [ref=f3e6]: MRP
+      - generic [ref=f3e7]: 计划协同
+    - menubar [ref=f3e8]:
+      - generic [ref=f3e9]: 计划
+      - menuitem "看板" [ref=f3e10] [cursor=pointer]
+      - menuitem "排产计划" [ref=f3e17] [cursor=pointer]
+      - generic [ref=f3e22]: 数据
+      - menuitem "经营计划" [ref=f3e23] [cursor=pointer]
+      - menuitem "库存快照" [ref=f3e28] [cursor=pointer]
+      - menuitem "物料管理" [ref=f3e35] [cursor=pointer]
+      - menuitem "物料分类" [ref=f3e40] [cursor=pointer]
+      - menuitem "BOM管理" [ref=f3e45] [cursor=pointer]
+      - generic [ref=f3e50]: 配置
+      - menuitem "产能配置" [ref=f3e51] [cursor=pointer]
+      - generic [ref=f3e56]: 系统
+      - menuitem "用户与权限" [ref=f3e57] [cursor=pointer]
+  - generic [ref=f3e62]:
+    - generic [ref=f3e63]:
+      - generic [ref=f3e64]:
+        - generic [ref=f3e65]: 数据管理
+        - generic [ref=f3e66]: /
+        - strong [ref=f3e67]: 物料管理
+      - generic [ref=f3e68]:
+        - generic [ref=f3e69]: 数据已同步
+        - button "系 系统管理员" [ref=f3e72] [cursor=pointer]:
+          - generic [ref=f3e73]: 系
+          - generic [ref=f3e74]: 系统管理员
+    - main [ref=f3e75]:
+      - generic [ref=f3e76]:
+        - generic [ref=f3e77]:
+          - heading "物料管理" [level=1] [ref=f3e78]
+          - generic [ref=f3e79]:
+            - button "导入" [ref=f3e80] [cursor=pointer]
+            - button "新增" [ref=f3e85] [cursor=pointer]
+        - generic [ref=f3e90]:
+          - generic [ref=f3e92] [cursor=pointer]:
+            - generic:
+              - combobox [ref=f3e94]
+              - generic [ref=f3e95]: 物料二级分类
+          - generic [ref=f3e101] [cursor=pointer]:
+            - generic:
+              - combobox [ref=f3e103]
+              - generic [ref=f3e104]: 物料类别
+          - generic [ref=f3e110] [cursor=pointer]:
+            - generic:
+              - combobox [ref=f3e112]
+              - generic [ref=f3e113]: 所属区域
+          - textbox "搜索料号/名称/型号" [ref=f3e124]
+        - generic [ref=f3e126]:
+          - generic [ref=f3e128]:
+            - table [ref=f3e130]:
+              - rowgroup [ref=f3e147]:
+                - row [ref=f3e148]:
+                  - columnheader "料号" [ref=f3e149]
+                  - columnheader "物料名称" [ref=f3e151]
+                  - columnheader "项目型号" [ref=f3e153]
+                  - columnheader "规格型号" [ref=f3e155]
+                  - columnheader "单位" [ref=f3e157]
+                  - columnheader "MOQ" [ref=f3e159]
+                  - columnheader "MPQ" [ref=f3e161]
+                  - columnheader "所属区域" [ref=f3e163]
+                  - columnheader "属性" [ref=f3e165]
+                  - columnheader "物料二级分类" [ref=f3e167]
+                  - columnheader "物料类别" [ref=f3e169]
+                  - columnheader "是否有效" [ref=f3e171]
+                  - columnheader "提前期(天)" [ref=f3e173]
+                  - columnheader "产地" [ref=f3e175]
+                  - columnheader "操作" [ref=f3e177]
+            - table [ref=f3e207]:
+              - rowgroup [ref=f3e224]:
+                - row [ref=f3e225]:
+                  - cell "test1111" [ref=f3e226]
+                  - cell "测试物料" [ref=f3e228]
+                  - cell "pro212a" [ref=f3e230]
+                  - cell "SRM121312" [ref=f3e232]
+                  - cell "个" [ref=f3e234]
+                  - cell "300" [ref=f3e236]
+                  - cell "400" [ref=f3e238]
+                  - cell "上海" [ref=f3e240]
+                  - cell [ref=f3e242]
+                  - cell "-" [ref=f3e243]
+                  - cell "-" [ref=f3e245]
+                  - cell "是" [ref=f3e249]
+                  - cell [ref=f3e253]
+                  - cell [ref=f3e254]
+                  - cell [ref=f3e255]:
+                    - generic [ref=f3e256]:
+                      - button "编辑" [ref=f3e257] [cursor=pointer]
+                      - button "删除" [ref=f3e259] [cursor=pointer]
+                - row [ref=f3e261]:
+                  - cell "43121343" [ref=f3e262]
+                  - cell "CONN,BTB,Socket,30Pin,0.4Pitch,0.8H" [ref=f3e264]
+                  - cell "L9830" [ref=f3e266]
+                  - cell "YXT-BB1F-30S-02" [ref=f3e268]
+                  - cell [ref=f3e270]
+                  - cell "10000" [ref=f3e271]
+                  - cell "10000" [ref=f3e273]
+                  - cell "上海" [ref=f3e275]
+                  - cell "通用" [ref=f3e277]
+                  - cell "-" [ref=f3e279]
+                  - cell "原材料" [ref=f3e281]
+                  - cell "是" [ref=f3e285]
+                  - cell [ref=f3e289]
+                  - cell [ref=f3e290]
+                  - cell [ref=f3e291]:
+                    - generic [ref=f3e292]:
+                      - button "编辑" [ref=f3e293] [cursor=pointer]
+                      - button "删除" [ref=f3e295] [cursor=pointer]
+                - row [ref=f3e297]:
+                  - cell "43128316" [ref=f3e298]
+                  - cell "CONN,BTB,Socket,24Pin,0.4Pitch,0.8H，3.7*2.6*0.8" [ref=f3e300]
+                  - cell "L8600" [ref=f3e302]
+                  - cell "YXT-BB1F-24S-02" [ref=f3e304]
+                  - cell [ref=f3e306]
+                  - cell "10000" [ref=f3e307]
+                  - cell "10000" [ref=f3e309]
+                  - cell "上海" [ref=f3e311]
+                  - cell "通用" [ref=f3e313]
+                  - cell "-" [ref=f3e315]
+                  - cell "原材料" [ref=f3e317]
+                  - cell "是" [ref=f3e321]
+                  - cell [ref=f3e325]
+                  - cell [ref=f3e326]
+                  - cell [ref=f3e327]:
+                    - generic [ref=f3e328]:
+                      - button "编辑" [ref=f3e329] [cursor=pointer]
+                      - button "删除" [ref=f3e331] [cursor=pointer]
+                - row [ref=f3e333]:
+                  - cell "3408AA800063" [ref=f3e334]
+                  - cell "IND,L0201,1.6nh,±0.1,600mA" [ref=f3e336]
+                  - cell "BYC_HM6502_A01" [ref=f3e338]
+                  - cell "BSCQ000603031N6B00" [ref=f3e340]
+                  - cell "个" [ref=f3e342]
+                  - cell "15000" [ref=f3e344]
+                  - cell "15000" [ref=f3e346]
+                  - cell "上海" [ref=f3e348]
+                  - cell "限制使用" [ref=f3e350]
+                  - cell "-" [ref=f3e352]
+                  - cell "原材料" [ref=f3e354]
+                  - cell "是" [ref=f3e358]
+                  - cell "60" [ref=f3e362]
+                  - cell "东莞" [ref=f3e364]
+                  - cell [ref=f3e366]:
+                    - generic [ref=f3e367]:
+                      - button "编辑" [ref=f3e368] [cursor=pointer]
+                      - button "删除" [ref=f3e370] [cursor=pointer]
+                - row [ref=f3e372]:
+                  - cell "3408AA800062" [ref=f3e373]
+                  - cell "IND,L0201,1.2nh,±0.1,600mA" [ref=f3e375]
+                  - cell "BYC_HM6502_A01" [ref=f3e377]
+                  - cell "BSCQ000603031N2B00" [ref=f3e379]
+                  - cell "个" [ref=f3e381]
+                  - cell "15000" [ref=f3e383]
+                  - cell "15000" [ref=f3e385]
+                  - cell "上海" [ref=f3e387]
+                  - cell "限制使用" [ref=f3e389]
+                  - cell "-" [ref=f3e391]
+                  - cell "原材料" [ref=f3e393]
+                  - cell "是" [ref=f3e397]
+                  - cell "60" [ref=f3e401]
+                  - cell "东莞" [ref=f3e403]
+                  - cell [ref=f3e405]:
+                    - generic [ref=f3e406]:
+                      - button "编辑" [ref=f3e407] [cursor=pointer]
+                      - button "删除" [ref=f3e409] [cursor=pointer]
+                - row [ref=f3e411]:
+                  - cell "2915AA800001" [ref=f3e412]
+                  - cell "EMI Filter – SIGNAL Series,1 Line,-,/,/,Non Polarity,48V,50 欧姆" [ref=f3e414]
+                  - cell "HM6501" [ref=f3e416]
+                  - cell "FHS1005F14A20TF-S" [ref=f3e418]
+                  - cell "个" [ref=f3e420]
+                  - cell "10000" [ref=f3e422]
+                  - cell "10000" [ref=f3e424]
+                  - cell "上海" [ref=f3e426]
+                  - cell "限制使用" [ref=f3e428]
+                  - cell "-" [ref=f3e430]
+                  - cell "原材料" [ref=f3e432]
+                  - cell "是" [ref=f3e436]
+                  - cell "60" [ref=f3e440]
+                  - cell "深圳" [ref=f3e442]
+                  - cell [ref=f3e444]:
+                    - generic [ref=f3e445]:
+                      - button "编辑" [ref=f3e446] [cursor=pointer]
+                      - button "删除" [ref=f3e448] [cursor=pointer]
+                - row [ref=f3e450]:
+                  - cell "1512AA800004" [ref=f3e451]
+                  - cell "IC,VIDEO,模拟高清图像信号处理芯片,6mm × 6mm × 0.85mm,56QFN（6mm x 6mm×0.85mm）,56 pin,0.35 mm" [ref=f3e453]
+                  - cell "DR2810" [ref=f3e455]
+                  - cell "FH8536HV300" [ref=f3e457]
+                  - cell "个" [ref=f3e459]
+                  - cell "4900" [ref=f3e461]
+                  - cell "4900" [ref=f3e463]
+                  - cell "上海" [ref=f3e465]
+                  - cell "限制使用" [ref=f3e467]
+                  - cell "-" [ref=f3e469]
+                  - cell "原材料" [ref=f3e471]
+                  - cell "是" [ref=f3e475]
+                  - cell "60" [ref=f3e479]
+                  - cell "中国大陆" [ref=f3e481]
+                  - cell [ref=f3e483]:
+                    - generic [ref=f3e484]:
+                      - button "编辑" [ref=f3e485] [cursor=pointer]
+                      - button "删除" [ref=f3e487] [cursor=pointer]
+                - row [ref=f3e489]:
+                  - cell "1921AA800011" [ref=f3e490]
+                  - cell "TVS,Uni-directional,12 V,395,,23,1.65*1.05*0.55mm,DFN1610-2L,2 pin" [ref=f3e492]
+                  - cell "DR1210" [ref=f3e494]
+                  - cell "WS12DP" [ref=f3e496]
+                  - cell "个" [ref=f3e498]
+                  - cell "3000" [ref=f3e500]
+                  - cell "3000" [ref=f3e502]
+                  - cell "上海" [ref=f3e504]
+                  - cell "限制使用" [ref=f3e506]
+                  - cell "-" [ref=f3e508]
+                  - cell "原材料" [ref=f3e510]
+                  - cell "是" [ref=f3e514]
+                  - cell "50" [ref=f3e518]
+                  - cell "中国" [ref=f3e520]
+                  - cell [ref=f3e522]:
+                    - generic [ref=f3e523]:
+                      - button "编辑" [ref=f3e524] [cursor=pointer]
+                      - button "删除" [ref=f3e526] [cursor=pointer]
+                - row [ref=f3e528]:
+                  - cell "6839AA800395" [ref=f3e529]
+                  - cell "DR6501,整机70迈N500SE, 双录版, 【专车专用, 车维供应】（外购）" [ref=f3e531]
+                  - cell "DR6501" [ref=f3e533]
+                  - cell "70迈N500SE, 双录版, 【专车专用, 车维供应】" [ref=f3e535]
+                  - cell "个" [ref=f3e537]
+                  - cell "1" [ref=f3e539]
+                  - cell "1" [ref=f3e541]
+                  - cell "上海" [ref=f3e543]
+                  - cell "限制使用" [ref=f3e545]
+                  - cell "-" [ref=f3e547]
+                  - cell "-" [ref=f3e549]
+                  - cell "是" [ref=f3e553]
+                  - cell "45" [ref=f3e557]
+                  - cell "惠州" [ref=f3e559]
+                  - cell [ref=f3e561]:
+                    - generic [ref=f3e562]:
+                      - button "编辑" [ref=f3e563] [cursor=pointer]
+                      - button "删除" [ref=f3e565] [cursor=pointer]
+                - row [ref=f3e567]:
+                  - cell "6839AA800393" [ref=f3e568]
+                  - cell "DR6501,整机70迈N500SE, 单录版, 【专车专用, 车维供应】（外购）" [ref=f3e570]
+                  - cell "DR6501" [ref=f3e572]
+                  - cell "70迈N500SE, 单录版, 【专车专用, 车维供应】" [ref=f3e574]
+                  - cell "个" [ref=f3e576]
+                  - cell "1" [ref=f3e578]
+                  - cell "1" [ref=f3e580]
+                  - cell "上海" [ref=f3e582]
+                  - cell "限制使用" [ref=f3e584]
+                  - cell "-" [ref=f3e586]
+                  - cell "-" [ref=f3e588]
+                  - cell "是" [ref=f3e592]
+                  - cell "45" [ref=f3e596]
+                  - cell "惠州" [ref=f3e598]
+                  - cell [ref=f3e600]:
+                    - generic [ref=f3e601]:
+                      - button "编辑" [ref=f3e602] [cursor=pointer]
+                      - button "删除" [ref=f3e604] [cursor=pointer]
+                - row [ref=f3e606]:
+                  - cell "6839AA800392" [ref=f3e607]
+                  - cell "DR6800,整机70迈N800, 单录版, 【专车专用, 车维供应】（外购）" [ref=f3e609]
+                  - cell "DR6800" [ref=f3e611]
+                  - cell "70迈N800, 单录版, 【专车专用, 车维供应】" [ref=f3e613]
+                  - cell "个" [ref=f3e615]
+                  - cell "1" [ref=f3e617]
+                  - cell "1" [ref=f3e619]
+                  - cell "上海" [ref=f3e621]
+                  - cell "限制使用" [ref=f3e623]
+                  - cell "-" [ref=f3e625]
+                  - cell "-" [ref=f3e627]
+                  - cell "是" [ref=f3e631]
+                  - cell "45" [ref=f3e635]
+                  - cell "惠州" [ref=f3e637]
+                  - cell [ref=f3e639]:
+                    - generic [ref=f3e640]:
+                      - button "编辑" [ref=f3e641] [cursor=pointer]
+                      - button "删除" [ref=f3e643] [cursor=pointer]
+                - row [ref=f3e645]:
+                  - cell "6839AA800396" [ref=f3e646]
+                  - cell "DR6500,整机70迈N500, 双录版, 【专车专用, 车维供应】（外购）" [ref=f3e648]
+                  - cell "DR6500" [ref=f3e650]
+                  - cell "70迈N500, 双录版, 【专车专用, 车维供应】" [ref=f3e652]
+                  - cell "个" [ref=f3e654]
+                  - cell "1" [ref=f3e656]
+                  - cell "1" [ref=f3e658]
+                  - cell "上海" [ref=f3e660]
+                  - cell "限制使用" [ref=f3e662]
+                  - cell "-" [ref=f3e664]
+                  - cell "-" [ref=f3e666]
+                  - cell "是" [ref=f3e670]
+                  - cell "45" [ref=f3e674]
+                  - cell "惠州" [ref=f3e676]
+                  - cell [ref=f3e678]:
+                    - generic [ref=f3e679]:
+                      - button "编辑" [ref=f3e680] [cursor=pointer]
+                      - button "删除" [ref=f3e682] [cursor=pointer]
+                - row [ref=f3e684]:
+                  - cell "6610AA800449" [ref=f3e685]
+                  - cell "PCB,硬板,DR2863,RC44H后录板" [ref=f3e687]
+                  - cell "DR2863" [ref=f3e689]
+                  - cell "LBCB061C1-2(MZH&H)" [ref=f3e691]
+                  - cell "个" [ref=f3e693]
+                  - cell "3000" [ref=f3e695]
+                  - cell "3000" [ref=f3e697]
+                  - cell "上海" [ref=f3e699]
+                  - cell "限制使用" [ref=f3e701]
+                  - cell "-" [ref=f3e703]
+                  - cell "原材料" [ref=f3e705]
+                  - cell "是" [ref=f3e709]
+                  - cell "60" [ref=f3e713]
+                  - cell "益阳" [ref=f3e715]
+                  - cell [ref=f3e717]:
+                    - generic [ref=f3e718]:
+                      - button "编辑" [ref=f3e719] [cursor=pointer]
+                      - button "删除" [ref=f3e721] [cursor=pointer]
+                - row [ref=f3e723]:
+                  - cell "6839AA800391" [ref=f3e724]
+                  - cell "DR6500,整机70迈N500, 单录版, 【专车专用, 车维供应】（外购）" [ref=f3e726]
+                  - cell "DR6500" [ref=f3e728]
+                  - cell "70迈N500, 单录版, 【专车专用, 车维供应】" [ref=f3e730]
+                  - cell "个" [ref=f3e732]
+                  - cell "1" [ref=f3e734]
+                  - cell "1" [ref=f3e736]
+                  - cell "上海" [ref=f3e738]
+                  - cell "限制使用" [ref=f3e740]
+                  - cell "-" [ref=f3e742]
+                  - cell "-" [ref=f3e744]
+                  - cell "是" [ref=f3e748]
+                  - cell "45" [ref=f3e752]
+                  - cell "惠州" [ref=f3e754]
+                  - cell [ref=f3e756]:
+                    - generic [ref=f3e757]:
+                      - button "编辑" [ref=f3e758] [cursor=pointer]
+                      - button "删除" [ref=f3e760] [cursor=pointer]
+                - row [ref=f3e762]:
+                  - cell "6610AA800446" [ref=f3e763]
+                  - cell "PCB,硬板,DR2863,RC44H后录板" [ref=f3e765]
+                  - cell "DR2863" [ref=f3e767]
+                  - cell "LBCB061C1-2(GQ&H)" [ref=f3e769]
+                  - cell "个" [ref=f3e771]
+                  - cell "3000" [ref=f3e773]
+                  - cell "3000" [ref=f3e775]
+                  - cell "上海" [ref=f3e777]
+                  - cell "限制使用" [ref=f3e779]
+                  - cell "-" [ref=f3e781]
+                  - cell "原材料" [ref=f3e783]
+                  - cell "是" [ref=f3e787]
+                  - cell "60" [ref=f3e791]
+                  - cell "盐城" [ref=f3e793]
+                  - cell [ref=f3e795]:
+                    - generic [ref=f3e796]:
+                      - button "编辑" [ref=f3e797] [cursor=pointer]
+                      - button "删除" [ref=f3e799] [cursor=pointer]
+                - row [ref=f3e801]:
+                  - cell "6839AA800394" [ref=f3e802]
+                  - cell "DR6400,整机70迈N400, 单录版, 【专车专用, 车维供应】（外购）" [ref=f3e804]
+                  - cell "DR6400" [ref=f3e806]
+                  - cell "70迈N400, 单录版, 【专车专用, 车维供应】" [ref=f3e808]
+                  - cell "个" [ref=f3e810]
+                  - cell "1" [ref=f3e812]
+                  - cell "1" [ref=f3e814]
+                  - cell "上海" [ref=f3e816]
+                  - cell "限制使用" [ref=f3e818]
+                  - cell "-" [ref=f3e820]
+                  - cell "-" [ref=f3e822]
+                  - cell "是" [ref=f3e826]
+                  - cell "45" [ref=f3e830]
+                  - cell "惠州" [ref=f3e832]
+                  - cell [ref=f3e834]:
+                    - generic [ref=f3e835]:
+                      - button "编辑" [ref=f3e836] [cursor=pointer]
+                      - button "删除" [ref=f3e838] [cursor=pointer]
+                - row [ref=f3e840]:
+                  - cell "6610AA800448" [ref=f3e841]
+                  - cell "PCB,硬板,DR2863,主板PCB" [ref=f3e843]
+                  - cell "DR2863" [ref=f3e845]
+                  - cell "LBCM061C1-1(MZH&H)" [ref=f3e847]
+                  - cell "个" [ref=f3e849]
+                  - cell "3000" [ref=f3e851]
+                  - cell "3000" [ref=f3e853]
+                  - cell "上海" [ref=f3e855]
+                  - cell "限制使用" [ref=f3e857]
+                  - cell "-" [ref=f3e859]
+                  - cell "原材料" [ref=f3e861]
+                  - cell "是" [ref=f3e865]
+                  - cell "60" [ref=f3e869]
+                  - cell "益阳" [ref=f3e871]
+                  - cell [ref=f3e873]:
+                    - generic [ref=f3e874]:
+                      - button "编辑" [ref=f3e875] [cursor=pointer]
+                      - button "删除" [ref=f3e877] [cursor=pointer]
+                - row [ref=f3e879]:
+                  - cell "4850AA800015" [ref=f3e880]
+                  - cell "DR6400 70迈256G SD卡（专车款，车维供应）" [ref=f3e882]
+                  - cell "DR6400" [ref=f3e884]
+                  - cell "DR6400 70迈256G SD卡（专车款，车维供应）" [ref=f3e886]
+                  - cell "个" [ref=f3e888]
+                  - cell "1" [ref=f3e890]
+                  - cell "1" [ref=f3e892]
+                  - cell "上海" [ref=f3e894]
+                  - cell "限制使用" [ref=f3e896]
+                  - cell "-" [ref=f3e898]
+                  - cell "-" [ref=f3e900]
+                  - cell "是" [ref=f3e904]
+                  - cell "56" [ref=f3e908]
+                  - cell "中国合肥" [ref=f3e910]
+                  - cell [ref=f3e912]:
+                    - generic [ref=f3e913]:
+                      - button "编辑" [ref=f3e914] [cursor=pointer]
+                      - button "删除" [ref=f3e916] [cursor=pointer]
+                - row [ref=f3e918]:
+                  - cell "6610AA800447" [ref=f3e919]
+                  - cell "PCB,硬板,DR2863,主板PCB" [ref=f3e921]
+                  - cell "DR2863" [ref=f3e923]
+                  - cell "LBCM061C1-1(GQ&H)" [ref=f3e925]
+                  - cell "个" [ref=f3e927]
+                  - cell "3000" [ref=f3e929]
+                  - cell "3000" [ref=f3e931]
+                  - cell "上海" [ref=f3e933]
+                  - cell "限制使用" [ref=f3e935]
+                  - cell "-" [ref=f3e937]
+                  - cell "原材料" [ref=f3e939]
+                  - cell "是" [ref=f3e943]
+                  - cell "60" [ref=f3e947]
+                  - cell "盐城" [ref=f3e949]
+                  - cell [ref=f3e951]:
+                    - generic [ref=f3e952]:
+                      - button "编辑" [ref=f3e953] [cursor=pointer]
+                      - button "删除" [ref=f3e955] [cursor=pointer]
+                - row [ref=f3e957]:
+                  - cell "4850AA800016" [ref=f3e958]
+                  - cell "DR6400 70迈128G SD卡（专车款，车维供应）" [ref=f3e960]
+                  - cell "DR6400" [ref=f3e962]
+                  - cell "DR6400 70迈128G SD卡（专车款，车维供应）" [ref=f3e964]
+                  - cell "个" [ref=f3e966]
+                  - cell "1" [ref=f3e968]
+                  - cell "1" [ref=f3e970]
+                  - cell "上海" [ref=f3e972]
+                  - cell "限制使用" [ref=f3e974]
+                  - cell "-" [ref=f3e976]
+                  - cell "-" [ref=f3e978]
+                  - cell "是" [ref=f3e982]
+                  - cell "56" [ref=f3e986]
+                  - cell "中国合肥" [ref=f3e988]
+                  - cell [ref=f3e990]:
+                    - generic [ref=f3e991]:
+                      - button "编辑" [ref=f3e992] [cursor=pointer]
+                      - button "删除" [ref=f3e994] [cursor=pointer]
+          - generic [ref=f3e186]:
+            - generic [ref=f3e187]: 共 18909 条
+            - generic [ref=f3e188]:
+              - generic [ref=f3e191] [cursor=pointer]:
+                - generic:
+                  - combobox [ref=f3e193]
+                  - generic [ref=f3e194]: 20条/页
+              - button "上一页" [disabled] [ref=f3e199]
+              - list [ref=f3e200]:
+                - listitem "第 1 页" [ref=f3e201]: "1"
+                - listitem "第 2 页" [ref=f3e996] [cursor=pointer]: "2"
+                - listitem "第 3 页" [ref=f3e997] [cursor=pointer]: "3"
+                - listitem "第 4 页" [ref=f3e998] [cursor=pointer]: "4"
+                - listitem "第 5 页" [ref=f3e999] [cursor=pointer]: "5"
+                - listitem "第 6 页" [ref=f3e1000] [cursor=pointer]: "6"
+                - listitem "向后 5 页" [ref=f3e1001] [cursor=pointer]
+                - listitem "第 946 页" [ref=f3e1002] [cursor=pointer]: "946"
+              - button "下一页" [ref=f3e202] [cursor=pointer]
+        - dialog [ref=f3e1004]:
+          - generic [active] [ref=f3e1005]:
+            - generic [ref=f3e1006]:
+              - generic [ref=f3e1007]: 编辑物料
+              - button "关闭此对话框" [ref=f3e1008] [cursor=pointer]
+            - generic [ref=f3e1013]:
+              - generic [ref=f3e1014]:
+                - generic [ref=f3e1015]:
+                  - generic [ref=f3e1016]: "*料号"
+                  - textbox "*料号" [disabled] [ref=f3e1020]:
+                    - /placeholder: 请输入料号
+                    - text: test1111
+                - generic [ref=f3e1021]:
+                  - generic [ref=f3e1022]: "*物料名称"
+                  - textbox "*物料名称" [ref=f3e1026]:
+                    - /placeholder: 请输入物料名称
+                    - text: 测试物料
+                - generic [ref=f3e1027]:
+                  - generic [ref=f3e1028]: 项目型号
+                  - textbox "项目型号" [ref=f3e1032]:
+                    - /placeholder: 请输入项目型号
+                    - text: pro212a
+                - generic [ref=f3e1033]:
+                  - generic [ref=f3e1034]: 规格型号
+                  - textbox "规格型号" [ref=f3e1038]:
+                    - /placeholder: 请输入规格型号
+                    - text: SRM121312
+                - generic [ref=f3e1039]:
+                  - generic [ref=f3e1040]: 单位
+                  - textbox "单位" [ref=f3e1044]:
+                    - /placeholder: 请输入单位
+                    - text: 个
+                - generic [ref=f3e1045]:
+                  - generic [ref=f3e1046]: MOQ最小起订量
+                  - spinbutton "MOQ最小起订量" [ref=f3e1051]: "300"
+                - generic [ref=f3e1052]:
+                  - generic [ref=f3e1053]: MPQ最小包装
+                  - spinbutton "MPQ最小包装" [ref=f3e1058]: "400"
+                - generic [ref=f3e1059]:
+                  - generic [ref=f3e1060]: 所属区域
+                  - generic [ref=f3e1063] [cursor=pointer]:
+                    - generic:
+                      - combobox "所属区域" [ref=f3e1065]
+                      - generic [ref=f3e1066]: 上海
+                - generic [ref=f3e1071]:
+                  - generic [ref=f3e1072]: 属性
+                  - generic [ref=f3e1075] [cursor=pointer]:
+                    - generic:
+                      - combobox "属性" [ref=f3e1077]
+                      - generic [ref=f3e1078]: 请选择
+                - generic [ref=f3e1083]:
+                  - generic [ref=f3e1084]: 物料类别
+                  - generic [ref=f3e1087] [cursor=pointer]:
+                    - generic:
+                      - combobox "物料类别" [ref=f3e1089]
+                      - generic [ref=f3e1090]: 请选择
+                - generic [ref=f3e1095]:
+                  - generic [ref=f3e1096]: 物料二级分类
+                  - generic [ref=f3e1099] [cursor=pointer]:
+                    - generic:
+                      - combobox "物料二级分类" [ref=f3e1101]
+                      - generic [ref=f3e1102]: 请选择分类
+                - generic [ref=f3e1107]:
+                  - generic [ref=f3e1108]: L-T提前期(天)
+                  - spinbutton "L-T提前期(天)" [ref=f3e1113]
+                - generic [ref=f3e1114]:
+                  - generic [ref=f3e1115]: 产地
+                  - textbox "产地" [ref=f3e1119]:
+                    - /placeholder: 请输入产地
+              - generic [ref=f3e1120]:
+                - generic [ref=f3e1121]: 是否有效
+                - generic [ref=f3e1123]:
+                  - switch "是否有效" [checked]
+                  - generic [ref=f3e1124] [cursor=pointer]
+            - generic [ref=f3e1127]:
+              - button "取消" [ref=f3e1128] [cursor=pointer]
+              - button "确认" [ref=f3e1130] [cursor=pointer]

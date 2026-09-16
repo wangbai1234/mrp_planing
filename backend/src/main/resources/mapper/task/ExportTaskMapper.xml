@@ -2,6 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mrp.task.repository.ExportTaskMapper">
 
+    <sql id="selectColumns">
+        id, task_type, business_scope, request_key, status, priority,
+        worker_id, lease_until, heartbeat_at, progress_current, progress_total,
+        attempt_count, max_attempts, next_run_at, input_payload, input_checksum,
+        result_resource_id, error_code, error_message, file_path,
+        created_by, created_at, started_at, finished_at, version
+    </sql>
+
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO export_task (task_type, business_scope, request_key, status, priority,
             worker_id, lease_until, heartbeat_at, progress_current, progress_total,
@@ -14,11 +22,11 @@
     </insert>
 
     <select id="selectById" resultType="com.mrp.task.domain.ExportTask">
-        SELECT * FROM export_task WHERE id = #{id}
+        SELECT <include refid="selectColumns"/> FROM export_task WHERE id = #{id}
     </select>
 
     <select id="selectByRequestKey" resultType="com.mrp.task.domain.ExportTask">
-        SELECT * FROM export_task WHERE request_key = #{requestKey}
+        SELECT <include refid="selectColumns"/> FROM export_task WHERE request_key = #{requestKey}
     </select>
 
     <delete id="deleteById">

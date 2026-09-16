@@ -29,6 +29,8 @@ public class BomDetail {
     private String admitNote;
     private String orgName;
     private String bodyCode;
+    private Long materialCategoryId;
+    private String materialCategoryName;
 
     public BomDetail() {}
 
@@ -109,4 +111,10 @@ public class BomDetail {
 
     public String getBodyCode() { return bodyCode; }
     public void setBodyCode(String bodyCode) { this.bodyCode = bodyCode; }
+
+    public Long getMaterialCategoryId() { return materialCategoryId; }
+    public void setMaterialCategoryId(Long materialCategoryId) { this.materialCategoryId = materialCategoryId; }
+
+    public String getMaterialCategoryName() { return materialCategoryName; }
+    public void setMaterialCategoryName(String materialCategoryName) { this.materialCategoryName = materialCategoryName; }
 }

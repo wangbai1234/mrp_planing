@@ -1,0 +1,86 @@
+- generic [ref=f3e3]:
+  - complementary [ref=f3e4]:
+    - generic [ref=f3e5]:
+      - generic [ref=f3e6]: MRP
+      - generic [ref=f3e7]: 计划协同
+    - menubar [ref=f3e8]:
+      - generic [ref=f3e9]: 计划
+      - menuitem "看板" [ref=f3e10] [cursor=pointer]
+      - menuitem "排产计划" [ref=f3e17] [cursor=pointer]
+      - generic [ref=f3e22]: 数据
+      - menuitem "经营计划" [ref=f3e23] [cursor=pointer]
+      - menuitem "库存快照" [ref=f3e28] [cursor=pointer]
+      - menuitem "物料管理" [ref=f3e35] [cursor=pointer]
+      - menuitem "物料分类" [ref=f3e40] [cursor=pointer]
+      - menuitem "BOM管理" [ref=f3e45] [cursor=pointer]
+      - generic [ref=f3e50]: 配置
+      - menuitem "产能配置" [ref=f3e51] [cursor=pointer]
+      - generic [ref=f3e56]: 系统
+      - menuitem "用户与权限" [ref=f3e57] [cursor=pointer]
+  - generic [ref=f3e62]:
+    - generic [ref=f3e63]:
+      - generic [ref=f3e64]:
+        - generic [ref=f3e65]: 数据管理
+        - generic [ref=f3e66]: /
+        - strong [ref=f3e67]: 物料管理
+      - generic [ref=f3e68]:
+        - generic [ref=f3e69]: 数据已同步
+        - button "系 系统管理员" [ref=f3e72] [cursor=pointer]:
+          - generic [ref=f3e73]: 系
+          - generic [ref=f3e74]: 系统管理员
+    - main [ref=f3e75]:
+      - generic [ref=f3e76]:
+        - generic [ref=f3e77]:
+          - heading "物料管理" [level=1] [ref=f3e78]
+          - generic [ref=f3e79]:
+            - button "导入" [ref=f3e80] [cursor=pointer]
+            - button "新增" [ref=f3e85] [cursor=pointer]
+        - generic [ref=f3e90]:
+          - generic [ref=f3e92] [cursor=pointer]:
+            - generic:
+              - combobox [ref=f3e94]
+              - generic [ref=f3e95]: 物料二级分类
+          - generic [ref=f3e101] [cursor=pointer]:
+            - generic:
+              - combobox [ref=f3e103]
+              - generic [ref=f3e104]: 物料类别
+          - generic [ref=f3e110] [cursor=pointer]:
+            - generic:
+              - combobox [ref=f3e112]
+              - generic [ref=f3e113]: 所属区域
+          - textbox "搜索料号/名称/型号" [ref=f3e124]
+        - generic [ref=f3e126]:
+          - generic [ref=f3e128]:
+            - table [ref=f3e130]:
+              - rowgroup [ref=f3e147]:
+                - row [ref=f3e148]:
+                  - columnheader "料号" [ref=f3e149]
+                  - columnheader "物料名称" [ref=f3e151]
+                  - columnheader "项目型号" [ref=f3e153]
+                  - columnheader "规格型号" [ref=f3e155]
+                  - columnheader "单位" [ref=f3e157]
+                  - columnheader "MOQ" [ref=f3e159]
+                  - columnheader "MPQ" [ref=f3e161]
+                  - columnheader "所属区域" [ref=f3e163]
+                  - columnheader "属性" [ref=f3e165]
+                  - columnheader "物料二级分类" [ref=f3e167]
+                  - columnheader "物料类别" [ref=f3e169]
+                  - columnheader "是否有效" [ref=f3e171]
+                  - columnheader "提前期(天)" [ref=f3e173]
+                  - columnheader "产地" [ref=f3e175]
+                  - columnheader "操作" [ref=f3e177]
+            - generic [ref=f3e182]:
+              - table:
+                - rowgroup
+              - generic [ref=f3e183]: 暂无数据
+          - generic [ref=f3e186]:
+            - generic [ref=f3e187]: 共 0 条
+            - generic [ref=f3e188]:
+              - generic [ref=f3e191] [cursor=pointer]:
+                - generic:
+                  - combobox [ref=f3e193]
+                  - generic [ref=f3e194]: 20条/页
+              - button "上一页" [disabled] [ref=f3e199]
+              - list [ref=f3e200]:
+                - listitem "第 1 页" [ref=f3e201]: "1"
+              - button "下一页" [disabled] [ref=f3e202]
