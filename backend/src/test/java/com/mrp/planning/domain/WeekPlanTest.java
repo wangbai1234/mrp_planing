@@ -86,4 +86,51 @@ class WeekPlanTest {
 
         assertTrue(locked.isLocked());
     }
+
+    @Test
+    void withManual_shouldPreserveOriginalAutoValue() {
+        LocalDate weekStart = LocalDate.of(2026, 8, 3);
+        WeekPlan plan = WeekPlan.auto(weekStart, weekStart, weekStart, 1, false, false, 300);
+
+        WeekPlan overridden = plan.withManual(500L);
+
+        assertEquals(300, overridden.systemQuantity(), "auto value should be preserved");
+        assertEquals(500L, overridden.manualQuantity(), "manual value should be set");
+        assertEquals(500, overridden.effectiveQuantity(), "effective should use manual");
+    }
+
+    @Test
+    void withManual_nullShouldClearOverride() {
+        LocalDate weekStart = LocalDate.of(2026, 8, 3);
+        WeekPlan plan = WeekPlan.auto(weekStart, weekStart, weekStart, 1, false, false, 300)
+                .withManual(500L);
+
+        WeekPlan cleared = plan.withManual(null);
+
+        assertEquals(300, cleared.systemQuantity(), "system quantity unchanged");
+        assertNull(cleared.manualQuantity(), "manual should be cleared");
+        assertEquals(300, cleared.effectiveQuantity(), "effective should revert to system");
+    }
+
+    @Test
+    void withCapacity_shouldCalculateExcessWhenExceeded() {
+        LocalDate weekStart = LocalDate.of(2026, 8, 3);
+        WeekPlan plan = WeekPlan.auto(weekStart, weekStart, weekStart, 1, false, false, 500);
+
+        WeekPlan checked = plan.withCapacity(true, 100);
+
+        assertTrue(checked.capacityExceeded());
+        assertEquals(100, checked.capacityExcessQty());
+    }
+
+    @Test
+    void withCapacity_shouldNotMarkWhenWithinCapacity() {
+        LocalDate weekStart = LocalDate.of(2026, 8, 3);
+        WeekPlan plan = WeekPlan.auto(weekStart, weekStart, weekStart, 1, false, false, 300);
+
+        WeekPlan checked = plan.withCapacity(false, 0);
+
+        assertFalse(checked.capacityExceeded());
+        assertEquals(0, checked.capacityExcessQty());
+    }
 }
