@@ -2,10 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mrp.shipment.repository.ShipmentMapper">
 
-    <insert id="insertBatch" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertBatch">
         INSERT INTO shipment_batch (source, status, created_by)
         VALUES (#{source}, #{status}, #{createdBy})
     </insert>
+
+    <select id="selectLastInsertId" resultType="long">
+        SELECT LAST_INSERT_ID()
+    </select>
 
     <select id="selectBatchById" resultType="com.mrp.shipment.domain.ShipmentBatch">
         SELECT * FROM shipment_batch WHERE id = #{id}

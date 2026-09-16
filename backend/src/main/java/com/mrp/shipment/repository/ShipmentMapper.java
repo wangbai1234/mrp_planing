@@ -12,6 +12,8 @@ public interface ShipmentMapper {
 
     int insertBatch(ShipmentBatch batch);
 
+    Long selectLastInsertId();
+
     ShipmentBatch selectBatchById(@Param("id") Long id);
 
     ShipmentBatch selectLatestBatch();

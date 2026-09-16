@@ -94,6 +94,10 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.DELETE, "/api/v1/material-categories/**").hasAuthority("material_category:manage")
                 .requestMatchers(HttpMethod.PATCH, "/api/v1/material-categories/**").hasAuthority("material_category:manage")
 
+                // Shipment permissions
+                .requestMatchers(HttpMethod.POST, "/api/v1/shipment-imports").hasAuthority("inventory:import")
+                .requestMatchers(HttpMethod.GET, "/api/v1/shipments/**").hasAuthority("inventory:view")
+
                 // Import/Export task status
                 .requestMatchers(HttpMethod.GET, "/api/v1/import-tasks/**").hasAuthority("forecast:view")
                 .requestMatchers(HttpMethod.GET, "/api/v1/inventory-import-tasks/**").hasAuthority("inventory:view")
