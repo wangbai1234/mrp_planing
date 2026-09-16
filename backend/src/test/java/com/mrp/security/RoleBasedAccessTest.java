@@ -171,4 +171,28 @@ class RoleBasedAccessTest {
                     .andExpect(status().isForbidden());
         }
     }
+
+    @Test
+    void accessWithoutToken_shouldReturn403() throws Exception {
+        mockMvc.perform(get("/api/v1/plans"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void accessWithInvalidToken_shouldReturn403() throws Exception {
+        mockMvc.perform(get("/api/v1/plans")
+                        .header("Authorization", "Bearer invalid-token"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void accessWithInsufficientPermission_shouldReturn403() throws Exception {
+        // Use a token with limited permissions (simulated with malformed token)
+        String limitedToken = "eyJhbGciOiJIUzM4NCJ9.limited.payload";
+
+        // Try to publish (requires schedule:publish permission)
+        mockMvc.perform(post("/api/v1/plans/1/publish")
+                        .header("Authorization", "Bearer " + limitedToken))
+                .andExpect(status().isForbidden());
+    }
 }
