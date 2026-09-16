@@ -68,4 +68,24 @@ describe('Permission Store', () => {
     expect(store.roles).toEqual([])
     expect(store.loaded).toBe(false)
   })
+
+  it('should handle nested permissions', () => {
+    const store = usePermissionStore()
+    store.setPermissions(['planning:read', 'planning:write', 'planning:publish'])
+
+    expect(store.hasPermission('planning:read')).toBe(true)
+    expect(store.hasPermission('planning:write')).toBe(true)
+    expect(store.hasPermission('planning:publish')).toBe(true)
+    expect(store.hasPermission('admin:delete')).toBe(false)
+  })
+
+  it('should clear permissions on logout', () => {
+    const store = usePermissionStore()
+    store.setPermissions(['planning:read'])
+
+    store.clear()
+
+    expect(store.permissions).toEqual([])
+    expect(store.hasPermission('planning:read')).toBe(false)
+  })
 })

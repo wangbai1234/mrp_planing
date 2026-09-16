@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { setToken, getToken } from '@/api/client'
+import { setToken, getToken, get } from '@/api/client'
 
 // Mock localStorage
 const localStorageMock = {
@@ -48,5 +48,22 @@ describe('API Client', () => {
     // Re-import to trigger initialization
     // This is tricky in ESM, so we'll just test the getter
     expect(localStorageMock.getItem).toBeDefined()
+  })
+
+  it('should handle 401 response', async () => {
+    fetchMock.mockResolvedValue({
+      status: 401,
+      ok: false,
+      statusText: 'Unauthorized'
+    })
+
+    await expect(get('/api/v1/plans')).rejects.toThrow('未授权，请重新登录')
+    expect(getToken()).toBeNull()
+  })
+
+  it('should handle network error', async () => {
+    fetchMock.mockRejectedValue(new TypeError('Failed to fetch'))
+
+    await expect(get('/api/v1/plans')).rejects.toThrow('Failed to fetch')
   })
 })
