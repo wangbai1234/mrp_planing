@@ -15,9 +15,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -46,10 +49,14 @@ public class ExportService {
     public ExportTask createExportTask(Long planVersionId, String factoryCode, List<String> fields,
                                        boolean includePriority, boolean includeActual,
                                        Long userId) {
+        log.info("Export request: planVersionId={}, factoryCode={}, fields={}, count={}",
+                planVersionId, factoryCode, fields, fields != null ? fields.size() : 0);
+
         PlanVersion version = planMapper.selectVersionById(planVersionId);
         if (version == null) throw new BusinessException("MRP_NOT_FOUND", "Plan version not found");
 
-        String requestKey = "export:" + planVersionId + ":" + factoryCode + ":" + String.join(",", fields);
+        String requestKey = buildRequestKey(planVersionId, factoryCode, fields);
+        log.info("Export requestKey length={}", requestKey.length());
         ExportTask existing = exportTaskMapper.selectByRequestKey(requestKey);
         if (existing != null) {
             if (ExportTask.STATUS_SUCCEEDED.equals(existing.getStatus()) && existing.getFilePath() != null) {
@@ -76,6 +83,7 @@ public class ExportService {
             } else {
                 details = planMapper.selectDetailsByVersionId(planVersionId);
             }
+            log.info("Export query: planVersionId={}, factoryCode={}, detailCount={}", planVersionId, factoryCode, details.size());
             Path filePath = generateExcel(details, fields, includePriority, includeActual);
             String filePathStr = filePath.toString();
             exportTaskMapper.updateResultWithFile(task.getId(), ExportTask.STATUS_SUCCEEDED, filePathStr, 0);
@@ -152,6 +160,30 @@ public class ExportService {
                 wb.write(os);
             }
             return filePath;
+        }
+    }
+
+    private String buildRequestKey(Long planVersionId, String factoryCode, List<String> fields) {
+        String fieldsStr = String.join(",", fields);
+        String raw = "export:" + planVersionId + ":" + factoryCode + ":" + fieldsStr;
+        if (raw.length() <= 128) {
+            return raw;
+        }
+        String fieldsHash = sha256Hex(fieldsStr);
+        return "export:" + planVersionId + ":" + factoryCode + ":" + fieldsHash;
+    }
+
+    private static String sha256Hex(String input) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] digest = md.digest(input.getBytes(StandardCharsets.UTF_8));
+            StringBuilder sb = new StringBuilder(64);
+            for (byte b : digest) {
+                sb.append(String.format("%02x", b & 0xff));
+            }
+            return sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("SHA-256 not available", e);
         }
     }
 }
