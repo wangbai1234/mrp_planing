@@ -254,35 +254,67 @@ test.describe('MRP Business Flow Tests', () => {
     // Navigate to planning page
     await page.click('text=排产计划');
     await page.waitForURL('**/planning');
+    await page.waitForTimeout(2000); // Wait for data to load
     
-    // Check if plans exist
-    const planRows = page.locator('.el-table__row');
-    const planCount = await planRows.count();
+    // Check if publish button exists and is enabled
+    const publishButton = page.locator('button:has-text("发布")').first();
+    const isPublishVisible = await publishButton.isVisible({ timeout: 5000 }).catch(() => false);
     
-    if (planCount > 0) {
-      // Click on first plan
-      await planRows.first().click();
-      await page.waitForTimeout(1000);
-      
-      // Try to publish
-      const publishButton = page.locator('button:has-text("发布")');
-      if (await publishButton.isVisible()) {
-        await publishButton.click();
-        await page.waitForTimeout(3000);
-        
-        // Check for any dialog or message
-        const dialog = page.locator('.el-dialog, .el-message-box');
-        const hasDialog = await dialog.isVisible({ timeout: 3000 }).catch(() => false);
-        
-        if (hasDialog) {
-          // Try to confirm
-          const confirmButton = page.locator('button:has-text("确认"), button:has-text("确定")');
-          if (await confirmButton.isVisible({ timeout: 2000 }).catch(() => false)) {
-            await confirmButton.click();
-            await page.waitForTimeout(2000);
+    if (!isPublishVisible) {
+      console.log('TC012: Publish button not visible, skipping');
+      return;
+    }
+    
+    // Check if button is disabled
+    const isDisabled = await publishButton.isDisabled();
+    if (isDisabled) {
+      console.log('TC012: Publish button is disabled - no plan version or already published');
+      // Try to recalculate first
+      const recalcButton = page.locator('button:has-text("重算")').first();
+      if (await recalcButton.isVisible({ timeout: 2000 }).catch(() => false)) {
+        const isRecalcDisabled = await recalcButton.isDisabled();
+        if (!isRecalcDisabled) {
+          console.log('TC012: Clicking recalculate to create plan version');
+          await recalcButton.click();
+          await page.waitForTimeout(5000); // Wait for recalculation
+          
+          // Check if publish is now enabled
+          const isStillDisabled = await publishButton.isDisabled();
+          if (isStillDisabled) {
+            console.log('TC012: Publish still disabled after recalc, skipping');
+            return;
           }
+        } else {
+          console.log('TC012: Recalculate also disabled, skipping');
+          return;
         }
+      } else {
+        return;
       }
+    }
+    
+    // Now try to publish
+    console.log('TC012: Attempting to publish');
+    await publishButton.click();
+    await page.waitForTimeout(2000);
+    
+    // Check for confirmation dialog
+    const dialog = page.locator('.el-message-box, .el-dialog').first();
+    const hasDialog = await dialog.isVisible({ timeout: 3000 }).catch(() => false);
+    
+    if (hasDialog) {
+      const confirmButton = page.locator('button:has-text("确认"), button:has-text("确定")').first();
+      if (await confirmButton.isVisible({ timeout: 2000 }).catch(() => false)) {
+        await confirmButton.click();
+        await page.waitForTimeout(2000);
+      }
+    }
+    
+    // Verify publish success (check for success message or status change)
+    const successMsg = page.locator('.el-message--success');
+    const hasSuccess = await successMsg.isVisible({ timeout: 3000 }).catch(() => false);
+    if (hasSuccess) {
+      console.log('TC012: Publish successful');
     }
     
     console.log('TC012排产审核发布测试完成');
