@@ -26,6 +26,9 @@ public class CalcTask {
     private Long resultResourceId;
     private String errorCode;
     private String errorMessage;
+    private String phase;
+    private Integer successRoots;
+    private Integer failedRoots;
     private Long createdBy;
     private Instant createdAt;
     private Instant startedAt;
@@ -40,6 +43,17 @@ public class CalcTask {
                     Instant nextRunAt, String inputPayload, String inputChecksum, Long resultResourceId,
                     String errorCode, String errorMessage, Long createdBy, Instant createdAt,
                     Instant startedAt, Instant finishedAt, Integer version) {
+        this(id, taskType, businessScope, requestKey, status, priority, workerId, leaseUntil, heartbeatAt,
+             progressCurrent, progressTotal, attemptCount, maxAttempts, nextRunAt, inputPayload, inputChecksum,
+             resultResourceId, errorCode, errorMessage, null, 0, 0, createdBy, createdAt, startedAt, finishedAt, version);
+    }
+
+    public CalcTask(Long id, String taskType, String businessScope, String requestKey, String status,
+                    Integer priority, String workerId, Instant leaseUntil, Instant heartbeatAt,
+                    Integer progressCurrent, Integer progressTotal, Integer attemptCount, Integer maxAttempts,
+                    Instant nextRunAt, String inputPayload, String inputChecksum, Long resultResourceId,
+                    String errorCode, String errorMessage, String phase, Integer successRoots, Integer failedRoots,
+                    Long createdBy, Instant createdAt, Instant startedAt, Instant finishedAt, Integer version) {
         this.id = id;
         this.taskType = taskType;
         this.businessScope = businessScope;
@@ -59,6 +73,9 @@ public class CalcTask {
         this.resultResourceId = resultResourceId;
         this.errorCode = errorCode;
         this.errorMessage = errorMessage;
+        this.phase = phase;
+        this.successRoots = successRoots;
+        this.failedRoots = failedRoots;
         this.createdBy = createdBy;
         this.createdAt = createdAt;
         this.startedAt = startedAt;
@@ -85,6 +102,9 @@ public class CalcTask {
     public Long resultResourceId() { return resultResourceId; }
     public String errorCode() { return errorCode; }
     public String errorMessage() { return errorMessage; }
+    public String phase() { return phase; }
+    public Integer successRoots() { return successRoots; }
+    public Integer failedRoots() { return failedRoots; }
     public Long createdBy() { return createdBy; }
     public Instant createdAt() { return createdAt; }
     public Instant startedAt() { return startedAt; }
@@ -110,9 +130,41 @@ public class CalcTask {
     public void setResultResourceId(Long resultResourceId) { this.resultResourceId = resultResourceId; }
     public void setErrorCode(String errorCode) { this.errorCode = errorCode; }
     public void setErrorMessage(String errorMessage) { this.errorMessage = errorMessage; }
+    public void setPhase(String phase) { this.phase = phase; }
+    public void setSuccessRoots(Integer successRoots) { this.successRoots = successRoots; }
+    public void setFailedRoots(Integer failedRoots) { this.failedRoots = failedRoots; }
     public void setCreatedBy(Long createdBy) { this.createdBy = createdBy; }
     public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }
     public void setStartedAt(Instant startedAt) { this.startedAt = startedAt; }
     public void setFinishedAt(Instant finishedAt) { this.finishedAt = finishedAt; }
     public void setVersion(Integer version) { this.version = version; }
+
+    // Jackson getter methods
+    public Long getId() { return id; }
+    public String getTaskType() { return taskType; }
+    public String getBusinessScope() { return businessScope; }
+    public String getRequestKey() { return requestKey; }
+    public String getStatus() { return status; }
+    public Integer getPriority() { return priority; }
+    public String getWorkerId() { return workerId; }
+    public Instant getLeaseUntil() { return leaseUntil; }
+    public Instant getHeartbeatAt() { return heartbeatAt; }
+    public Integer getProgressCurrent() { return progressCurrent; }
+    public Integer getProgressTotal() { return progressTotal; }
+    public Integer getAttemptCount() { return attemptCount; }
+    public Integer getMaxAttempts() { return maxAttempts; }
+    public Instant getNextRunAt() { return nextRunAt; }
+    public String getInputPayload() { return inputPayload; }
+    public String getInputChecksum() { return inputChecksum; }
+    public Long getResultResourceId() { return resultResourceId; }
+    public String getErrorCode() { return errorCode; }
+    public String getErrorMessage() { return errorMessage; }
+    public String getPhase() { return phase; }
+    public Integer getSuccessRoots() { return successRoots; }
+    public Integer getFailedRoots() { return failedRoots; }
+    public Long getCreatedBy() { return createdBy; }
+    public Instant getCreatedAt() { return createdAt; }
+    public Instant getStartedAt() { return startedAt; }
+    public Instant getFinishedAt() { return finishedAt; }
+    public Integer getVersion() { return version; }
 }

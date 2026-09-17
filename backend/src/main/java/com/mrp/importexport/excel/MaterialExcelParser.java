@@ -1,6 +1,8 @@
 package com.mrp.importexport.excel;
 
 import com.mrp.masterdata.domain.Material;
+import com.mrp.masterdata.domain.MaterialCategory;
+import com.mrp.masterdata.repository.MaterialCategoryMapper;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xssf.eventusermodel.XSSFReader;
 import org.apache.poi.xssf.model.SharedStrings;
@@ -17,7 +19,9 @@ import javax.xml.parsers.SAXParserFactory;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class MaterialExcelParser {
@@ -35,8 +39,15 @@ public class MaterialExcelParser {
     private static final List<String> EXPECTED_HEADERS = List.of(
             "展示名称", "料号*", "物料名称*", "项目型号", "规格型号",
             "单位", "MOQ最小起订量", "MPQ最小包装", "所属区域", "属性",
-            "物料类别", "是否有效*", "L-T提前期", "产地"
+            "物料类别", "是否有效*", "L-T提前期", "产地", "物料二级分类编码"
     );
+
+    private final MaterialCategoryMapper materialCategoryMapper;
+    private Map<String, Long> categoryCodeMap;
+
+    public MaterialExcelParser(MaterialCategoryMapper materialCategoryMapper) {
+        this.materialCategoryMapper = materialCategoryMapper;
+    }
 
     public ParseResult<Material> parse(Path file) {
         List<Material> rows = new ArrayList<>();
@@ -45,6 +56,17 @@ public class MaterialExcelParser {
         List<List<String>> rawRows = new ArrayList<>();
         List<String> headers = new ArrayList<>();
         int totalRows = 0;
+
+        // Load category code mapping
+        if (categoryCodeMap == null) {
+            categoryCodeMap = new HashMap<>();
+            List<MaterialCategory> allCategories = materialCategoryMapper.selectAll();
+            for (MaterialCategory cat : allCategories) {
+                if (cat.getCode() != null) {
+                    categoryCodeMap.put(cat.getCode(), cat.getId());
+                }
+            }
+        }
 
         try (OPCPackage pkg = OPCPackage.open(file.toFile())) {
             XSSFReader reader = new XSSFReader(pkg);
@@ -62,7 +84,7 @@ public class MaterialExcelParser {
             factory.setNamespaceAware(true);
             XMLReader xmlReader = factory.newSAXParser().getXMLReader();
 
-            MaterialSheetHandler handler = new MaterialSheetHandler(sst, styles, rows, errors, rawRows, headers);
+            MaterialSheetHandler handler = new MaterialSheetHandler(sst, styles, rows, errors, rawRows, headers, categoryCodeMap);
             xmlReader.setContentHandler(handler);
             xmlReader.parse(new InputSource(sheetStream));
 
@@ -100,6 +122,7 @@ public class MaterialExcelParser {
         private final List<ParseError> errors;
         private final List<List<String>> rawRows;
         private final List<String> headers;
+        private final Map<String, Long> categoryCodeMap;
 
         private int currentRow = -1;
         private int currentCol = 0;
@@ -115,13 +138,15 @@ public class MaterialExcelParser {
 
         MaterialSheetHandler(SharedStrings sst, StylesTable styles,
                             List<Material> rows, List<ParseError> errors,
-                            List<List<String>> rawRows, List<String> headers) {
+                            List<List<String>> rawRows, List<String> headers,
+                            Map<String, Long> categoryCodeMap) {
             this.sst = sst;
             this.styles = styles;
             this.rows = rows;
             this.errors = errors;
             this.rawRows = rawRows;
             this.headers = headers;
+            this.categoryCodeMap = categoryCodeMap;
         }
 
         int getDataRowCount() { return dataRowCount; }
@@ -227,6 +252,17 @@ public class MaterialExcelParser {
             Long mpq = parseLong(getString(7));   // MPQ
             Integer leadTime = parseInteger(getString(12)); // L-T提前期
 
+            // 物料二级分类编码
+            String categoryCode = getString(14); // 物料二级分类编码
+            Long materialCategoryId = null;
+            if (categoryCode != null && !categoryCode.isBlank() && categoryCodeMap != null) {
+                materialCategoryId = categoryCodeMap.get(categoryCode.trim());
+                if (materialCategoryId == null) {
+                    errors.add(ParseError.of(currentRow + 1, "物料二级分类编码", categoryCode,
+                            "CATEGORY_NOT_FOUND", "未找到该分类编码: " + categoryCode));
+                }
+            }
+
             rows.add(new Material(
                     null,
                     materialCode,
@@ -247,7 +283,7 @@ public class MaterialExcelParser {
                     false,
                     null,
                     null,
-                    null  // materialCategoryId - to be set after category lookup
+                    materialCategoryId
             ));
         }
 

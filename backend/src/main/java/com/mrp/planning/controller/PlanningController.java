@@ -115,15 +115,28 @@ public class PlanningController {
         Long capacityVersionId = request.get("capacityVersionId") != null
                 ? Long.valueOf(request.get("capacityVersionId").toString()) : null;
 
+        // 读取拆分维度
+        @SuppressWarnings("unchecked")
+        List<String> splitCategories = request.get("splitCategories") != null
+                ? (List<String>) request.get("splitCategories") : null;
+        boolean useBomExplosion = splitCategories != null && !splitCategories.isEmpty();
+
+        // 构建 requestKey（含拆分维度以区分不同拆分的重算）
+        String splitKey = useBomExplosion ? ":" + String.join(",", splitCategories) : "";
+
         // 当 factoryCode 为空时，为所有工厂生成排产版本
         if (factoryCode == null || factoryCode.isBlank()) {
             log.info("factoryCode 为空，为所有工厂生成排产版本");
-            String requestKey = "recalc:all:" + forecastVersionId + ":" + inventorySnapshotId + ":" + currentWeekStart;
+            String requestKey = "recalc:all:" + forecastVersionId + ":" + inventorySnapshotId + ":" + currentWeekStart + splitKey;
             CalcTask existing = calcTaskMapper.selectByRequestKey(requestKey);
             if (existing != null && CalcTask.STATUS_SUCCEEDED.equals(existing.status())) {
                 return ResponseEntity.accepted().body(ApiResponse.ok(Map.of(
                         "taskId", existing.id(), "status", existing.status(),
                         "planVersionId", existing.resultResourceId())));
+            }
+            // 删除失败的任务，允许重新提交
+            if (existing != null && CalcTask.STATUS_FAILED.equals(existing.status())) {
+                calcTaskMapper.deleteById(existing.id());
             }
 
             CalcTask task = new CalcTask(null, "RECALCULATION", "ALL", requestKey,
@@ -132,15 +145,21 @@ public class PlanningController {
             calcTaskMapper.insert(task);
 
             Long userId = CurrentUser.getUserId();
-            asyncCalculationService.executeRecalculationAllFactories(
-                    task.id(), forecastVersionId, inventorySnapshotId, shipmentBatchId,
-                    capacityVersionId, currentWeekStart, userId);
+            if (useBomExplosion) {
+                asyncCalculationService.executeRecalculationAllFactoriesWithBomExplosion(
+                        task.id(), forecastVersionId, inventorySnapshotId, shipmentBatchId,
+                        capacityVersionId, currentWeekStart, splitCategories, userId);
+            } else {
+                asyncCalculationService.executeRecalculationAllFactories(
+                        task.id(), forecastVersionId, inventorySnapshotId, shipmentBatchId,
+                        capacityVersionId, currentWeekStart, userId);
+            }
 
             return ResponseEntity.accepted().body(ApiResponse.ok(Map.of(
                     "taskId", task.id(), "status", CalcTask.STATUS_PENDING)));
         }
 
-        String requestKey = "recalc:" + forecastVersionId + ":" + factoryCode + ":" + inventorySnapshotId + ":" + currentWeekStart;
+        String requestKey = "recalc:" + forecastVersionId + ":" + factoryCode + ":" + inventorySnapshotId + ":" + currentWeekStart + splitKey;
         log.info("请求键: {}, forecastVersionId: {}", requestKey, forecastVersionId);
         
         CalcTask existing = calcTaskMapper.selectByRequestKey(requestKey);
@@ -149,6 +168,10 @@ public class PlanningController {
                     "taskId", existing.id(), "status", existing.status(),
                     "planVersionId", existing.resultResourceId())));
         }
+        // 删除失败的任务，允许重新提交
+        if (existing != null && CalcTask.STATUS_FAILED.equals(existing.status())) {
+            calcTaskMapper.deleteById(existing.id());
+        }
 
         CalcTask task = new CalcTask(null, "RECALCULATION", factoryCode, requestKey,
                 CalcTask.STATUS_PENDING, 0, null, null, null, 0, 0, 0, 3, null,
@@ -156,9 +179,15 @@ public class PlanningController {
         calcTaskMapper.insert(task);
 
         Long userId = CurrentUser.getUserId();
-        asyncCalculationService.executeRecalculation(
-                task.id(), forecastVersionId, inventorySnapshotId, shipmentBatchId,
-                capacityVersionId, factoryCode, currentWeekStart, userId);
+        if (useBomExplosion) {
+            asyncCalculationService.executeRecalculationWithBomExplosion(
+                    task.id(), forecastVersionId, inventorySnapshotId, shipmentBatchId,
+                    capacityVersionId, factoryCode, currentWeekStart, splitCategories, userId);
+        } else {
+            asyncCalculationService.executeRecalculation(
+                    task.id(), forecastVersionId, inventorySnapshotId, shipmentBatchId,
+                    capacityVersionId, factoryCode, currentWeekStart, userId);
+        }
 
         return ResponseEntity.accepted().body(ApiResponse.ok(Map.of(
                 "taskId", task.id(), "status", CalcTask.STATUS_PENDING)));

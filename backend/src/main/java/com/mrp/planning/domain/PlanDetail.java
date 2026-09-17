@@ -20,5 +20,7 @@ public record PlanDetail(
         Long manualQuantity,
         long effectiveQuantity,
         boolean capacityExceeded,
-        long capacityExcessQty
+        long capacityExcessQty,
+        String rootMaterialCode,
+        String rootMaterialName
 ) {}

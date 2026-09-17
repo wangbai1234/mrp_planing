@@ -17,6 +17,8 @@ public interface MaterialCategoryMapper {
 
     List<MaterialCategory> selectAll();
 
+    List<MaterialCategory> selectAll(@Param("level") Integer level, @Param("enabled") Boolean enabled);
+
     List<MaterialCategory> selectByParentId(@Param("parentId") Long parentId);
 
     List<MaterialCategory> selectByLevel(@Param("level") int level);

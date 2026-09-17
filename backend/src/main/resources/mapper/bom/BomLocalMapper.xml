@@ -81,6 +81,34 @@
         ORDER BY d.child_code
     </select>
 
+    <select id="selectAllDetails" resultMap="detailResultMap">
+        SELECT d.parent_code, d.child_code, d.child_name, d.version, d.material_spec, d.make_factory,
+               d.child_qty, d.child_note, d.replace_priority, d.alt_code, d.alt_name, d.alt_spec,
+               d.alt_factory, d.alt_qty, d.is_deliver, d.is_default, d.main_status, d.alt_status,
+               d.main_rhos_status, d.alt_rhos_status, d.admit_note,
+               m.material_category_id, mc.name AS material_category_name
+        FROM bom_detail d
+        LEFT JOIN material m ON m.material_code = d.child_code AND m.is_deleted = 0
+        LEFT JOIN material_category mc ON mc.id = m.material_category_id AND mc.is_deleted = 0
+        ORDER BY d.parent_code, d.child_code
+    </select>
+
+    <select id="selectDetailsByParentCodes" resultMap="detailResultMap">
+        SELECT d.parent_code, d.child_code, d.child_name, d.version, d.material_spec, d.make_factory,
+               d.child_qty, d.child_note, d.replace_priority, d.alt_code, d.alt_name, d.alt_spec,
+               d.alt_factory, d.alt_qty, d.is_deliver, d.is_default, d.main_status, d.alt_status,
+               d.main_rhos_status, d.alt_rhos_status, d.admit_note,
+               m.material_category_id, mc.name AS material_category_name
+        FROM bom_detail d
+        LEFT JOIN material m ON m.material_code = d.child_code AND m.is_deleted = 0
+        LEFT JOIN material_category mc ON mc.id = m.material_category_id AND mc.is_deleted = 0
+        WHERE d.parent_code IN
+        <foreach collection="parentCodes" item="code" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+        ORDER BY d.parent_code, d.child_code
+    </select>
+
     <insert id="insertParent">
         INSERT INTO bom_parent (inv_code, inv_name, version, parent_qty, org_name, body_code, synced_at)
         VALUES (#{invCode}, #{invName}, #{version}, #{parentQty}, #{orgName}, #{bodyCode}, NOW())

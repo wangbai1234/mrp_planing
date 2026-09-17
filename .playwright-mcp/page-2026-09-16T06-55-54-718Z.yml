@@ -1,0 +1,86 @@
+- generic [ref=f1e3]:
+  - complementary [ref=f1e4]:
+    - generic [ref=f1e5]:
+      - generic [ref=f1e6]: MRP
+      - generic [ref=f1e7]: 计划协同
+    - menubar [ref=f1e8]:
+      - generic [ref=f1e9]: 计划
+      - menuitem "看板" [ref=f1e10] [cursor=pointer]
+      - menuitem "排产计划" [ref=f1e17] [cursor=pointer]
+      - generic [ref=f1e22]: 数据
+      - menuitem "经营计划" [ref=f1e23] [cursor=pointer]
+      - menuitem "库存快照" [ref=f1e28] [cursor=pointer]
+      - menuitem "物料管理" [ref=f1e35] [cursor=pointer]
+      - menuitem "物料分类" [ref=f1e40] [cursor=pointer]
+      - menuitem "BOM管理" [ref=f1e45] [cursor=pointer]
+      - generic [ref=f1e50]: 配置
+      - menuitem "产能配置" [ref=f1e51] [cursor=pointer]
+      - generic [ref=f1e56]: 系统
+      - menuitem "用户与权限" [ref=f1e57] [cursor=pointer]
+  - generic [ref=f1e62]:
+    - generic [ref=f1e63]:
+      - generic [ref=f1e64]:
+        - generic [ref=f1e65]: 计划管理
+        - generic [ref=f1e66]: /
+        - strong [ref=f1e67]: 排产计划
+      - generic [ref=f1e68]:
+        - generic [ref=f1e69]: 数据已同步
+        - button "系 系统管理员" [ref=f1e72] [cursor=pointer]:
+          - generic [ref=f1e73]: 系
+          - generic [ref=f1e74]: 系统管理员
+    - main [ref=f1e75]:
+      - generic [ref=f1e76]:
+        - generic [ref=f1e77]:
+          - heading "排产计划" [level=1] [ref=f1e78]
+          - generic [ref=f1e79]:
+            - button "拆分维度：未设置" [ref=f1e80] [cursor=pointer]
+            - button "设置" [ref=f1e82] [cursor=pointer]
+            - button "版本对比" [ref=f1e87] [cursor=pointer]
+            - button "导出" [ref=f1e92] [cursor=pointer]
+            - button "重算" [disabled]
+            - button "发布" [disabled] [ref=f1e97]
+        - generic [ref=f1e103]:
+          - generic [ref=f1e105]:
+            - generic [ref=f1e107] [cursor=pointer]:
+              - generic:
+                - combobox [ref=f1e109]
+                - generic [ref=f1e110]: 全部工厂
+            - textbox "搜索整机料号 / 机型" [ref=f1e121]
+            - generic [ref=f1e124] [cursor=pointer]:
+              - generic:
+                - combobox [ref=f1e126]
+                - generic [ref=f1e127]: 全部状态
+          - generic [ref=f1e132]:
+            - generic [ref=f1e133]: 当前周
+            - generic [ref=f1e135]: 人工调整
+            - generic [ref=f1e137]: 已执行 / 锁定
+            - generic [ref=f1e139]: 超产能
+            - generic [ref=f1e141]: 点击数量可编辑，点击料号查看详情
+          - table [ref=f1e143]:
+            - rowgroup [ref=f1e144]:
+              - row [ref=f1e145]:
+                - columnheader "整机料号 / 名称" [ref=f1e146]
+                - columnheader "工厂" [ref=f1e147]
+            - rowgroup [ref=f1e148]:
+              - row [ref=f1e149]:
+                - cell [ref=f1e150]:
+                  - paragraph [ref=f1e170]: 暂无排产数据
+        - generic [ref=f1e171]:
+          - generic [ref=f1e173]:
+            - generic [ref=f1e174]: 历史版本
+            - generic: 禁止回滚
+          - generic [ref=f1e177]:
+            - table [ref=f1e179]:
+              - rowgroup [ref=f1e188]:
+                - row [ref=f1e189]:
+                  - columnheader "排产版本" [ref=f1e190]
+                  - columnheader "工厂" [ref=f1e192]
+                  - columnheader "生成时间" [ref=f1e194]
+                  - columnheader "经营计划版本" [ref=f1e196]
+                  - columnheader "拆分维度" [ref=f1e198]
+                  - columnheader "状态" [ref=f1e200]
+                  - columnheader "操作" [ref=f1e202]
+            - generic [ref=f1e207]:
+              - table:
+                - rowgroup
+              - generic [ref=f1e208]: 暂无数据

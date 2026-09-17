@@ -23,6 +23,8 @@ public class PlanVersion {
     private String status;
     private Boolean autoRecalcForecast;
     private Boolean autoRecalcInventory;
+    private String splitCategories;
+    private String splitCategoryNames;
     private Long createdBy;
     private Instant createdAt;
     private Instant updatedAt;
@@ -34,6 +36,17 @@ public class PlanVersion {
                        String ruleVersion, LocalDate currentWeekStart, String inputChecksum,
                        String resultChecksum, String status, Boolean autoRecalcForecast,
                        Boolean autoRecalcInventory, Long createdBy, Instant createdAt, Instant updatedAt) {
+        this(id, versionNo, factoryCode, forecastVersionId, inventorySnapshotId, shipmentBatchId,
+             capacityVersionId, ruleVersion, currentWeekStart, inputChecksum, resultChecksum, status,
+             autoRecalcForecast, autoRecalcInventory, null, null, createdBy, createdAt, updatedAt);
+    }
+
+    public PlanVersion(Long id, Integer versionNo, String factoryCode, Long forecastVersionId,
+                       Long inventorySnapshotId, Long shipmentBatchId, Long capacityVersionId,
+                       String ruleVersion, LocalDate currentWeekStart, String inputChecksum,
+                       String resultChecksum, String status, Boolean autoRecalcForecast,
+                       Boolean autoRecalcInventory, String splitCategories, String splitCategoryNames,
+                       Long createdBy, Instant createdAt, Instant updatedAt) {
         this.id = id;
         this.versionNo = versionNo;
         this.factoryCode = factoryCode;
@@ -48,6 +61,8 @@ public class PlanVersion {
         this.status = status;
         this.autoRecalcForecast = autoRecalcForecast;
         this.autoRecalcInventory = autoRecalcInventory;
+        this.splitCategories = splitCategories;
+        this.splitCategoryNames = splitCategoryNames;
         this.createdBy = createdBy;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -67,6 +82,8 @@ public class PlanVersion {
     public String status() { return status; }
     public Boolean autoRecalcForecast() { return autoRecalcForecast; }
     public Boolean autoRecalcInventory() { return autoRecalcInventory; }
+    public String splitCategories() { return splitCategories; }
+    public String splitCategoryNames() { return splitCategoryNames; }
     public Long createdBy() { return createdBy; }
     public Instant createdAt() { return createdAt; }
     public Instant updatedAt() { return updatedAt; }
@@ -86,6 +103,8 @@ public class PlanVersion {
     public String getStatus() { return status; }
     public Boolean getAutoRecalcForecast() { return autoRecalcForecast; }
     public Boolean getAutoRecalcInventory() { return autoRecalcInventory; }
+    public String getSplitCategories() { return splitCategories; }
+    public String getSplitCategoryNames() { return splitCategoryNames; }
     public Long getCreatedBy() { return createdBy; }
     public Instant getCreatedAt() { return createdAt; }
     public Instant getUpdatedAt() { return updatedAt; }
@@ -104,6 +123,8 @@ public class PlanVersion {
     public void setStatus(String status) { this.status = status; }
     public void setAutoRecalcForecast(Boolean autoRecalcForecast) { this.autoRecalcForecast = autoRecalcForecast; }
     public void setAutoRecalcInventory(Boolean autoRecalcInventory) { this.autoRecalcInventory = autoRecalcInventory; }
+    public void setSplitCategories(String splitCategories) { this.splitCategories = splitCategories; }
+    public void setSplitCategoryNames(String splitCategoryNames) { this.splitCategoryNames = splitCategoryNames; }
     public void setCreatedBy(Long createdBy) { this.createdBy = createdBy; }
     public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }
     public void setUpdatedAt(Instant updatedAt) { this.updatedAt = updatedAt; }

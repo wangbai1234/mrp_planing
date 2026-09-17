@@ -1,0 +1,235 @@
+- generic [ref=f2e48]:
+  - complementary [ref=f2e49]:
+    - generic [ref=f2e50]:
+      - generic [ref=f2e51]: MRP
+      - generic [ref=f2e52]: 计划协同
+    - menubar [ref=f2e53]:
+      - generic [ref=f2e54]: 计划
+      - menuitem "看板" [ref=f2e55] [cursor=pointer]
+      - menuitem "排产计划" [ref=f2e62] [cursor=pointer]
+      - generic [ref=f2e67]: 数据
+      - menuitem "经营计划" [ref=f2e68] [cursor=pointer]
+      - menuitem "库存快照" [ref=f2e73] [cursor=pointer]
+      - menuitem "物料管理" [ref=f2e80] [cursor=pointer]
+      - menuitem "物料分类" [ref=f2e85] [cursor=pointer]
+      - menuitem "BOM管理" [active] [ref=f2e90] [cursor=pointer]
+      - generic [ref=f2e95]: 配置
+      - menuitem "产能配置" [ref=f2e96] [cursor=pointer]
+      - generic [ref=f2e101]: 系统
+      - menuitem "用户与权限" [ref=f2e102] [cursor=pointer]
+  - generic [ref=f2e107]:
+    - generic [ref=f2e108]:
+      - generic [ref=f2e109]:
+        - generic [ref=f2e110]: 数据管理
+        - generic [ref=f2e111]: /
+        - strong [ref=f2e112]: BOM管理
+      - generic [ref=f2e113]:
+        - generic [ref=f2e114]: 数据已同步
+        - button "系 系统管理员" [ref=f2e117] [cursor=pointer]:
+          - generic [ref=f2e118]: 系
+          - generic [ref=f2e119]: 系统管理员
+    - main [ref=f2e120]:
+      - generic [ref=f2e7565]:
+        - generic [ref=f2e7566]:
+          - heading "BOM管理" [level=1] [ref=f2e7567]
+          - generic [ref=f2e7568]:
+            - button "从Oracle同步" [ref=f2e7569] [cursor=pointer]
+            - button "BOM树展开" [disabled] [ref=f2e7574]
+        - generic [ref=f2e7579]:
+          - textbox "搜索物料编码/名称" [ref=f2e7587]
+          - button "刷新" [ref=f2e7590] [cursor=pointer]
+        - generic [ref=f2e7596]:
+          - generic [ref=f2e7598]:
+            - table [ref=f2e7600]:
+              - rowgroup [ref=f2e7609]:
+                - row [ref=f2e7610]:
+                  - columnheader "编码" [ref=f2e7611]
+                  - columnheader "名称" [ref=f2e7613]
+                  - columnheader "版本" [ref=f2e7615]
+                  - columnheader "单位" [ref=f2e7617]
+                  - columnheader "组织" [ref=f2e7619]
+                  - columnheader "子项数" [ref=f2e7621]
+                  - columnheader "库存组织编码" [ref=f2e7623]
+            - table [ref=f2e7629]:
+              - rowgroup [ref=f2e7638]:
+                - row [ref=f2e7639]:
+                  - cell "11420762" [ref=f2e7640]
+                  - cell "IC,WCN3620,WIFI/FM/BT SOC，ES2" [ref=f2e7642]
+                  - cell "V1.1" [ref=f2e7644]
+                  - cell [ref=f2e7648]
+                  - cell "七十迈科技（无锡）有限公司" [ref=f2e7649]
+                  - cell "3" [ref=f2e7651]
+                  - cell "MY0101" [ref=f2e7653]
+                - row [ref=f2e7655]:
+                  - cell "2611AA000289" [ref=f2e7656]
+                  - cell "显示模组,BYC_WT1003_A01,1.39 英寸,LTPS-AMOLED,454*454,NA,NA,NA,2.5D" [ref=f2e7658]
+                  - cell "V1.0" [ref=f2e7660]
+                  - cell [ref=f2e7664]
+                  - cell "上海七十迈数字科技有限公司" [ref=f2e7665]
+                  - cell "1" [ref=f2e7667]
+                  - cell "MY01" [ref=f2e7669]
+                - row [ref=f2e7671]:
+                  - cell "2611AA000291" [ref=f2e7672]
+                  - cell "显示模组,BYC_WT1003_A01,1.39 英寸,LTPS-AMOLED,454*454,NA,NA,NA,2.5D" [ref=f2e7674]
+                  - cell "V1.0" [ref=f2e7676]
+                  - cell [ref=f2e7680]
+                  - cell "上海七十迈数字科技有限公司" [ref=f2e7681]
+                  - cell "1" [ref=f2e7683]
+                  - cell "MY01" [ref=f2e7685]
+                - row [ref=f2e7687]:
+                  - cell "2611AA000292" [ref=f2e7688]
+                  - cell "显示模组,BYC_WT1003_A11,1.39 英寸,LTPS-AMOLED,454*454,NA,NA,NA,2.5D" [ref=f2e7690]
+                  - cell "V1.0" [ref=f2e7692]
+                  - cell [ref=f2e7696]
+                  - cell "上海七十迈数字科技有限公司" [ref=f2e7697]
+                  - cell "1" [ref=f2e7699]
+                  - cell "MY01" [ref=f2e7701]
+                - row [ref=f2e7703]:
+                  - cell "2611AA000293" [ref=f2e7704]
+                  - cell "显示模组,BYC_WT1003_A11,1.39 英寸,LTPS-AMOLED,454*454,NA,NA,NA,2.5D" [ref=f2e7706]
+                  - cell "V1.0" [ref=f2e7708]
+                  - cell [ref=f2e7712]
+                  - cell "上海七十迈数字科技有限公司" [ref=f2e7713]
+                  - cell "1" [ref=f2e7715]
+                  - cell "MY01" [ref=f2e7717]
+                - row [ref=f2e7719]:
+                  - cell "2611AA000300" [ref=f2e7720]
+                  - cell "显示模组,BYC_WT1004_A01,1.78 英寸,LTPS-AMOLED(On-cell),368*448,On-cell,蓝宝石,NA,2D" [ref=f2e7722]
+                  - cell "V1.0" [ref=f2e7724]
+                  - cell [ref=f2e7728]
+                  - cell "上海七十迈数字科技有限公司" [ref=f2e7729]
+                  - cell "1" [ref=f2e7731]
+                  - cell "MY01" [ref=f2e7733]
+                - row [ref=f2e7735]:
+                  - cell "2611AA000404" [ref=f2e7736]
+                  - cell "显示模组,BYC_WT2103_A01,1.47英寸,AMOLED,194X368,触摸屏,康宁2320,黑色,2.5D" [ref=f2e7738]
+                  - cell "V1.0" [ref=f2e7740]
+                  - cell [ref=f2e7744]
+                  - cell "上海七十迈数字科技有限公司" [ref=f2e7745]
+                  - cell "1" [ref=f2e7747]
+                  - cell "MY01" [ref=f2e7749]
+                - row [ref=f2e7751]:
+                  - cell "2611AA000405" [ref=f2e7752]
+                  - cell "显示模组,BYC_WT2103_A01,1.47英寸,AMOLED,194x368,触摸屏,康宁2320,黑色,2.5D" [ref=f2e7754]
+                  - cell "V1.0" [ref=f2e7756]
+                  - cell [ref=f2e7760]
+                  - cell "上海七十迈数字科技有限公司" [ref=f2e7761]
+                  - cell "1" [ref=f2e7763]
+                  - cell "MY01" [ref=f2e7765]
+                - row [ref=f2e7767]:
+                  - cell "2611AA000406" [ref=f2e7768]
+                  - cell "显示模组,BYC_WT2103_A01,1.47英寸,AMLOED,194X368,触摸屏,康宁2320,黑色,2.5D" [ref=f2e7770]
+                  - cell "V1.0" [ref=f2e7772]
+                  - cell [ref=f2e7776]
+                  - cell "上海七十迈数字科技有限公司" [ref=f2e7777]
+                  - cell "1" [ref=f2e7779]
+                  - cell "MY01" [ref=f2e7781]
+                - row [ref=f2e7783]:
+                  - cell "2611AA800001" [ref=f2e7784]
+                  - cell "显示模组,BYC_WT2102_A01,1.6 英寸,AMOLED,NA,触摸屏,熊猫,黑色,2.5D" [ref=f2e7786]
+                  - cell "V1.0" [ref=f2e7788]
+                  - cell [ref=f2e7792]
+                  - cell "上海七十迈数字科技有限公司" [ref=f2e7793]
+                  - cell "1" [ref=f2e7795]
+                  - cell "MY01" [ref=f2e7797]
+                - row [ref=f2e7799]:
+                  - cell "2611AA800002" [ref=f2e7800]
+                  - cell "显示模组,BYC_WT2102_A01,1.6英寸,AMOLED,NA,触摸屏,信利,黑色,2.5D" [ref=f2e7802]
+                  - cell "V1.0" [ref=f2e7804]
+                  - cell [ref=f2e7808]
+                  - cell "上海七十迈数字科技有限公司" [ref=f2e7809]
+                  - cell "1" [ref=f2e7811]
+                  - cell "MY01" [ref=f2e7813]
+                - row [ref=f2e7815]:
+                  - cell "2611AA800009" [ref=f2e7816]
+                  - cell "显示模组,BYC_WT1003_A01,1.39 英寸,奕力+义隆+TI,454*454,NA,NA,NA,2.5D" [ref=f2e7818]
+                  - cell "V1.0" [ref=f2e7820]
+                  - cell [ref=f2e7824]
+                  - cell "上海七十迈数字科技有限公司" [ref=f2e7825]
+                  - cell "1" [ref=f2e7827]
+                  - cell "MY01" [ref=f2e7829]
+                - row [ref=f2e7831]:
+                  - cell "2611AA800010" [ref=f2e7832]
+                  - cell "显示模组,BYC_WT1003_A01,1.39英寸,瑞鼎+Folcal+TI,454*454,NA,NA,NA,2.5D" [ref=f2e7834]
+                  - cell "V1.0" [ref=f2e7836]
+                  - cell [ref=f2e7840]
+                  - cell "上海七十迈数字科技有限公司" [ref=f2e7841]
+                  - cell "1" [ref=f2e7843]
+                  - cell "MY01" [ref=f2e7845]
+                - row [ref=f2e7847]:
+                  - cell "2611AA800011" [ref=f2e7848]
+                  - cell "显示模组,BYC_WT1003_A01,1.39英寸,瑞鼎+Focal+光宝,454*454,NA,NA,NA,2.5D" [ref=f2e7850]
+                  - cell "V1.0" [ref=f2e7852]
+                  - cell [ref=f2e7856]
+                  - cell "上海七十迈数字科技有限公司" [ref=f2e7857]
+                  - cell "1" [ref=f2e7859]
+                  - cell "MY01" [ref=f2e7861]
+                - row [ref=f2e7863]:
+                  - cell "2611AA800012" [ref=f2e7864]
+                  - cell "显示模组,BYC_WT1003_A01,1.39英寸,奕力+Focal+光宝,454*454,NA,NA,NA,2.5D" [ref=f2e7866]
+                  - cell "V1.0" [ref=f2e7868]
+                  - cell [ref=f2e7872]
+                  - cell "上海七十迈数字科技有限公司" [ref=f2e7873]
+                  - cell "1" [ref=f2e7875]
+                  - cell "MY01" [ref=f2e7877]
+                - row [ref=f2e7879]:
+                  - cell "2611AA800013" [ref=f2e7880]
+                  - cell "显示模组,BYC_WT1003_A11,1.39英寸,瑞鼎+Folcal+TI,454*454,NA,NA,NA,2.5D" [ref=f2e7882]
+                  - cell "V1.0" [ref=f2e7884]
+                  - cell [ref=f2e7888]
+                  - cell "上海七十迈数字科技有限公司" [ref=f2e7889]
+                  - cell "1" [ref=f2e7891]
+                  - cell "MY01" [ref=f2e7893]
+                - row [ref=f2e7895]:
+                  - cell "2611AA800014" [ref=f2e7896]
+                  - cell "显示模组,BYC_WT1003_A11,1.39英寸,奕力+义隆+TI,454*454,NA,NA,NA,2.5D" [ref=f2e7898]
+                  - cell "V1.0" [ref=f2e7900]
+                  - cell [ref=f2e7904]
+                  - cell "上海七十迈数字科技有限公司" [ref=f2e7905]
+                  - cell "1" [ref=f2e7907]
+                  - cell "MY01" [ref=f2e7909]
+                - row [ref=f2e7911]:
+                  - cell "2611AA800015" [ref=f2e7912]
+                  - cell "显示模组,BYC_WT1003_A11,39.84英寸,瑞鼎+Focal+光宝,454*454,NA,NA,NA,2.5D" [ref=f2e7914]
+                  - cell "V1.0" [ref=f2e7916]
+                  - cell [ref=f2e7920]
+                  - cell "上海七十迈数字科技有限公司" [ref=f2e7921]
+                  - cell "1" [ref=f2e7923]
+                  - cell "MY01" [ref=f2e7925]
+                - row [ref=f2e7927]:
+                  - cell "2611AA800016" [ref=f2e7928]
+                  - cell "显示模组,BYC_WT1003_A11,1.39 英寸,奕力+Focal+光宝,454*454,NA,NA,NA,2.5D" [ref=f2e7930]
+                  - cell "V1.0" [ref=f2e7932]
+                  - cell [ref=f2e7936]
+                  - cell "上海七十迈数字科技有限公司" [ref=f2e7937]
+                  - cell "1" [ref=f2e7939]
+                  - cell "MY01" [ref=f2e7941]
+                - row [ref=f2e7943]:
+                  - cell "2611AA800017" [ref=f2e7944]
+                  - cell "显示模组,BYC_WT1003_A01,1.39 英寸,瑞鼎+联阳+光宝,454*454,NA,NA,NA,2.5D" [ref=f2e7946]
+                  - cell "V1.0" [ref=f2e7948]
+                  - cell [ref=f2e7952]
+                  - cell "上海七十迈数字科技有限公司" [ref=f2e7953]
+                  - cell "1" [ref=f2e7955]
+                  - cell "MY01" [ref=f2e7957]
+          - generic [ref=f2e7961]:
+            - generic [ref=f2e7962]: 共 3561 条
+            - generic [ref=f2e7965] [cursor=pointer]:
+              - generic:
+                - combobox [ref=f2e7967]
+                - generic [ref=f2e7968]: 20条/页
+            - button "上一页" [disabled] [ref=f2e7973]
+            - list [ref=f2e7974]:
+              - listitem "第 1 页" [ref=f2e7975]: "1"
+              - listitem "第 2 页" [ref=f2e7976] [cursor=pointer]: "2"
+              - listitem "第 3 页" [ref=f2e7977] [cursor=pointer]: "3"
+              - listitem "第 4 页" [ref=f2e7978] [cursor=pointer]: "4"
+              - listitem "第 5 页" [ref=f2e7979] [cursor=pointer]: "5"
+              - listitem "第 6 页" [ref=f2e7980] [cursor=pointer]: "6"
+              - listitem "向后 5 页" [ref=f2e7981] [cursor=pointer]
+              - listitem "第 179 页" [ref=f2e7982] [cursor=pointer]: "179"
+            - button "下一页" [ref=f2e7983] [cursor=pointer]
+            - generic [ref=f2e7984]:
+              - generic [ref=f2e7985]: 前往
+              - spinbutton "页" [ref=f2e7988]: "1"
+              - generic [ref=f2e7989]: 页

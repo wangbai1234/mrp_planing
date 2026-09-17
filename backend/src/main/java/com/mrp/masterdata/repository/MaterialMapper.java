@@ -17,6 +17,8 @@ public interface MaterialMapper {
 
     Material selectByCode(@Param("materialCode") String materialCode);
 
+    List<Material> selectByCodes(@Param("codes") List<String> codes);
+
     List<Material> selectAll(@Param("category") String category, @Param("region") String region,
                              @Param("isActive") Boolean isActive, @Param("keyword") String keyword,
                              @Param("materialCategoryId") Long materialCategoryId);
@@ -37,4 +39,8 @@ public interface MaterialMapper {
     int countByCode(@Param("materialCode") String materialCode);
 
     int countByExternalId(@Param("externalId") String externalId);
+
+    int updateCategoryIdByCode(@Param("materialCode") String materialCode, @Param("categoryId") Long categoryId);
+
+    int updateCategoryIdBatch(@Param("list") List<Material> materials);
 }

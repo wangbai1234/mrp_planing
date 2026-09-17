@@ -60,6 +60,15 @@
         SELECT <include refid="selectColumns"/> FROM material WHERE material_code = #{materialCode} AND is_deleted = 0
     </select>
 
+    <select id="selectByCodes" resultType="com.mrp.masterdata.domain.Material">
+        SELECT <include refid="selectColumns"/> FROM material
+        WHERE material_code IN
+        <foreach collection="codes" item="code" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+        AND is_deleted = 0
+    </select>
+
     <select id="selectAll" resultType="com.mrp.masterdata.domain.Material">
         SELECT <include refid="selectColumns"/> FROM material
         <include refid="whereClause"/>
@@ -98,4 +107,18 @@
     <select id="countByExternalId" resultType="int">
         SELECT COUNT(*) FROM material WHERE external_id = #{externalId} AND is_deleted = 0
     </select>
+
+    <update id="updateCategoryIdByCode">
+        UPDATE material
+        SET material_category_id = #{categoryId}, updated_at = CURRENT_TIMESTAMP(3)
+        WHERE material_code = #{materialCode} AND is_deleted = 0
+    </update>
+
+    <update id="updateCategoryIdBatch">
+        <foreach collection="list" item="m" separator=";">
+            UPDATE material
+            SET material_category_id = #{m.materialCategoryId}, updated_at = CURRENT_TIMESTAMP(3)
+            WHERE material_code = #{m.materialCode} AND is_deleted = 0
+        </foreach>
+    </update>
 </mapper>

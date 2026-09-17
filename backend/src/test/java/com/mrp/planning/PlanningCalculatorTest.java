@@ -223,6 +223,91 @@ class PlanningCalculatorTest {
         assertFalse(w3.isLocked(), "W3 (Aug10) should not be locked");
     }
 
+    // === R001: 月可排量 MAX(0) - 边界测试 ===
+
+    @Test
+    void monthlyAvailable_exactZero() {
+        // forecast=1000, inventory=500, shipped=500 → available=0
+        assertEquals(0, PlanningCalculator.monthlyAvailable(1000, 500, 500));
+    }
+
+    @Test
+    void monthlyAvailable_allZero() {
+        assertEquals(0, PlanningCalculator.monthlyAvailable(0, 0, 0));
+    }
+
+    @Test
+    void monthlyAvailable_largeNumbers() {
+        // 大数值测试
+        assertEquals(999999, PlanningCalculator.monthlyAvailable(1000000, 1, 0));
+    }
+
+    // === R002: 月拆周 - 边界测试 ===
+
+    @Test
+    void splitQuantities_3() {
+        // 3 / 3 = 1, remainder = 0
+        long[] q = PlanningCalculator.splitQuantities(3);
+        assertEquals(1, q[0]);
+        assertEquals(1, q[1]);
+        assertEquals(1, q[2]);
+    }
+
+    @Test
+    void splitQuantities_4() {
+        // 4 / 3 = 1, remainder = 1 → W1=2, W2=1, W3=1
+        long[] q = PlanningCalculator.splitQuantities(4);
+        assertEquals(2, q[0]);
+        assertEquals(1, q[1]);
+        assertEquals(1, q[2]);
+        assertEquals(4, q[0] + q[1] + q[2]);
+    }
+
+    @Test
+    void splitQuantities_maxLong() {
+        // 测试大数值不溢出
+        long available = Long.MAX_VALUE / 3;
+        long[] q = PlanningCalculator.splitQuantities(available);
+        assertEquals(available, q[0] + q[1] + q[2]);
+    }
+
+    // === R005: 12周窗口 - 边界测试 ===
+
+    @Test
+    void generate12WeekPlan_singleMonth() {
+        // 只有1个月的数据，每月产生4周(W1-W3+W4=0)
+        LocalDate currentWeek = LocalDate.of(2026, 8, 3);
+        List<MonthlyForecast> forecasts = List.of(
+                MonthlyForecast.of(YearMonth.of(2026, 8), 900, 0, 0)
+        );
+        List<WeekPlan> plans = PlanningCalculator.generate12WeekPlan(
+                forecasts, currentWeek, null, null, null);
+        // 单月只产生4周（不足12周时不会填充）
+        assertEquals(4, plans.size());
+    }
+
+    @Test
+    void generate12WeekPlan_sixMonths() {
+        // 6个月数据 - 12周窗口覆盖Aug+Sep+Oct+部分Nov（因为carry机制）
+        // Aug W4 = Sep W1, Sep W4 = Oct W1, Oct W4 = Nov W1
+        LocalDate currentWeek = LocalDate.of(2026, 8, 3);
+        List<MonthlyForecast> forecasts = List.of(
+                MonthlyForecast.of(YearMonth.of(2026, 8), 900, 0, 0),
+                MonthlyForecast.of(YearMonth.of(2026, 9), 1200, 0, 0),
+                MonthlyForecast.of(YearMonth.of(2026, 10), 1500, 0, 0),
+                MonthlyForecast.of(YearMonth.of(2026, 11), 1800, 0, 0),
+                MonthlyForecast.of(YearMonth.of(2026, 12), 2100, 0, 0),
+                MonthlyForecast.of(YearMonth.of(2027, 1), 2400, 0, 0)
+        );
+        List<WeekPlan> plans = PlanningCalculator.generate12WeekPlan(
+                forecasts, currentWeek, null, null, null);
+        assertEquals(12, plans.size());
+        // 总量守恒：验证所有12周的总量
+        long total = plans.stream().mapToLong(WeekPlan::systemQuantity).sum();
+        // Aug(900) + Sep(1200) + Oct(1500) + Nov carry(600) = 4200
+        assertEquals(4200, total);
+    }
+
     // === R013: 负值归零 ===
 
     @Test

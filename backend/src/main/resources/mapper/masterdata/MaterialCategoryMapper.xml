@@ -32,8 +32,16 @@
         SELECT <include refid="selectColumns"/> FROM material_category WHERE code = #{code} AND is_deleted = 0
     </select>
 
-    <select id="selectAll" resultMap="categoryResultMap">
-        SELECT <include refid="selectColumns"/> FROM material_category WHERE is_deleted = 0 ORDER BY level, sort, code
+    <select id="selectAll" resultMap="categoryResultMap" parameterType="map">
+        SELECT <include refid="selectColumns"/> FROM material_category
+        WHERE is_deleted = 0
+        <if test="level != null">
+            AND level = #{level}
+        </if>
+        <if test="enabled != null">
+            AND enabled = #{enabled}
+        </if>
+        ORDER BY level, sort, code
     </select>
 
     <select id="selectByParentId" resultMap="categoryResultMap">

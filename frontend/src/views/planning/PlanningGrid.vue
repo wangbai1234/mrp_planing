@@ -2,7 +2,7 @@
 import { ref, computed, onMounted, inject } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { get, post, del, download } from '../../api/client'
-import type { PlanVersion, PlanGridRow } from '../../api/types'
+import type { PlanVersion, PlanGridRow, CategoryTreeNode } from '../../api/types'
 
 const setCrumb = inject<(g: string, p: string) => void>('setCrumb')!
 
@@ -21,6 +21,35 @@ const materialDetailVisible = ref(false)
 const settingsVisible = ref(false)
 const autoRecalcForecast = ref(false)
 const autoRecalcInventory = ref(false)
+
+// Split dimension state
+const splitDialogVisible = ref(false)
+const categoryTree = ref<CategoryTreeNode[]>([])
+const categoryLoading = ref(false)
+const selectedCategories = ref<string[]>([])
+const splitCategoryNames = ref('')
+const categoryTreeRef = ref<any>(null)
+
+// Task progress state
+const taskProgress = ref<{
+  active: boolean
+  taskId: number | null
+  phase: string
+  progressCurrent: number
+  progressTotal: number
+  successRoots: number
+  failedRoots: number
+  elapsedMs: number
+}>({
+  active: false,
+  taskId: null,
+  phase: 'PENDING',
+  progressCurrent: 0,
+  progressTotal: 0,
+  successRoots: 0,
+  failedRoots: 0,
+  elapsedMs: 0
+})
 
 // Grid pagination
 const gridPage = ref(1)
@@ -109,6 +138,8 @@ const pagedMaterialGroups = computed(() => {
 
 const gridTotalMaterials = computed(() => materialGroups.value.size)
 
+const hasSplitCategories = computed(() => selectedCategories.value.length > 0)
+
 // Format time to Beijing time
 function formatBeijingTime(utcTime: string): string {
   if (!utcTime) return '-'
@@ -131,10 +162,13 @@ async function loadPlan() {
       : '/plans/current'
     const res = await get<any>(url)
     if (res && res.length > 0) {
+      // 只加载有拆分维度的版本（旧版本 root_material_code 为空会导致两列相同）
+      const splitVersions = res.filter((v: any) => v.splitCategories)
+      const versionsToLoad = splitVersions.length > 0 ? splitVersions : res
       // 加载所有版本的网格数据
       const allGridData: PlanGridRow[] = []
-      let lastVersion = res[0]
-      for (const version of res) {
+      let lastVersion = versionsToLoad[0]
+      for (const version of versionsToLoad) {
         const gridRes = await get<any>(`/plans/${version.id}/grid`)
         if (gridRes?.grid) {
           allGridData.push(...gridRes.grid)
@@ -147,6 +181,18 @@ async function loadPlan() {
       currentVersion.value = lastVersion
       autoRecalcForecast.value = lastVersion.autoRecalcForecast
       autoRecalcInventory.value = lastVersion.autoRecalcInventory
+      // Read split categories from version
+      if (lastVersion.splitCategories) {
+        try {
+          selectedCategories.value = typeof lastVersion.splitCategories === 'string'
+            ? JSON.parse(lastVersion.splitCategories)
+            : lastVersion.splitCategories
+        } catch { selectedCategories.value = [] }
+        splitCategoryNames.value = lastVersion.splitCategoryNames || ''
+      } else {
+        selectedCategories.value = []
+        splitCategoryNames.value = ''
+      }
       gridTotal.value = allGridData.length
     } else {
       gridData.value = []
@@ -194,6 +240,10 @@ async function handleFirstRecalculate() {
       ElMessage.success('排产计算完成，已为所有工厂生成版本')
       await loadPlan()
       await loadHistoryVersions()
+    } else if (res?.status === 'FAILED') {
+      ElMessage.error({ message: res.errorMessage || '计算失败', duration: 10000 })
+    } else if (res?.taskId) {
+      await pollTaskUntilDone(res.taskId)
     } else {
       ElMessage.warning('任务已提交: ' + res?.status)
     }
@@ -211,17 +261,25 @@ async function handleRecalculate() {
   }
   loading.value = true
   try {
-    const res = await post<any>('/recalculations', {
+    const body: Record<string, any> = {
       forecastVersionId: currentVersion.value.forecastVersionId,
       inventorySnapshotId: currentVersion.value.inventorySnapshotId,
       shipmentBatchId: currentVersion.value.shipmentBatchId,
       capacityVersionId: currentVersion.value.capacityVersionId,
       currentWeekStart: currentWeekStart.value
-    })
+    }
+    if (selectedCategories.value.length > 0) {
+      body.splitCategories = selectedCategories.value
+    }
+    const res = await post<any>('/recalculations', body)
     if (res?.status === 'SUCCEEDED') {
       ElMessage.success('重算完成，已为所有工厂生成新版本')
       await loadPlan()
       await loadHistoryVersions()
+    } else if (res?.status === 'FAILED') {
+      ElMessage.error({ message: res.errorMessage || '重算失败', duration: 10000 })
+    } else if (res?.taskId) {
+      await pollTaskUntilDone(res.taskId)
     } else {
       ElMessage.warning('重算任务已提交: ' + res?.status)
     }
@@ -386,6 +444,151 @@ async function handleExport() {
   }
 }
 
+// === Split Dimension ===
+
+async function openSplitDialog() {
+  splitDialogVisible.value = true
+  if (categoryTree.value.length === 0) {
+    await loadCategoryTree()
+  }
+}
+
+async function loadCategoryTree() {
+  categoryLoading.value = true
+  try {
+    const res = await get<any>('/material-categories/tree')
+    categoryTree.value = res || []
+  } catch (e: any) {
+    ElMessage.error('加载分类树失败: ' + e.message)
+  } finally {
+    categoryLoading.value = false
+  }
+}
+
+function handleCategoryCheck() {
+  // Selection is read from treeRef in applySplitAndRecalculate
+}
+
+function findCategoryNode(nodes: CategoryTreeNode[], code: string): CategoryTreeNode | null {
+  for (const node of nodes) {
+    if (node.code === code) return node
+    if (node.children) {
+      const found = findCategoryNode(node.children, code)
+      if (found) return found
+    }
+  }
+  return null
+}
+
+async function applySplitAndRecalculate() {
+  const treeRef = categoryTreeRef.value
+  if (!treeRef) return
+  const checkedKeys = treeRef.getCheckedKeys(true) as string[]
+
+  if (checkedKeys.length === 0) {
+    ElMessage.warning('请至少选择一个分类')
+    return
+  }
+
+  splitDialogVisible.value = false
+  selectedCategories.value = checkedKeys
+
+  // Build display names
+  const names: string[] = []
+  for (const code of checkedKeys) {
+    const node = findCategoryNode(categoryTree.value, code)
+    if (node) names.push(node.code + ' ' + node.name)
+  }
+  splitCategoryNames.value = names.join(', ')
+
+  // Trigger recalculate
+  loading.value = true
+  try {
+    const body: Record<string, any> = {
+      forecastVersionId: currentVersion.value?.forecastVersionId,
+      inventorySnapshotId: currentVersion.value?.inventorySnapshotId,
+      shipmentBatchId: currentVersion.value?.shipmentBatchId,
+      capacityVersionId: currentVersion.value?.capacityVersionId,
+      currentWeekStart: currentWeekStart.value,
+      splitCategories: checkedKeys
+    }
+    const res = await post<any>('/recalculations', body)
+    if (res?.status === 'SUCCEEDED') {
+      ElMessage.success('排产重算完成')
+      await loadPlan()
+      await loadHistoryVersions()
+    } else if (res?.status === 'FAILED') {
+      ElMessage.error({ message: res.errorMessage || '排产生成失败', duration: 10000 })
+    } else if (res?.taskId) {
+      // Async task submitted, poll for result
+      await pollTaskUntilDone(res.taskId)
+    } else {
+      ElMessage.warning('任务已提交: ' + res?.status)
+    }
+  } catch (e: any) {
+    ElMessage.error({ message: '排产生成失败: ' + e.message, duration: 10000 })
+  } finally {
+    loading.value = false
+  }
+}
+
+async function pollTaskUntilDone(taskId: number) {
+  const maxAttempts = 300 // 5 minutes max
+  const startTime = Date.now()
+  taskProgress.value = {
+    active: true,
+    taskId,
+    phase: 'PENDING',
+    progressCurrent: 0,
+    progressTotal: 0,
+    successRoots: 0,
+    failedRoots: 0,
+    elapsedMs: 0
+  }
+
+  for (let i = 0; i < maxAttempts; i++) {
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    try {
+      const task = await get<any>(`/recalculations/${taskId}`)
+      if (task) {
+        taskProgress.value = {
+          active: true,
+          taskId,
+          phase: task.phase || task.status || 'PENDING',
+          progressCurrent: task.progressCurrent || 0,
+          progressTotal: task.progressTotal || 0,
+          successRoots: task.successRoots || 0,
+          failedRoots: task.failedRoots || 0,
+          elapsedMs: Date.now() - startTime
+        }
+
+        if (task.status === 'SUCCEEDED') {
+          taskProgress.value.active = false
+          const elapsed = ((Date.now() - startTime) / 1000).toFixed(1)
+          ElMessage.success({
+            message: `排产重算完成\n拆分维度：${splitCategoryNames.value || '整机'}\n整机：${task.successRoots || 0}\n耗时：${elapsed}秒`,
+            duration: 5000
+          })
+          await loadPlan()
+          await loadHistoryVersions()
+          return
+        } else if (task.status === 'FAILED') {
+          taskProgress.value.active = false
+          ElMessage.error({
+            message: `排产重算失败\n${task.errorMessage || '未知错误'}`,
+            duration: 10000
+          })
+          return
+        }
+      }
+    } catch {
+      // continue polling
+    }
+  }
+  taskProgress.value.active = false
+  ElMessage.warning('任务执行超时，请稍后刷新页面查看')
+}
+
 function handleHistorySizeChange() {
   historyPage.value = 1
   loadHistoryVersions()
@@ -412,6 +615,7 @@ onMounted(() => {
     <div class="page-header">
       <h1 class="page-title">排产计划</h1>
       <div class="page-actions">
+        <el-button @click="openSplitDialog">拆分维度</el-button>
         <el-button @click="settingsVisible = true"><el-icon><Setting /></el-icon>设置</el-button>
         <el-button @click="compareVisible = true"><el-icon><Switch /></el-icon>版本对比</el-button>
         <el-button type="primary" @click="exportVisible = true"><el-icon><Download /></el-icon>导出</el-button>
@@ -419,6 +623,33 @@ onMounted(() => {
         <el-button type="primary" @click="handlePublish" :disabled="!currentVersion || currentVersion.status === 'PUBLISHED'"><el-icon><Promotion /></el-icon>{{ currentVersion?.status === 'PUBLISHED' ? '已发布' : '发布' }}</el-button>
       </div>
     </div>
+
+    <!-- 任务进度 -->
+    <el-card v-if="taskProgress.active" shadow="never" style="margin-bottom: 12px; border: 1px solid #409eff; background: #f0f7ff">
+      <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap">
+        <div style="display: flex; align-items: center; gap: 8px">
+          <el-icon class="is-loading" style="color: #409eff"><Loading /></el-icon>
+          <span style="font-weight: 600; color: #409eff">排产正在重算...</span>
+        </div>
+        <div v-if="splitCategoryNames" style="color: #606266">
+          拆分维度：<span style="color: #303133; font-weight: 500">{{ splitCategoryNames }}</span>
+        </div>
+        <div v-if="taskProgress.progressTotal > 0" style="color: #606266">
+          处理进度：<span style="color: #303133; font-weight: 500">{{ taskProgress.progressCurrent }} / {{ taskProgress.progressTotal }}</span>
+          <span v-if="taskProgress.successRoots > 0" style="color: #67c23a; margin-left: 8px">成功: {{ taskProgress.successRoots }}</span>
+          <span v-if="taskProgress.failedRoots > 0" style="color: #f56c6c; margin-left: 8px">失败: {{ taskProgress.failedRoots }}</span>
+        </div>
+        <div style="color: #909399; font-size: 12px">
+          耗时：{{ (taskProgress.elapsedMs / 1000).toFixed(1) }}秒
+        </div>
+      </div>
+      <el-progress
+        v-if="taskProgress.progressTotal > 0"
+        :percentage="Math.round(taskProgress.progressCurrent / taskProgress.progressTotal * 100)"
+        :stroke-width="6"
+        style="margin-top: 8px"
+      />
+    </el-card>
 
     <!-- 无排产版本提示 -->
     <el-alert v-if="!currentVersion && !loading" title="暂无排产数据" type="warning" :closable="false" style="margin-bottom: 12px">
@@ -466,8 +697,9 @@ onMounted(() => {
         <table style="border-collapse: separate; border-spacing: 0; min-width: 100%; table-layout: fixed">
           <thead>
             <tr>
-              <th style="position: sticky; left: 0; z-index: 9; width: 200px; background: #f6f8fb; height: 62px; border-right: 1px solid #dfe4ea; border-bottom: 1px solid #dfe4ea; padding: 0 10px; font-size: 12px; color: #4b5870; font-weight: 600">整机料号 / 名称</th>
-              <th style="position: sticky; left: 200px; z-index: 9; width: 80px; background: #f6f8fb; height: 62px; border-right: 1px solid #dfe4ea; border-bottom: 1px solid #dfe4ea; padding: 0 10px; font-size: 12px; color: #4b5870; font-weight: 600">工厂</th>
+              <th style="position: sticky; left: 0; z-index: 11; width: 240px; min-width: 240px; max-width: 240px; background: #f6f8fb; height: 62px; border-right: 1px solid #dfe4ea; border-bottom: 1px solid #dfe4ea; padding: 0 10px; font-size: 12px; color: #4b5870; font-weight: 600; box-shadow: 2px 0 4px rgba(0,0,0,0.08)">整机料号 / 名称</th>
+              <th v-if="hasSplitCategories" style="position: sticky; left: 240px; z-index: 11; width: 240px; min-width: 240px; max-width: 240px; background: #f6f8fb; height: 62px; border-right: 1px solid #dfe4ea; border-bottom: 1px solid #dfe4ea; padding: 0 10px; font-size: 12px; color: #4b5870; font-weight: 600; box-shadow: 2px 0 4px rgba(0,0,0,0.08)">排产物料</th>
+              <th :style="{ position: 'sticky', left: hasSplitCategories ? '480px' : '240px', zIndex: 11, width: '80px', minWidth: '80px', maxWidth: '80px', background: '#f6f8fb', height: '62px', borderRight: '1px solid #dfe4ea', borderBottom: '1px solid #dfe4ea', padding: '0 10px', fontSize: '12px', color: '#4b5870', fontWeight: 600, boxShadow: '2px 0 4px rgba(0,0,0,0.08)' }">工厂</th>
               <th v-for="week in weeks" :key="week"
                   :class="{ 'current-week-header': isCurrentWeek(week) }"
                   style="width: 94px; min-width: 94px; background: #f6f8fb; height: 62px; border-right: 1px solid #dfe4ea; border-bottom: 1px solid #dfe4ea; padding: 0; text-align: center; font-size: 12px; color: #4b5870; font-weight: 600; vertical-align: middle">
@@ -480,10 +712,13 @@ onMounted(() => {
           </thead>
           <tbody>
             <tr v-for="[groupKey, rows] in pagedMaterialGroups" :key="groupKey">
-              <td style="position: sticky; left: 0; z-index: 5; background: #fff; border-right: 1px solid #dfe4ea; border-bottom: 1px solid #dfe4ea; padding: 8px 10px; width: 200px; cursor: pointer" @click="openMaterialDetail(rows[0]?.materialId || '', rows[0]?.factoryCode || '')">
-                <div style="font-family: monospace; font-size: 12px; color: #2563eb">{{ rows[0]?.materialId || '' }} <span style="color: #4b5870; font-family: inherit">{{ rows[0]?.materialName || '' }}</span></div>
+              <td style="position: sticky; left: 0; z-index: 7; background: #fff; border-right: 1px solid #dfe4ea; border-bottom: 1px solid #dfe4ea; padding: 8px 10px; width: 240px; min-width: 240px; max-width: 240px; cursor: pointer; box-shadow: 2px 0 4px rgba(0,0,0,0.05)" @click="openMaterialDetail(rows[0]?.materialId || '', rows[0]?.factoryCode || '')">
+                <div style="font-family: monospace; font-size: 12px; color: #2563eb; word-break: break-all">{{ rows[0]?.rootMaterialCode || rows[0]?.materialId || '' }} <span style="color: #4b5870; font-family: inherit">{{ rows[0]?.rootMaterialName || rows[0]?.materialName || '' }}</span></div>
               </td>
-              <td style="position: sticky; left: 200px; z-index: 5; background: #fff; border-right: 1px solid #dfe4ea; border-bottom: 1px solid #dfe4ea; padding: 8px 10px; width: 80px; font-size: 12px; color: #4b5870">
+              <td v-if="hasSplitCategories" style="position: sticky; left: 240px; z-index: 7; background: #fff; border-right: 1px solid #dfe4ea; border-bottom: 1px solid #dfe4ea; padding: 8px 10px; width: 240px; min-width: 240px; max-width: 240px; box-shadow: 2px 0 4px rgba(0,0,0,0.05)">
+                <div style="font-family: monospace; font-size: 12px; color: #1d2129; word-break: break-all">{{ rows[0]?.materialId || '' }} <span style="color: #4b5870; font-family: inherit">{{ rows[0]?.materialName || '' }}</span></div>
+              </td>
+              <td :style="{ position: 'sticky', left: hasSplitCategories ? '480px' : '240px', zIndex: 7, background: '#fff', borderRight: '1px solid #dfe4ea', borderBottom: '1px solid #dfe4ea', padding: '8px 10px', width: '80px', minWidth: '80px', maxWidth: '80px', fontSize: '12px', color: '#4b5870', boxShadow: '2px 0 4px rgba(0,0,0,0.05)' }">
                 {{ rows[0]?.factoryCode || '' }}
               </td>
               <td v-for="week in weeks" :key="week"
@@ -498,7 +733,7 @@ onMounted(() => {
               </td>
             </tr>
             <tr v-if="pagedMaterialGroups.size === 0">
-              <td :colspan="1 + weeks.length" style="height: 120px; text-align: center; color: #748096">
+              <td :colspan="2 + (hasSplitCategories ? 1 : 0) + weeks.length" style="height: 120px; text-align: center; color: #748096">
                 <el-empty description="暂无排产数据" :image-size="60" />
               </td>
             </tr>
@@ -550,6 +785,12 @@ onMounted(() => {
             <span style="font-family: monospace">V{{ row.forecastVersionId }}</span>
           </template>
         </el-table-column>
+        <el-table-column label="拆分维度" min-width="160">
+          <template #default="{ row }">
+            <span v-if="row.splitCategoryNames" style="font-size: 12px; color: #4b5870">{{ row.splitCategoryNames }}</span>
+            <span v-else style="font-size: 12px; color: #86909c">整机</span>
+          </template>
+        </el-table-column>
         <el-table-column label="状态" width="100">
           <template #default="{ row }">
             <el-tag :type="row.status === 'PUBLISHED' ? 'success' : 'info'" size="small" effect="plain">
@@ -595,6 +836,28 @@ onMounted(() => {
       </el-card>
       <template #footer>
         <el-button type="primary" @click="settingsVisible = false">确定</el-button>
+      </template>
+    </el-dialog>
+
+    <!-- Split Dimension Dialog -->
+    <el-dialog v-model="splitDialogVisible" title="排产拆分维度" width="500px">
+      <div v-loading="categoryLoading" style="max-height: 400px; overflow-y: auto">
+        <el-tree
+          v-if="categoryTree.length > 0"
+          ref="categoryTreeRef"
+          :data="categoryTree"
+          :props="{ label: (node: CategoryTreeNode) => node.code + ' ' + node.name, children: 'children' }"
+          show-checkbox
+          check-strictly
+          node-key="code"
+          :default-checked-keys="selectedCategories"
+          @check="handleCategoryCheck"
+        />
+        <el-empty v-if="!categoryLoading && categoryTree.length === 0" description="暂无分类数据" />
+      </div>
+      <template #footer>
+        <el-button @click="splitDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="applySplitAndRecalculate" :loading="loading">应用并重算</el-button>
       </template>
     </el-dialog>
 

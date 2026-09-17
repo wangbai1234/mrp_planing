@@ -22,6 +22,10 @@ public interface BomLocalMapper {
 
     List<BomDetail> selectDetailByParentCode(@Param("parentCode") String parentCode);
 
+    List<BomDetail> selectAllDetails();
+
+    List<BomDetail> selectDetailsByParentCodes(@Param("parentCodes") List<String> parentCodes);
+
     void insertParent(BomMaterial material);
 
     void insertDetail(BomDetail detail);

@@ -154,4 +154,14 @@ public class MaterialController {
                 "total", result.total()
         )));
     }
+
+    /**
+     * Update material category from Excel file
+     */
+    @PostMapping("/materials/update-category")
+    public ResponseEntity<ApiResponse<Map<String, Object>>> updateCategory(
+            @RequestParam("file") MultipartFile file) throws IOException {
+        Map<String, Object> result = materialService.updateCategoryFromExcel(file.getInputStream());
+        return ResponseEntity.ok(ApiResponse.ok(result));
+    }
 }

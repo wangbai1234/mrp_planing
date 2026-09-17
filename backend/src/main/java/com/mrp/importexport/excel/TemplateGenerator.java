@@ -31,12 +31,13 @@ public class TemplateGenerator {
                 new TemplateColumn("物料类别", "_category", "请从下拉菜单中选择（原材料、整机等）", false),
                 new TemplateColumn("是否有效*", "_is_active", "请从下拉菜单中选择（本列必填）：是/否", true),
                 new TemplateColumn("L-T提前期", "_lead_time", "请输入数字（天）", false),
-                new TemplateColumn("产地", "_origin_place", "请在此列填写产地", false)
+                new TemplateColumn("产地", "_origin_place", "请在此列填写产地", false),
+                new TemplateColumn("物料二级分类编码", "_category_code", "请填写物料二级分类编码（如：08001、08002等）", false)
         );
 
         List<List<String>> sampleData = List.of(
-                List.of("示例", "3308AA800180", "0201,贴片电容,330nF,10%,25V,X5R", "HM6801", "V334K0201X5R250NXT", "", "15000", "15000", "上海", "限制使用", "原材料", "是", "84", "中国"),
-                List.of("示例", "6610AA800551", "PCB,硬板,DR2412,MAIN BOARD", "DR2412", "LBCM052F1-1(JFG&H)", "", "3000", "3000", "上海", "限制使用", "原材料", "是", "30", "中国")
+                List.of("示例", "3308AA800180", "0201,贴片电容,330nF,10%,25V,X5R", "HM6801", "V334K0201X5R250NXT", "", "15000", "15000", "上海", "限制使用", "原材料", "是", "84", "中国", "08060"),
+                List.of("示例", "6610AA800551", "PCB,硬板,DR2412,MAIN BOARD", "DR2412", "LBCM052F1-1(JFG&H)", "", "3000", "3000", "上海", "限制使用", "原材料", "是", "30", "中国", "08095")
         );
 
         return generate(columns, sampleData, "物料导入模板");

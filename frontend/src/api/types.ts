@@ -25,6 +25,8 @@ export interface PlanVersion {
   status: string
   autoRecalcForecast: boolean
   autoRecalcInventory: boolean
+  splitCategories?: string[] | null
+  splitCategoryNames?: string | null
   createdBy?: number
   createdAt: string
   updatedAt: string
@@ -34,6 +36,8 @@ export interface PlanGridRow {
   planVersionId: number
   materialId: string
   materialName: string
+  rootMaterialCode?: string
+  rootMaterialName?: string
   factoryCode: string
   weekStartDate: string
   physicalMonth: string
@@ -46,6 +50,15 @@ export interface PlanGridRow {
   effectiveQuantity: number
   capacityExceeded: boolean
   capacityExcessQty: number
+}
+
+export interface CategoryTreeNode {
+  id: number
+  code: string
+  name: string
+  level: number
+  enabled: boolean
+  children?: CategoryTreeNode[]
 }
 
 export interface ForecastVersion {

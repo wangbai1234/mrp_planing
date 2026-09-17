@@ -230,6 +230,8 @@ public class PlanningDomainService {
                     m.put("planVersionId", d.planVersionId());
                     m.put("materialId", d.materialId());
                     m.put("materialName", d.materialName() != null ? d.materialName() : "");
+                    m.put("rootMaterialCode", d.rootMaterialCode() != null ? d.rootMaterialCode() : d.materialId());
+                    m.put("rootMaterialName", d.rootMaterialName() != null ? d.rootMaterialName() : (d.materialName() != null ? d.materialName() : ""));
                     m.put("factoryCode", d.factoryCode());
                     m.put("weekStartDate", d.weekStartDate().toString());
                     m.put("physicalMonth", d.physicalMonth().toString());
