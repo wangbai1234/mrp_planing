@@ -55,6 +55,6 @@
             error_message = CONCAT('Task stuck in ', status, ' for more than ', #{timeoutMinutes}, ' minutes'),
             finished_at = CURRENT_TIMESTAMP(3), version = version + 1
         WHERE status IN ('PENDING', 'CLAIMED', 'RUNNING')
-          AND created_at < DATE_SUB(NOW(), INTERVAL #{timeoutMinutes} MINUTE)
+          AND created_at &lt; DATE_SUB(NOW(), INTERVAL #{timeoutMinutes} MINUTE)
     </update>
 </mapper>
