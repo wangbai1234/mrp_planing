@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.mrp.repository.DailyCapacityMapper">
+    <insert id="freezeUnits">
+        INSERT INTO mrp_calendar_material_unit (calendar_version_id, material_code, unit)
+        SELECT #{versionId}, material_code, NULLIF(TRIM(unit), '') FROM material WHERE is_deleted=0
+    </insert>
+    <select id="selectUnits" resultType="com.mrp.mrp.repository.DailyCapacityMapper$MaterialUnit">
+        SELECT material_code, unit FROM mrp_calendar_material_unit WHERE calendar_version_id=#{versionId}
+    </select>
+</mapper>

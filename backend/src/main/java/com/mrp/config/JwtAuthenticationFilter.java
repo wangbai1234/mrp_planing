@@ -41,18 +41,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 Long userId = claims.get("userId", Long.class);
                 String username = claims.getSubject();
 
-                // Load user permissions
-                Set<String> permissions = userService.getEffectivePermissions(userId);
+                UserService.AuthenticationState state = userService.authenticationStateForActiveUser(userId, username);
+                if (state != null && jwtService.matchesCredentialVersion(claims, state.passwordHash()) &&
+                        (!state.passwordChangeRequired() ||
+                                (request.getContextPath() + "/api/v1/auth/change-password").equals(request.getRequestURI()))) {
+                    Set<String> permissions = userService.getEffectivePermissions(userId);
 
-                List<SimpleGrantedAuthority> authorities = permissions.stream()
-                        .map(SimpleGrantedAuthority::new)
-                        .toList();
+                    List<SimpleGrantedAuthority> authorities = permissions.stream()
+                            .map(SimpleGrantedAuthority::new)
+                            .toList();
 
-                var principal = new CurrentUser.UserPrincipal(userId, username);
-                var auth = new UsernamePasswordAuthenticationToken(
-                        principal, null, authorities
-                );
-                SecurityContextHolder.getContext().setAuthentication(auth);
+                    var principal = new CurrentUser.UserPrincipal(userId, username);
+                    var auth = new UsernamePasswordAuthenticationToken(
+                            principal, null, authorities
+                    );
+                    SecurityContextHolder.getContext().setAuthentication(auth);
+                }
             }
         }
 

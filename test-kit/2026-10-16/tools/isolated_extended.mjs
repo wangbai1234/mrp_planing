@@ -1,0 +1,16 @@
+import fs from 'node:fs/promises';import assert from 'node:assert/strict';
+const base='http://127.0.0.1:8180/api/v1',out=new URL('../evidence/isolated-extended.json',import.meta.url),results=[];let token;
+async function req(p,method='GET',body,file){let h=token?{Authorization:'Bearer '+token}:{};let b;if(file){b=new FormData();b.append('file',new Blob([await fs.readFile(new URL('../../2026-10-15/data/xlsx/'+file+'.xlsx',import.meta.url))]),file+'.xlsx');}else if(body!==undefined){h['Content-Type']='application/json';b=JSON.stringify(body);}let begin=performance.now();let r=await fetch(base+p,{method,headers:h,body:b,signal:AbortSignal.timeout(180000)});let j=await r.json();return {status:r.status,...j,ms:Math.round(performance.now()-begin)};}
+function ok(r){assert(r.status<300&&r.success,JSON.stringify(r));return r.data;}
+async function test(id,fn){try{results.push({id,status:'PASS',detail:await fn()});}catch(e){results.push({id,status:'FAIL',error:String(e)});}await fs.writeFile(out,JSON.stringify(results,null,2));console.log(id,results.at(-1).status);}
+token=ok(await req('/auth/login','POST',{username:'admin',password:process.env.UAT_PASSWORD})).token;
+await test('restore-isolated-mapping',async()=>{const before=ok(await req('/mrp/factory-warehouse-mappings'));ok(await req('/mrp/factory-warehouse-mappings/import','POST',undefined,'config-factory'));const after=ok(await req('/mrp/factory-warehouse-mappings'));assert(after.every(x=>['UAT_APK','UAT_YH'].includes(x.warehouseCode)));return {before,after};});
+await test('forecast-negative-preview',async()=>{const d=ok(await req('/forecast-imports','POST',undefined,'negative-forecast'));assert(d.errorRows>0||d.errors?.length>0);return {taskId:d.taskId,errorRows:d.errorRows};});
+await test('forecast-10000-preview',async()=>{const r=await req('/forecast-imports','POST',undefined,'forecast-import-10000');const d=ok(r);return {ms:r.ms,totalRows:d.totalRows,validRows:d.validRows,errorRows:d.errorRows,taskId:d.taskId,errorsSample:d.errors?.slice(0,3)};});
+const p='/mrp/batches/5';let pub;
+await test('publish-with-current-capacity-review',async()=>{const review=ok(await req(p+'/capacity-review'));pub=ok(await req(p+'/publish','POST',{capacityFingerprint:review.fingerprint}));assert.equal(pub.status,'PUBLISHED');return {id:pub.id,status:pub.status,runId:pub.activeRunId};});
+let revised;
+await test('revise-published',async()=>{revised=ok(await req(p+'/revise','POST'));assert.notEqual(revised.id,5);return {id:revised.id,status:revised.status,parentBatchId:revised.parentBatchId};});
+if(revised)await test('cancel-test-revision',async()=>ok(await req('/mrp/batches/'+revised.id+'/cancel','POST')));
+for(const [id,path,method,body] of [ ['missing-required-params','/mrp/batches/5/capacity-loads','GET'],['missing-json-body','/mrp/batches/5/linked-transfers/preview','POST'],['unknown-json-field','/mrp/material-policies','POST',{materialCode:'5079AA000088',supplyMode:'SELF_MADE',explosionMode:'STOP'}]])await test(id,async()=>{const r=await req(path,method,body);assert(r.status>=400&&r.status<500,'Expected controlled 4xx, got '+r.status);});
+console.log(JSON.stringify({pass:results.filter(r=>r.status==='PASS').length,fail:results.filter(r=>r.status==='FAIL').length}));

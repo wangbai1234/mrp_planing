@@ -50,50 +50,11 @@ class BomExplosionServiceTest extends BaseIntegrationTest {
     @BeforeEach
     void setUp() {
         // Create categories: 03 -> 03001, 03002, 03003, 03004
-        cat03 = new MaterialCategory();
-        cat03.setCode("03");
-        cat03.setName("模具夹具");
-        cat03.setParentId(null);
-        cat03.setLevel(1);
-        cat03.setSort(1);
-        cat03.setEnabled(true);
-        categoryMapper.insert(cat03);
-
-        cat03001 = new MaterialCategory();
-        cat03001.setCode("03001");
-        cat03001.setName("工具(夹具及配套件)");
-        cat03001.setParentId(cat03.getId());
-        cat03001.setLevel(2);
-        cat03001.setSort(1);
-        cat03001.setEnabled(true);
-        categoryMapper.insert(cat03001);
-
-        cat03002 = new MaterialCategory();
-        cat03002.setCode("03002");
-        cat03002.setName("模具");
-        cat03002.setParentId(cat03.getId());
-        cat03002.setLevel(2);
-        cat03002.setSort(2);
-        cat03002.setEnabled(true);
-        categoryMapper.insert(cat03002);
-
-        cat03003 = new MaterialCategory();
-        cat03003.setCode("03003");
-        cat03003.setName("模型机");
-        cat03003.setParentId(cat03.getId());
-        cat03003.setLevel(2);
-        cat03003.setSort(3);
-        cat03003.setEnabled(true);
-        categoryMapper.insert(cat03003);
-
-        cat03004 = new MaterialCategory();
-        cat03004.setCode("03004");
-        cat03004.setName("手板模型机");
-        cat03004.setParentId(cat03.getId());
-        cat03004.setLevel(2);
-        cat03004.setSort(4);
-        cat03004.setEnabled(true);
-        categoryMapper.insert(cat03004);
+        cat03 = getOrCreateCategory("03", "模具夹具", null, 1, 1);
+        cat03001 = getOrCreateCategory("03001", "工具(夹具及配套件)", cat03.getId(), 2, 1);
+        cat03002 = getOrCreateCategory("03002", "模具", cat03.getId(), 2, 2);
+        cat03003 = getOrCreateCategory("03003", "模型机", cat03.getId(), 2, 3);
+        cat03004 = getOrCreateCategory("03004", "手板模型机", cat03.getId(), 2, 4);
 
         // Create materials: A->03, B->03001, C->03002, D->03003, E->03004
         matA = createMaterial("MAT-A", "物料A", cat03.getId());
@@ -101,6 +62,22 @@ class BomExplosionServiceTest extends BaseIntegrationTest {
         matC = createMaterial("MAT-C", "物料C", cat03002.getId());
         matD = createMaterial("MAT-D", "物料D", cat03003.getId());
         matE = createMaterial("MAT-E", "物料E", cat03004.getId());
+    }
+
+    private MaterialCategory getOrCreateCategory(String code, String name, Long parentId, int level, int sort) {
+        MaterialCategory existing = categoryMapper.selectByCode(code);
+        if (existing != null) {
+            return existing;
+        }
+        MaterialCategory category = new MaterialCategory();
+        category.setCode(code);
+        category.setName(name);
+        category.setParentId(parentId);
+        category.setLevel(level);
+        category.setSort(sort);
+        category.setEnabled(true);
+        categoryMapper.insert(category);
+        return category;
     }
 
     private Material createMaterial(String code, String name, Long categoryId) {
@@ -127,6 +104,7 @@ class BomExplosionServiceTest extends BaseIntegrationTest {
     @Test
     void testTargetCategory03001_onlyMatchesB() {
         // targetCategories = ["03001"] -> only B
+        createBomDetail("MAT-A", "MAT-B", 1L);
         BomExplosionResult result = bomExplosionService.explode(
                 matA.id(), BigDecimal.valueOf(100), List.of("03001"));
 
@@ -138,6 +116,7 @@ class BomExplosionServiceTest extends BaseIntegrationTest {
     @Test
     void testTargetCategory03And03001_matchesAandB() {
         // targetCategories = ["03", "03001"] -> A and B
+        createBomDetail("MAT-A", "MAT-B", 1L);
         BomExplosionResult result = bomExplosionService.explode(
                 matA.id(), BigDecimal.valueOf(100), List.of("03", "03001"));
 
@@ -152,6 +131,8 @@ class BomExplosionServiceTest extends BaseIntegrationTest {
     @Test
     void testTargetCategory03And03001And03002_matchesAandBandC() {
         // targetCategories = ["03", "03001", "03002"] -> A, B, C
+        createBomDetail("MAT-A", "MAT-B", 1L);
+        createBomDetail("MAT-A", "MAT-C", 1L);
         BomExplosionResult result = bomExplosionService.explode(
                 matA.id(), BigDecimal.valueOf(100), List.of("03", "03001", "03002"));
 
@@ -179,6 +160,10 @@ class BomExplosionServiceTest extends BaseIntegrationTest {
     @Test
     void testSelecting03And03001_doesNotAutoSelectOtherChildren() {
         // Selecting 03 + 03001 should NOT auto-select 03002~03004
+        createBomDetail("MAT-A", "MAT-B", 1L);
+        createBomDetail("MAT-A", "MAT-C", 1L);
+        createBomDetail("MAT-A", "MAT-D", 1L);
+        createBomDetail("MAT-A", "MAT-E", 1L);
         BomExplosionResult result = bomExplosionService.explode(
                 matA.id(), BigDecimal.valueOf(100), List.of("03", "03001"));
 

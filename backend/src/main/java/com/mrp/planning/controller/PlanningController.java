@@ -1,10 +1,13 @@
 package com.mrp.planning.controller;
 
 import com.mrp.common.exception.BusinessException;
+import com.mrp.common.exception.NotFoundException;
 import com.mrp.common.response.ApiResponse;
 import com.mrp.common.security.CurrentUser;
 import com.mrp.importexport.service.ExportService;
+import com.mrp.mrp.service.PlanningFactoryAccessService;
 import com.mrp.planning.domain.*;
+import com.mrp.planning.repository.PlanMapper;
 import com.mrp.planning.service.AsyncCalculationService;
 import com.mrp.planning.service.PlanningDomainService;
 import com.mrp.planning.service.PlanningService;
@@ -22,6 +25,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,15 +40,20 @@ public class PlanningController {
     private final ExportService exportService;
     private final CalcTaskMapper calcTaskMapper;
     private final AsyncCalculationService asyncCalculationService;
+    private final PlanningFactoryAccessService factoryAccess;
+    private final PlanMapper planMapper;
 
     public PlanningController(PlanningService planningService, PlanningDomainService domainService,
                               ExportService exportService, CalcTaskMapper calcTaskMapper,
-                              AsyncCalculationService asyncCalculationService) {
+                              AsyncCalculationService asyncCalculationService,
+                              PlanningFactoryAccessService factoryAccess, PlanMapper planMapper) {
         this.planningService = planningService;
         this.domainService = domainService;
         this.exportService = exportService;
         this.calcTaskMapper = calcTaskMapper;
         this.asyncCalculationService = asyncCalculationService;
+        this.factoryAccess = factoryAccess;
+        this.planMapper = planMapper;
     }
 
     // === 版本列表 ===
@@ -60,6 +69,9 @@ public class PlanningController {
         } else {
             versions = domainService.listVersions(null);
         }
+        Map<String, Boolean> visibleFactories = new HashMap<>();
+        versions = versions.stream().filter(v -> visibleFactories.computeIfAbsent(
+                v.factoryCode(), factoryAccess::canReadFactory)).toList();
         int from = Math.min((page - 1) * pageSize, versions.size());
         int to = Math.min(from + pageSize, versions.size());
         return ResponseEntity.ok(ApiResponse.ok(versions.subList(from, to)));
@@ -73,9 +85,10 @@ public class PlanningController {
         List<PlanVersion> versions;
         if (factoryCode != null && !factoryCode.isBlank()) {
             PlanVersion version = planningService.getLatestPlan(factoryCode);
-            versions = version != null ? List.of(version) : List.of();
+            versions = version != null && factoryAccess.canReadFactory(version.factoryCode()) ? List.of(version) : List.of();
         } else {
-            versions = planningService.getAllLatestPlans();
+            versions = planningService.getAllLatestPlans().stream()
+                    .filter(v -> factoryAccess.canReadFactory(v.factoryCode())).toList();
         }
         return ResponseEntity.ok(ApiResponse.ok(versions));
     }
@@ -84,6 +97,7 @@ public class PlanningController {
 
     @GetMapping("/plans/{id}/grid")
     public ResponseEntity<ApiResponse<Map<String, Object>>> getPlanGrid(@PathVariable Long id) {
+        requirePlanFactory(id);
         return ResponseEntity.ok(ApiResponse.ok(domainService.getPlanGridWithOverrides(id)));
     }
 
@@ -195,7 +209,12 @@ public class PlanningController {
 
     @GetMapping("/recalculations/{id}")
     public ResponseEntity<ApiResponse<CalcTask>> getRecalculation(@PathVariable Long id) {
-        return ResponseEntity.ok(ApiResponse.ok(calcTaskMapper.selectById(id)));
+        CalcTask task = calcTaskMapper.selectById(id);
+        if (task != null) {
+            if (!"RECALCULATION".equals(task.taskType())) throw new NotFoundException("CalcTask", id);
+            factoryAccess.requireFactory(task.businessScope());
+        }
+        return ResponseEntity.ok(ApiResponse.ok(task));
     }
 
     // === 人工调整 ===
@@ -233,7 +252,14 @@ public class PlanningController {
     @GetMapping("/plans/compare")
     public ResponseEntity<ApiResponse<Map<String, Object>>> compare(
             @RequestParam Long baseId, @RequestParam Long currentId) {
+        requirePlanFactory(baseId);
+        requirePlanFactory(currentId);
         return ResponseEntity.ok(ApiResponse.ok(domainService.compareVersions(baseId, currentId)));
+    }
+
+    private void requirePlanFactory(Long id) {
+        PlanVersion version = planMapper.selectVersionById(id);
+        if (version != null) factoryAccess.requireFactory(version.factoryCode());
     }
 
     // === 导出 ===
@@ -262,17 +288,8 @@ public class PlanningController {
 
     @GetMapping("/export-tasks/{id}/download")
     public ResponseEntity<Resource> downloadExport(@PathVariable Long id) {
-        ExportTask task = exportService.getExportTask(id);
-        if (task == null || task.getFilePath() == null) {
-            throw new BusinessException("MRP_NOT_FOUND", "Export file not found");
-        }
-        
-        Path filePath = Paths.get(task.getFilePath());
+        Path filePath = exportService.getDownloadPath(id);
         File file = filePath.toFile();
-        if (!file.exists()) {
-            throw new BusinessException("MRP_NOT_FOUND", "Export file not found on disk");
-        }
-        
         FileSystemResource resource = new FileSystemResource(file);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.mrp.repository.MrpRequirementDetailMapper">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO mrp_requirement_detail (run_id, batch_id, factory_code, root_material_code, source_month, parent_material_code, current_material_code, level_no, path_text, path_hash, category_role, supply_mode, explosion_policy, effective_explosion_policy, policy_source, gross_qty, inventory_before_qty, inventory_used_qty, inventory_after_qty, net_qty, terminal_flag, terminal_reason)
+        VALUES (#{runId}, #{batchId}, #{factoryCode}, #{rootMaterialCode}, #{sourceMonth}, #{parentMaterialCode}, #{currentMaterialCode}, #{levelNo}, #{pathText}, #{pathHash}, #{categoryRole}, #{supplyMode}, #{explosionPolicy}, #{effectiveExplosionPolicy}, #{policySource}, #{grossQty}, #{inventoryBeforeQty}, #{inventoryUsedQty}, #{inventoryAfterQty}, #{netQty}, #{terminalFlag}, #{terminalReason})
+    </insert>
+    
+    <insert id="insertBatch">
+        INSERT INTO mrp_requirement_detail (run_id, batch_id, factory_code, root_material_code, source_month, parent_material_code, current_material_code, level_no, path_text, path_hash, category_role, supply_mode, explosion_policy, effective_explosion_policy, policy_source, gross_qty, inventory_before_qty, inventory_used_qty, inventory_after_qty, net_qty, terminal_flag, terminal_reason) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.runId}, #{item.batchId}, #{item.factoryCode}, #{item.rootMaterialCode}, #{item.sourceMonth}, #{item.parentMaterialCode}, #{item.currentMaterialCode}, #{item.levelNo}, #{item.pathText}, #{item.pathHash}, #{item.categoryRole}, #{item.supplyMode}, #{item.explosionPolicy}, #{item.effectiveExplosionPolicy}, #{item.policySource}, #{item.grossQty}, #{item.inventoryBeforeQty}, #{item.inventoryUsedQty}, #{item.inventoryAfterQty}, #{item.netQty}, #{item.terminalFlag}, #{item.terminalReason})
+        </foreach>
+    </insert>
+    
+    <select id="selectByRunId" resultType="com.mrp.mrp.domain.MrpRequirementDetail">
+        SELECT * FROM mrp_requirement_detail WHERE run_id=#{runId} ORDER BY factory_code, root_material_code, source_month, level_no
+    </select>
+    <select id="selectPageByRunId" resultType="com.mrp.mrp.domain.MrpRequirementDetail">
+        SELECT * FROM mrp_requirement_detail WHERE run_id=#{runId}
+        ORDER BY factory_code, root_material_code, source_month, level_no, id
+        LIMIT #{offset}, #{pageSize}
+    </select>
+    <select id="countByRunId" resultType="int">
+        SELECT COUNT(*) FROM mrp_requirement_detail WHERE run_id=#{runId}
+    </select>
+    
+    <select id="selectByRunIdAndRoot" resultType="com.mrp.mrp.domain.MrpRequirementDetail">
+        SELECT * FROM mrp_requirement_detail WHERE run_id=#{runId} AND root_material_code=#{rootMaterialCode} ORDER BY source_month, level_no
+    </select>
+    
+    <select id="selectByBatchId" resultType="com.mrp.mrp.domain.MrpRequirementDetail">
+        SELECT * FROM mrp_requirement_detail WHERE batch_id=#{batchId} ORDER BY root_material_code, source_month, level_no
+    </select>
+
+    <delete id="deleteByRunId">
+        DELETE FROM mrp_requirement_detail WHERE run_id=#{runId}
+    </delete>
+    <delete id="deleteMaterialByRunId">
+        DELETE FROM mrp_requirement_detail WHERE run_id=#{runId} AND level_no &gt; 0
+    </delete>
+</mapper>

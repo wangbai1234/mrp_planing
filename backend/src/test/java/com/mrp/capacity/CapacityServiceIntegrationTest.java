@@ -1,12 +1,12 @@
 package com.mrp.capacity;
 
 import com.mrp.MrpApiApplication;
+import com.mrp.BaseIntegrationTest;
 import com.mrp.capacity.domain.CapacityLine;
 import com.mrp.capacity.service.CapacityService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -14,9 +14,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = MrpApiApplication.class)
-@ActiveProfiles("local")
 @Transactional
-class CapacityServiceIntegrationTest {
+class CapacityServiceIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     private CapacityService capacityService;

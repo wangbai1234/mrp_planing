@@ -16,6 +16,38 @@
     <select id="selectById" resultType="com.mrp.task.domain.CalcTask">
         SELECT * FROM calc_task WHERE id = #{id}
     </select>
+    <select id="selectLatestCalculationForBatch" resultType="com.mrp.task.domain.CalcTask">
+        SELECT id, status, progress_current, progress_total, phase, error_message
+        FROM calc_task
+        WHERE id = (
+            SELECT id FROM calc_task
+            WHERE (task_type='MRP_CALCULATION' AND request_key LIKE CONCAT('mrp-calc-', #{batchId}, '-%'))
+               OR (task_type='MRP_MATERIAL_ANALYSIS' AND request_key LIKE CONCAT('mrp-material-', #{batchId}, '-%'))
+            ORDER BY created_at DESC, id DESC LIMIT 1
+        )
+    </select>
+    <select id="selectLatestLifecycleForBatch" resultType="com.mrp.task.domain.CalcTask">
+        SELECT id, task_type, status, progress_current, progress_total, phase,
+               result_resource_id, error_message, created_at, finished_at
+        FROM calc_task
+        WHERE id = (
+            SELECT id FROM calc_task
+            WHERE task_type = #{taskType}
+              AND request_key LIKE CONCAT(#{requestPrefix}, #{batchId}, '-%')
+            ORDER BY id DESC LIMIT 1
+        )
+    </select>
+    <select id="selectPendingLifecycle" resultType="com.mrp.task.domain.CalcTask">
+        SELECT * FROM calc_task
+        WHERE status = 'PENDING' AND task_type IN ('MRP_PUBLISH', 'MRP_REVISION')
+        ORDER BY priority ASC, created_at ASC LIMIT 10
+    </select>
+
+    <update id="updateOwnedProgress">
+        UPDATE calc_task SET progress_current = GREATEST(progress_current, #{percent}),
+            progress_total = 100, phase = #{phase}, heartbeat_at = CURRENT_TIMESTAMP(3)
+        WHERE id = #{id} AND status = 'RUNNING' AND worker_id = #{workerId} AND version = #{version}
+    </update>
 
     <select id="selectByRequestKey" resultType="com.mrp.task.domain.CalcTask">
         SELECT * FROM calc_task WHERE request_key = #{requestKey}
@@ -45,16 +77,90 @@
         WHERE id = #{id}
     </update>
 
+    <update id="failOwnedTask">
+        UPDATE calc_task
+        SET status = 'FAILED', error_code = 'CALC_ERROR', error_message = #{errorMessage},
+            finished_at = CURRENT_TIMESTAMP(3), version = version + 1
+        WHERE id = #{id} AND status = 'RUNNING'
+          AND worker_id = #{workerId} AND version = #{version}
+    </update>
+    <update id="finishOwnedLifecycle">
+        UPDATE calc_task SET status = 'SUCCEEDED', result_resource_id = #{resultId},
+            progress_current = 100, progress_total = 100, phase = 'COMPLETED',
+            finished_at = CURRENT_TIMESTAMP(3), version = version + 1
+        WHERE id = #{id} AND status = 'RUNNING'
+          AND worker_id = #{workerId} AND version = #{version}
+    </update>
+
     <delete id="deleteById">
         DELETE FROM calc_task WHERE id = #{id}
     </delete>
 
     <update id="failStuckTasks">
-        UPDATE calc_task
-        SET status = 'FAILED', error_code = 'TIMEOUT',
-            error_message = CONCAT('Task stuck in ', status, ' for more than ', #{timeoutMinutes}, ' minutes'),
-            finished_at = CURRENT_TIMESTAMP(3), version = version + 1
-        WHERE status IN ('PENDING', 'CLAIMED', 'RUNNING')
-          AND created_at &lt; DATE_SUB(NOW(), INTERVAL #{timeoutMinutes} MINUTE)
+        UPDATE calc_task SET status='FAILED', error_code='LEASE_EXPIRED',
+            error_message=CONCAT('Task lease expired after ', #{timeoutMinutes}, ' minutes'),
+            finished_at=CURRENT_TIMESTAMP(3), version=version+1
+        WHERE status='RUNNING' AND lease_until &lt; CURRENT_TIMESTAMP(3)
+          AND attempt_count &gt;= max_attempts
+          AND task_type NOT IN ('MRP_CALCULATION', 'MRP_MATERIAL_ANALYSIS')
     </update>
+
+    <select id="selectExpiredRunning" resultType="com.mrp.task.domain.CalcTask">
+        SELECT * FROM calc_task
+        WHERE status = 'RUNNING' AND lease_until IS NOT NULL
+          AND lease_until &lt; CURRENT_TIMESTAMP(3)
+          AND task_type IN ('MRP_CALCULATION', 'MRP_MATERIAL_ANALYSIS')
+        ORDER BY lease_until, id LIMIT 20
+    </select>
+
+    <update id="requeueExpired">
+        UPDATE calc_task SET status = 'PENDING', worker_id = NULL, lease_until = NULL,
+            heartbeat_at = NULL, phase = 'QUEUED', version = version + 1
+        WHERE id = #{id} AND version = #{version} AND status = 'RUNNING'
+          AND lease_until &lt; CURRENT_TIMESTAMP(3) AND attempt_count &lt; max_attempts
+    </update>
+
+    <update id="failExpired">
+        UPDATE calc_task SET status = 'FAILED', error_code = 'LEASE_EXPIRED',
+            error_message = 'Task lease expired after maximum attempts',
+            finished_at = CURRENT_TIMESTAMP(3), version = version + 1
+        WHERE id = #{id} AND version = #{version} AND status = 'RUNNING'
+          AND lease_until &lt; CURRENT_TIMESTAMP(3) AND attempt_count &gt;= max_attempts
+    </update>
+
+    <select id="selectPending" resultType="com.mrp.task.domain.CalcTask">
+        SELECT * FROM calc_task
+        WHERE status = 'PENDING' AND task_type IN ('MRP_CALCULATION','MRP_MATERIAL_ANALYSIS')
+        ORDER BY priority ASC, created_at ASC
+        LIMIT 10
+    </select>
+
+    <update id="updateInputPayload">
+        UPDATE calc_task SET input_payload = #{inputPayload}
+        WHERE id = #{id}
+    </update>
+
+    <update id="claimTask">
+        UPDATE calc_task
+        SET status = 'RUNNING', worker_id = #{workerId}, started_at = NOW(),
+            heartbeat_at = NOW(), lease_until = DATE_ADD(NOW(), INTERVAL #{leaseMinutes} MINUTE),
+            attempt_count = attempt_count + 1, version = version + 1
+        WHERE id = #{id} AND status = 'PENDING' AND version = #{version}
+    </update>
+
+    <update id="heartbeat">
+        UPDATE calc_task
+        SET heartbeat_at = NOW(), lease_until = DATE_ADD(NOW(), INTERVAL #{leaseMinutes} MINUTE)
+        WHERE id = #{id} AND worker_id = #{workerId} AND status = 'RUNNING'
+    </update>
+
+    <update id="heartbeatForWorker">
+        UPDATE calc_task
+        SET heartbeat_at = NOW(), lease_until = DATE_ADD(NOW(), INTERVAL #{leaseMinutes} MINUTE)
+        WHERE worker_id = #{workerId} AND status = 'RUNNING'
+    </update>
+
+    <select id="selectByWorkerAndStatus" resultType="com.mrp.task.domain.CalcTask">
+        SELECT * FROM calc_task WHERE worker_id = #{workerId} AND status = #{status}
+    </select>
 </mapper>

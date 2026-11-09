@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.mrp.repository.BomSnapshotMapper">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO bom_snapshot (source_version, status, checksum, error_message, effective_at)
+        VALUES (#{sourceVersion}, #{status}, #{checksum}, #{errorMessage}, #{effectiveAt})
+    </insert>
+    
+    <update id="update">
+        UPDATE bom_snapshot SET status=#{status}, checksum=#{checksum}, error_message=#{errorMessage}, effective_at=#{effectiveAt}
+        WHERE id=#{id}
+    </update>
+    
+    <select id="selectById" resultType="com.mrp.mrp.domain.BomSnapshot">
+        SELECT * FROM bom_snapshot WHERE id=#{id}
+    </select>
+
+    <select id="selectLatestReady" resultType="com.mrp.mrp.domain.BomSnapshot">
+        SELECT * FROM bom_snapshot
+        WHERE status = 'READY'
+        ORDER BY id DESC
+        LIMIT 1
+    </select>
+    
+    <select id="selectAll" resultType="com.mrp.mrp.domain.BomSnapshot">
+        SELECT * FROM bom_snapshot ORDER BY id DESC
+    </select>
+</mapper>

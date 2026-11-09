@@ -10,15 +10,15 @@ export default defineConfig({
   use: {
     baseURL: 'http://localhost:5180',
     trace: 'on-first-retry',
-    screenshot: 'only-on-failure',
-    launchOptions: {
-      executablePath: '/Users/wanglixun/Library/Caches/ms-playwright/chromium-1234/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing'
-    }
+    screenshot: 'only-on-failure'
   },
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] }
+      use: {
+        ...devices['Desktop Chrome'],
+        channel: process.env.PLAYWRIGHT_USE_SYSTEM_CHROME === '1' ? 'chrome' : undefined
+      }
     }
   ],
   webServer: {

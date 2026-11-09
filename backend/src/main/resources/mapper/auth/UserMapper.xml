@@ -9,6 +9,10 @@
         WHERE id = #{id}
     </select>
 
+    <select id="selectAuthenticationStateForActiveUser" resultType="map">
+        SELECT need_change_password, password_hash FROM user WHERE id = #{id} AND username = #{username} AND is_active = 1
+    </select>
+
     <select id="selectByUsername" resultType="com.mrp.auth.domain.User">
         SELECT id, username, password_hash, display_name, department, email, phone,
                is_active, last_login_at, created_at, updated_at
@@ -65,8 +69,8 @@
     </select>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO user (username, password_hash, display_name, department, email, phone, is_active)
-        VALUES (#{username}, #{passwordHash}, #{displayName}, #{department}, #{email}, #{phone}, #{isActive})
+        INSERT INTO user (username, password_hash, display_name, department, email, phone, is_active, need_change_password)
+        VALUES (#{username}, #{passwordHash}, #{displayName}, #{department}, #{email}, #{phone}, #{isActive}, 1)
     </insert>
 
     <update id="update">
@@ -83,7 +87,7 @@
     </update>
 
     <update id="updatePassword">
-        UPDATE user SET password_hash = #{passwordHash} WHERE id = #{id}
+        UPDATE user SET password_hash = #{passwordHash}, need_change_password = 1 WHERE id = #{id}
     </update>
 
     <update id="updateLastLoginAt">
@@ -92,6 +96,10 @@
 
     <delete id="deleteById">
         DELETE FROM user WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteFactoryScopesByUserId">
+        DELETE FROM user_factory_scope WHERE user_id = #{userId}
     </delete>
 
     <select id="selectUserIdsByRoleId" resultType="java.lang.Long">

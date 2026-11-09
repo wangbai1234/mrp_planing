@@ -1,6 +1,6 @@
 # 无消息队列任务执行契约
 
-本项目不引入 MQ。导入、重算、导出和 CRM 同步都通过 MySQL 任务表 + Worker 轮询执行；MySQL 是任务状态真源，Redis 是锁和进度加速层。
+本项目不引入 MQ。导入、MRP 计算、导出和后续 CRM 同步都通过 MySQL 任务表 + Worker 轮询执行；MySQL 是任务状态真源，Redis 是锁和进度加速层。业务批次状态与技术任务状态分离。
 
 ## 1. 状态机
 
@@ -12,6 +12,15 @@ PENDING -> CLAIMED -> RUNNING -> SUCCEEDED
 ```
 
 只有合法状态迁移可以执行。API 创建任务后立即返回 `202 + taskId`。`SUCCEEDED`、`FAILED`、`CANCELLED` 是终态，禁止回退。
+
+MRP 业务批次（`mrp_calc_batch`，同时是 Phase 2 `planId`）在创建技术任务前使用：
+
+```text
+ DRAFT -> CHECKING -> ANALYZING -> WAITING_DECISION
+       -> REANALYZING -> READY_TO_CALCULATE
+```
+
+只有 `READY_TO_CALCULATE` 锁定后才创建 `calc_task(PENDING)`。`WAITING_DECISION` 任务可以成功结束并等待业务，不得进入计算 Worker，也不得被技术超时扫描标为失败。计算成功先进入 `WRITING`，结果 run 校验后切换 active run 才进入 `READY`；输入变化可使未发布批次进入 `STALE`。
 
 ## 2. 任务字段
 
@@ -51,7 +60,7 @@ Worker 每次认领少量任务：
 1. MySQL 事务中按优先级和创建时间查询可执行任务；
 2. 使用 `SELECT ... FOR UPDATE SKIP LOCKED`；
 3. 更新 `CLAIMED`、`worker_id`、`lease_until`、`attempt_count`；
-4. 提交事务后启动对应 Spring Batch Job；
+4. 提交事务后启动对应 Spring Batch Job；MRP 任务再次验证绑定批次为已锁定且 checksum 未变化；
 5. 同一工厂/相同输入版本的排产重算再使用 Redisson 业务锁防重复并行。
 
 不能先读出任务再无条件更新，否则多 Worker 会重复执行。
@@ -67,7 +76,7 @@ Worker 每次认领少量任务：
 ## 5. 重试
 
 - 默认最大尝试次数 3，配置化但不能无限；
-- 数据校验错误、业务冲突和非法文件不可自动重试；
+- 数据校验错误、待业务决策、业务冲突和非法文件不可自动重试；待业务决策返回批次工作台，不创建失败任务；
 - 临时数据库/Redis连接错误可以指数退避重试；
 - 重试前确认没有 READY 结果；
 - 已生成的 FAILED 临时版本和 staging 数据按任务 id 隔离，不污染当前版本。
@@ -78,7 +87,7 @@ Worker 每次认领少量任务：
 
 ## 7. 进度
 
-进度阶段至少区分：准备输入、计算、产能校验、批量写入、结果校验、版本提交。前端展示阶段和数量，不承诺不准确的秒级剩余时间。
+进度阶段至少区分：加载锁定输入、BOM 展开、逐层库存扣减、日分配、待分配校验、批量写入、守恒校验、版本提交。前端展示阶段和数量，不承诺不准确的秒级剩余时间。
 
 ## 8. 并发限制
 

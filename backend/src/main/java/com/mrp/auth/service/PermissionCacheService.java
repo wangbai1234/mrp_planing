@@ -10,7 +10,8 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class PermissionCacheService {
 
-    private static final String CACHE_KEY_PREFIX = "user:permissions:";
+    // V057 backfills factory grants in SQL; switch namespace so existing cached grants are reloaded.
+    private static final String CACHE_KEY_PREFIX = "user:permissions:v2:";
     private static final String ROLE_USERS_PREFIX = "role:users:";
     private static final long CACHE_TTL_MINUTES = 30;
 

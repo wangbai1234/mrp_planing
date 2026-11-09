@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.mrp.repository.ConfigMasterMapper">
+    <select id="selectLastInsertId" resultType="long">SELECT LAST_INSERT_ID()</select>
+
+    <select id="selectFactoryWarehouseMappings" resultType="com.mrp.mrp.domain.FactoryWarehouseMapping">
+        SELECT m.*, m.is_good_warehouse AS goodWarehouse,
+               cu.display_name AS created_by_name, uu.display_name AS updated_by_name
+        FROM factory_warehouse_mapping m
+        LEFT JOIN user cu ON cu.id = m.created_by
+        LEFT JOIN user uu ON uu.id = m.updated_by
+        ORDER BY m.factory_code, m.id
+    </select>
+    <sql id="WarehousePageWhere">
+        WHERE m.factory_code IN <foreach collection="factoryCodes" item="code" open="(" separator="," close=")">#{code}</foreach>
+        <if test="keyword != null and keyword != ''">
+            AND (m.factory_code LIKE CONCAT('%',#{keyword},'%') OR m.warehouse_code LIKE CONCAT('%',#{keyword},'%')
+                OR m.warehouse_name LIKE CONCAT('%',#{keyword},'%'))
+        </if>
+        <if test="quality == 'GOOD'">AND m.quality_configured=1 AND m.is_good_warehouse=1</if>
+        <if test="quality == 'DEFECTIVE'">AND m.quality_configured=1 AND m.is_good_warehouse=0</if>
+        <if test="quality == 'UNCONFIGURED'">AND m.quality_configured=0</if>
+    </sql>
+    <select id="selectFactoryWarehouseMappingPage" resultType="com.mrp.mrp.domain.FactoryWarehouseMapping">
+        SELECT m.*, m.is_good_warehouse AS goodWarehouse,
+               cu.display_name AS created_by_name, uu.display_name AS updated_by_name
+        FROM factory_warehouse_mapping m
+        LEFT JOIN user cu ON cu.id=m.created_by LEFT JOIN user uu ON uu.id=m.updated_by
+        <include refid="WarehousePageWhere"/>
+        ORDER BY m.factory_code,m.id LIMIT #{limit} OFFSET #{offset}
+    </select>
+    <select id="countFactoryWarehouseMappingPage" resultType="int">
+        SELECT COUNT(*) FROM factory_warehouse_mapping m <include refid="WarehousePageWhere"/>
+    </select>
+    <select id="selectFactoryWarehouseMappingById" resultType="com.mrp.mrp.domain.FactoryWarehouseMapping">
+        SELECT m.*, m.is_good_warehouse AS goodWarehouse FROM factory_warehouse_mapping m WHERE id=#{id}
+    </select>
+    <select id="selectFactoryWarehouseMappingsByFactory" resultType="com.mrp.mrp.domain.FactoryWarehouseMapping">
+        SELECT m.*, m.is_good_warehouse AS goodWarehouse FROM factory_warehouse_mapping m WHERE factory_code=#{factoryCode}
+        ORDER BY CASE WHEN priority_no IS NULL THEN 1 ELSE 0 END, priority_no, id
+    </select>
+    <select id="countWarehousePriority" resultType="int">
+        SELECT COUNT(*) FROM factory_warehouse_mapping
+        WHERE factory_code=#{factoryCode} AND priority_no=#{priorityNo} AND enabled=1 AND is_good_warehouse=1
+        <if test="excludeId != null">AND id &lt;&gt; #{excludeId}</if>
+    </select>
+    <select id="countWarehouseReferences" resultType="int">
+        SELECT (SELECT COUNT(*) FROM inventory_item WHERE warehouse_code=#{warehouseCode})
+             + (SELECT COUNT(*) FROM mrp_batch_factory_scope WHERE warehouse_code=#{warehouseCode})
+             + (SELECT COUNT(*) FROM stock_policy WHERE warehouse_code=#{warehouseCode})
+    </select>
+    <select id="selectFactoryWarehouseMappingByFactory" resultType="com.mrp.mrp.domain.FactoryWarehouseMapping">
+        SELECT m.*, m.is_good_warehouse AS goodWarehouse FROM factory_warehouse_mapping m WHERE factory_code=#{factoryCode} ORDER BY id LIMIT 1
+    </select>
+    <select id="selectFactoryWarehouseMappingByWarehouse" resultType="com.mrp.mrp.domain.FactoryWarehouseMapping">
+        SELECT m.*, m.is_good_warehouse AS goodWarehouse FROM factory_warehouse_mapping m WHERE warehouse_code=#{warehouseCode}
+    </select>
+    <insert id="insertFactoryWarehouseMapping" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO factory_warehouse_mapping
+            (factory_code, factory_name, warehouse_code, warehouse_name, warehouse_manager, supplier_name,
+             is_good_warehouse, warehouse_attribute, priority_no, quality_configured, enabled, created_by, updated_by)
+        VALUES (#{factoryCode}, #{factoryName}, #{warehouseCode}, #{warehouseName}, #{warehouseManager}, #{supplierName},
+                #{goodWarehouse}, #{warehouseAttribute}, #{priorityNo}, #{qualityConfigured}, #{enabled}, #{createdBy}, #{updatedBy})
+    </insert>
+    <update id="updateFactoryWarehouseMapping">
+        UPDATE factory_warehouse_mapping
+        SET factory_name=#{factoryName}, warehouse_name=#{warehouseName}, warehouse_manager=#{warehouseManager},
+            supplier_name=#{supplierName}, is_good_warehouse=#{goodWarehouse}, warehouse_attribute=#{warehouseAttribute},
+            priority_no=#{priorityNo}, quality_configured=#{qualityConfigured},
+            enabled=#{enabled}, updated_by=#{updatedBy}, updated_at=NOW(3)
+        WHERE id=#{id}
+    </update>
+    <delete id="deleteFactoryWarehouseMapping">DELETE FROM factory_warehouse_mapping WHERE id=#{id}</delete>
+
+    <select id="selectStockPolicies" resultType="com.mrp.mrp.domain.StockPolicy">
+        SELECT p.*, cu.display_name AS created_by_name, uu.display_name AS updated_by_name
+        FROM stock_policy p
+        LEFT JOIN user cu ON cu.id = p.created_by
+        LEFT JOIN user uu ON uu.id = p.updated_by
+        ORDER BY p.warehouse_code, p.material_code
+    </select>
+    <select id="selectStockPolicyById" resultType="com.mrp.mrp.domain.StockPolicy">
+        SELECT * FROM stock_policy WHERE id=#{id}
+    </select>
+    <select id="selectStockPolicyByKey" resultType="com.mrp.mrp.domain.StockPolicy">
+        SELECT * FROM stock_policy WHERE warehouse_code=#{warehouseCode} AND material_code=#{materialCode}
+    </select>
+    <select id="countStockPolicies" resultType="int">SELECT COUNT(*) FROM stock_policy</select>
+    <insert id="insertStockPolicy" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO stock_policy
+            (warehouse_code, material_code, safety_stock_qty, warning_stock_qty, created_by, updated_by)
+        VALUES (#{warehouseCode}, #{materialCode}, #{safetyStockQty}, #{warningStockQty}, #{createdBy}, #{updatedBy})
+    </insert>
+    <update id="updateStockPolicy">
+        UPDATE stock_policy
+        SET safety_stock_qty=#{safetyStockQty}, warning_stock_qty=#{warningStockQty}, updated_by=#{updatedBy}, updated_at=NOW(3)
+        WHERE id=#{id}
+    </update>
+    <delete id="deleteStockPolicy">DELETE FROM stock_policy WHERE id=#{id}</delete>
+
+    <select id="selectMaterialPolicies" resultType="com.mrp.mrp.domain.MaterialPolicy">
+        SELECT p.*, cu.display_name AS created_by_name, uu.display_name AS updated_by_name
+        FROM material_policy p
+        LEFT JOIN user cu ON cu.id = p.created_by
+        LEFT JOIN user uu ON uu.id = p.updated_by
+        ORDER BY p.material_code
+    </select>
+    <select id="selectMaterialPolicyById" resultType="com.mrp.mrp.domain.MaterialPolicy">
+        SELECT * FROM material_policy WHERE id=#{id}
+    </select>
+    <select id="selectMaterialPolicyByMaterial" resultType="com.mrp.mrp.domain.MaterialPolicy">
+        SELECT * FROM material_policy WHERE material_code=#{materialCode}
+    </select>
+    <select id="countMaterialPolicies" resultType="int">SELECT COUNT(*) FROM material_policy</select>
+    <insert id="insertMaterialPolicy" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO material_policy (material_code, supply_mode, explosion_policy, created_by, updated_by)
+        VALUES (#{materialCode}, #{supplyMode}, #{explosionPolicy}, #{createdBy}, #{updatedBy})
+    </insert>
+    <update id="updateMaterialPolicy">
+        UPDATE material_policy
+        SET supply_mode=#{supplyMode}, explosion_policy=#{explosionPolicy}, updated_by=#{updatedBy}, updated_at=NOW(3)
+        WHERE id=#{id}
+    </update>
+    <delete id="deleteMaterialPolicy">DELETE FROM material_policy WHERE id=#{id}</delete>
+
+    <select id="selectProductionCalendar" resultType="com.mrp.mrp.domain.ProductionCalendarEntry">
+        SELECT c.id, c.factory_code, c.calendar_date, c.is_production_day AS production_day,
+               c.allocation_weight, c.daily_capacity, c.capacity_unit, c.revision, c.reason, c.created_by, c.created_at, c.updated_by, c.updated_at,
+               cu.display_name AS created_by_name, uu.display_name AS updated_by_name
+        FROM mrp_production_calendar c
+        LEFT JOIN user cu ON cu.id = c.created_by
+        LEFT JOIN user uu ON uu.id = c.updated_by
+        <where><if test="factoryCode != null">c.factory_code=#{factoryCode}</if></where>
+        ORDER BY factory_code, calendar_date
+    </select>
+    <select id="selectProductionCalendarById" resultType="com.mrp.mrp.domain.ProductionCalendarEntry">
+        SELECT id, factory_code, calendar_date, is_production_day AS production_day,
+               allocation_weight, daily_capacity, capacity_unit, revision, reason, created_by, created_at, updated_by, updated_at
+        FROM mrp_production_calendar WHERE id=#{id}
+    </select>
+    <select id="selectProductionCalendarByKey" resultType="com.mrp.mrp.domain.ProductionCalendarEntry">
+        SELECT id, factory_code, calendar_date, is_production_day AS production_day,
+               allocation_weight, daily_capacity, capacity_unit, revision, reason, created_by, created_at, updated_by, updated_at
+        FROM mrp_production_calendar WHERE factory_code=#{factoryCode} AND calendar_date=#{calendarDate}
+    </select>
+    <select id="selectProductionCalendarFactories" resultType="string">
+        SELECT DISTINCT factory_code FROM mrp_production_calendar ORDER BY factory_code
+    </select>
+    <insert id="insertProductionCalendar" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO mrp_production_calendar
+            (factory_code, calendar_date, is_production_day, allocation_weight, daily_capacity, capacity_unit, revision, reason, created_by, updated_by)
+        VALUES (#{factoryCode}, #{calendarDate}, #{productionDay}, #{allocationWeight}, #{dailyCapacity}, #{capacityUnit}, COALESCE(#{revision},0), #{reason}, #{createdBy}, #{updatedBy})
+    </insert>
+    <update id="updateProductionCalendar">
+        UPDATE mrp_production_calendar
+        SET is_production_day=#{productionDay}, allocation_weight=#{allocationWeight}, daily_capacity=#{dailyCapacity},
+            capacity_unit=#{capacityUnit}, revision=COALESCE(revision,0)+1,
+            reason=#{reason}, updated_by=#{updatedBy}, updated_at=NOW(3)
+        WHERE id=#{id} AND revision=#{revision}
+    </update>
+    <delete id="deleteProductionCalendar">DELETE FROM mrp_production_calendar WHERE id=#{id}</delete>
+
+    <select id="selectProductionCalendarRange" resultType="com.mrp.mrp.domain.ProductionCalendarEntry">
+        SELECT c.id, c.factory_code, c.calendar_date, c.is_production_day AS production_day,
+               c.allocation_weight, c.daily_capacity, c.capacity_unit, c.revision, c.reason,
+               c.created_by, c.created_at, c.updated_by, c.updated_at,
+               cu.display_name AS created_by_name, uu.display_name AS updated_by_name
+        FROM mrp_production_calendar c
+        LEFT JOIN `user` cu ON cu.id=c.created_by
+        LEFT JOIN `user` uu ON uu.id=c.updated_by
+        WHERE c.factory_code=#{factoryCode} AND c.calendar_date BETWEEN #{startDate} AND #{endDate}
+        ORDER BY c.calendar_date
+    </select>
+    <sql id="CalendarMonthDates">
+      WITH RECURSIVE calendar_dates AS (
+        SELECT CAST(#{startDate} AS DATE) AS calendar_date
+        UNION ALL SELECT DATE_ADD(calendar_date, INTERVAL 1 DAY) FROM calendar_dates
+        WHERE calendar_date &lt; CAST(#{endDate} AS DATE)
+      )
+    </sql>
+    <sql id="CalendarPageWhere"><where>
+      <if test="keyword != null and keyword != ''">AND (c.reason LIKE CONCAT('%',#{keyword},'%') OR c.capacity_unit LIKE CONCAT('%',#{keyword},'%'))</if>
+      <if test="status == 'PRODUCTION'">AND c.is_production_day=1 AND c.daily_capacity &gt; 0 AND c.capacity_unit='台' AND c.daily_capacity=FLOOR(c.daily_capacity)</if>
+      <if test="status == 'REST'">AND c.is_production_day=0</if>
+      <if test="status == 'UNCONFIGURED'">AND (c.id IS NULL OR (c.is_production_day=1 AND (c.daily_capacity IS NULL OR c.daily_capacity &lt;= 0 OR c.capacity_unit IS NULL OR c.capacity_unit &lt;&gt; '台' OR c.daily_capacity &lt;&gt; FLOOR(c.daily_capacity))))</if>
+    </where></sql>
+    <select id="selectProductionCalendarPage" resultType="com.mrp.mrp.domain.ProductionCalendarEntry">
+      <include refid="CalendarMonthDates"/>
+      SELECT c.id,#{factoryCode} AS factory_code,d.calendar_date,c.is_production_day AS production_day,c.allocation_weight,
+             c.daily_capacity,c.capacity_unit,c.revision,c.reason,c.created_by,c.created_at,c.updated_by,c.updated_at,
+             cu.display_name AS created_by_name,uu.display_name AS updated_by_name
+      FROM calendar_dates d LEFT JOIN mrp_production_calendar c ON c.calendar_date=d.calendar_date AND c.factory_code=#{factoryCode}
+      LEFT JOIN `user` cu ON cu.id=c.created_by
+      LEFT JOIN `user` uu ON uu.id=c.updated_by
+      <include refid="CalendarPageWhere"/>
+      ORDER BY d.calendar_date LIMIT #{limit} OFFSET #{offset}
+    </select>
+    <select id="countProductionCalendarPage" resultType="int">
+      <include refid="CalendarMonthDates"/>
+      SELECT COUNT(*) FROM calendar_dates d LEFT JOIN mrp_production_calendar c ON c.calendar_date=d.calendar_date AND c.factory_code=#{factoryCode}
+      <include refid="CalendarPageWhere"/>
+    </select>
+    <select id="lockProductionCalendarRange" resultType="com.mrp.mrp.domain.ProductionCalendarEntry">
+      SELECT c.id,c.factory_code,c.calendar_date,c.is_production_day AS production_day,c.allocation_weight,
+             c.daily_capacity,c.capacity_unit,c.revision,c.reason,c.created_by,c.created_at,c.updated_by,c.updated_at
+      FROM mrp_production_calendar c
+      WHERE c.factory_code=#{factoryCode} AND c.calendar_date BETWEEN #{startDate} AND #{endDate}
+      ORDER BY c.calendar_date FOR UPDATE
+    </select>
+
+    <select id="selectBusinessWeeks" resultType="com.mrp.mrp.domain.BusinessWeek">
+        SELECT w.*, cu.display_name AS created_by_name, uu.display_name AS updated_by_name
+        FROM business_week w
+        LEFT JOIN user cu ON cu.id = w.created_by
+        LEFT JOIN user uu ON uu.id = w.updated_by
+        <where><if test="businessMonth != null">w.business_month=#{businessMonth}</if></where>
+        ORDER BY w.business_month, w.sort_no
+    </select>
+    <select id="selectBusinessMonths" resultType="java.time.LocalDate">
+        SELECT DISTINCT business_month FROM business_week ORDER BY business_month
+    </select>
+    <delete id="deleteBusinessWeeksByMonth">DELETE FROM business_week WHERE business_month=#{businessMonth}</delete>
+    <insert id="insertBusinessWeeks">
+        INSERT INTO business_week
+            (business_month, week_code, start_date, end_date, sort_no, created_by, updated_by)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.businessMonth}, #{item.weekCode}, #{item.startDate}, #{item.endDate}, #{item.sortNo},
+             #{item.createdBy}, #{item.updatedBy})
+        </foreach>
+    </insert>
+
+    <insert id="insertFactoryWarehouseSnapshot">
+        INSERT INTO factory_warehouse_mapping_version (version_no, status, created_by, published_at)
+        VALUES (#{versionNo}, 'SNAPSHOT', #{createdBy}, NOW(3))
+    </insert>
+    <insert id="copyFactoryWarehouseSnapshotDetails">
+        INSERT INTO factory_warehouse_mapping_detail
+            (version_id, factory_code, factory_name, warehouse_code, warehouse_name, warehouse_manager,
+             supplier_name, is_good_warehouse, warehouse_attribute, priority_no, maintenance_order, enabled)
+        SELECT #{versionId}, factory_code, factory_name, warehouse_code, warehouse_name, warehouse_manager,
+               supplier_name, is_good_warehouse, warehouse_attribute, priority_no, id, enabled
+        FROM factory_warehouse_mapping
+    </insert>
+    <insert id="insertStockPolicySnapshot">
+        INSERT INTO stock_policy_version (version_no, status, created_by, published_at)
+        VALUES (#{versionNo}, 'SNAPSHOT', #{createdBy}, NOW(3))
+    </insert>
+    <insert id="copyStockPolicySnapshotDetails">
+        INSERT INTO stock_policy_detail (version_id, warehouse_code, material_code, safety_stock_qty, warning_stock_qty)
+        SELECT #{versionId}, warehouse_code, material_code, safety_stock_qty, warning_stock_qty FROM stock_policy
+    </insert>
+    <insert id="insertMaterialPolicySnapshot">
+        INSERT INTO mrp_material_policy_version (version_no, status, created_by, published_at)
+        SELECT COALESCE(MAX(version_no), 0) + 1, 'SNAPSHOT', #{createdBy}, NOW(3) FROM mrp_material_policy_version
+    </insert>
+    <insert id="copyMaterialPolicySnapshotDetails">
+        INSERT INTO mrp_material_policy_detail (version_id, material_code, supply_mode, explosion_policy, revision)
+        SELECT #{versionId}, material_code, supply_mode, explosion_policy, 0 FROM material_policy
+    </insert>
+    <insert id="insertProductionCalendarSnapshot">
+        INSERT INTO production_calendar_version (version_no, factory_code, status, created_by, published_at)
+        SELECT COALESCE(MAX(version_no), 0) + 1, #{factoryCode}, 'SNAPSHOT', #{createdBy}, NOW(3)
+        FROM production_calendar_version
+    </insert>
+    <insert id="copyProductionCalendarSnapshotDetails">
+        INSERT INTO production_calendar_day
+            (version_id, factory_code, calendar_date, is_production_day, allocation_weight, daily_capacity, capacity_unit, reason, revision)
+        SELECT #{versionId}, factory_code, calendar_date, is_production_day, 1, daily_capacity, capacity_unit, reason, 0
+        FROM mrp_production_calendar
+        <choose>
+            <when test="factoryCode == 'ALL'">WHERE factory_code IN (SELECT factory_code FROM mrp_factory WHERE enabled=1)</when>
+            <otherwise>WHERE factory_code=#{factoryCode}</otherwise>
+        </choose>
+    </insert>
+    <insert id="insertBusinessWeekSnapshot">
+        INSERT INTO business_week_version (version_no, business_month, status, created_by, published_at)
+        VALUES (#{versionNo}, #{businessMonth}, 'SNAPSHOT', #{createdBy}, NOW(3))
+    </insert>
+    <insert id="copyBusinessWeekSnapshotDetails">
+        INSERT INTO business_week_detail (version_id, week_code, start_date, end_date, sort_no)
+        SELECT #{versionId}, week_code, start_date, end_date, sort_no
+        FROM business_week WHERE business_month=#{businessMonth}
+    </insert>
+<sql id="StockPolicyWhere"><where>
+        <if test="keyword != null and keyword != ''">AND (p.material_code LIKE CONCAT('%', #{keyword}, '%') OR m.material_name LIKE CONCAT('%', #{keyword}, '%') OR m.spec_model LIKE CONCAT('%', #{keyword}, '%') OR p.warehouse_code LIKE CONCAT('%', #{keyword}, '%'))</if>
+        <if test="warehouse != null and warehouse != ''">AND p.warehouse_code=#{warehouse}</if></where></sql>
+<select id="selectStockPolicyPage" resultType="com.mrp.mrp.domain.StockPolicy">
+        SELECT p.*, cu.display_name AS created_by_name, uu.display_name AS updated_by_name FROM stock_policy p
+        LEFT JOIN material m ON m.material_code=p.material_code
+        LEFT JOIN user cu ON cu.id=p.created_by LEFT JOIN user uu ON uu.id=p.updated_by
+        <include refid="StockPolicyWhere"/> ORDER BY p.material_code, p.id LIMIT #{limit} OFFSET #{offset}
+    </select>
+    <select id="countStockPolicyPage" resultType="int">
+        SELECT COUNT(*) FROM stock_policy p LEFT JOIN material m ON m.material_code=p.material_code
+        <include refid="StockPolicyWhere"/>
+    </select>
+<sql id="MaterialPolicyWhere"><where>
+        <if test="keyword != null and keyword != ''">AND (p.material_code LIKE CONCAT('%', #{keyword}, '%') OR m.material_name LIKE CONCAT('%', #{keyword}, '%') OR m.spec_model LIKE CONCAT('%', #{keyword}, '%') )</if>
+        <if test="supply != null and supply != ''">AND p.supply_mode=#{supply}</if><if test="explosion != null and explosion != ''">AND p.explosion_policy=#{explosion}</if></where></sql>
+<select id="selectMaterialPolicyPage" resultType="com.mrp.mrp.domain.MaterialPolicy">
+        SELECT p.*, cu.display_name AS created_by_name, uu.display_name AS updated_by_name FROM material_policy p
+        LEFT JOIN material m ON m.material_code=p.material_code
+        LEFT JOIN user cu ON cu.id=p.created_by LEFT JOIN user uu ON uu.id=p.updated_by
+        <include refid="MaterialPolicyWhere"/> ORDER BY p.material_code, p.id LIMIT #{limit} OFFSET #{offset}
+    </select>
+    <select id="countMaterialPolicyPage" resultType="int">
+        SELECT COUNT(*) FROM material_policy p LEFT JOIN material m ON m.material_code=p.material_code
+        <include refid="MaterialPolicyWhere"/>
+    </select>
+</mapper>

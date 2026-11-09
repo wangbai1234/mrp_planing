@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.mrp.repository.MrpTerminalDemandMapper">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO mrp_terminal_demand (run_id, batch_id, factory_code, root_material_code, terminal_material_code, terminal_type, supply_mode, source_month, quantity)
+        VALUES (#{runId}, #{batchId}, #{factoryCode}, #{rootMaterialCode}, #{terminalMaterialCode}, #{terminalType}, #{supplyMode}, #{sourceMonth}, #{quantity})
+    </insert>
+    
+    <insert id="insertBatch">
+        INSERT INTO mrp_terminal_demand (run_id, batch_id, factory_code, root_material_code, terminal_material_code, terminal_type, supply_mode, source_month, quantity) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.runId}, #{item.batchId}, #{item.factoryCode}, #{item.rootMaterialCode}, #{item.terminalMaterialCode}, #{item.terminalType}, #{item.supplyMode}, #{item.sourceMonth}, #{item.quantity})
+        </foreach>
+    </insert>
+    
+    <select id="selectByRunId" resultType="com.mrp.mrp.domain.MrpTerminalDemand">
+        SELECT * FROM mrp_terminal_demand WHERE run_id=#{runId} ORDER BY factory_code, root_material_code, terminal_material_code, source_month
+    </select>
+    <select id="selectPageByRunId" resultType="com.mrp.mrp.domain.MrpTerminalDemand">
+        SELECT * FROM mrp_terminal_demand
+        WHERE run_id=#{runId} AND terminal_type &lt;&gt; 'MACHINE_OUTPUT'
+        <if test="keyword != null and keyword != ''">
+            AND (root_material_code LIKE CONCAT('%', #{keyword}, '%')
+                 OR terminal_material_code LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+        ORDER BY factory_code, root_material_code, terminal_material_code, source_month, id
+        LIMIT #{offset}, #{pageSize}
+    </select>
+    <select id="countByRunId" resultType="int">
+        SELECT COUNT(*) FROM mrp_terminal_demand
+        WHERE run_id=#{runId} AND terminal_type &lt;&gt; 'MACHINE_OUTPUT'
+        <if test="keyword != null and keyword != ''">
+            AND (root_material_code LIKE CONCAT('%', #{keyword}, '%')
+                 OR terminal_material_code LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+    </select>
+    <sql id="shortageFilter">
+        run_id=#{runId} AND terminal_type &lt;&gt; 'MACHINE_OUTPUT'
+        <if test="factoryCode != null and factoryCode != ''">AND factory_code=#{factoryCode}</if>
+        <if test="rootMaterialCode != null and rootMaterialCode != ''">AND root_material_code=#{rootMaterialCode}</if>
+        <if test="terminalMaterialCode != null and terminalMaterialCode != ''">AND terminal_material_code=#{terminalMaterialCode}</if>
+        <if test="sourceMonth != null">AND source_month=#{sourceMonth}</if>
+        <if test="keyword != null and keyword != ''">AND (root_material_code LIKE CONCAT('%',#{keyword},'%') OR terminal_material_code LIKE CONCAT('%',#{keyword},'%'))</if>
+    </sql>
+    <select id="selectShortagePage" resultType="com.mrp.mrp.domain.MrpTerminalDemand">
+        SELECT run_id,batch_id,factory_code,root_material_code,terminal_material_code,terminal_type,supply_mode,source_month,SUM(quantity) quantity
+        FROM mrp_terminal_demand WHERE <include refid="shortageFilter"/>
+        GROUP BY run_id,batch_id,factory_code,root_material_code,terminal_material_code,terminal_type,supply_mode,source_month
+        ORDER BY factory_code,terminal_material_code,source_month,root_material_code,terminal_type,supply_mode
+        LIMIT #{offset},#{pageSize}
+    </select>
+    <select id="countShortagePage" resultType="long">
+        SELECT COUNT(*) FROM (SELECT 1 FROM mrp_terminal_demand WHERE <include refid="shortageFilter"/>
+        GROUP BY run_id,batch_id,factory_code,root_material_code,terminal_material_code,terminal_type,supply_mode,source_month) grouped
+    </select>
+    <sql id="shortageSummaryFilter">
+        run_id=#{runId} AND terminal_type &lt;&gt; 'MACHINE_OUTPUT'
+        <if test="factoryCode != null and factoryCode != ''">AND factory_code=#{factoryCode}</if>
+        <if test="terminalMaterialCode != null and terminalMaterialCode != ''">AND terminal_material_code=#{terminalMaterialCode}</if>
+        <if test="sourceMonth != null">AND source_month=#{sourceMonth}</if>
+        <if test="keyword != null and keyword != ''">AND (root_material_code LIKE CONCAT('%',#{keyword},'%') OR terminal_material_code LIKE CONCAT('%',#{keyword},'%'))</if>
+    </sql>
+    <select id="selectShortageSummary" resultType="com.mrp.mrp.domain.MrpTerminalDemand">
+        SELECT grouped.*,
+            (SELECT COUNT(*) FROM mrp_inventory_pool p WHERE p.batch_id=#{poolBatchId}
+                AND p.factory_code=grouped.factory_code COLLATE utf8mb4_unicode_ci AND p.material_code=grouped.terminal_material_code COLLATE utf8mb4_unicode_ci) inventory_pool_count,
+            (SELECT COALESCE(SUM(p.available_qty),0) FROM mrp_inventory_pool p WHERE p.batch_id=#{poolBatchId}
+                AND p.factory_code=grouped.factory_code COLLATE utf8mb4_unicode_ci AND p.material_code=grouped.terminal_material_code COLLATE utf8mb4_unicode_ci) available_qty,
+            (SELECT COALESCE(SUM(p.allocated_qty),0) FROM mrp_inventory_pool p WHERE p.batch_id=#{poolBatchId}
+                AND p.factory_code=grouped.factory_code COLLATE utf8mb4_unicode_ci AND p.material_code=grouped.terminal_material_code COLLATE utf8mb4_unicode_ci) allocated_qty,
+            (SELECT COUNT(*) FROM mrp_stock_risk r WHERE r.batch_id=#{riskBatchId} AND r.run_id=grouped.run_id
+                AND (r.factory_code=grouped.factory_code COLLATE utf8mb4_unicode_ci
+                    OR (r.factory_code IS NULL AND (SELECT COUNT(DISTINCT legacy_d.factory_code)
+                        FROM mrp_terminal_demand legacy_d WHERE legacy_d.run_id=r.run_id
+                        AND legacy_d.terminal_material_code=r.material_code COLLATE utf8mb4_unicode_ci
+                        AND legacy_d.terminal_type &lt;&gt; 'MACHINE_OUTPUT')=1))
+                AND r.material_code=grouped.terminal_material_code COLLATE utf8mb4_unicode_ci AND r.resolved_at IS NULL
+                AND (r.warehouse_code IS NULL OR EXISTS (SELECT 1 FROM mrp_inventory_pool p WHERE p.batch_id=#{poolBatchId}
+                    AND p.factory_code=grouped.factory_code COLLATE utf8mb4_unicode_ci AND p.material_code=grouped.terminal_material_code COLLATE utf8mb4_unicode_ci
+                    AND p.warehouse_code COLLATE utf8mb4_unicode_ci=r.warehouse_code COLLATE utf8mb4_unicode_ci))) warehouse_risk_count,
+            (SELECT COUNT(DISTINCT d.root_material_code) FROM mrp_terminal_demand d
+                WHERE d.run_id=grouped.run_id AND d.factory_code=grouped.factory_code COLLATE utf8mb4_unicode_ci
+                    AND d.terminal_material_code=grouped.terminal_material_code COLLATE utf8mb4_unicode_ci
+                    AND d.terminal_type=grouped.terminal_type COLLATE utf8mb4_unicode_ci AND d.supply_mode=grouped.supply_mode COLLATE utf8mb4_unicode_ci) affected_machine_count
+            ,(SELECT COUNT(*) FROM mrp_decision_issue i WHERE i.batch_id=#{issueBatchId}
+                AND i.status='OPEN' AND i.scope_type='MATERIAL'
+                AND (i.factory_code=grouped.factory_code COLLATE utf8mb4_unicode_ci
+                    OR (i.factory_code IS NULL AND (SELECT COUNT(DISTINCT legacy_d.factory_code)
+                        FROM mrp_terminal_demand legacy_d WHERE legacy_d.run_id=grouped.run_id
+                        AND legacy_d.terminal_material_code=i.scope_key COLLATE utf8mb4_unicode_ci
+                        AND legacy_d.terminal_type &lt;&gt; 'MACHINE_OUTPUT')=1))
+                AND i.scope_key=grouped.terminal_material_code COLLATE utf8mb4_unicode_ci) pending_issue_count
+            ,(SELECT COUNT(*) FROM mrp_material_policy_notice n WHERE n.run_id=grouped.run_id
+                AND n.factory_code=grouped.factory_code COLLATE utf8mb4_unicode_ci AND n.material_code=grouped.terminal_material_code COLLATE utf8mb4_unicode_ci
+                AND n.missing_type IN ('EXPLOSION','BOTH') AND n.default_explosion_confirmed_at IS NULL) pending_policy_count
+        FROM (SELECT run_id,batch_id,factory_code,terminal_material_code,terminal_type,supply_mode,SUM(quantity) quantity
+            FROM mrp_terminal_demand WHERE <include refid="shortageSummaryFilter"/>
+            GROUP BY run_id,batch_id,factory_code,terminal_material_code,terminal_type,supply_mode) grouped
+        ORDER BY grouped.factory_code,grouped.terminal_material_code,grouped.terminal_type,grouped.supply_mode
+        LIMIT #{offset},#{pageSize}
+    </select>
+    <select id="countShortageSummary" resultType="long">
+        SELECT COUNT(*) FROM (SELECT 1 FROM mrp_terminal_demand WHERE <include refid="shortageSummaryFilter"/>
+        GROUP BY run_id,batch_id,factory_code,terminal_material_code,terminal_type,supply_mode) grouped
+    </select>
+    <select id="selectShortagePools" resultType="com.mrp.mrp.domain.MrpInventoryPool">
+        SELECT * FROM mrp_inventory_pool WHERE batch_id=#{batchId} AND factory_code=#{factoryCode}
+            AND material_code=#{materialCode}
+        ORDER BY warehouse_code, id LIMIT #{offset},#{pageSize}
+    </select>
+    <select id="countShortagePools" resultType="long">
+        SELECT COUNT(*) FROM mrp_inventory_pool WHERE batch_id=#{batchId} AND factory_code=#{factoryCode}
+            AND material_code=#{materialCode}
+    </select>
+    
+    <select id="selectByBatchId" resultType="com.mrp.mrp.domain.MrpTerminalDemand">
+        SELECT * FROM mrp_terminal_demand WHERE batch_id=#{batchId} ORDER BY root_material_code, terminal_material_code, source_month
+    </select>
+    
+    <select id="selectAggregatedByBatchId" resultType="com.mrp.mrp.domain.MrpTerminalDemand">
+        SELECT 
+            batch_id, factory_code, terminal_material_code, terminal_type, source_month,
+            SUM(quantity) as quantity
+        FROM mrp_terminal_demand 
+        WHERE batch_id=#{batchId} AND terminal_type &lt;&gt; 'MACHINE_OUTPUT'
+        GROUP BY factory_code, terminal_material_code, terminal_type, source_month
+        ORDER BY terminal_material_code, source_month
+    </select>
+
+    <select id="selectAggregatedByRunId" resultType="com.mrp.mrp.domain.MrpTerminalDemand">
+        SELECT
+            run_id, batch_id, factory_code, root_material_code, terminal_material_code,
+            terminal_type, supply_mode, source_month, SUM(quantity) AS quantity
+        FROM mrp_terminal_demand
+        WHERE run_id=#{runId} AND terminal_type &lt;&gt; 'MACHINE_OUTPUT'
+        GROUP BY run_id, batch_id, factory_code, root_material_code,
+                 terminal_material_code, terminal_type, supply_mode, source_month
+        ORDER BY root_material_code, terminal_material_code, source_month
+    </select>
+
+    <delete id="deleteByRunId">
+        DELETE FROM mrp_terminal_demand WHERE run_id=#{runId}
+    </delete>
+    <delete id="deleteMaterialByRunId">
+        DELETE FROM mrp_terminal_demand WHERE run_id=#{runId} AND terminal_type &lt;&gt; 'MACHINE_OUTPUT'
+    </delete>
+</mapper>

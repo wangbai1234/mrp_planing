@@ -4,9 +4,12 @@ import com.mrp.bom.domain.BomDetail;
 import com.mrp.bom.domain.BomMaterial;
 import com.mrp.bom.domain.BomTreeNodeV2;
 import com.mrp.bom.service.BomService;
+import com.mrp.bom.service.BomSyncTaskService;
+import com.mrp.bom.domain.BomSyncTask;
 import com.mrp.common.response.ApiResponse;
 import com.mrp.common.response.PageResult;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,9 +20,11 @@ import java.util.Map;
 public class BomController {
 
     private final BomService bomService;
+    private final BomSyncTaskService syncTasks;
 
-    public BomController(BomService bomService) {
+    public BomController(BomService bomService, BomSyncTaskService syncTasks) {
         this.bomService = bomService;
+        this.syncTasks = syncTasks;
     }
 
     @GetMapping("/materials")
@@ -53,9 +58,19 @@ public class BomController {
     }
 
     @PostMapping("/sync")
-    public ResponseEntity<ApiResponse<Map<String, Object>>> syncFromOracle() {
-        Map<String, Object> result = bomService.syncFromOracle();
-        return ResponseEntity.ok(ApiResponse.ok(result));
+    public ResponseEntity<ApiResponse<BomSyncTask>> syncFromOracle() {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(ApiResponse.ok(syncTasks.start()));
+    }
+
+    @GetMapping("/sync/latest")
+    public ResponseEntity<ApiResponse<BomSyncTask>> latestSync() {
+        return ResponseEntity.ok(ApiResponse.ok(syncTasks.latest()));
+    }
+
+    @GetMapping("/sync/{taskId}")
+    public ResponseEntity<ApiResponse<BomSyncTask>> getSync(@PathVariable long taskId) {
+        BomSyncTask task = syncTasks.get(taskId);
+        return task == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(ApiResponse.ok(task));
     }
 
     @GetMapping("/status")

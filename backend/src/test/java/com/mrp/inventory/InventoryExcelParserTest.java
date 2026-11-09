@@ -1,6 +1,6 @@
 package com.mrp.inventory;
 
-import com.mrp.MrpApiApplication;
+import com.mrp.BaseIntegrationTest;
 import com.mrp.importexport.excel.InventoryExcelParser;
 import com.mrp.importexport.excel.ParseResult;
 import com.mrp.importexport.excel.TestExcelFileBuilder;
@@ -8,17 +8,13 @@ import com.mrp.inventory.domain.InventoryDetail;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(classes = MrpApiApplication.class)
-@ActiveProfiles("test")
-class InventoryExcelParserTest {
+class InventoryExcelParserTest extends BaseIntegrationTest {
 
     @Autowired
     private InventoryExcelParser parser;

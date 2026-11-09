@@ -21,6 +21,16 @@
         SELECT * FROM import_task WHERE id = #{id}
     </select>
 
+    <select id="selectByIdForUpdate" resultType="com.mrp.task.domain.ImportTask" useCache="false" flushCache="true">
+        SELECT * FROM import_task WHERE id = #{id} FOR UPDATE
+    </select>
+
+    <update id="completePending">
+        UPDATE import_task SET status = 'SUCCEEDED', result_resource_id = #{resultResourceId},
+            finished_at = CURRENT_TIMESTAMP(3), version = version + 1
+        WHERE id = #{id} AND version = #{version} AND status = 'PENDING'
+    </update>
+
     <select id="selectByRequestKey" resultType="com.mrp.task.domain.ImportTask">
         SELECT * FROM import_task WHERE request_key = #{requestKey}
     </select>

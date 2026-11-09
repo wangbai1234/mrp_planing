@@ -33,6 +33,21 @@ const formData = ref({
 const roleDialogVisible = ref(false)
 const roleDialogUser = ref<User | null>(null)
 const selectedRoleIds = ref<number[]>([])
+const temporaryPassword = ref('')
+const temporaryUsername = ref('')
+const passwordDialogVisible = ref(false)
+
+function showTemporaryPassword(username: string, password: string) {
+  temporaryUsername.value = username
+  temporaryPassword.value = password
+  passwordDialogVisible.value = true
+}
+
+function closeTemporaryPassword() {
+  passwordDialogVisible.value = false
+  temporaryPassword.value = ''
+  temporaryUsername.value = ''
+}
 
 async function loadUsers() {
   loading.value = true
@@ -114,7 +129,8 @@ async function handleSave() {
       })
       ElMessage.success('更新成功')
     } else {
-      await createUser(formData.value)
+      const result = await createUser(formData.value)
+      showTemporaryPassword(result.user.username, result.temporaryPassword)
       ElMessage.success('创建成功')
     }
     dialogVisible.value = false
@@ -151,8 +167,9 @@ async function handleToggleStatus(user: User) {
 async function handleResetPassword(user: User) {
   try {
     await ElMessageBox.confirm(`确定重置 "${user.displayName || user.username}" 的密码吗？`, '确认重置', { type: 'warning' })
-    await resetUserPassword(user.id)
-    ElMessage.success('密码已重置为默认密码')
+    const result = await resetUserPassword(user.id)
+    showTemporaryPassword(user.username, result.temporaryPassword)
+    ElMessage.success('密码已重置')
   } catch (e: any) {
     if (e !== 'cancel') {
       ElMessage.error('重置失败: ' + e.message)
@@ -201,6 +218,7 @@ function getRoleNames(user: User): string {
           style="width: 220px"
           clearable
           @keyup.enter="handleSearch"
+          @clear="handleSearch"
         >
           <template #prefix>
             <el-icon><Search /></el-icon>
@@ -213,12 +231,15 @@ function getRoleNames(user: User): string {
         <el-select v-model="roleFilter" placeholder="角色" clearable style="width: 140px" @change="handleSearch">
           <el-option v-for="role in roles" :key="role.id" :label="role.name" :value="role.id" />
         </el-select>
-        <el-button @click="handleSearch">查询</el-button>
       </div>
 
       <el-table :data="users" v-loading="loading" style="width: 100%">
         <el-table-column prop="displayName" label="用户姓名" min-width="120" />
-        <el-table-column prop="username" label="登录账号" min-width="120" />
+        <el-table-column label="登录账号" min-width="180">
+          <template #default="{ row }">
+            {{ row.email || row.username }}
+          </template>
+        </el-table-column>
         <el-table-column label="所属角色" min-width="150">
           <template #default="{ row }">
             {{ getRoleNames(row) }}
@@ -246,10 +267,10 @@ function getRoleNames(user: User): string {
           <template #default="{ row }">
             <PermissionButton permission="user:update" link @click="openEditDialog(row)">编辑</PermissionButton>
             <PermissionButton permission="user:assign_role" link @click="openRoleDialog(row)">分配角色</PermissionButton>
-            <PermissionButton permission="user:update" link @click="handleToggleStatus(row)">
+            <PermissionButton :permission="row.isActive ? 'user:disable' : 'user:enable'" link @click="handleToggleStatus(row)">
               {{ row.isActive ? '禁用' : '启用' }}
             </PermissionButton>
-            <PermissionButton permission="user:update" link @click="handleResetPassword(row)">
+            <PermissionButton permission="user:reset_password" link @click="handleResetPassword(row)">
               <el-icon><RefreshRight /></el-icon>重置密码
             </PermissionButton>
             <PermissionButton permission="user:delete" link type="danger" @click="handleDelete(row)">删除</PermissionButton>
@@ -291,6 +312,15 @@ function getRoleNames(user: User): string {
         <template #footer>
           <el-button @click="dialogVisible = false">取消</el-button>
           <el-button type="primary" @click="handleSave">确认</el-button>
+        </template>
+      </el-dialog>
+
+      <el-dialog :model-value="passwordDialogVisible" title="临时密码" width="500px" :close-on-click-modal="false" @close="closeTemporaryPassword">
+        <p>账号：{{ temporaryUsername }}</p>
+        <el-input :model-value="temporaryPassword" readonly aria-label="临时密码" />
+        <p>请将临时密码交给该用户。首次登录必须修改密码，关闭后将无法再次查看。</p>
+        <template #footer>
+          <el-button type="primary" @click="closeTemporaryPassword">关闭</el-button>
         </template>
       </el-dialog>
 

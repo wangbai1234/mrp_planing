@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.mrp.repository.FactoryMasterMapper">
+    <sql id="columns">id, factory_code AS factoryCode, factory_name AS factoryName,
+        enabled, created_by AS createdBy, created_at AS createdAt,
+        updated_by AS updatedBy, updated_at AS updatedAt</sql>
+    <sql id="pageWhere">
+        WHERE factory_code IN <foreach collection="visible" item="code" open="(" separator="," close=")">#{code}</foreach>
+        <if test="keyword != null and keyword != ''">
+            AND (factory_code LIKE CONCAT('%',#{keyword},'%') OR factory_name LIKE CONCAT('%',#{keyword},'%'))
+        </if>
+        <if test="status == 'ENABLED'">AND enabled=1</if>
+        <if test="status == 'DISABLED'">AND enabled=0</if>
+    </sql>
+    <select id="selectAll" resultType="map">SELECT <include refid="columns"/> FROM mrp_factory ORDER BY id</select>
+    <select id="selectPage" resultType="map">
+        SELECT <include refid="columns"/> FROM mrp_factory <include refid="pageWhere"/>
+        ORDER BY id LIMIT #{limit} OFFSET #{offset}
+    </select>
+    <select id="countPage" resultType="int">SELECT COUNT(*) FROM mrp_factory <include refid="pageWhere"/></select>
+    <select id="selectEnabledCodes" resultType="string">SELECT factory_code FROM mrp_factory WHERE enabled=1 ORDER BY id</select>
+    <select id="countEnabled" resultType="int">SELECT COUNT(*) FROM mrp_factory WHERE factory_code=#{code} AND enabled=1</select>
+    <select id="selectByCode" resultType="map">
+        SELECT <include refid="columns"/> FROM mrp_factory WHERE factory_code=#{code}
+    </select>
+    <select id="countReferences" resultType="int">
+        SELECT (SELECT COUNT(*) FROM factory_warehouse_mapping WHERE factory_code=#{code})
+             + (SELECT COUNT(*) FROM forecast_detail WHERE factory_code=#{code})
+             + (SELECT COUNT(*) FROM mrp_production_calendar WHERE factory_code=#{code})
+             + (SELECT COUNT(*) FROM mrp_batch_factory_scope WHERE factory_code=#{code})
+             + (SELECT COUNT(*) FROM forecast_draft_line WHERE factory_code=#{code})
+    </select>
+    <insert id="insert">
+        INSERT INTO mrp_factory(factory_code,factory_name,enabled,created_by,updated_by)
+        VALUES(#{code},#{name},#{enabled},#{userId},#{userId})
+    </insert>
+    <update id="update">
+        UPDATE mrp_factory SET factory_name=#{name}, enabled=#{enabled}, updated_by=#{userId},
+            updated_at=NOW(3) WHERE factory_code=#{code}
+    </update>
+    <delete id="delete">DELETE FROM mrp_factory WHERE factory_code=#{code}</delete>
+</mapper>

@@ -1,0 +1,87 @@
+{
+  "months": [
+    "2026-11",
+    "2026-12",
+    "2027-01",
+    "2027-02",
+    "2027-03",
+    "2027-04"
+  ],
+  "firstGridDate": "2026-10-29",
+  "lastGridDate": "2027-04-30",
+  "snapshotId": 33,
+  "datasets": {
+    "accuracy": {
+      "rootDemands": 50,
+      "expandedDetails": 1380,
+      "demandGroups": 1020,
+      "dailyRows": 8436,
+      "forecastFileRows": 10,
+      "rootSkuCount": 5,
+      "reachableMaterials": 81,
+      "stopNodes": 0
+    },
+    "accuracy-stock": {
+      "rootDemands": 50,
+      "expandedDetails": 1380,
+      "demandGroups": 1020,
+      "dailyRows": 8436,
+      "forecastFileRows": 10,
+      "rootSkuCount": 5,
+      "reachableMaterials": 81,
+      "stopNodes": 0
+    },
+    "all-leaf": {
+      "rootDemands": 804,
+      "expandedDetails": 5112,
+      "demandGroups": 4200,
+      "dailyRows": 52500,
+      "forecastFileRows": 134,
+      "rootSkuCount": 67,
+      "reachableMaterials": 217,
+      "stopNodes": 0
+    },
+    "load-frontier": {
+      "rootDemands": 16944,
+      "expandedDetails": 21324,
+      "demandGroups": 36528,
+      "dailyRows": 456600,
+      "forecastFileRows": 2824,
+      "rootSkuCount": 1412,
+      "reachableMaterials": 1565,
+      "stopNodes": 1344
+    },
+    "accuracy-distinct": {
+      "rootDemands": 25,
+      "expandedDetails": 515,
+      "demandGroups": 515,
+      "dailyRows": 4194,
+      "forecastFileRows": 5,
+      "rootSkuCount": 5,
+      "reachableMaterials": 88,
+      "stopNodes": 0
+    },
+    "load-distinct": {
+      "rootDemands": 8466,
+      "expandedDetails": 9768,
+      "demandGroups": 17928,
+      "dailyRows": 224100,
+      "forecastFileRows": 1411,
+      "rootSkuCount": 1411,
+      "reachableMaterials": 1556,
+      "stopNodes": 1361
+    }
+  },
+  "workbooks": 29,
+  "rootExamples": [
+    "6839AA000359",
+    "6839AA000685",
+    "6839AA000654",
+    "6839AA000653",
+    "6839AA000664"
+  ],
+  "limitations": [
+    "100000 CSV is import IO stress, not 100000 unique roots; importer accepts xlsx only, convert with provided artifact tool exporter.",
+    "load-frontier deliberately STOPs before unclassified descendants; all-leaf and accuracy fixtures exercise full-leaf expansion on unchanged master data."
+  ]
+}

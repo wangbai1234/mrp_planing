@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { ref, inject, onMounted, computed } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { get, post, upload, download } from '../../api/client'
 import type { InventorySnapshot, InventoryItem } from '../../api/types'
+import { usePermission } from '../../composables/usePermission'
 
-const setCrumb = inject<(g: string, p: string) => void>('setCrumb')!
+const { hasPermission } = usePermission()
 
 const snapshots = ref<InventorySnapshot[]>([])
 const loading = ref(false)
@@ -15,6 +16,8 @@ const uploadLoading = ref(false)
 const confirmLoading = ref(false)
 const isDragOver = ref(false)
 const fileInput = ref<HTMLInputElement | null>(null)
+const historyVisible = ref(false)
+const selectedSnapshot = ref<InventorySnapshot | null>(null)
 
 const selectedSnapshotId = ref<number | null>(null)
 const snapshotItems = ref<InventoryItem[]>([])
@@ -30,34 +33,22 @@ const detailsSearch = ref('')
 
 const currentStep = computed(() => stagingResult.value ? 1 : 0)
 
-const filteredSnapshots = computed(() => {
-  const keyword = listSearch.value.trim().toLowerCase()
-  if (!keyword) return snapshots.value
-  return snapshots.value.filter(s =>
-    String(s.id).includes(keyword) ||
-    (s.snapshotDate || '').toLowerCase().includes(keyword) ||
-    (s.status || '').toLowerCase().includes(keyword)
-  )
-})
+const listTotal = ref(0)
 
-const listTotal = computed(() => filteredSnapshots.value.length)
+function inventoryQualityLabel(quality?: string) {
+  if (quality === 'GOOD') return '良品'
+  if (quality === 'DEFECTIVE') return '不良品'
+  return '未维护'
+}
 
-const pagedSnapshots = computed(() => {
-  const start = (listCurrentPage.value - 1) * listPageSize.value
-  return filteredSnapshots.value.slice(start, start + listPageSize.value)
-})
+function warehouseLabel(code?: string, name?: string) {
+  if (name) return name
+  return code || '-'
+}
 
-const filteredItems = computed(() => {
-  const keyword = detailsSearch.value.trim().toLowerCase()
-  if (!keyword) return snapshotItems.value
-  return snapshotItems.value.filter(item =>
-    (item.materialId || '').toLowerCase().includes(keyword) ||
-    (item.materialName || '').toLowerCase().includes(keyword) ||
-    (item.supplierName || '').toLowerCase().includes(keyword) ||
-    (item.projectModel || '').toLowerCase().includes(keyword) ||
-    (item.inventoryCategory || '').toLowerCase().includes(keyword)
-  )
-})
+function inventoryQuantity(item: InventoryItem) {
+  return item.inventoryQuantity ?? item.inventoryQty ?? item.shippingAvailableQty ?? 0
+}
 
 function formatBeijingTime(utcStr: string): string {
   if (!utcStr) return ''
@@ -77,8 +68,11 @@ function formatBeijingTime(utcStr: string): string {
 async function loadSnapshots() {
   loading.value = true
   try {
-    const res = await get<any>('/inventory-snapshots')
-    snapshots.value = res || []
+    const params = new URLSearchParams({ page: String(listCurrentPage.value), pageSize: String(listPageSize.value) })
+    if (listSearch.value.trim()) params.set('keyword', listSearch.value.trim())
+    const res = await get<any>(`/inventory-snapshots/page?${params}`)
+    snapshots.value = res?.items || []
+    listTotal.value = res?.total || 0
   } catch (e: any) {
     ElMessage.error('加载列表失败: ' + e.message)
   } finally {
@@ -86,33 +80,42 @@ async function loadSnapshots() {
   }
 }
 
+let detailsRequest = 0
 async function loadSnapshotDetails(snapshotId: number, page = 1) {
+  const request = ++detailsRequest
   detailsLoading.value = true
   selectedSnapshotId.value = snapshotId
   currentPage.value = page
-  detailsSearch.value = ''
   try {
-    const res = await get<any>(`/inventory-snapshots/${snapshotId}?page=${page}&pageSize=${pageSize.value}`)
+    const params = new URLSearchParams({ page: String(page), pageSize: String(pageSize.value) })
+    if (detailsSearch.value.trim()) params.set('keyword', detailsSearch.value.trim())
+    const res = await get<any>(`/inventory-snapshots/${snapshotId}?${params}`)
+    if (request !== detailsRequest) return
     snapshotItems.value = res?.items || []
     totalItems.value = res?.total || 0
   } catch (e: any) {
-    ElMessage.error('加载详情失败: ' + e.message)
+    if (request === detailsRequest) ElMessage.error('加载详情失败: ' + e.message)
   } finally {
-    detailsLoading.value = false
+    if (request === detailsRequest) detailsLoading.value = false
   }
 }
 
 function handleSnapshotClick(row: InventorySnapshot) {
+  selectedSnapshot.value = row
+  detailsSearch.value = ''
   loadSnapshotDetails(row.id)
+  historyVisible.value = false
 }
 
 function handleListPageChange(page: number) {
   listCurrentPage.value = page
+  loadSnapshots()
 }
 
 function handleListSizeChange(size: number) {
   listPageSize.value = size
   listCurrentPage.value = 1
+  loadSnapshots()
 }
 
 function handlePageChange(page: number) {
@@ -130,10 +133,12 @@ function handleSizeChange(size: number) {
 
 function handleListSearch() {
   listCurrentPage.value = 1
+  loadSnapshots()
 }
 
 function handleDetailsSearch() {
   currentPage.value = 1
+  if (selectedSnapshotId.value) void loadSnapshotDetails(selectedSnapshotId.value, 1)
 }
 
 async function downloadTemplate() {
@@ -200,9 +205,9 @@ async function handleUpload(f: File) {
     const formData = new FormData()
     formData.append('file', f)
     const res = await upload<any>('/inventory-imports/items', formData)
-    stagingResult.value = res.data
+    stagingResult.value = res
     if (res?.errorRows > 0) {
-      ElMessage.warning(`解析完成: ${res.successRows} 行成功, ${res.errorRows} 行有错误`)
+      ElMessage.error(`解析完成: ${res.successRows} 行成功, ${res.errorRows} 行有错误，无法导入`)
     }
   } catch (e: any) {
     ElMessage.error('上传失败: ' + e.message)
@@ -218,16 +223,17 @@ function removeFile() {
 }
 
 async function handleConfirm() {
-  if (!stagingResult.value?.taskId) return
+  if (!hasPermission('inventory:import_confirm') || !stagingResult.value?.taskId) return
 
   confirmLoading.value = true
   try {
-    const res = await post<any>(`/inventory-imports/items/${stagingResult.value.taskId}/confirm`)
-    if (res.success) {
-      ElMessage.success('导入成功')
-      handleClose()
-      await loadSnapshots()
-    }
+    await post<any>(`/inventory-imports/items/${stagingResult.value.taskId}/confirm`)
+    ElMessage.success('导入成功')
+    handleClose()
+    listCurrentPage.value = 1
+    listSearch.value = ''
+    await loadSnapshots()
+    if (snapshots.value[0]) handleSnapshotClick(snapshots.value[0])
   } catch (e: any) {
     ElMessage.error('确认失败: ' + e.message)
   } finally {
@@ -242,7 +248,7 @@ function handleClose() {
   uploadLoading.value = false
 }
 
-function openImportDialog() {
+async function openImportDialog() {
   stagingResult.value = null
   file.value = null
   importVisible.value = true
@@ -254,9 +260,9 @@ function formatFileSize(bytes: number): string {
   return (bytes / (1024 * 1024)).toFixed(1) + ' MB'
 }
 
-onMounted(() => {
-  setCrumb('数据管理', '库存管理')
-  loadSnapshots()
+onMounted(async () => {
+  await loadSnapshots()
+  if (snapshots.value[0]) handleSnapshotClick(snapshots.value[0])
 })
 </script>
 
@@ -264,94 +270,37 @@ onMounted(() => {
   <div class="inventory-page">
     <div class="page-header">
       <h1 class="page-title">库存管理</h1>
-      <el-button type="primary" @click="openImportDialog">
-        <el-icon><Upload /></el-icon>导入
-      </el-button>
+      <div class="page-actions"><el-button @click="historyVisible = true">历史版本</el-button><el-button v-if="hasPermission('inventory:import')" type="primary" @click="openImportDialog"><el-icon><Upload /></el-icon>导入</el-button></div>
     </div>
 
-    <div class="table-card" v-loading="loading">
+    <div class="table-card" v-loading="detailsLoading || loading">
       <div class="table-title-bar">
-        <span class="table-title-text">历史记录</span>
-        <el-input
-          v-model="listSearch"
-          placeholder="搜索ID / 日期 / 状态"
-          clearable
-          style="width: 220px"
-          @input="handleListSearch"
-        />
+        <span class="table-title-text">{{ selectedSnapshot ? `库存快照 #${selectedSnapshot.id} · ${selectedSnapshot.snapshotDate}` : '库存数据' }}</span>
+        <el-input v-model="detailsSearch" placeholder="搜索仓库 / 料号 / 名称 / 供应商" clearable style="width:220px" @keyup.enter="handleDetailsSearch" @clear="handleDetailsSearch" />
       </div>
-      <el-table :data="pagedSnapshots" size="default" border @row-click="handleSnapshotClick" highlight-current-row>
-        <el-table-column prop="id" label="ID" width="80" />
-        <el-table-column prop="snapshotDate" label="快照日期" width="140" />
-        <el-table-column prop="status" label="状态" width="120">
+      <el-table :data="snapshotItems" size="default" border max-height="600" style="width: 100%;">
+        <el-table-column label="仓库" width="120" fixed>
+          <template #default="{ row }">{{ warehouseLabel(row.warehouseCode, row.warehouseName) }}</template>
+        </el-table-column>
+        <el-table-column prop="inventoryCategory" label="物料类别" width="120" fixed />
+        <el-table-column prop="materialId" label="物料料号" width="150" fixed />
+        <el-table-column prop="inventoryQuality" label="品质" width="90">
           <template #default="{ row }">
-            <el-tag :type="row.status === 'IMPORTED' ? 'success' : 'info'" size="small" effect="plain">
-              {{ row.status === 'IMPORTED' ? '已导入' : row.status }}
+            <el-tag :type="row.inventoryQuality === 'GOOD' ? 'success' : 'danger'" size="small">
+              {{ inventoryQualityLabel(row.inventoryQuality) }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="导入时间">
-          <template #default="{ row }">
-            {{ formatBeijingTime(row.createdAt) }}
-          </template>
-        </el-table-column>
-      </el-table>
-      <el-empty v-if="!loading && pagedSnapshots.length === 0" description="暂无库存数据，请先导入" />
-      <div v-if="listTotal > 0" class="pagination-bar">
-        <span class="total-text">共 {{ listTotal }} 条</span>
-        <el-pagination
-          v-model:current-page="listCurrentPage"
-          v-model:page-size="listPageSize"
-          :total="listTotal"
-          :page-sizes="[3, 10, 20]"
-          layout="total, sizes, prev, pager, next"
-          @size-change="handleListSizeChange"
-          @current-change="handleListPageChange"
-        />
-      </div>
-    </div>
-
-    <div v-if="selectedSnapshotId" class="table-card details-card" v-loading="detailsLoading">
-      <div class="table-title-bar">
-        <span class="table-title-text">快照详情</span>
-        <div style="display: flex; align-items: center; gap: 12px;">
-          <el-input
-            v-model="detailsSearch"
-            placeholder="搜索料号 / 物料名称 / 供应商"
-            clearable
-            style="width: 220px"
-            @input="handleDetailsSearch"
-          />
-          <el-button size="small" @click="selectedSnapshotId = null">关闭</el-button>
-        </div>
-      </div>
-      <el-table :data="filteredItems" size="default" border max-height="600" style="width: 100%;">
-        <el-table-column prop="productLine" label="产品线" width="100" fixed />
-        <el-table-column prop="inventoryCategory" label="库存分类" width="100" fixed />
-        <el-table-column prop="materialId" label="料号" width="130" fixed />
-        <el-table-column prop="projectModel" label="项目型号" width="120" />
         <el-table-column prop="materialName" label="物料名称" width="150" />
         <el-table-column prop="supplierName" label="供应商名称" width="130" />
-        <el-table-column prop="productMode" label="产品模式" width="100" />
-        <el-table-column prop="odmSupplierQty" label="ODM供应商仓" width="110" align="right" />
-        <el-table-column prop="xa400Qty" label="XA400咪哈成品仓" width="130" align="right" />
-        <el-table-column prop="xa378Qty" label="XA378永惠成品仓" width="130" align="right" />
-        <el-table-column prop="xa226Qty" label="XA226惠州仓" width="110" align="right" />
-        <el-table-column prop="shippingAvailableQty" label="出货可用库存" width="110" align="right">
+        <el-table-column label="库存数量" min-width="120" align="right">
           <template #default="{ row }">
-            <span style="font-weight: 600; color: #1677FF;">{{ row.shippingAvailableQty }}</span>
+            <span style="font-weight: 600; color: #1677FF;">{{ inventoryQuantity(row) }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="classification" label="分类" width="80" />
-        <el-table-column prop="barcode" label="产品条形码" width="130" />
-        <el-table-column prop="remark" label="备注" width="120" />
-        <el-table-column prop="orderPendingQty" label="订单未交数量" width="110" align="right" />
-        <el-table-column prop="salesStatus" label="销售状态" width="90" />
-        <el-table-column prop="parentRecord" label="父记录" width="100" />
+        <el-table-column prop="remark" label="备注" min-width="150" />
       </el-table>
-      <el-empty v-if="!detailsLoading && filteredItems.length === 0" description="暂无数据" />
       <div v-if="totalItems > 0" class="pagination-bar">
-        <span class="total-text">共 {{ totalItems }} 条</span>
         <el-pagination
           v-model:current-page="currentPage"
           v-model:page-size="pageSize"
@@ -363,6 +312,15 @@ onMounted(() => {
         />
       </div>
     </div>
+
+    <el-dialog v-model="historyVisible" title="历史版本" width="720px">
+      <div class="filter-bar"><el-input v-model="listSearch" placeholder="搜索ID / 日期 / 状态" clearable style="width:220px" @clear="handleListSearch" @keyup.enter="handleListSearch" /></div>
+      <el-table :data="snapshots" border v-loading="loading" @row-click="handleSnapshotClick" highlight-current-row>
+        <el-table-column prop="id" label="快照" width="90"><template #default="{row}">#{{ row.id }}</template></el-table-column><el-table-column prop="snapshotDate" label="快照日期" width="140" /><el-table-column prop="status" label="状态" width="110"><template #default="{row}">{{ row.status === 'IMPORTED' ? '已导入' : row.status }}</template></el-table-column><el-table-column label="导入时间"><template #default="{row}">{{ formatBeijingTime(row.createdAt) }}</template></el-table-column><el-table-column label="操作" width="90"><template #default="{row}"><el-button link type="primary" @click.stop="handleSnapshotClick(row)">查看</el-button></template></el-table-column>
+      </el-table>
+      <el-empty v-if="!loading && snapshots.length === 0" description="暂无历史版本" />
+      <el-pagination v-if="listTotal" v-model:current-page="listCurrentPage" v-model:page-size="listPageSize" :total="listTotal" :page-sizes="[3,10,20]" layout="total, sizes, prev, pager, next" @size-change="handleListSizeChange" @current-change="handleListPageChange" />
+    </el-dialog>
 
     <el-dialog v-model="importVisible" :width="760" :before-close="handleClose" class="import-dialog" :close-on-click-modal="false">
       <template #header>
@@ -467,16 +425,15 @@ onMounted(() => {
               </template>
             </el-table-column>
             <el-table-column prop="row" label="行号" width="60" />
-            <el-table-column prop="inventoryCategory" label="库存分类" width="90" />
-            <el-table-column prop="materialId" label="料号" width="120" />
-            <el-table-column prop="projectModel" label="项目型号" width="100" />
-            <el-table-column prop="materialName" label="物料名称" width="120" />
-            <el-table-column prop="supplierName" label="供应商" width="100" />
-            <el-table-column prop="odmSupplierQty" label="ODM仓" width="70" align="right" />
-            <el-table-column prop="xa400Qty" label="XA400" width="60" align="right" />
-            <el-table-column prop="xa378Qty" label="XA378" width="60" align="right" />
-            <el-table-column prop="xa226Qty" label="XA226" width="60" align="right" />
-            <el-table-column prop="shippingAvailableQty" label="可用库存" width="70" align="right" />
+            <el-table-column prop="warehouseCode" label="仓库编码" width="130" />
+            <el-table-column prop="inventoryCategory" label="物料类别" width="100" />
+            <el-table-column prop="materialId" label="物料料号" width="130" />
+            <el-table-column prop="inventoryQuality" label="品质" width="80">
+              <template #default="{ row }">{{ inventoryQualityLabel(row.inventoryQuality) }}</template>
+            </el-table-column>
+            <el-table-column prop="supplierName" label="供应商" width="120" />
+            <el-table-column label="库存数量" width="100" align="right"><template #default="{row}">{{ row.inventoryQuantity ?? row.inventoryQty ?? row.shippingAvailableQty ?? 0 }}</template></el-table-column>
+            <el-table-column prop="remark" label="备注" min-width="150" />
             <el-table-column prop="message" label="错误信息" min-width="150" />
           </el-table>
         </div>
@@ -486,10 +443,10 @@ onMounted(() => {
         <div class="rules-title">上传的 Excel 文件需符合以下规范：</div>
         <div class="rules-list">
           <div class="rule-item">1. 仅支持上传小于 30 MB 且不超过 50,000 条记录的 .xlsx 文件</div>
-          <div class="rule-item">2. 必填项（库存分类、料号、供应商名称）不能为空</div>
+          <div class="rule-item">2. 仓库编码、物料料号、库存数量必填；品质依据已维护仓库属性自动识别，无需在 Excel 中填写品质列</div>
           <div class="rule-item">3. 料号必须在物料管理表中存在</div>
           <div class="rule-item">4. 不能存在合并单元格</div>
-          <div class="rule-item">5. 项目型号、物料名称根据料号自动查询，出货可用库存自动计算</div>
+          <div class="rule-item">5. 同一文件可包含多个仓库；仓库须已启用并确认良品属性，按仓库编码分别汇总</div>
         </div>
       </div>
 
@@ -497,6 +454,7 @@ onMounted(() => {
         <div class="dialog-footer">
           <el-button @click="handleClose" class="btn-cancel">取消</el-button>
           <el-button
+            v-if="hasPermission('inventory:import_confirm')"
             type="primary"
             @click="handleConfirm"
             :loading="confirmLoading"

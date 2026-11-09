@@ -28,10 +28,13 @@ public interface ForecastMapper {
 
     int insertDetails(@Param("list") List<ForecastDetail> details);
 
+    int assignPrioritySequence(@Param("versionId") Long versionId);
+
     List<ForecastDetail> selectDetailsByVersionId(@Param("versionId") Long versionId);
 
     List<ForecastDetail> selectDetailsByVersionIdAndMaterial(@Param("versionId") Long versionId,
-                                                              @Param("materialId") String materialId);
+                                                              @Param("materialId") String materialId,
+                                                              @Param("factoryCode") String factoryCode);
 
     List<ForecastDetail> selectDetailsPage(@Param("versionId") Long versionId,
                                             @Param("keyword") String keyword,

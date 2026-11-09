@@ -15,7 +15,7 @@
 
 ```text
 mrp:{env}:task:progress:{taskId}
-mrp:{env}:plan:summary:{planVersionId}:{factoryCode}
+mrp:{env}:plan:summary:{batchId}:{factoryCode}
 mrp:{env}:idempotency:{userId}:{requestKey}
 mrp:{env}:lock:recalc:{factoryCode}
 mrp:{env}:auth:token-version:{userId}

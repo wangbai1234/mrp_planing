@@ -1,0 +1,26 @@
+/* Shared alignment for list controls across top-level pages and dialogs. */
+.page-header > .page-actions,
+.page-header > .actions {
+  margin-left: auto;
+}
+
+.filter-bar > .el-input:not(.el-date-editor),
+.filter-bar > .filter-left,
+.list-filters > .el-input,
+.filters > .el-input:last-of-type,
+.history-filter > .el-input,
+.permission-config .toolbar > .el-input {
+  order: 10;
+  margin-left: auto;
+}
+
+.pagination-bar,
+.pagination {
+  justify-content: flex-end;
+}
+
+.el-pagination {
+  width: max-content;
+  max-width: 100%;
+  margin-left: auto;
+}

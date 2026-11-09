@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.inventory.repository.InventorySnapshotAccessMapper">
+    <!-- Raw snapshots have no frozen mapping. Use the same current enabled mapping as normalization,
+         and also check explicit legacy/balance factories so remapping cannot hide existing contents. -->
+    <sql id="visibleScope">
+        #{userId} IS NOT NULL AND (
+          EXISTS (SELECT 1 FROM user_role ur JOIN role r ON r.id=ur.role_id
+            JOIN role_data_scope ds ON ds.role_id=r.id
+            WHERE ur.user_id=#{userId} AND r.status='ACTIVE' AND ds.scope_type='ALL')
+          OR (
+            (NULLIF(TRIM(s.warehouse_code),'') IS NOT NULL
+              OR EXISTS (SELECT 1 FROM inventory_item i WHERE i.snapshot_id=s.id)
+              OR EXISTS (SELECT 1 FROM inventory_detail d WHERE d.snapshot_id=s.id)
+              OR EXISTS (SELECT 1 FROM mrp_inventory_balance b WHERE b.inventory_snapshot_id=s.id))
+            AND (s.warehouse_code IS NULL OR s.warehouse_code='' OR EXISTS (
+              SELECT 1 FROM factory_warehouse_mapping m WHERE m.enabled=1 AND m.warehouse_code=s.warehouse_code
+              AND <include refid="com.mrp.mrp.repository.PlanningAccessMapper.factoryGrant"><property name="factory" value="m.factory_code"/></include>))
+            AND NOT EXISTS (SELECT 1 FROM inventory_item i WHERE i.snapshot_id=s.id AND
+              (NULLIF(TRIM(i.warehouse_code),'') IS NULL OR NOT EXISTS (
+              SELECT 1 FROM factory_warehouse_mapping m WHERE m.enabled=1 AND m.warehouse_code=i.warehouse_code
+              AND <include refid="com.mrp.mrp.repository.PlanningAccessMapper.factoryGrant"><property name="factory" value="m.factory_code"/></include>)))
+            AND NOT EXISTS (SELECT 1 FROM inventory_detail d WHERE d.snapshot_id=s.id AND NOT
+              <include refid="com.mrp.mrp.repository.PlanningAccessMapper.factoryGrant"><property name="factory" value="d.factory_code"/></include>)
+            AND NOT EXISTS (SELECT 1 FROM mrp_inventory_balance b WHERE b.inventory_snapshot_id=s.id AND NOT
+              <include refid="com.mrp.mrp.repository.PlanningAccessMapper.factoryGrant"><property name="factory" value="b.factory_code"/></include>)
+          )
+        )
+    </sql>
+    <sql id="keywordFilter">
+        <if test="keyword != null and keyword != ''">
+            AND (CAST(s.id AS CHAR) LIKE CONCAT('%',#{keyword},'%')
+              OR CAST(s.snapshot_date AS CHAR) LIKE CONCAT('%',#{keyword},'%')
+              OR s.status LIKE CONCAT('%',#{keyword},'%'))
+        </if>
+    </sql>
+    <select id="canRead" resultType="int">
+        SELECT COUNT(*) FROM inventory_snapshot s WHERE s.id=#{snapshotId} AND <include refid="visibleScope"/>
+    </select>
+    <select id="visible" resultType="com.mrp.inventory.domain.InventorySnapshot">
+        SELECT s.* FROM inventory_snapshot s WHERE <include refid="visibleScope"/>
+        <include refid="keywordFilter"/>
+        <if test="warehouseCode != null and warehouseCode != ''">
+            AND (s.warehouse_code=#{warehouseCode} OR EXISTS (SELECT 1 FROM inventory_item i
+              WHERE i.snapshot_id=s.id AND i.warehouse_code=#{warehouseCode}))
+        </if>
+        ORDER BY s.id DESC
+        <if test="limit != null">LIMIT #{limit} OFFSET #{offset}</if>
+    </select>
+    <select id="countVisible" resultType="long">
+        SELECT COUNT(*) FROM inventory_snapshot s WHERE <include refid="visibleScope"/>
+        <include refid="keywordFilter"/>
+    </select>
+</mapper>

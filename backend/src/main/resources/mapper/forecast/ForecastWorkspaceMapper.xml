@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.forecast.repository.ForecastWorkspaceMapper">
+    <select id="headForUpdate" resultType="map">SELECT current_version_id AS currentVersionId,revision FROM forecast_version_head WHERE id=1 FOR UPDATE</select>
+    <select id="currentHead" resultType="map">SELECT current_version_id AS currentVersionId,revision FROM forecast_version_head WHERE id=1</select>
+    <select id="versionMonths" resultType="string">SELECT DISTINCT DATE_FORMAT(plan_month,'%Y-%m-%d') FROM forecast_detail WHERE version_id=#{id} ORDER BY 1</select>
+    <select id="versionMetadata" resultType="map">
+        SELECT v.source_type AS sourceType,v.parent_version_id AS parentVersionId,
+               COALESCE(creator.display_name,creator.username) AS createdByName,
+               COALESCE(v.published_by,v.created_by) AS publishedBy,
+               COALESCE(publisher.display_name,publisher.username,creator.display_name,creator.username) AS publishedByName,
+               COALESCE(v.published_at,v.created_at) AS publishedAt
+        FROM forecast_version v
+        LEFT JOIN `user` creator ON creator.id=v.created_by
+        LEFT JOIN `user` publisher ON publisher.id=v.published_by
+        WHERE v.id=#{id}
+    </select>
+    <update id="markImportedVersionEffective">
+        UPDATE forecast_version SET published_by=#{userId},published_at=CURRENT_TIMESTAMP(3) WHERE id=#{versionId}
+    </update>
+    <update id="advanceHead">UPDATE forecast_version_head SET current_version_id=#{versionId},revision=revision+1 WHERE id=1</update>
+    <select id="activeDraft" resultType="map">SELECT id,base_version_id AS baseVersionId,status,revision,created_by AS createdBy,created_at AS createdAt,updated_by AS updatedBy,updated_at AS updatedAt FROM forecast_draft WHERE status='DRAFT' LIMIT 1</select>
+    <select id="draftForUpdate" resultType="map">SELECT id,base_version_id AS baseVersionId,status,revision,created_by AS createdBy,created_at AS createdAt,updated_by AS updatedBy,updated_at AS updatedAt FROM forecast_draft WHERE id=#{id} FOR UPDATE</select>
+    <select id="draft" resultType="map">SELECT id,base_version_id AS baseVersionId,status,revision,created_by AS createdBy,created_at AS createdAt,updated_by AS updatedBy,updated_at AS updatedAt FROM forecast_draft WHERE id=#{id}</select>
+    <insert id="createDraft">INSERT INTO forecast_draft(base_version_id,created_by,updated_by) VALUES(#{baseVersionId},#{userId},#{userId})</insert>
+    <select id="lastId" resultType="long">SELECT LAST_INSERT_ID()</select>
+    <insert id="copyFromVersion">
+        INSERT INTO forecast_draft_line(draft_id,factory_code,material_id,material_name,business_line,form_type,project,platform,mold,status,months_json,priority_seq)
+        SELECT #{draftId},factory_code,material_id,MAX(material_name),MAX(business_line),MAX(form_type),MAX(project),MAX(platform),MAX(mold),MAX(status),
+               JSON_OBJECTAGG(DATE_FORMAT(plan_month,'%Y-%m-%d'),forecast_qty),MIN(priority_seq)
+        FROM forecast_detail WHERE version_id=#{baseVersionId} GROUP BY factory_code,material_id ORDER BY MIN(priority_seq),MIN(id)
+    </insert>
+    <sql id="lineColumns">id,draft_id AS draftId,factory_code AS factoryCode,material_id AS materialId,material_name AS materialName,business_line AS businessLine,form_type AS formType,project,platform,mold,status,months_json AS monthsJson,priority_seq AS prioritySeq,is_deleted AS isDeleted,created_by AS createdBy,created_at AS createdAt,updated_by AS updatedBy,updated_at AS updatedAt</sql>
+    <select id="lines" resultType="map">SELECT <include refid="lineColumns"/> FROM forecast_draft_line WHERE draft_id=#{draftId} ORDER BY priority_seq,id</select>
+    <select id="linesPage" resultType="map">SELECT <include refid="lineColumns"/> FROM forecast_draft_line WHERE draft_id=#{draftId} AND is_deleted=0<if test="keyword != null and keyword != ''"> AND (material_id LIKE CONCAT('%',#{keyword},'%') OR material_name LIKE CONCAT('%',#{keyword},'%') OR factory_code LIKE CONCAT('%',#{keyword},'%'))</if> ORDER BY priority_seq,id LIMIT #{limit} OFFSET #{offset}</select>
+    <select id="countLines" resultType="long">SELECT COUNT(*) FROM forecast_draft_line WHERE draft_id=#{draftId} AND is_deleted=0<if test="keyword != null and keyword != ''"> AND (material_id LIKE CONCAT('%',#{keyword},'%') OR material_name LIKE CONCAT('%',#{keyword},'%') OR factory_code LIKE CONCAT('%',#{keyword},'%'))</if></select>
+    <select id="lineForUpdate" resultType="map">SELECT <include refid="lineColumns"/> FROM forecast_draft_line WHERE id=#{id} AND draft_id=#{draftId} FOR UPDATE</select>
+    <select id="lineByKey" resultType="map">SELECT <include refid="lineColumns"/> FROM forecast_draft_line WHERE draft_id=#{draftId} AND factory_code=#{factoryCode} AND material_id=#{materialId} FOR UPDATE</select>
+    <select id="lineByKeyRead" resultType="map">SELECT <include refid="lineColumns"/> FROM forecast_draft_line WHERE draft_id=#{draftId} AND factory_code=#{factoryCode} AND material_id=#{materialId}</select>
+    <select id="deletedLineByKeyRead" resultType="map">SELECT <include refid="lineColumns"/> FROM forecast_draft_line WHERE draft_id=#{draftId} AND factory_code=#{factoryCode} AND material_id=#{materialId} AND is_deleted=1</select>
+    <insert id="insertLine">INSERT INTO forecast_draft_line(draft_id,factory_code,material_id,material_name,business_line,form_type,project,platform,mold,status,months_json,priority_seq,created_by,updated_by) VALUES(#{draftId},#{line.factoryCode},#{line.materialId},#{line.materialName},#{line.businessLine},#{line.formType},#{line.project},#{line.platform},#{line.mold},#{line.status},#{line.monthsJson},#{line.prioritySeq},#{userId},#{userId})</insert>
+    <update id="updateLine">UPDATE forecast_draft_line SET material_name=#{line.materialName},business_line=#{line.businessLine},form_type=#{line.formType},project=#{line.project},platform=#{line.platform},mold=#{line.mold},status=#{line.status},months_json=#{line.monthsJson},priority_seq=#{line.prioritySeq},is_deleted=0,updated_by=#{userId} WHERE id=#{lineId} AND draft_id=#{draftId}</update>
+    <update id="deleteLine">UPDATE forecast_draft_line SET is_deleted=1,updated_by=#{userId} WHERE id=#{lineId} AND draft_id=#{draftId} AND is_deleted=0</update>
+    <update id="bumpDraft">UPDATE forecast_draft SET revision=revision+1,updated_by=#{userId} WHERE id=#{draftId} AND status='DRAFT' AND revision=#{expectedRevision}</update>
+    <update id="publishDraft">UPDATE forecast_draft SET status='PUBLISHED',published_version_id=#{versionId} WHERE id=#{draftId} AND status='DRAFT'</update>
+    <update id="discardDraft">UPDATE forecast_draft SET status='DISCARDED' WHERE id=#{draftId} AND status='DRAFT'</update>
+    <select id="countActiveLines" resultType="int">SELECT COUNT(*) FROM forecast_draft_line WHERE draft_id=#{draftId} AND is_deleted=0</select>
+    <select id="countActiveMonths" resultType="int">SELECT COALESCE(SUM(JSON_LENGTH(months_json)),0) FROM forecast_draft_line WHERE draft_id=#{draftId} AND is_deleted=0</select>
+    <select id="maxPriority" resultType="int">SELECT COALESCE(MAX(priority_seq),0) FROM forecast_draft_line WHERE draft_id=#{draftId}</select>
+    <update id="setVersionMetadata">UPDATE forecast_version SET source_type='MANUAL',parent_version_id=#{baseVersionId},published_by=#{userId},published_at=CURRENT_TIMESTAMP(3) WHERE id=#{versionId}</update>
+    <insert id="insertPublishedDetails">
+        INSERT INTO forecast_detail(version_id,source_row_no,priority_seq,factory_code,material_id,material_name,business_line,form_type,project,platform,mold,status,plan_month,forecast_qty)
+        SELECT #{versionId},COALESCE(original.source_row_no,l.priority_seq),COALESCE(original.priority_seq,l.priority_seq),
+               l.factory_code,l.material_id,l.material_name,l.business_line,l.form_type,l.project,l.platform,l.mold,l.status,
+               STR_TO_DATE(k.plan_month,'%Y-%m-%d'),CAST(JSON_UNQUOTE(JSON_EXTRACT(l.months_json,CONCAT('$.',JSON_QUOTE(k.plan_month)))) AS DECIMAL(18,6))
+        FROM forecast_draft_line l JOIN JSON_TABLE(JSON_KEYS(l.months_json),'$[*]' COLUMNS(plan_month VARCHAR(10) PATH '$')) k
+        LEFT JOIN forecast_detail original ON original.version_id=(SELECT base_version_id FROM forecast_draft WHERE id=#{draftId})
+            AND original.factory_code=l.factory_code AND original.material_id=l.material_id
+            AND original.plan_month=STR_TO_DATE(k.plan_month,'%Y-%m-%d')
+        WHERE l.draft_id=#{draftId} AND l.is_deleted=0
+    </insert>
+    <sql id="comparisonFrom">
+        FROM (SELECT factory_code,material_id,plan_month FROM forecast_detail WHERE version_id=#{oldId}
+              UNION SELECT factory_code,material_id,plan_month FROM forecast_detail WHERE version_id=#{newId}) k
+        LEFT JOIN forecast_detail o ON o.version_id=#{oldId} AND o.factory_code=k.factory_code AND o.material_id=k.material_id AND o.plan_month=k.plan_month
+        LEFT JOIN forecast_detail n ON n.version_id=#{newId} AND n.factory_code=k.factory_code AND n.material_id=k.material_id AND n.plan_month=k.plan_month
+    </sql>
+    <sql id="comparisonWhere">
+        WHERE 1=1
+        <if test="factoryCode != null and factoryCode != ''">AND k.factory_code=#{factoryCode}</if>
+        <if test="keyword != null and keyword != ''">AND (k.factory_code LIKE CONCAT('%',#{keyword},'%') OR k.material_id LIKE CONCAT('%',#{keyword},'%') OR o.material_name LIKE CONCAT('%',#{keyword},'%') OR n.material_name LIKE CONCAT('%',#{keyword},'%'))</if>
+        <if test="changesOnly">AND (o.id IS NULL OR n.id IS NULL OR o.forecast_qty&lt;&gt;n.forecast_qty OR o.priority_seq&lt;&gt;n.priority_seq OR NOT (o.material_name&lt;=&gt;n.material_name AND o.form_type&lt;=&gt;n.form_type AND o.project&lt;=&gt;n.project AND o.platform&lt;=&gt;n.platform AND o.mold&lt;=&gt;n.mold AND o.status&lt;=&gt;n.status))</if>
+    </sql>
+    <select id="compareVersions" resultType="map">
+        SELECT k.factory_code AS factoryCode,k.material_id AS materialId,DATE_FORMAT(k.plan_month,'%Y-%m') AS planMonth,
+            COALESCE(n.material_name,o.material_name) AS materialName,o.forecast_qty AS oldQty,n.forecast_qty AS newQty,
+            CASE WHEN o.id IS NULL THEN 'ADDED' WHEN n.id IS NULL THEN 'REMOVED' WHEN o.forecast_qty&lt;&gt;n.forecast_qty THEN 'QUANTITY'
+                 WHEN o.priority_seq&lt;&gt;n.priority_seq THEN 'PRIORITY'
+                 WHEN NOT (o.material_name&lt;=&gt;n.material_name AND o.form_type&lt;=&gt;n.form_type AND o.project&lt;=&gt;n.project AND o.platform&lt;=&gt;n.platform AND o.mold&lt;=&gt;n.mold AND o.status&lt;=&gt;n.status) THEN 'ATTRIBUTE' ELSE 'UNCHANGED' END AS changeType,
+            CASE WHEN o.id IS NOT NULL AND n.id IS NOT NULL THEN n.forecast_qty-o.forecast_qty ELSE NULL END AS delta,
+            o.priority_seq AS oldPriority,n.priority_seq AS newPriority
+        <include refid="comparisonFrom"/><include refid="comparisonWhere"/> ORDER BY k.factory_code,k.material_id,k.plan_month LIMIT #{limit} OFFSET #{offset}
+    </select>
+    <select id="countComparison" resultType="long">SELECT COUNT(*) <include refid="comparisonFrom"/><include refid="comparisonWhere"/></select>
+    <sql id="draftComparisonFrom">
+        FROM (SELECT factory_code,material_id,plan_month FROM forecast_detail WHERE version_id=#{baseVersionId}
+              UNION SELECT l.factory_code,l.material_id,STR_TO_DATE(k.plan_month,'%Y-%m-%d') AS plan_month
+                FROM forecast_draft_line l JOIN JSON_TABLE(JSON_KEYS(l.months_json),'$[*]' COLUMNS(plan_month VARCHAR(10) PATH '$')) k
+                WHERE l.draft_id=#{draftId} AND l.is_deleted=0) keys_
+        LEFT JOIN forecast_detail o ON o.version_id=#{baseVersionId} AND o.factory_code=keys_.factory_code AND o.material_id=keys_.material_id AND o.plan_month=keys_.plan_month
+        LEFT JOIN (SELECT l.id,l.factory_code,l.material_id,l.material_name,l.form_type,l.project,l.platform,l.mold,l.status,l.priority_seq,
+                          STR_TO_DATE(k.plan_month,'%Y-%m-%d') AS plan_month,
+                          CAST(JSON_UNQUOTE(JSON_EXTRACT(l.months_json,CONCAT('$.',JSON_QUOTE(k.plan_month)))) AS DECIMAL(18,6)) AS forecast_qty
+                   FROM forecast_draft_line l JOIN JSON_TABLE(JSON_KEYS(l.months_json),'$[*]' COLUMNS(plan_month VARCHAR(10) PATH '$')) k
+                   WHERE l.draft_id=#{draftId} AND l.is_deleted=0) n
+          ON n.factory_code=keys_.factory_code AND n.material_id=keys_.material_id AND n.plan_month=keys_.plan_month
+    </sql>
+    <sql id="draftComparisonWhere">
+        WHERE 1=1
+        <if test="factoryCode != null and factoryCode != ''">AND keys_.factory_code=#{factoryCode}</if>
+        <if test="keyword != null and keyword != ''">AND (keys_.factory_code LIKE CONCAT('%',#{keyword},'%') OR keys_.material_id LIKE CONCAT('%',#{keyword},'%') OR o.material_name LIKE CONCAT('%',#{keyword},'%') OR n.material_name LIKE CONCAT('%',#{keyword},'%'))</if>
+        <if test="changesOnly">AND (o.id IS NULL OR n.id IS NULL OR o.forecast_qty&lt;&gt;n.forecast_qty OR NOT (o.material_name&lt;=&gt;n.material_name AND o.form_type&lt;=&gt;n.form_type AND o.project&lt;=&gt;n.project AND o.platform&lt;=&gt;n.platform AND o.mold&lt;=&gt;n.mold AND o.status&lt;=&gt;n.status))</if>
+    </sql>
+    <sql id="draftComparisonProjection">
+        SELECT keys_.factory_code AS factoryCode,keys_.material_id AS materialId,DATE_FORMAT(keys_.plan_month,'%Y-%m') AS planMonth,
+            COALESCE(n.material_name,o.material_name) AS materialName,o.forecast_qty AS oldQty,n.forecast_qty AS newQty,
+            CASE WHEN o.id IS NULL THEN 'ADDED' WHEN n.id IS NULL THEN 'REMOVED' WHEN o.forecast_qty&lt;&gt;n.forecast_qty THEN 'QUANTITY'
+                 WHEN NOT (o.material_name&lt;=&gt;n.material_name AND o.form_type&lt;=&gt;n.form_type AND o.project&lt;=&gt;n.project AND o.platform&lt;=&gt;n.platform AND o.mold&lt;=&gt;n.mold AND o.status&lt;=&gt;n.status) THEN 'ATTRIBUTE' ELSE 'UNCHANGED' END AS changeType,
+            COALESCE(n.forecast_qty,0)-COALESCE(o.forecast_qty,0) AS delta,
+            o.priority_seq AS oldPriority,n.priority_seq AS newPriority
+        <include refid="draftComparisonFrom"/><include refid="draftComparisonWhere"/>
+    </sql>
+    <select id="compareDraft" resultType="map"><include refid="draftComparisonProjection"/> ORDER BY keys_.factory_code,keys_.material_id,keys_.plan_month LIMIT #{limit} OFFSET #{offset}</select>
+    <select id="countDraftComparison" resultType="long">SELECT COUNT(*) <include refid="draftComparisonFrom"/><include refid="draftComparisonWhere"/></select>
+    <select id="summarizeDraftComparison" resultType="map">
+        SELECT changeType,COUNT(*) AS rowCount,SUM(delta) AS quantityDelta FROM (
+            <include refid="draftComparisonProjection"/>
+        ) changes_ WHERE changeType&lt;&gt;'UNCHANGED' GROUP BY changeType
+    </select>
+    <select id="countChangedDraftLines" resultType="int">
+        SELECT COUNT(*) FROM (
+            SELECT factoryCode,materialId FROM (<include refid="draftComparisonProjection"/>) changes_
+            WHERE changeType&lt;&gt;'UNCHANGED' GROUP BY factoryCode,materialId
+        ) changed_lines
+    </select>
+    <select id="materialHistory" resultType="map">
+        SELECT v.id AS versionId,v.version_no AS versionNo,v.source_type AS sourceType,v.created_at AS createdAt,v.created_by AS createdBy,
+               d.factory_code AS factoryCode,d.material_id AS materialId,d.material_name AS materialName,d.plan_month AS planMonth,d.forecast_qty AS forecastQty
+        FROM forecast_detail d JOIN forecast_version v ON v.id=d.version_id
+        WHERE d.factory_code=#{factoryCode} AND d.material_id=#{materialId}
+        ORDER BY v.version_no DESC,d.plan_month LIMIT #{limit} OFFSET #{offset}
+    </select>
+    <select id="countMaterialHistory" resultType="long">SELECT COUNT(*) FROM forecast_detail WHERE factory_code=#{factoryCode} AND material_id=#{materialId}</select>
+</mapper>

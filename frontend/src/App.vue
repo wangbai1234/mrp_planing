@@ -1,20 +1,17 @@
 <script setup lang="ts">
-import { ref, provide, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { setToken } from './api/client'
 import { usePermissionStore } from './stores/permission'
+import { useBreadcrumbStore } from './stores/breadcrumb'
+import { getPageLabel } from './config/pageLabels'
+import { visibleMenu } from './config/menu'
+import AppBreadcrumb from './components/AppBreadcrumb.vue'
 
 const router = useRouter()
 const route = useRoute()
 const permissionStore = usePermissionStore()
-
-const crumbGroup = ref('计划管理')
-const crumbPage = ref('12 周滚动排产')
-
-provide('setCrumb', (group: string, page: string) => {
-  crumbGroup.value = group
-  crumbPage.value = page
-})
+const breadcrumbStore = useBreadcrumbStore()
 
 function navigateTo(path: string) {
   router.push(path)
@@ -24,6 +21,7 @@ function handleLogout() {
   setToken(null)
   localStorage.removeItem('mrp_user_info')
   permissionStore.clear()
+  breadcrumbStore.clear()
   router.push('/login')
 }
 
@@ -44,63 +42,44 @@ watch(() => route.path, () => {
   loadUserInfo()
 })
 
-// Dynamic menu based on permissions
-const menuItems = computed(() => {
-  const items = []
+// Push breadcrumb on route change
+watch(() => route.path, (path) => {
+  if (route.name !== 'login' && route.name !== 'feishu-callback') {
+    const label = getPageLabel(path)
+    if (label) {
+      breadcrumbStore.pushPath(path, label)
+    }
+  }
+}, { immediate: true })
 
-  // 计划 group
-  if (permissionStore.hasAnyPermission(['schedule:view'])) {
-    items.push({
-      group: '计划',
-      items: [
-        { path: '/dashboard', label: '看板', icon: 'DataBoard', permission: 'schedule:view' },
-        { path: '/planning', label: '排产计划', icon: 'Calendar', permission: 'schedule:view' }
-      ].filter(item => !item.permission || permissionStore.hasPermission(item.permission))
-    })
+// New user detection: hide layout for users who need to change password OR have no permissions
+const isNewUser = computed(() => {
+  const info = localStorage.getItem('mrp_user_info')
+  if (!info) return false
+  try {
+    const userInfo = JSON.parse(info)
+    return userInfo.needChangePassword === true ||
+           (userInfo.roles?.includes('NEW_USER') && (!userInfo.permissions || userInfo.permissions.length === 0))
+  } catch {
+    return false
   }
-
-  // 数据 group
-  const dataItems = []
-  if (permissionStore.hasPermission('forecast:view')) {
-    dataItems.push({ path: '/forecast', label: '经营计划', icon: 'Document' })
-  }
-  if (permissionStore.hasPermission('inventory:view')) {
-    dataItems.push({ path: '/inventory', label: '库存快照', icon: 'Box' })
-  }
-  dataItems.push({ path: '/material', label: '物料管理', icon: 'Files' })
-  if (permissionStore.hasPermission('material_category:view')) {
-    dataItems.push({ path: '/material-category', label: '物料分类', icon: 'Folder' })
-  }
-  dataItems.push({ path: '/bom', label: 'BOM管理', icon: 'Share' })
-  if (dataItems.length > 0) {
-    items.push({ group: '数据', items: dataItems })
-  }
-
-  // 配置 group
-  const configItems = []
-  if (permissionStore.hasPermission('capacity:view')) {
-    configItems.push({ path: '/capacity', label: '产能配置', icon: 'Setting' })
-  }
-  if (configItems.length > 0) {
-    items.push({ group: '配置', items: configItems })
-  }
-
-  // 系统管理 group
-  if (permissionStore.hasAnyPermission(['user:view', 'role:view', 'audit:view'])) {
-    items.push({
-      group: '系统',
-      items: [
-        { path: '/admin/users', label: '用户与权限', icon: 'UserFilled' }
-      ]
-    })
-  }
-
-  return items
 })
+
+// The sidebar is derived from the shared menu declaration, filtered by permission.
+const menuItems = computed(() => visibleMenu(permissionStore.permissions))
 </script>
 
 <template>
-  <el-container style="height: 100vh" v-if="route.name !== 'login'">
+  <!-- Special pages: hide entire layout -->
+  <div v-if="route.name === 'login' || route.name === 'feishu-callback' || route.name === 'waiting-permission'" style="height: 100vh; background: #f3f5f8">
+    <RouterView />
+  </div>
+  <!-- New user: hide entire layout, only show content for change password dialog -->
+  <div v-else-if="isNewUser" style="height: 100vh; background: #f3f5f8">
+    <RouterView />
+  </div>
+  <!-- Normal layout -->
+  <el-container style="height: 100vh" v-else-if="route.name !== 'login' && route.name !== 'feishu-callback'">
     <el-aside width="184px" class="app-sidebar">
       <div class="brand">
         <div class="brand-mark">MRP</div>
@@ -125,13 +104,8 @@ const menuItems = computed(() => {
     </el-aside>
     <el-container>
       <el-header class="app-topbar" height="48px">
-        <div class="crumb">
-          <span>{{ crumbGroup }}</span>
-          <span style="margin: 0 4px">/</span>
-          <strong>{{ crumbPage }}</strong>
-        </div>
+        <AppBreadcrumb />
         <div class="top-meta">
-          <span><span class="sync-dot"></span>数据已同步</span>
           <el-dropdown @command="handleLogout" trigger="click">
             <span class="user-info">
               <el-avatar :size="28" style="background: #385077; font-size: 12px">
@@ -199,31 +173,12 @@ const menuItems = computed(() => {
   justify-content: space-between;
   padding: 0 18px;
 }
-.crumb {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  color: #748096;
-  font-size: 13px;
-}
-.crumb strong {
-  color: #172033;
-  font-weight: 600;
-}
 .top-meta {
   display: flex;
   gap: 14px;
   align-items: center;
   color: #4b5870;
   font-size: 12px;
-}
-.sync-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #17803d;
-  display: inline-block;
-  margin-right: 5px;
 }
 .user-info {
   display: flex;

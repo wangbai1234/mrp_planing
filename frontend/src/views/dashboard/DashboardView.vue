@@ -1,12 +1,8 @@
 <script setup lang="ts">
-import { inject, onMounted } from 'vue'
 import { Calendar, Warning, Document, Box } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
 
-const setCrumb = inject<(g: string, p: string) => void>('setCrumb')!
 const router = useRouter()
-
-onMounted(() => setCrumb('计划管理', '工作台'))
 
 function goToPlanning() {
   router.push('/planning')
@@ -18,7 +14,7 @@ function goToPlanning() {
     <div class="page-header">
       <h1 class="page-title">MRP 工作台</h1>
       <el-button type="primary" @click="goToPlanning">
-        <el-icon><Calendar /></el-icon>进入滚动排产
+        <el-icon><Calendar /></el-icon>进入 MRP 计算与日排产
       </el-button>
     </div>
 
@@ -83,7 +79,7 @@ function goToPlanning() {
               <p>当前有周排产量超过产线配置上限。</p>
             </div>
             <el-tag type="danger" size="small" effect="plain">阻断发布前检查</el-tag>
-            <el-button type="primary" link @click="router.push('/planning')">去调整</el-button>
+            <el-button type="primary" link @click="router.push('/planning')">进入新排产</el-button>
           </div>
           <div class="action-row">
             <div class="action-icon primary"><el-icon><Document /></el-icon></div>
@@ -98,7 +94,7 @@ function goToPlanning() {
             <div class="action-icon success"><el-icon><Box /></el-icon></div>
             <div class="action-info">
               <strong>检查库存快照口径</strong>
-              <p>不良品仓已排除，永惠与爱培科分开计算。</p>
+              <p>不良品仓已排除，按维护的工厂和仓库范围分别计算。</p>
             </div>
             <el-tag type="success" size="small" effect="plain">已完成</el-tag>
             <el-button type="primary" link @click="router.push('/inventory')">查看快照</el-button>
@@ -134,7 +130,7 @@ function goToPlanning() {
             <span class="activity-time">23:40</span>
             <div class="activity-content">
               <strong>库存快照导入完成</strong>
-              <p>永惠与爱培科分开计算。</p>
+              <p>按维护的工厂和仓库范围分别计算。</p>
             </div>
           </div>
         </div>

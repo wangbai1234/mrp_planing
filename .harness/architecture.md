@@ -4,11 +4,11 @@
 
 ### API 应用
 
-负责认证、页面查询、导入任务创建、任务状态查询、人工调整、发布、版本对比和导出任务创建。API 不执行长时间排产计算，不在 Controller 中直接写多张结果表。
+负责认证、页面查询、导入任务创建、MRP 批次预检、业务决策、库存分配、任务状态查询、日人工调整、发布、版本对比和导出任务创建。API 不执行长时间排产计算，不在 Controller 中直接写多张结果表，也不在计算过程中等待弹窗输入。
 
 ### Worker 应用
 
-与 API 共用代码和镜像，以 `worker` profile 启动。通过 `@Scheduled` 认领 `PENDING` 的导入和计算任务，调用 Spring Batch。Worker 必须支持优雅停机：任务处于安全检查点时可重启，不能把半成品版本标为可用。
+与 API 共用代码和镜像，以 `worker` profile 启动。通过 `@Scheduled` 认领 `PENDING` 的导入和计算任务，调用 Spring Batch。Worker 只处理已经锁定全部业务决策的 `READY_TO_CALCULATE` 批次；`WAITING_DECISION` 不属于技术队列。Worker 必须支持优雅停机：任务处于安全检查点时可重启，不能把半成品版本标为可用。
 
 任务认领、租约、心跳、恢复和有限重试必须遵循 `task-execution-contract.md`。
 
@@ -45,7 +45,7 @@ Controller  -> Application Service -> Domain Service / Batch Job
 
 - Controller 只做鉴权、参数校验、调用应用服务和返回统一响应；
 - Application Service 组织事务和业务用例；
-- Domain Service 放排产公式、拆周和校验，不依赖 HTTP、Redis 或 MyBatis；
+- Domain Service 放多层净需求、库存守恒、日分配和汇总校验，不依赖 HTTP、Redis 或 MyBatis；
 - Repository 的 SQL 显式写在 XML，复杂查询必须有索引说明；
 - Batch Step 不直接操作 Controller 或前端 DTO；
 - DTO、Entity、Domain Model 分离，禁止数据库 Entity 直接作为 API 响应。
@@ -56,25 +56,47 @@ Controller  -> Application Service -> Domain Service / Batch Job
 views -> composables / feature services -> api client(fetch) -> backend
 ```
 
-页面按 `planning`、`forecast`、`inventory`、`capacity`、`versions`、`manual` 划分。排产页的 12 周表格必须保留固定物料列、横向滚动、来源月份标签、人工/锁定/超限状态和详情抽屉。
+页面按 `mrp-batches`、`planning`、`calendar`、`masterdata`、`forecast`、`inventory`、`versions` 划分；决策/库存分配是批次详情标签或深链，旧 `capacity` 页面仅作 Phase 1 兼容。日排产页固定“来源整机、末级需求物料、终点/供应、工厂”列，默认 28 天并可查看 12 周；日期列表示最终排产日期，周/月视图只读。
 
-不要把业务公式复制到多个 Vue 组件。页面展示值来自 API；前端可以做格式化和即时输入校验，但不能成为正式排产计算的唯一实现。
+不要把业务公式复制到多个 Vue 组件。页面展示值来自 API；前端可以做格式化和即时输入校验，但不能成为正式排产计算的唯一实现。工作台只收集并提交业务决策，后台计算开始后不再弹窗等待。
 
 ## 4. 异步任务模型
 
 ```text
-POST /api/v1/recalculations
-  -> calc_task(PENDING)
-  -> worker claim with Redisson lock
-  -> Spring Batch execution
-  -> calc_task(RUNNING / progress)
-  -> plan_version(READY)
-  -> calc_task(SUCCEEDED)
+POST /api/v1/mrp/batches
+  -> mrp_calc_batch(DRAFT -> CHECKING)
+  -> precheck issues
+  -> ANALYZING -> WAITING_DECISION or REANALYZING
+  -> READY_TO_CALCULATE
+  -> lock decisions + calc_task(PENDING)
+  -> worker claim with MySQL lease + Redisson business lock
+  -> pure calculation without long DB transaction
+  -> mrp_calc_run chunk writes
+  -> independent MrpResultWriter short transaction switches active_run_id
+  -> plan/batch(READY) + calc_task(SUCCEEDED)
 ```
 
-任务失败：`calc_task=FAILED`，排产当前版本不变；必须保留失败原因和输入 checksum。重试只能创建新任务或在安全检查点重试，不能覆盖已有 READY 版本。
+任务失败：`calc_task=FAILED`，排产当前发布版本不变；必须保留失败原因和输入 checksum。重试只能创建新任务或在安全检查点重试，不能覆盖已有 READY/PUBLISHED 版本。输入或配置变化时未发布批次进入 `STALE`。
 
-## 5. 依赖管理
+## 5. Phase 2 领域边界
+
+```text
+MrpPrecheckService
+  -> DecisionService / InventoryAllocationService
+  -> MrpCalculationOrchestrator
+       -> NetRequirementExplosionEngine (pure Java)
+       -> DailyDistributionEngine (pure Java)
+       -> MrpResultWriter (independent transactional bean)
+  -> MrpQueryService / MrpPublishService
+```
+
+- 当前 `BomExplosionService` 保留查询/分类停止能力，新净需求引擎不得复用其 UI 分类停止语义；
+- BOM 当前同步表只用于生成不可变快照，正式计算只读快照；
+- 库存原始导入与规范化计算真源分层；
+- 日计划是唯一事实，周/月查询从日事实聚合；Phase 2 计划身份固定为 `mrp_calc_batch`/`batchId`；
+- Phase 1 周计划使用兼容适配器只读，不与新写链路共用 override。
+
+## 6. 依赖管理
 
 每增加一个依赖，必须在任务报告中说明：解决的问题、为什么现有栈不能解决、运行时成本、删除方案。默认不增加基础设施依赖。
 

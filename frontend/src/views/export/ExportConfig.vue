@@ -51,7 +51,7 @@ async function handleExport() {
         <el-switch v-model="includeActual" />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="handleExport" :loading="loading">导出 Excel</el-button>
+        <el-button type="primary" @click="handleExport" :loading="loading">导出</el-button>
       </el-form-item>
     </el-form>
   </el-card>

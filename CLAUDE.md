@@ -1,149 +1,65 @@
-# MRP 排产系统项目
+# CLAUDE.md
 
-## 项目概述
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-MRP（Material Requirements Planning）排产系统，将线下 Excel 经营计划→排产流程系统化。
+## What this is
 
-**当前阶段**：系统开发准备（Harness 约束已冻结，Phase 1）
+MRP 排产系统：把线下 Excel 经营计划→排产流程系统化。**当前开发是 Phase 2**（多层净需求 + 日排产）。Phase 1 整机周排产已验收，只读兼容，不得改其表、API 或 Flyway 历史来冒充 Phase 2 进度。
 
-> 开始任何实现前，必须读取根目录 `project.md` 和 `.harness/runbook.md`。按 `.harness/workflow.yaml` 的阶段顺序执行，不得跳过门禁。
+开工前必读：`project.md`（唯一项目契约）、`AGENTS.md`、`.harness/execution-laws.md`。阶段顺序、门禁和 Prompt 在 `.harness/workflow.yaml` 与 `.harness/prompts/`（Phase 2 是 `10`–`19`，`00`–`09` 是已完成的 Phase 1）。未裁决的业务冲突记入 `.harness/decision-log.md`，不得自行选规则。业务基线：`docs/MRP需求文档v4.0（Phase 2）.md`、`docs/MRP多层净需求与日排产开发手册.md`。
 
-技术边界：Java 后端必须使用 Maven 3.9+ / Maven Wrapper 构建；Maven 是构建工具，不是运行时中间件。初期运行形态为 API（直接托管 Vue 构建产物）+ Worker + MySQL + Redis，Nginx 只有在 TLS、路由、静态资源性能或负载均衡需求被证实后才评估加入。
+## Commands
 
----
+Java 21、Node 24（`frontend/.nvmrc` 与 `package.json` `engines`）、Maven Wrapper。环境不满足时停下来告诉用户，不要改版本配置或替用户安装运行时。
 
-## 项目结构
+```bash
+# 基础设施（集成验证必须用 MySQL，禁止用 H2 代替）
+docker compose -f deploy/docker-compose.yml up -d mysql redis
 
-```
-MRP新版/
-├── CLAUDE.md                    # 项目配置（本文件）
-├── docs/                        # 需求文档
-│   └── MRP需求文档v3.0（Phase 1）.md
-├── prototype/                   # 原型图
-│   ├── MRP原型图.html           # 原型图（Ant Design 风格）
-│   ├── MRP原型图-飞书风格.html  # 原型图（飞书 + B端 SaaS 风格）
-│   ├── MRP原型图-企业级风格.html # 原型图（企业级 ERP 风格，基于 SKILL.md）
-│   └── MRP滚动排产可交互原型.html # 推荐：固定 12 周横向查看原型
-├── assets/                      # 核心资产文件
-│   ├── MRP业务知识库.md         # 已确认的业务事实和规则
-│   ├── MRP需求基线.md           # 已确认的需求
-│   ├── MRP待确认问题池.md       # 待确认问题
-│   ├── MRP业务规则库.md         # 已确认的业务规则
-│   ├── MRP变更影响矩阵.md       # 变更影响分析
-│   ├── MRP-UAT验收案例库.md     # 验收测试用例
-│   ├── 2026-08-28.md            # 工作日志
-│   └── 2026-09-01.md            # 产品与原型调整记录
-├── mrp-ui-design/               # 前端设计规范
-│   └── SKILL.md                 # MRP/ERP 企业管理系统前端设计约束
-├── templates/                    # Excel 导入/导出模板
-├── scripts/                      # 模板与校验脚本
-├── project.md                   # Harness 项目总入口
-├── AGENTS.md                    # 代理强制入口
-├── .harness/                    # 架构契约、Prompt、门禁和状态
-└── .claude/
-    └── memory/                  # 持久化记忆
+# 后端（在 backend/；始终用 ./mvnw，不要用全局 mvn）
+./mvnw test
+./mvnw -Dtest=ClassName test
+./mvnw -Dtest=ClassName#method test
+./mvnw spring-boot:run -Dspring-boot.run.profiles=local          # API，默认 8080
+# Worker 是同一工程的另一个 main：com.mrp.MrpWorkerApplication（worker profile）
+
+# 前端（在 frontend/）
+npm ci
+npm run dev          # Vite，端口 5180，/api 代理到 localhost:8080
+npm test             # vitest run（src/**/*.{test,spec}.ts）
+npm run test:watch
+npx vitest run src/utils/__tests__/foo.test.ts
+npm run build        # vue-tsc -b && vite build
+npx playwright test  # e2e/，baseURL http://localhost:5180，会拉起 npm run dev
+npx playwright test e2e/phase2-mrp.spec.ts
 ```
 
----
+后端测试是 JUnit 5 + Testcontainers MySQL（`backend/src/test`）。改完代码先编译再测；报告功能完成前要实际起服务并用浏览器或 curl 验证，不能只凭单测。
 
-## 核心业务规则（Phase 1 已确认）
+## Architecture
 
-### 排产核心算法
+模块化单体，不是微服务。一个后端代码库、两个启动类：`MrpApiApplication`（API，并托管 `resources/static` 里的 Vue 产物）和 `MrpWorkerApplication`（同一镜像的 worker profile）。无消息队列：API 往 MySQL 写 `PENDING` 的 `calc_task` / `import_task`，Worker 用 Spring Batch + `@Scheduled` 认领执行；Redisson 只做锁、进度、幂等，不存最终结果。大计算不得堵在同步 HTTP 里，接口返回任务号，前端轮询。
 
-**月可排量公式**：
+```text
+Vue (frontend/) ──/api──► backend-api :8080 ──┐
+                                               ├── MySQL 8（唯一业务真源）
+                        backend-worker ────────┘    Redis（缓存/锁/进度）
 ```
-月可排量 = MAX(0, 月需求 − 整机库存 − 已出货数量)
-```
 
-**月拆周规则**：
-- 默认平均分摊到该月前 3 周
-- 第 4 周空出（用于承接下月第 1 份）
-- 余数放到第一周，尽量往前期排产
+后端包在 `com.mrp` 下**按业务模块**划分（`auth` `masterdata` `forecast` `inventory` `shipment` `capacity` `bom` `mrp` `planning` `importexport` `audit` `task` `common`），模块内再分 controller/service/repository/domain。禁止按技术层把所有业务堆进一个大目录。MyBatis SQL 必须写 XML Mapper，不用 MyBatis-Plus。BOM 另有只读外部源：`bom/local` 走主库，外部 BOM 走独立数据源（`PrimaryDataSourceConfig`，含 Oracle 驱动）。
 
-**提前一周滚动**：
-- 下个月第 1 周的排产提前到上个月第 4 周承接
-- 形成 12 周连续滚动，无空档
+Phase 2 计算链（`mrp` + `planning`）：经营计划按整机料号、自然月 → 绑定不可变 BOM 快照逐层展开，每层先扣本层库存再传播净需求 → 末级可以是结构叶子，也可以被物料策略 `STOP` 提前终止 → 日排产是唯一事实（月净需求按有效生产日分配后整体提前 7 个自然日）→ 周/月只从日事实只读聚合。相同输入快照 + 规则版本必须得到相同结果和 checksum；自动值、人工覆盖值、最终值分开存。数量一律 `DECIMAL(18,6)` / `BigDecimal`，禁止 `double` 或无约束截断；Phase 1 的 `BIGINT/long` 只保留兼容读取。已出货本期不进公式（`TODO-SHIPMENT`）。
 
-### 数据同步规则
+Flyway 在 `backend/src/main/resources/db/migration`（`V001`–`V020` 左右是 Phase 1，`V021` 起是 Phase 2）。**已应用的迁移不可修改**，只能新增下一个版本。
 
-| 数据类型 | 更新频率 | 触发方式 |
-|---------|---------|---------|
-| 经营计划 | 每半月（月中/月初） | 手动导入 + 自动触发开关 |
-| 库存快照 | 每日 | 手动导入 + 自动触发开关 |
-| 已出货记录 | 实时 | CRM 接口自动同步 |
+前端是 Vue 3 + TypeScript + Vite + Element Plus + Vue Router，`src/views/<模块>` 对页面，`src/api` 用浏览器原生 `fetch` 封装（不引入 Axios）。契约默认不引入 Pinia，但 `src/stores` 已存在——沿用现状，不要再加新的状态库。排产宽表用 Element Plus Table V2 或等价虚拟化。UI 以 `prototype/` 为契约（推荐 `MRP滚动排产可交互原型.html`），组件必须用 Element Plus，不用 emoji。导入/列表页面另见 `assets/import-design-rules.md`、`.harness/import-rules.md`、`.harness/list-rules.md`。
 
-### 版本管理规则
+侧边栏和权限配置页共用 `frontend/src/config/menu.ts` 一份声明，分组为「计划 / 基础信息 / 配置 / 系统」。新增页面在该文件加一项即可，权限页按权限码前缀自动归入对应分节；不要在 `App.vue` 里另写菜单，也不要再按 `permission.parent_id` 给权限页排版。
 
-- 经营计划：每次导入生成新版本，排产绑定最新版本
-- 排产计划：每次重算生成新版本，人工修改不生成新版本
+## Hard rules
 
----
-
-## 角色定义
-
-| 角色 | 人员 | 职责 |
-|------|------|------|
-| 商务人员 | - | 维护经营计划表 |
-| 计划人员 | 肖芳（永惠）、徐燕平（爱培科） | 审核排产、微调 |
-| 仓库人员 | 慧琴 | 每日提供库存表 |
-| 物料管理人员 | 曹玉琴 | 缺料核算（Phase 2） |
-| 管理人员 | 晓燕姐 | 需求决策与审批 |
-| 系统管理员 | 王立勋 | 系统开发、配置 |
-
----
-
-## 当前工作重点
-
-### Phase 1 范围
-- [x] 经营计划导入
-- [x] 排产自动生成（整机级）
-- [x] 库存扣减
-- [x] 已出货扣减
-- [x] 人工调整
-- [x] 排产导出
-
-### 待确认问题（Phase 2）
-- [ ] Q011：通知与提醒机制
-- [ ] Q012：异常处理机制
-
----
-
-## 开发约定
-
-### Harness 执行约定
-
-- 技术栈和“不引入额外中间件”约束以 `project.md` 为准；
-- Mimo 按 `.harness/prompts/00` 至 `.harness/prompts/09` 顺序执行；
-- 每个阶段必须产出任务报告，门禁未通过不得进入下一阶段；
-- 业务冲突记录到 `.harness/decision-log.md`，不得自行拍板；
-- 详细数据、计算、导入、API、安全和测试约束见 `.harness/`。
-
-### 阶段划分
-1. **需求确认阶段**（当前）：确认所有业务规则，完善原型图
-2. **系统设计阶段**：数据库设计、API 设计、技术选型
-3. **开发实现阶段**：前后端开发
-4. **UAT 验收阶段**：基于验收案例库进行测试
-
-### 原型图设计规范
-- 飞书 + B 端 SaaS 风格
-- 左侧导航栏（200px）
-- 顶部操作栏（48px）
-- 内容区域（自适应）
-- 卡片式布局
-- 扁平化设计
-
----
-
-## 参考资料
-
-- 需求文档：`docs/MRP需求文档v3.0（Phase 1）.md`
-- 原型图：`prototype/MRP原型图.html`（可直接在浏览器打开）
-- 飞书风格原型图：`prototype/MRP原型图-飞书风格.html`（可直接在浏览器打开）
-- 企业级风格原型图：`prototype/MRP原型图-企业级风格.html`（可直接在浏览器打开，基于 SKILL.md 规范）
-- 业务规则库：`assets/MRP业务规则库.md`
-- 验收案例库：`assets/MRP-UAT验收案例库.md`
-- 前端设计规范：`mrp-ui-design/SKILL.md`
-
----
-
-*最后更新：2026-09-03*
+- 不引入契约之外的中间件：无 MQ、对象存储、搜索引擎、独立调度中心、微服务。Nginx 不是初期组件。
+- 导入先入 staging，整文件校验通过且用户确认后才生成正式版本。
+- 写操作留审计；长期主数据版本与单次批次业务决策分开。
+- 前端任务先读对应原型；Excel 导入先读 `.harness/import-rules.md`。
+- 依赖审批：新增库要在任务报告和 `.harness/decision-log.md` 说明。

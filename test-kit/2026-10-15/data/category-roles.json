@@ -1,0 +1,1232 @@
+[
+  {
+    "categoryCode": "01",
+    "role": "ASSEMBLY",
+    "enabled": true
+  },
+  {
+    "categoryCode": "02",
+    "role": "ASSEMBLY",
+    "enabled": true
+  },
+  {
+    "categoryCode": "03",
+    "role": "ASSEMBLY",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "09",
+    "role": "FINISHED_GOOD",
+    "enabled": true
+  },
+  {
+    "categoryCode": "01001",
+    "role": "ASSEMBLY",
+    "enabled": true
+  },
+  {
+    "categoryCode": "01002",
+    "role": "ASSEMBLY",
+    "enabled": true
+  },
+  {
+    "categoryCode": "01003",
+    "role": "ASSEMBLY",
+    "enabled": true
+  },
+  {
+    "categoryCode": "01004",
+    "role": "ASSEMBLY",
+    "enabled": true
+  },
+  {
+    "categoryCode": "01005",
+    "role": "ASSEMBLY",
+    "enabled": true
+  },
+  {
+    "categoryCode": "01008",
+    "role": "ASSEMBLY",
+    "enabled": true
+  },
+  {
+    "categoryCode": "019001",
+    "role": "ASSEMBLY",
+    "enabled": true
+  },
+  {
+    "categoryCode": "019101",
+    "role": "ASSEMBLY",
+    "enabled": true
+  },
+  {
+    "categoryCode": "02001",
+    "role": "ASSEMBLY",
+    "enabled": true
+  },
+  {
+    "categoryCode": "03001",
+    "role": "ASSEMBLY",
+    "enabled": true
+  },
+  {
+    "categoryCode": "03002",
+    "role": "ASSEMBLY",
+    "enabled": true
+  },
+  {
+    "categoryCode": "03003",
+    "role": "ASSEMBLY",
+    "enabled": true
+  },
+  {
+    "categoryCode": "03004",
+    "role": "ASSEMBLY",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08001",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08002",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08003",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08004",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08005",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08006",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08007",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08008",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08009",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08010",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08011",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08012",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08013",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08014",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08015",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08016",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08017",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08018",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08019",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08020",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08021",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08022",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08023",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08024",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08025",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08026",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08027",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08028",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08029",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08030",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08031",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08032",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08033",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08034",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08035",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08036",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08037",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08038",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08039",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08040",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08041",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08042",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08043",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08044",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08045",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08046",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08047",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08048",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08049",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08050",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08051",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08052",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08053",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08054",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08055",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08056",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08057",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08058",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08059",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08060",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08061",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08062",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08063",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08064",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08065",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08066",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08067",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08068",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08069",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08070",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08071",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08072",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08073",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08074",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08075",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08076",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08077",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08078",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08079",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08080",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08081",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08082",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08083",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08084",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08085",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08086",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08087",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08088",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08089",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08090",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08091",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08092",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08093",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08094",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08095",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08096",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08097",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08098",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08099",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08100",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08101",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08102",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08103",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08104",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08105",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08106",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08107",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08108",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08109",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08110",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08111",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08112",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08113",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08114",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08115",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08116",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08117",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08118",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08119",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08120",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08121",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08122",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08123",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08124",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08125",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08126",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08127",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08128",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08129",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08130",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08131",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08132",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08133",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08134",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08135",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08136",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08137",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08138",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08139",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08140",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08141",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08142",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08143",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08144",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08145",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08146",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08147",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08148",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08149",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08150",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08151",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08152",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08153",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08154",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08155",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08157",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08158",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08159",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08160",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08161",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08162",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08163",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08164",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08165",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08166",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08167",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08169",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08170",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08171",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08172",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08173",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08174",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08175",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08176",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08177",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08178",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08179",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08180",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08181",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08182",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08183",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08184",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08185",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08187",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08188",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08189",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08190",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08191",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08192",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08193",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08194",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08195",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08196",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08197",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08198",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08199",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08200",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08201",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08202",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08203",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08206",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08207",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08208",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08209",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08210",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08211",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08212",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08213",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08214",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08216",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08217",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08218",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08219",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08220",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08221",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08222",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08223",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08224",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08225",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "08226",
+    "role": "RAW_MATERIAL",
+    "enabled": true
+  },
+  {
+    "categoryCode": "09001",
+    "role": "FINISHED_GOOD",
+    "enabled": true
+  },
+  {
+    "categoryCode": "09002",
+    "role": "FINISHED_GOOD",
+    "enabled": true
+  },
+  {
+    "categoryCode": "09003",
+    "role": "FINISHED_GOOD",
+    "enabled": true
+  },
+  {
+    "categoryCode": "09004",
+    "role": "FINISHED_GOOD",
+    "enabled": true
+  },
+  {
+    "categoryCode": "09005",
+    "role": "FINISHED_GOOD",
+    "enabled": true
+  },
+  {
+    "categoryCode": "09006",
+    "role": "FINISHED_GOOD",
+    "enabled": true
+  },
+  {
+    "categoryCode": "09007",
+    "role": "FINISHED_GOOD",
+    "enabled": true
+  },
+  {
+    "categoryCode": "09008",
+    "role": "FINISHED_GOOD",
+    "enabled": true
+  }
+]

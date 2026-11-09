@@ -56,32 +56,39 @@
         </foreach>
     </insert>
 
+    <update id="assignPrioritySequence">
+        UPDATE forecast_detail fd
+        JOIN (
+            SELECT id, ROW_NUMBER() OVER (ORDER BY id) AS seq
+            FROM forecast_detail
+            WHERE version_id=#{versionId}
+        ) ranked ON ranked.id=fd.id
+        SET fd.source_row_no=ranked.seq, fd.priority_seq=ranked.seq
+        WHERE fd.version_id=#{versionId}
+    </update>
+
     <select id="selectDetailsByVersionId" resultType="com.mrp.forecast.domain.ForecastDetail">
-        SELECT * FROM forecast_detail WHERE version_id = #{versionId} ORDER BY material_id, plan_month
+        SELECT id, version_id, factory_code, material_id, material_name,
+               business_line, form_type, project, platform, mold, status,
+               plan_month, forecast_qty, priority_seq
+        FROM forecast_detail WHERE version_id = #{versionId}
+        ORDER BY priority_seq, source_row_no, id, plan_month
     </select>
 
     <select id="selectDetailsByVersionIdAndMaterial" resultType="com.mrp.forecast.domain.ForecastDetail">
-        SELECT * FROM forecast_detail 
+        SELECT id, version_id, factory_code, material_id, material_name,
+               business_line, form_type, project, platform, mold, status,
+               plan_month, forecast_qty, priority_seq
+        FROM forecast_detail
         WHERE version_id = #{versionId} AND material_id = #{materialId}
-        ORDER BY plan_month
+          AND factory_code &lt;=&gt; #{factoryCode}
+        ORDER BY priority_seq, source_row_no, id, plan_month
     </select>
 
     <select id="selectDetailsPage" resultType="com.mrp.forecast.domain.ForecastDetail">
-        SELECT * FROM forecast_detail
-        <where>
-            version_id = #{versionId}
-            <if test="keyword != null and keyword != ''">
-                AND (material_id LIKE CONCAT('%', #{keyword}, '%')
-                OR material_name LIKE CONCAT('%', #{keyword}, '%')
-                OR factory_code LIKE CONCAT('%', #{keyword}, '%'))
-            </if>
-        </where>
-        ORDER BY material_id, plan_month
-        LIMIT #{offset}, #{pageSize}
-    </select>
-
-    <select id="selectDistinctMaterials" resultType="map">
-        SELECT DISTINCT material_id, material_name, factory_code, form_type, project, platform, mold, status
+        SELECT id, version_id, factory_code, material_id, material_name,
+               business_line, form_type, project, platform, mold, status,
+               plan_month, forecast_qty, priority_seq
         FROM forecast_detail
         <where>
             version_id = #{versionId}
@@ -91,12 +98,14 @@
                 OR factory_code LIKE CONCAT('%', #{keyword}, '%'))
             </if>
         </where>
-        ORDER BY material_id
+        ORDER BY priority_seq, source_row_no, id, plan_month
         LIMIT #{offset}, #{pageSize}
     </select>
 
-    <select id="countDistinctMaterials" resultType="long">
-        SELECT COUNT(DISTINCT material_id) FROM forecast_detail
+    <select id="selectDistinctMaterials" resultType="map">
+        SELECT material_id, factory_code, MAX(material_name) AS material_name, MAX(form_type) AS form_type,
+               MAX(project) AS project, MAX(platform) AS platform, MAX(mold) AS mold, MAX(status) AS status
+        FROM forecast_detail
         <where>
             version_id = #{versionId}
             <if test="keyword != null and keyword != ''">
@@ -105,6 +114,22 @@
                 OR factory_code LIKE CONCAT('%', #{keyword}, '%'))
             </if>
         </where>
+        GROUP BY factory_code, material_id
+        ORDER BY material_id, factory_code
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="countDistinctMaterials" resultType="long">
+        SELECT COUNT(*) FROM (SELECT factory_code, material_id FROM forecast_detail
+        <where>
+            version_id = #{versionId}
+            <if test="keyword != null and keyword != ''">
+                AND (material_id LIKE CONCAT('%', #{keyword}, '%')
+                OR material_name LIKE CONCAT('%', #{keyword}, '%')
+                OR factory_code LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+        </where>
+    GROUP BY factory_code, material_id) counted
     </select>
 
     <select id="countDetailsPage" resultType="long">

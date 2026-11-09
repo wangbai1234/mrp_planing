@@ -33,6 +33,23 @@ export function updateRolePermissions(id: number, permissionIds: number[]) {
   return put<void>(`/roles/${id}/permissions`, { permissionIds })
 }
 
+export interface RoleDataScope {
+  scopeType: 'ALL' | 'FACTORY' | 'NONE'
+  factoryCodes: string[]
+}
+
+export function getRoleFactoryOptions() {
+  return get<string[]>('/roles/factories')
+}
+
+export function getRoleDataScope(id: number) {
+  return get<RoleDataScope>(`/roles/${id}/data-scope`)
+}
+
+export function updateRoleConfiguration(id: number, permissionIds: number[], dataScope: RoleDataScope) {
+  return put<void>(`/roles/${id}/configuration`, { permissionIds, dataScope })
+}
+
 export function copyRole(id: number, data: { name: string; code: string }) {
   return post<Role>(`/roles/${id}/copy`, data)
 }

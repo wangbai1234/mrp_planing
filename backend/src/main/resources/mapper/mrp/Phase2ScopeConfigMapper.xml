@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.mrp.repository.Phase2ScopeConfigMapper">
+    <select id="selectLastInsertId" resultType="long">SELECT LAST_INSERT_ID()</select>
+    <select id="nextFactoryWarehouseVersionNo" resultType="int">
+        SELECT COALESCE(MAX(version_no), 0) + 1 FROM factory_warehouse_mapping_version
+    </select>
+    <insert id="insertFactoryWarehouseVersion">
+        INSERT INTO factory_warehouse_mapping_version(version_no, status, effective_date, created_by)
+        VALUES (#{versionNo}, 'DRAFT', #{effectiveDate}, #{createdBy})
+    </insert>
+    <select id="selectFactoryWarehouseVersions" resultType="map">
+        SELECT id, version_no AS versionNo, status, effective_date AS effectiveDate,
+               checksum, created_by AS createdBy, created_at AS createdAt, published_at AS publishedAt
+        FROM factory_warehouse_mapping_version
+        WHERE is_deleted=0
+        ORDER BY id DESC
+    </select>
+    <select id="selectFactoryWarehouseVersion" resultType="map">
+        SELECT id, version_no AS versionNo, status, effective_date AS effectiveDate,
+               checksum, created_by AS createdBy, created_at AS createdAt, published_at AS publishedAt
+        FROM factory_warehouse_mapping_version WHERE id=#{id} AND is_deleted=0
+    </select>
+    <select id="selectFactoryWarehouseVersionStatus" resultType="string">
+        SELECT status FROM factory_warehouse_mapping_version WHERE id=#{id} AND is_deleted=0
+    </select>
+    <select id="selectFactoryWarehouseDetails" resultType="com.mrp.mrp.domain.FactoryWarehouseMappingDetail">
+        SELECT d.*, d.is_good_warehouse AS goodWarehouse
+        FROM factory_warehouse_mapping_detail d WHERE version_id=#{versionId} ORDER BY factory_code, maintenance_order, id
+    </select>
+    <select id="selectLatestPublishedFactoryWarehouseVersionId" resultType="long">
+        SELECT id FROM factory_warehouse_mapping_version
+        WHERE status='PUBLISHED' AND is_deleted=0
+        ORDER BY id DESC LIMIT 1
+    </select>
+    <select id="selectPublishedFactoryByWarehouse" resultType="string">
+        SELECT factory_code FROM factory_warehouse_mapping
+        WHERE enabled=1 AND warehouse_code=#{warehouseCode}
+    </select>
+    <delete id="deleteFactoryWarehouseDetails">
+        DELETE FROM factory_warehouse_mapping_detail WHERE version_id=#{versionId}
+    </delete>
+    <insert id="insertFactoryWarehouseDetails">
+        INSERT INTO factory_warehouse_mapping_detail
+            (version_id, factory_code, factory_name, warehouse_code, warehouse_name, warehouse_manager,
+             supplier_name, is_good_warehouse, warehouse_attribute, priority_no, maintenance_order, enabled)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.versionId}, #{item.factoryCode}, #{item.factoryName}, #{item.warehouseCode},
+             #{item.warehouseName}, #{item.warehouseManager}, #{item.supplierName}, #{item.goodWarehouse},
+             #{item.warehouseAttribute}, #{item.priorityNo}, #{item.maintenanceOrder}, #{item.enabled})
+        </foreach>
+    </insert>
+    <update id="publishFactoryWarehouseVersion">
+        UPDATE factory_warehouse_mapping_version
+        SET status='PUBLISHED', checksum=#{checksum}, published_at=NOW(3)
+        WHERE id=#{id} AND status='DRAFT' AND is_deleted=0
+    </update>
+    <select id="countFactoryWarehouseVersionReferences" resultType="int">
+        SELECT COUNT(*) FROM mrp_calc_batch WHERE factory_warehouse_mapping_version_id=#{id}
+    </select>
+    <update id="markFactoryWarehouseVersionDeleted">
+        UPDATE factory_warehouse_mapping_version
+        SET is_deleted=1, deleted_at=NOW(3)
+        WHERE id=#{id} AND status='DRAFT' AND is_deleted=0
+    </update>
+
+    <select id="nextStockPolicyVersionNo" resultType="int">
+        SELECT COALESCE(MAX(version_no), 0) + 1 FROM stock_policy_version
+    </select>
+    <insert id="insertStockPolicyVersion">
+        INSERT INTO stock_policy_version(version_no, status, effective_date, created_by)
+        VALUES (#{versionNo}, 'DRAFT', #{effectiveDate}, #{createdBy})
+    </insert>
+    <select id="selectStockPolicyVersions" resultType="map">
+        SELECT id, version_no AS versionNo, status, effective_date AS effectiveDate,
+               checksum, created_by AS createdBy, created_at AS createdAt, published_at AS publishedAt
+        FROM stock_policy_version
+        WHERE is_deleted=0
+        ORDER BY id DESC
+    </select>
+    <select id="selectStockPolicyVersion" resultType="map">
+        SELECT id, version_no AS versionNo, status, effective_date AS effectiveDate,
+               checksum, created_by AS createdBy, created_at AS createdAt, published_at AS publishedAt
+        FROM stock_policy_version WHERE id=#{id} AND is_deleted=0
+    </select>
+    <select id="selectStockPolicyVersionStatus" resultType="string">
+        SELECT status FROM stock_policy_version WHERE id=#{id} AND is_deleted=0
+    </select>
+    <select id="selectStockPolicyDetails" resultType="com.mrp.mrp.domain.StockPolicyDetail">
+        SELECT * FROM stock_policy_detail WHERE version_id=#{versionId} ORDER BY warehouse_code, material_code
+    </select>
+    <select id="selectLatestPublishedStockPolicyVersionId" resultType="long">
+        SELECT id FROM stock_policy_version
+        WHERE status='PUBLISHED' AND is_deleted=0
+        ORDER BY id DESC LIMIT 1
+    </select>
+    <select id="selectPublishedStockPolicy" resultType="com.mrp.mrp.domain.StockPolicyDetail">
+        SELECT d.*
+        FROM stock_policy_detail d
+        JOIN stock_policy_version v ON v.id=d.version_id
+        WHERE v.status='PUBLISHED' AND v.is_deleted=0
+          AND d.warehouse_code=#{warehouseCode} AND d.material_code=#{materialCode}
+        ORDER BY v.id DESC LIMIT 1
+    </select>
+    <delete id="deleteStockPolicyDetails">
+        DELETE FROM stock_policy_detail WHERE version_id=#{versionId}
+    </delete>
+    <insert id="insertStockPolicyDetails">
+        INSERT INTO stock_policy_detail
+            (version_id, warehouse_code, material_code, safety_stock_qty, warning_stock_qty)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.versionId}, #{item.warehouseCode}, #{item.materialCode},
+             #{item.safetyStockQty}, #{item.warningStockQty})
+        </foreach>
+    </insert>
+    <update id="publishStockPolicyVersion">
+        UPDATE stock_policy_version
+        SET status='PUBLISHED', checksum=#{checksum}, published_at=NOW(3)
+        WHERE id=#{id} AND status='DRAFT' AND is_deleted=0
+    </update>
+    <select id="countStockPolicyVersionReferences" resultType="int">
+        SELECT COUNT(*) FROM mrp_calc_batch WHERE stock_policy_version_id=#{id}
+    </select>
+    <update id="markStockPolicyVersionDeleted">
+        UPDATE stock_policy_version
+        SET is_deleted=1, deleted_at=NOW(3)
+        WHERE id=#{id} AND status='DRAFT' AND is_deleted=0
+    </update>
+
+    <select id="nextBusinessWeekVersionNo" resultType="int">
+        SELECT COALESCE(MAX(version_no), 0) + 1 FROM business_week_version WHERE business_month=#{businessMonth}
+    </select>
+    <insert id="insertBusinessWeekVersion">
+        INSERT INTO business_week_version(version_no, business_month, status, created_by)
+        VALUES (#{versionNo}, #{businessMonth}, 'DRAFT', #{createdBy})
+    </insert>
+    <select id="selectBusinessWeekVersions" resultType="map">
+        SELECT id, version_no AS versionNo, business_month AS businessMonth, status,
+               checksum, created_by AS createdBy, created_at AS createdAt, published_at AS publishedAt
+        FROM business_week_version
+        WHERE is_deleted=0
+        ORDER BY business_month DESC, version_no DESC
+    </select>
+    <select id="selectBusinessWeekVersion" resultType="map">
+        SELECT id, version_no AS versionNo, business_month AS businessMonth, status,
+               checksum, created_by AS createdBy, created_at AS createdAt, published_at AS publishedAt
+        FROM business_week_version WHERE id=#{id} AND is_deleted=0
+    </select>
+    <select id="selectBusinessWeekVersionStatus" resultType="string">
+        SELECT status FROM business_week_version WHERE id=#{id} AND is_deleted=0
+    </select>
+    <select id="selectBusinessWeekDetails" resultType="com.mrp.mrp.domain.BusinessWeekDetail">
+        SELECT * FROM business_week_detail WHERE version_id=#{versionId} ORDER BY sort_no
+    </select>
+    <select id="selectLatestPublishedBusinessWeekVersionId" resultType="long">
+        SELECT id FROM business_week_version
+        WHERE status='PUBLISHED' AND is_deleted=0 AND business_month=#{businessMonth}
+        ORDER BY id DESC LIMIT 1
+    </select>
+    <select id="selectPublishedBusinessWeeksByRange" resultType="com.mrp.mrp.domain.BusinessWeekDetail">
+        SELECT id, business_month, week_code, start_date, end_date, sort_no
+        FROM business_week
+        WHERE end_date &gt;= #{startDate} AND start_date &lt;= #{endDate}
+        ORDER BY start_date, sort_no
+    </select>
+    <delete id="deleteBusinessWeekDetails">
+        DELETE FROM business_week_detail WHERE version_id=#{versionId}
+    </delete>
+    <insert id="insertBusinessWeekDetails">
+        INSERT INTO business_week_detail(version_id, week_code, start_date, end_date, sort_no)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.versionId}, #{item.weekCode}, #{item.startDate}, #{item.endDate}, #{item.sortNo})
+        </foreach>
+    </insert>
+    <update id="publishBusinessWeekVersion">
+        UPDATE business_week_version
+        SET status='PUBLISHED', checksum=#{checksum}, published_at=NOW(3)
+        WHERE id=#{id} AND status='DRAFT' AND is_deleted=0
+    </update>
+    <select id="countBusinessWeekVersionReferences" resultType="int">
+        SELECT
+            (SELECT COUNT(*) FROM mrp_batch_business_week_scope WHERE business_week_version_id=#{id})
+          + (SELECT COUNT(*) FROM mrp_calc_batch WHERE business_week_version_id=#{id})
+    </select>
+    <update id="markBusinessWeekVersionDeleted">
+        UPDATE business_week_version
+        SET is_deleted=1, deleted_at=NOW(3)
+        WHERE id=#{id} AND status='DRAFT' AND is_deleted=0
+    </update>
+</mapper>

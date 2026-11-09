@@ -8,7 +8,7 @@
 你正在执行 MRP Harness 项目。先读取根目录 project.md，再读取本 Prompt 引用的全部契约、需求、规则和资产。不要臆造规则，不要引入未冻结的中间件。先给出实施范围、将修改文件、业务不变量和验证命令，再开始工作。完成后必须按 .harness/task-state.md 输出任务报告，真实记录命令、结果、风险和下一步。门禁未通过时不能报告 DONE。
 ```
 
-开发执行顺序：`00` → `01` → `02` → `03` → `04` → `05` → `06` → `07` → `08` → `09`。
+`00` → `09` 是 Phase 1 历史阶段。当前 Phase 2 执行顺序：`10` → `11` → `12` → `13` → `14` → `15` → `16` → `17` → `18` → `19`。
 
 每个阶段的管理循环：
 
@@ -24,11 +24,19 @@
           CONTINUE-NEXT-STAGE.md
 ```
 
-全部阶段完成后执行 `FINAL-AUDIT.md`。
+全部阶段完成后执行 `FINAL-AUDIT.md`。Phase 2 允许在阶段复核 PASS 且无业务/环境阻塞时自动进入下一阶段；禁止跳过 REVIEW。
+
+## 多 Agent 执行
+
+Coordinator 在每阶段开始前输出文件所有权表，并唯一维护 workflow、decision-log、issue-log 和报告。实现 Agent 只能写被分配文件；独立 Reviewer 默认只读。数据库迁移序号、共享 DTO、Security 配置和路由禁止多人并行修改。
+
+启动时先枚举 Agent spawn、并行执行和独立 Reviewer 能力。若能力可用，按阶段所有权表并行；若不可用，必须记录 degraded mode，不能把同一会话的自审称为独立审查。没有另一会话或人工 Reviewer 时，涉及实现的阶段保持 BLOCKED。
+
+每个 Agent 在 `.superpowers/sdd/2026-09-22-phase2-daily-mrp/` 保存 task brief/report，Coordinator 更新 progress。若运行环境没有可枚举的 Superpowers 技能/CLI，此目录只作 SDD 证据，使用现有 REVIEW-STAGE/REPAIR-GATE/FINAL-AUDIT 完成闭环，不得伪造命令。
 
 ## 阶段切换
 
-只有当前 Prompt 的门禁通过并经 `REVIEW-STAGE.md` 复核后，才发送 `CONTINUE-NEXT-STAGE.md`。若 Mimo 报告 BLOCKED：
+只有当前 Prompt 的门禁通过并经 `REVIEW-STAGE.md` 复核后，才执行 `CONTINUE-NEXT-STAGE.md`。若 Mimo 报告 BLOCKED：
 
 1. 要求它保留失败现场；
 2. 让它只做诊断和最小修复，不扩展范围；
@@ -62,6 +70,6 @@
 
 ## 第一次启动
 
-第一次交给 Mimo 时，直接使用 `.harness/prompts/START-MIMO.md`；以后使用阶段执行/复核/修复/继续 Prompt，不需要每次重新组织完整上下文。
+第一次交给 Mimo 执行当前需求时，直接使用 `.harness/prompts/START-MIMO.md`，从阶段 10 开始；以后使用阶段执行/复核/修复/继续 Prompt，不需要每次重新组织完整上下文。
 
 如果会话中断或更换模型，先按 `.harness/handoff.md` 恢复。开放问题以 `.harness/issue-log.md` 为准，聊天记录不作为唯一进度来源。

@@ -61,9 +61,11 @@ public class InventoryController {
     // ========== Upload and parse ==========
 
     @PostMapping("/inventory-imports/items")
-    public ResponseEntity<ApiResponse<Map<String, Object>>> uploadItem(@RequestParam("file") MultipartFile file) throws IOException {
+    public ResponseEntity<ApiResponse<Map<String, Object>>> uploadItem(
+            @RequestParam("file") MultipartFile file) throws IOException {
         Long userId = CurrentUser.getUserId();
-        ImportTask task = inventoryImportService.uploadItem(file.getInputStream(), file.getOriginalFilename(), userId);
+        ImportTask task = inventoryImportService.uploadItem(
+                file.getInputStream(), file.getOriginalFilename(), userId);
         ParseResult<InventoryItem> staging = inventoryImportService.getItemStagingResult(task.id());
 
         List<Map<String, Object>> previewRows = buildPreviewRows(staging);
@@ -113,14 +115,24 @@ public class InventoryController {
         return ResponseEntity.ok(ApiResponse.ok(inventoryImportService.listSnapshots()));
     }
 
+    @GetMapping("/inventory-snapshots/page")
+    public ResponseEntity<ApiResponse<com.mrp.common.response.PageResult<InventorySnapshot>>> listSnapshotsPage(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "3") int pageSize,
+            @RequestParam(required = false) String keyword) {
+        return ResponseEntity.ok(ApiResponse.ok(inventoryImportService.listSnapshotsPage(keyword, page, pageSize)));
+    }
+
     // ========== Get snapshot details ==========
 
     @GetMapping("/inventory-snapshots/{snapshotId}")
     public ResponseEntity<ApiResponse<Map<String, Object>>> getSnapshotDetails(@PathVariable Long snapshotId,
                                                                                @RequestParam(defaultValue = "1") int page,
-                                                                               @RequestParam(defaultValue = "20") int pageSize) {
-        List<InventoryItem> items = inventoryImportService.getSnapshotItemsPage(snapshotId, page, pageSize);
-        int total = inventoryImportService.countSnapshotItems(snapshotId);
+                                                                               @RequestParam(defaultValue = "20") int pageSize,
+                                                                               @RequestParam(required = false) String keyword) {
+        var result = inventoryImportService.getSnapshotPage(snapshotId, keyword, page, pageSize);
+        List<InventoryItem> items = result.items();
+        int total = result.total();
 
         List<Map<String, Object>> rows = new ArrayList<>();
         for (InventoryItem item : items) {
@@ -129,6 +141,9 @@ public class InventoryController {
             row.put("productLine", item.productLine());
             row.put("inventoryCategory", item.inventoryCategory());
             row.put("materialId", item.materialId());
+            row.put("inventoryQuality", item.inventoryQuality());
+            row.put("warehouseCode", item.warehouseCode());
+            row.put("warehouseName", item.warehouseName());
             row.put("projectModel", item.projectModel());
             row.put("materialName", item.materialName());
             row.put("supplierName", item.supplierName());
@@ -138,6 +153,7 @@ public class InventoryController {
             row.put("xa378Qty", item.xa378Qty());
             row.put("xa226Qty", item.xa226Qty());
             row.put("shippingAvailableQty", item.shippingAvailableQty());
+            row.put("inventoryQty", item.shippingAvailableQty());
             row.put("classification", item.classification());
             row.put("barcode", item.barcode());
             row.put("remark", item.remark());
@@ -152,7 +168,7 @@ public class InventoryController {
                 "total", total,
                 "page", page,
                 "pageSize", pageSize,
-                "totalPages", (int) Math.ceil((double) total / pageSize)
+                "totalPages", result.totalPages()
         )));
     }
 
@@ -208,6 +224,9 @@ public class InventoryController {
             row.put("productLine", item.productLine());
             row.put("inventoryCategory", item.inventoryCategory());
             row.put("materialId", item.materialId());
+            row.put("inventoryQuality", item.inventoryQuality());
+            row.put("warehouseCode", item.warehouseCode());
+            row.put("warehouseName", item.warehouseName());
             row.put("projectModel", item.projectModel());
             row.put("materialName", item.materialName());
             row.put("supplierName", item.supplierName());
@@ -217,6 +236,7 @@ public class InventoryController {
             row.put("xa378Qty", item.xa378Qty());
             row.put("xa226Qty", item.xa226Qty());
             row.put("shippingAvailableQty", item.shippingAvailableQty());
+            row.put("inventoryQty", item.shippingAvailableQty());
             row.put("classification", item.classification());
             row.put("barcode", item.barcode());
             row.put("remark", item.remark());

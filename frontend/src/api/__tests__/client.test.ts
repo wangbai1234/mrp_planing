@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { setToken, getToken, get } from '@/api/client'
+import { setToken, getToken, get, upload, ApiError } from '@/api/client'
 
 // Mock localStorage
 const localStorageMock = {
@@ -51,19 +51,45 @@ describe('API Client', () => {
   })
 
   it('should handle 401 response', async () => {
+    setToken('expired-token')
     fetchMock.mockResolvedValue({
       status: 401,
       ok: false,
-      statusText: 'Unauthorized'
+      json: vi.fn().mockResolvedValue({ error: { code: 'AUTH_EXPIRED', message: '登录已过期' } })
     })
 
-    await expect(get('/api/v1/plans')).rejects.toThrow('未授权，请重新登录')
+    await expect(get('/plans')).rejects.toMatchObject({ status: 401, code: 'AUTH_EXPIRED' })
     expect(getToken()).toBeNull()
+  })
+
+  it('should keep login state and return a permission error for 403', async () => {
+    setToken('valid-token')
+    fetchMock.mockResolvedValue({
+      status: 403,
+      ok: false,
+      json: vi.fn().mockResolvedValue({ error: { code: 'ACCESS_DENIED', message: '缺少物料策略管理权限' } })
+    })
+
+    const promise = get('/mrp/material-policy-versions')
+    await expect(promise).rejects.toBeInstanceOf(ApiError)
+    await expect(promise).rejects.toMatchObject({ status: 403, code: 'ACCESS_DENIED' })
+    expect(getToken()).toBe('valid-token')
+    expect(localStorageMock.removeItem).not.toHaveBeenCalledWith('mrp_token')
   })
 
   it('should handle network error', async () => {
     fetchMock.mockRejectedValue(new TypeError('Failed to fetch'))
 
     await expect(get('/api/v1/plans')).rejects.toThrow('Failed to fetch')
+  })
+})
+
+
+describe('Non JSON API responses', () => {
+  it.each(['request', 'upload'])('reports a clear error for %s HTML responses', async (kind) => {
+    fetchMock.mockResolvedValue({ ok: true, status: 200, url: '/api/v1/mrp/batches/1/material-policy-notices',
+      json: vi.fn().mockRejectedValue(new SyntaxError("Unexpected token '<'")) })
+    const result = kind === 'request' ? get('/mrp/batches/1/material-policy-notices') : upload('/mrp/stock-policies/import', new FormData())
+    await expect(result).rejects.toMatchObject({ name: 'ApiError', status: 200, code: 'INVALID_JSON_RESPONSE' })
   })
 })

@@ -151,7 +151,8 @@ public class MaterialController {
                 "imported", result.imported(),
                 "skipped", result.skipped(),
                 "failed", result.failed(),
-                "total", result.total()
+                "total", result.total(),
+                "duplicateCodes", result.duplicateCodes()
         )));
     }
 

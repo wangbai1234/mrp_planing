@@ -1,0 +1,58 @@
+// Isolated API acceptance only; never calls material/category/BOM management APIs.
+import fs from 'node:fs/promises';import assert from 'node:assert/strict';
+const base='http://127.0.0.1:8180/api/v1',out=process.env.UAT_API_EVIDENCE || new URL('../evidence/api-suite.json',import.meta.url),results=[];
+let token;const fixture=new URL('../../2026-10-15/data/xlsx/',import.meta.url);
+async function req(p,method='GET',body,auth=token,file){if(/^\/(materials?|material-categor|bom)(\/|$)/.test(p))throw Error('Protected API');const h=auth?{Authorization:'Bearer '+auth}:{};let b;if(file){b=new FormData();b.append('file',new Blob([await fs.readFile(new URL(file+'.xlsx',fixture))]),file+'.xlsx');}else if(body!==undefined){h['Content-Type']='application/json';b=JSON.stringify(body);}const start=performance.now();const r=await fetch(base+p,{method,headers:h,body:b,signal:AbortSignal.timeout(90000)});const text=await r.text();let j;try{j=JSON.parse(text);}catch{j={binary:true,bytes:Buffer.byteLength(text),zip:text.startsWith('PK')}}return {status:r.status,j,data:j.data,ms:Math.round(performance.now()-start)};}
+function ok(r){assert(r.status<300&&r.j.success!==false,JSON.stringify({status:r.status,error:r.j.error}));return r.data;}
+function reject(r){assert(r.status>=400||r.j.success===false,'Unexpected accepted request');assert(r.status<500,'Uncontrolled server error '+r.status);}
+async function test(id,fn){try{const detail=await fn();results.push({id,status:'PASS',detail});}catch(e){results.push({id,status:'FAIL',error:String(e)});}await fs.writeFile(out,JSON.stringify(results,null,2));console.log(id,results.at(-1).status);}
+await test('AUTH-anonymous-protected',async()=>assert([401,403].includes((await req('/mrp/factories','GET',undefined,null)).status)));
+await test('AUTH-invalid-password',async()=>reject(await req('/auth/login','POST',{username:'admin',password:'invalid-test-password'},null)));
+token=ok(await req('/auth/login','POST',{username:'admin',password:process.env.UAT_PASSWORD},null)).token;
+for(const p of ['/mrp/factories','/forecast-versions?page=1&pageSize=20','/inventory-snapshots/page?page=1&pageSize=20','/roles','/permissions','/permissions/tree','/users?page=1&pageSize=20','/mrp/batches/page?page=1&pageSize=20'])await test('READ '+p,async()=>{const r=await req(p);ok(r);return {ms:r.ms};});
+for(const route of ['factory-warehouse-mappings','stock-policies','material-policies','production-calendars','business-weeks']){
+ await test('TEMPLATE '+route,async()=>{const r=await req('/mrp/'+route+'/template');assert.equal(r.status,200);assert(r.j.zip);});
+ const file={'factory-warehouse-mappings':'negative-calendar','stock-policies':'negative-calendar','material-policies':'negative-calendar','production-calendars':'negative-calendar','business-weeks':'negative-calendar'}[route];
+ await test('IMPORT-invalid-preview '+route,async()=>{const r=await req('/mrp/'+route+'/import/preview','POST',undefined,token,file);const d=ok(r);assert(d.errorRows>0||d.errors?.length>0);return {errors:d.errorRows};});
+ await test('IMPORT-invalid-atomic '+route,async()=>{const p='/mrp/'+route;const before=JSON.stringify(ok(await req(p)));reject(await req(p+'/import','POST',undefined,token,file));assert.equal(JSON.stringify(ok(await req(p))),before);});
+ await test('IMPORT-error-workbook '+route,async()=>{const r=await req('/mrp/'+route+'/import/errors','POST',undefined,token,file);assert.equal(r.status,200);assert(r.j.zip);});
+}
+let calendar;const cal={factoryCode:'爱培科',calendarDate:'2028-01-03',productionDay:true,dailyCapacity:'10000',capacityUnit:'台',reason:'API验收临时记录'};
+await test('CAL-create',async()=>{calendar=ok(await req('/mrp/production-calendars','POST',cal));assert.equal(Number(calendar.dailyCapacity),10000);});
+await test('CAL-update-revision',async()=>{calendar=ok(await req('/mrp/production-calendars/'+calendar.id,'PUT',{...calendar,dailyCapacity:'12000'}));assert.equal(Number(calendar.dailyCapacity),12000);});
+for(const [name,patch] of [['fraction',{dailyCapacity:'83.5'}],['negative',{dailyCapacity:'-1'}],['wrong-unit',{capacityUnit:'个'}],['unknown-factory',{factoryCode:'BAD'}]])await test('CAL-reject-'+name,async()=>reject(await req('/mrp/production-calendars','POST',{...cal,calendarDate:'2028-01-04',...patch})));
+await test('CAL-month-complete',async()=>assert.equal(ok(await req('/mrp/production-calendars/month?factoryCode='+encodeURIComponent('爱培科')+'&month=2028-01')).length,31));
+await test('CAL-page-cap',async()=>{const d=ok(await req('/mrp/production-calendars/page?factoryCode='+encodeURIComponent('爱培科')+'&month=2028-01&page=0&pageSize=10000'));assert(d.items.length<=100);assert.equal(d.page,1);});
+const br={factoryCode:'永惠',startDate:'2028-02-01',endDate:'2028-02-07',weekdays:[1,2,3,4,5,6,7],productionDay:true,dailyCapacity:'100',capacityUnit:'台',overwrite:false,reason:'验收'};let preview;
+await test('CAL-batch-preview-no-write',async()=>{const before=JSON.stringify(ok(await req('/mrp/production-calendars?factoryCode='+encodeURIComponent('永惠'))));preview=ok(await req('/mrp/production-calendars/batch/preview','POST',br));assert.equal(preview.inserted,7);assert.equal(JSON.stringify(ok(await req('/mrp/production-calendars?factoryCode='+encodeURIComponent('永惠')))),before);});
+await test('CAL-stale-fingerprint',async()=>reject(await req('/mrp/production-calendars/batch','POST',{...br,expectedFingerprint:'stale'})));
+await test('CAL-batch-commit',async()=>ok(await req('/mrp/production-calendars/batch','POST',{...br,expectedFingerprint:preview.fingerprint})));
+await test('CAL-preserve-existing',async()=>assert.equal(ok(await req('/mrp/production-calendars/batch/preview','POST',br)).preserved,7));
+await test('CAL-cleanup',async()=>{ok(await req('/mrp/production-calendars/'+calendar.id,'DELETE'));for(const c of ok(await req('/mrp/production-calendars?factoryCode='+encodeURIComponent('永惠'))).filter(c=>c.calendarDate>='2028-02-01'&&c.calendarDate<='2028-02-07'))ok(await req('/mrp/production-calendars/'+c.id,'DELETE'));});
+await test('MAPPING-conflict-atomic',async()=>{const rows=ok(await req('/mrp/factory-warehouse-mappings'));reject(await req('/mrp/factory-warehouse-mappings/'+rows[0].id,'PUT',{...rows[0],warehouseCode:rows[1].warehouseCode}));assert.equal(JSON.stringify(ok(await req('/mrp/factory-warehouse-mappings'))),JSON.stringify(rows));});
+await test('STOCK-negative',async()=>reject(await req('/mrp/stock-policies','POST',{warehouseCode:'UAT_APK',materialCode:'5079AA000088',safetyStockQty:'-1',warningStockQty:'0'})));
+await test('POLICY-unknown-material',async()=>reject(await req('/mrp/material-policies','POST',{materialCode:'UAT_DOES_NOT_EXIST',supplyMode:'SELF_MADE',explosionPolicy:'STOP'})));
+for(const route of ['stock-policies','material-policies'])await test('PAGE-search-empty '+route,async()=>assert.equal(ok(await req('/mrp/'+route+'/page?keyword=UAT_DOES_NOT_EXIST&page=1&pageSize=20')).total,0));
+let rid,uid,ut;const stamp=Date.now();
+await test('ROLE-create',async()=>{rid=ok(await req('/roles','POST',{code:'uat_'+stamp,name:'验收临时角色',description:'测试后删除'})).id;});
+await test('ROLE-update',async()=>ok(await req('/roles/'+rid,'PUT',{name:'验收角色更新',description:'API测试',status:'ACTIVE'})));
+await test('ROLE-permissions-empty',async()=>{ok(await req('/roles/'+rid+'/permissions','PUT',{permissionIds:[]}));assert.deepEqual(ok(await req('/roles/'+rid+'/permissions')),[]);});
+await test('USER-create',async()=>{const d=ok(await req('/users','POST',{username:'uat_'+stamp,displayName:'验收用户',roleIds:[rid]}));uid=d.id;assert(!d.passwordHash,'Password hash leaked');});
+await test('USER-update',async()=>{const d=ok(await req('/users/'+uid,'PUT',{displayName:'验收用户更新',department:'测试',roleIds:[rid]}));assert.equal(d.displayName,'验收用户更新');});
+await test('USER-login-no-permissions',async()=>{ut=ok(await req('/auth/login','POST',{username:'uat_'+stamp,password:'Mrp@123456'},null)).token;});
+for(const p of ['/users','/forecast-versions','/mrp/batches/5','/forecast-versions/1','/users/1'])await test('AUTH-no-permission '+p,async()=>assert.equal((await req(p,'GET',undefined,ut)).status,403));
+await test('USER-disable-login',async()=>{ok(await req('/users/'+uid+'/status','PUT',{isActive:false}));reject(await req('/auth/login','POST',{username:'uat_'+stamp,password:'Mrp@123456'},null));});
+await test('USER-delete',async()=>ok(await req('/users/'+uid,'DELETE')));
+await test('ROLE-delete',async()=>ok(await req('/roles/'+rid,'DELETE')));
+const bid=Number(process.env.UAT_BATCH_ID||5),p='/mrp/batches/'+bid;let batch=ok(await req(p));let input,pr;
+await test('PLAN-ready',async()=>assert.equal(batch.status,'READY'));
+for(const tail of ['/summary','/issues','/execution','/capacity-loads?startDate=2026-10-01&endDate=2027-04-30','/plans/weekly','/plans/monthly','/plans/conservation','/unallocated','/overrides'])await test('PLAN-read '+tail,async()=>{const r=await req(p+tail);ok(r);return {ms:r.ms};});
+await test('PLAN-linked-preview-integer',async()=>{const rows=ok(await req(p+'/rolling-details?view=MACHINE_OUTPUT&pageSize=100&startDate=2026-10-01&endDate=2027-04-30')).items;const row=rows.find(x=>Number(x.effectiveQuantity)>=2);assert(row);const dates=ok(await req(p+'/rolling-grid')).calendarDays;const target=dates.find(d=>d!==row.scheduleDate&&d>row.scheduleDate&&new Date(d).getUTCDay()!==0&&new Date(d).getUTCDay()!==6);input={rowKey:row.rowKey,sourceDate:row.scheduleDate,targetDate:target,quantity:'1',expectedRunId:batch.activeRunId};pr=ok(await req(p+'/linked-transfers/preview','POST',input));assert(pr.lines.length>=2);assert(pr.lines.every(l=>Number.isInteger(Number(l.suggestedQuantity))));return {input,lines:pr.lines};});
+for(const [name,patch] of [['fraction',{quantity:'83.5'}],['negative',{quantity:'-1'}],['stale-run',{expectedRunId:999999}],['same-day',{targetDate:input?.sourceDate}]])await test('PLAN-linked-reject-'+name,async()=>reject(await req(p+'/linked-transfers/preview','POST',{...input,...patch})));
+const sum=rows=>{const m={};for(const r of rows){const k=[r.factoryCode,r.rootMaterialCode,r.terminalMaterialCode,r.terminalType,r.sourceMonth].join('|');m[k]=(m[k]||0)+Number(r.effectiveQuantity);}return m;};let totals;
+await test('PLAN-linked-lock-protection',async()=>{ok(await req(p+'/execution/lock?scheduleDate='+input.sourceDate,'POST'));reject(await req(p+'/linked-transfers/preview','POST',input));ok(await req(p+'/execution/unlock?scheduleDate='+input.sourceDate,'POST'));});
+await test('PLAN-linked-stale-fingerprint',async()=>reject(await req(p+'/linked-transfers','POST',{...input,fingerprint:'stale',reason:'验收',lines:pr.lines.map(l=>({rowKey:l.rowKey,quantity:l.suggestedQuantity}))})));
+await test('PLAN-linked-commit-conservation',async()=>{totals=sum(ok(await req(p+'/daily-plans')));pr=ok(await req(p+'/linked-transfers/preview','POST',input));ok(await req(p+'/linked-transfers','POST',{...input,fingerprint:pr.fingerprint,reason:'整数联动验收',lines:pr.lines.map(l=>({rowKey:l.rowKey,quantity:l.suggestedQuantity}))}));const after=sum(ok(await req(p+'/daily-plans')));for(const k in totals)assert(Math.abs(totals[k]-after[k])<0.00001,k);});
+await test('PLAN-linked-replay-rejected',async()=>reject(await req(p+'/linked-transfers','POST',{...input,fingerprint:pr.fingerprint,reason:'重放',lines:pr.lines.map(l=>({rowKey:l.rowKey,quantity:l.suggestedQuantity}))})));
+await test('PLAN-publish-stale-review',async()=>reject(await req(p+'/publish','POST',{capacityFingerprint:'stale'})));
+await fs.writeFile(out,JSON.stringify(results,null,2));console.log(JSON.stringify({pass:results.filter(x=>x.status==='PASS').length,fail:results.filter(x=>x.status==='FAIL').length}));

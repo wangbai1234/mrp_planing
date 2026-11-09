@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.mrp.repository.MrpInventoryPoolMapper">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO mrp_inventory_pool (batch_id, snapshot_id, factory_code, warehouse_code, inventory_org,
+            material_code, available_qty, reserved_qty, warning_qty, allocated_qty, version)
+        VALUES (#{batchId}, #{snapshotId}, #{factoryCode}, #{warehouseCode}, #{inventoryOrg},
+            #{materialCode}, #{availableQty}, #{reservedQty}, #{warningQty}, #{allocatedQty}, #{version})
+    </insert>
+    
+    <update id="update">
+        UPDATE mrp_inventory_pool SET available_qty=#{availableQty}, reserved_qty=#{reservedQty},
+            warning_qty=#{warningQty}, allocated_qty=#{allocatedQty}, version=version+1
+        WHERE id=#{id} AND version=#{version}
+    </update>
+    
+    <select id="selectById" resultType="com.mrp.mrp.domain.MrpInventoryPool">
+        SELECT * FROM mrp_inventory_pool WHERE id=#{id}
+    </select>
+    
+    <select id="selectByBatchId" resultType="com.mrp.mrp.domain.MrpInventoryPool">
+        SELECT * FROM mrp_inventory_pool WHERE batch_id=#{batchId} ORDER BY factory_code, material_code
+    </select>
+    <select id="selectPageByBatchId" resultType="com.mrp.mrp.domain.MrpInventoryPool">
+        SELECT * FROM mrp_inventory_pool WHERE batch_id=#{batchId}
+        ORDER BY factory_code, material_code, id LIMIT #{offset}, #{pageSize}
+    </select>
+    <select id="countByBatchId" resultType="int">SELECT COUNT(*) FROM mrp_inventory_pool WHERE batch_id=#{batchId}</select>
+    
+    <select id="selectByBatchAndMaterial" resultType="com.mrp.mrp.domain.MrpInventoryPool">
+        SELECT * FROM mrp_inventory_pool WHERE batch_id=#{batchId} AND material_code=#{materialCode}
+    </select>
+    <update id="rebuildAllocatedQuantitiesByBatchId">
+        UPDATE mrp_inventory_pool p
+        LEFT JOIN (
+            SELECT a.pool_id, COALESCE(SUM(a.allocated_qty), 0) AS allocated_qty
+            FROM mrp_inventory_allocation a
+            GROUP BY a.pool_id
+        ) a ON a.pool_id = p.id
+        SET p.allocated_qty=COALESCE(a.allocated_qty, 0), p.version=p.version+1
+        WHERE p.batch_id=#{batchId}
+    </update>
+</mapper>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.mrp.repository.MrpDailyPlanOverrideMapper">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO mrp_daily_plan_override (batch_id, factory_code, root_material_code, terminal_material_code, terminal_type, supply_mode, path_group_key, schedule_date, manual_quantity, reason, revision, operator_id)
+        VALUES (#{batchId}, #{factoryCode}, #{rootMaterialCode}, #{terminalMaterialCode}, #{terminalType}, #{supplyMode}, #{pathGroupKey}, #{scheduleDate}, #{manualQuantity}, #{reason}, #{revision}, #{operatorId})
+    </insert>
+    
+    <update id="update">
+        UPDATE mrp_daily_plan_override SET manual_quantity=#{manualQuantity}, reason=#{reason}, revision=#{revision}, operator_id=#{operatorId}
+        WHERE id=#{id}
+    </update>
+    
+    <delete id="deleteById">
+        DELETE FROM mrp_daily_plan_override WHERE id=#{id}
+    </delete>
+    
+    <select id="selectById" resultType="com.mrp.mrp.domain.MrpDailyPlanOverride">
+        SELECT * FROM mrp_daily_plan_override WHERE id=#{id}
+    </select>
+
+    <select id="selectByBusinessKey" resultType="com.mrp.mrp.domain.MrpDailyPlanOverride">
+        SELECT * FROM mrp_daily_plan_override
+        WHERE batch_id=#{batchId}
+          AND factory_code=#{factoryCode}
+          AND root_material_code=#{rootMaterialCode}
+          AND terminal_material_code=#{terminalMaterialCode}
+          AND terminal_type=#{terminalType}
+          AND supply_mode=#{supplyMode}
+          AND path_group_key=#{pathGroupKey}
+          AND schedule_date=#{scheduleDate}
+        LIMIT 1
+    </select>
+    
+    <select id="selectByBatchId" resultType="com.mrp.mrp.domain.MrpDailyPlanOverride">
+        SELECT * FROM mrp_daily_plan_override WHERE batch_id=#{batchId} ORDER BY factory_code, root_material_code, terminal_material_code, schedule_date
+    </select>
+</mapper>

@@ -3,8 +3,8 @@
 <mapper namespace="com.mrp.inventory.repository.InventoryMapper">
 
     <insert id="insertSnapshot" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO inventory_snapshot (snapshot_date, file_name, file_checksum, status, created_by)
-        VALUES (#{snapshotDate}, #{fileName}, #{fileChecksum}, #{status}, #{createdBy})
+        INSERT INTO inventory_snapshot (snapshot_date, warehouse_code, file_name, file_checksum, status, created_by)
+        VALUES (#{snapshotDate}, #{warehouseCode}, #{fileName}, #{fileChecksum}, #{status}, #{createdBy})
     </insert>
 
     <select id="selectSnapshotById" resultType="com.mrp.inventory.domain.InventorySnapshot">
@@ -17,6 +17,43 @@
 
     <select id="selectAllSnapshots" resultType="com.mrp.inventory.domain.InventorySnapshot">
         SELECT * FROM inventory_snapshot ORDER BY id DESC
+    </select>
+
+    <select id="selectSnapshotsByWarehouseCode" resultType="com.mrp.inventory.domain.InventorySnapshot">
+        SELECT s.*
+        FROM inventory_snapshot s
+        WHERE s.warehouse_code = #{warehouseCode}
+           OR EXISTS (
+                SELECT 1
+                FROM inventory_item i
+                WHERE i.snapshot_id = s.id
+                  AND i.warehouse_code = #{warehouseCode}
+           )
+        ORDER BY s.id DESC
+    </select>
+
+    <select id="selectSnapshotsPage" resultType="com.mrp.inventory.domain.InventorySnapshot">
+        SELECT * FROM inventory_snapshot
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND (CAST(id AS CHAR) LIKE CONCAT('%', #{keyword}, '%')
+                  OR CAST(snapshot_date AS CHAR) LIKE CONCAT('%', #{keyword}, '%')
+                  OR status LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+        </where>
+        ORDER BY id DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="countSnapshotsPage" resultType="long">
+        SELECT COUNT(*) FROM inventory_snapshot
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND (CAST(id AS CHAR) LIKE CONCAT('%', #{keyword}, '%')
+                  OR CAST(snapshot_date AS CHAR) LIKE CONCAT('%', #{keyword}, '%')
+                  OR status LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+        </where>
     </select>
 
     <insert id="insertDetails">

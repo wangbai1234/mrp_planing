@@ -2,13 +2,14 @@ package com.mrp.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mrp.MrpApiApplication;
+import com.mrp.BaseIntegrationTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -20,8 +21,7 @@ import static org.hamcrest.Matchers.*;
 
 @SpringBootTest(classes = MrpApiApplication.class)
 @AutoConfigureMockMvc
-@ActiveProfiles("local")
-class MaterialApiTest {
+class MaterialApiTest extends BaseIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -29,11 +29,14 @@ class MaterialApiTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     private String token;
 
     @BeforeEach
     void setUp() throws Exception {
-        Map<String, String> loginRequest = Map.of("username", "admin", "password", "admin123");
+        Map<String, String> loginRequest = Map.of("username", "admin", "password", BaseIntegrationTest.TEST_ADMIN_PASSWORD);
 
         MvcResult result = mockMvc.perform(post("/api/v1/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -59,20 +62,26 @@ class MaterialApiTest {
 
     @Test
     void listMaterials_withSearch_shouldReturnFilteredList() throws Exception {
-        mockMvc.perform(get("/api/v1/materials")
-                        .header("Authorization", "Bearer " + token)
-                        .param("keyword", "test")
-                        .param("page", "1")
-                        .param("pageSize", "20"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.data.items").isArray())
-                .andExpect(jsonPath("$.data.total").value(greaterThan(0)));
+        String code = "test-material-" + System.nanoTime();
+        jdbcTemplate.update("INSERT INTO material(material_code, material_name) VALUES (?, ?)", code, "Search fixture");
+        try {
+            mockMvc.perform(get("/api/v1/materials")
+                            .header("Authorization", "Bearer " + token)
+                            .param("keyword", code)
+                            .param("page", "1")
+                            .param("pageSize", "20"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.success").value(true))
+                    .andExpect(jsonPath("$.data.items[0].materialCode").value(code))
+                    .andExpect(jsonPath("$.data.total").value(1));
+        } finally {
+            jdbcTemplate.update("DELETE FROM material WHERE material_code = ?", code);
+        }
     }
 
     @Test
-    void listMaterials_withoutToken_shouldReturn403() throws Exception {
+    void listMaterials_withoutToken_shouldReturn401() throws Exception {
         mockMvc.perform(get("/api/v1/materials"))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
     }
 }

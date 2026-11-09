@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -97,6 +98,7 @@ public class MaterialImportService {
         int imported = 0;
         int skipped = 0;
         int failed = 0;
+        List<String> duplicateCodes = new ArrayList<>();
 
         log.info("Starting material import: total={}, checksum={}", total, checksum);
 
@@ -107,9 +109,11 @@ public class MaterialImportService {
             int batchNum = i / BATCH_SIZE + 1;
 
             try {
-                int result_count = processBatch(batch, skipDuplicates);
+                List<String> batchDuplicates = new ArrayList<>();
+                int result_count = processBatch(batch, skipDuplicates, batchDuplicates);
                 imported += result_count;
                 skipped += (batch.size() - result_count);
+                duplicateCodes.addAll(batchDuplicates);
                 log.debug("Batch {} completed: {}/{} imported", batchNum, result_count, batch.size());
             } catch (Exception e) {
                 failed += batch.size();
@@ -124,14 +128,14 @@ public class MaterialImportService {
         log.info("Material import completed: imported={}, skipped={}, failed={}, checksum={}", 
                 imported, skipped, failed, checksum);
 
-        return new ImportResult(imported, skipped, failed, total);
+        return new ImportResult(imported, skipped, failed, total, duplicateCodes);
     }
 
     /**
      * Process a single batch with its own transaction
      */
     @Transactional
-    protected int processBatch(List<Material> batch, boolean skipDuplicates) {
+    protected int processBatch(List<Material> batch, boolean skipDuplicates, List<String> duplicateCodes) {
         int count = 0;
 
         for (Material m : batch) {
@@ -139,6 +143,7 @@ public class MaterialImportService {
                 // Check duplicate
                 if (materialMapper.countByCode(m.materialCode()) > 0) {
                     if (skipDuplicates) {
+                        duplicateCodes.add(m.materialCode());
                         continue; // Skip silently
                     } else {
                         throw new ValidationException("Material code already exists: " + m.materialCode());
@@ -185,5 +190,5 @@ public class MaterialImportService {
 
     public record StagingResult(String checksum, ParseResult<Material> result) {}
 
-    public record ImportResult(int imported, int skipped, int failed, int total) {}
+    public record ImportResult(int imported, int skipped, int failed, int total, List<String> duplicateCodes) {}
 }

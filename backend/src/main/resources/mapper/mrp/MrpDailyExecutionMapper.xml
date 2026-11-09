@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.mrp.repository.MrpDailyExecutionMapper">
+
+    <resultMap id="BaseResultMap" type="com.mrp.mrp.domain.MrpDailyExecution">
+        <id property="id" column="id"/>
+        <result property="batchId" column="batch_id"/>
+        <result property="rowKey" column="row_key"/>
+        <result property="factoryCode" column="factory_code"/>
+        <result property="rootMaterialCode" column="root_material_code"/>
+        <result property="scheduleDate" column="schedule_date"/>
+        <result property="executionStatus" column="execution_status"/>
+        <result property="actualQuantity" column="actual_quantity"/>
+        <result property="plannedQuantity" column="planned_quantity"/>
+        <result property="confirmedBy" column="confirmed_by"/>
+        <result property="confirmedAt" column="confirmed_at"/>
+        <result property="remark" column="remark"/>
+        <result property="revision" column="revision"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.mrp.mrp.domain.MrpDailyExecution" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO mrp_daily_execution (batch_id, row_key, schedule_date, execution_status,
+            actual_quantity, planned_quantity, confirmed_by, confirmed_at, remark, revision)
+        VALUES (#{batchId}, #{rowKey}, #{scheduleDate}, #{executionStatus},
+            #{actualQuantity}, #{plannedQuantity}, #{confirmedBy}, #{confirmedAt}, #{remark}, #{revision})
+    </insert>
+
+    <select id="selectByBatchRowDate" resultMap="BaseResultMap">
+        SELECT * FROM mrp_daily_execution
+        WHERE batch_id = #{batchId} AND row_key = #{rowKey} AND schedule_date = #{scheduleDate}
+    </select>
+
+    <select id="selectByBatchId" resultMap="BaseResultMap">
+        SELECT * FROM mrp_daily_execution WHERE batch_id = #{batchId} ORDER BY schedule_date
+    </select>
+
+    <sql id="executionFacts">
+        SELECT d.batch_id, d.row_key, d.factory_code, d.root_material_code, d.schedule_date,
+               COALESCE(o.manual_quantity, d.system_quantity) effective_quantity
+        FROM mrp_daily_plan_detail d
+        LEFT JOIN mrp_daily_plan_override o ON o.batch_id = #{batchId}
+            AND o.factory_code = d.factory_code AND o.root_material_code = d.root_material_code
+            AND o.terminal_material_code = d.terminal_material_code AND o.terminal_type = d.terminal_type
+            AND o.supply_mode = d.supply_mode AND o.path_group_key = d.path_group_key
+            AND o.schedule_date = d.schedule_date
+        WHERE d.run_id = #{runId} AND d.terminal_type = 'MACHINE_OUTPUT'
+        UNION ALL
+        SELECT d.batch_id,
+               SHA2(CONCAT(d.factory_code, '|', d.root_material_code, '|', d.terminal_material_code, '|',
+                   d.terminal_type, '|', d.supply_mode, '|', d.path_group_key, '|', d.source_month, '|',
+                   o.schedule_date), 256) row_key,
+               d.factory_code, d.root_material_code, o.schedule_date, o.manual_quantity effective_quantity
+        FROM mrp_daily_plan_override o
+        JOIN mrp_daily_plan_detail d ON d.run_id = #{runId}
+            AND d.factory_code = o.factory_code AND d.root_material_code = o.root_material_code
+            AND d.terminal_material_code = o.terminal_material_code AND d.terminal_type = o.terminal_type
+            AND d.supply_mode = o.supply_mode AND d.path_group_key = o.path_group_key
+        WHERE o.batch_id = #{batchId} AND d.terminal_type = 'MACHINE_OUTPUT'
+            AND d.id = (SELECT t.id FROM mrp_daily_plan_detail t WHERE t.run_id = d.run_id
+                AND t.factory_code = d.factory_code AND t.root_material_code = d.root_material_code
+                AND t.terminal_material_code = d.terminal_material_code AND t.terminal_type = d.terminal_type
+                AND t.supply_mode = d.supply_mode AND t.path_group_key = d.path_group_key
+                ORDER BY t.schedule_date DESC, t.id DESC LIMIT 1)
+            AND NOT EXISTS (SELECT 1 FROM mrp_daily_plan_detail t WHERE t.run_id = d.run_id
+                AND t.factory_code = d.factory_code AND t.root_material_code = d.root_material_code
+                AND t.terminal_material_code = d.terminal_material_code AND t.terminal_type = d.terminal_type
+                AND t.supply_mode = d.supply_mode AND t.path_group_key = d.path_group_key
+                AND t.schedule_date = o.schedule_date)
+    </sql>
+
+    <sql id="pageFilter">
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND (p.root_material_code LIKE CONCAT('%', #{keyword}, '%')
+                    OR p.factory_code LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+            <if test="scheduleDate != null">AND p.schedule_date = #{scheduleDate}</if>
+        </where>
+    </sql>
+
+    <select id="countPage" resultType="int">
+        SELECT COUNT(*) FROM (<include refid="executionFacts"/>) p
+        <include refid="pageFilter"/>
+    </select>
+
+    <select id="selectPage" resultMap="BaseResultMap">
+        SELECT e.id, p.batch_id, p.row_key, p.factory_code, p.root_material_code, p.schedule_date,
+               COALESCE(e.execution_status, 'PLANNED') execution_status,
+               COALESCE(e.planned_quantity, p.effective_quantity) planned_quantity,
+               e.actual_quantity, e.confirmed_by, e.confirmed_at, e.remark, e.revision,
+               e.created_at, e.updated_at
+        FROM (<include refid="executionFacts"/>) p
+        LEFT JOIN mrp_daily_execution e ON e.batch_id = p.batch_id
+            AND e.row_key = p.row_key AND e.schedule_date = p.schedule_date
+        <include refid="pageFilter"/>
+        ORDER BY p.schedule_date DESC, p.factory_code, p.root_material_code, p.row_key
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="selectByBatchAndDateRange" resultMap="BaseResultMap">
+        SELECT * FROM mrp_daily_execution
+        WHERE batch_id = #{batchId} AND schedule_date BETWEEN #{startDate} AND #{endDate}
+        ORDER BY schedule_date
+    </select>
+
+    <update id="updateStatus">
+        UPDATE mrp_daily_execution
+        SET execution_status = #{executionStatus},
+            actual_quantity = #{actualQuantity},
+            confirmed_by = #{confirmedBy},
+            remark = #{remark},
+            confirmed_at = NOW(3),
+            revision = revision + 1
+        WHERE id = #{id} AND revision = #{expectedRevision}
+    </update>
+
+    <update id="freezeStatus">
+        UPDATE mrp_daily_execution
+        SET execution_status = #{executionStatus}, planned_quantity = #{plannedQuantity},
+            actual_quantity = #{actualQuantity}, confirmed_by = #{confirmedBy},
+            remark = #{remark}, confirmed_at = NOW(3), revision = revision + 1
+        WHERE id = #{id} AND revision = #{expectedRevision} AND execution_status = 'PLANNED'
+    </update>
+
+    <delete id="deleteByBatchId">
+        DELETE FROM mrp_daily_execution WHERE batch_id = #{batchId}
+    </delete>
+
+</mapper>

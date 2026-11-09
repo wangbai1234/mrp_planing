@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.mrp.repository.MrpCalcRunMapper">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO mrp_calc_run (batch_id, status, result_checksum, row_counts_json, started_at, finished_at, error_code, error_message)
+        VALUES (#{batchId}, #{status}, #{resultChecksum}, #{rowCountsJson}, #{startedAt}, #{finishedAt}, #{errorCode}, #{errorMessage})
+    </insert>
+    
+    <update id="update">
+        UPDATE mrp_calc_run SET status=#{status}, result_checksum=#{resultChecksum}, row_counts_json=#{rowCountsJson}, started_at=#{startedAt}, finished_at=#{finishedAt}, error_code=#{errorCode}, error_message=#{errorMessage}
+        WHERE id=#{id}
+    </update>
+    
+    <select id="selectById" resultType="com.mrp.mrp.domain.MrpCalcRun">
+        SELECT * FROM mrp_calc_run WHERE id=#{id}
+    </select>
+</mapper>

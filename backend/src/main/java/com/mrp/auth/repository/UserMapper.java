@@ -13,6 +13,8 @@ public interface UserMapper {
 
     User selectByUsername(@Param("username") String username);
 
+    java.util.Map<String, Object> selectAuthenticationStateForActiveUser(@Param("id") Long id, @Param("username") String username);
+
     List<User> selectAll();
 
     List<User> selectWithRoles(@Param("keyword") String keyword,
@@ -36,6 +38,8 @@ public interface UserMapper {
     int updateLastLoginAt(@Param("id") Long id);
 
     int deleteById(@Param("id") Long id);
+
+    int deleteFactoryScopesByUserId(@Param("userId") Long userId);
 
     List<Long> selectUserIdsByRoleId(@Param("roleId") Long roleId);
 

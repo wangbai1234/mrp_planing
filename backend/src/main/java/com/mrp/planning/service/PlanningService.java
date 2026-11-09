@@ -21,6 +21,7 @@ import com.mrp.planning.repository.PlanMapper;
 import com.mrp.shipment.domain.ShipmentDetail;
 import com.mrp.shipment.repository.ShipmentMapper;
 import com.mrp.task.repository.CalcTaskMapper;
+import com.mrp.mrp.service.FactoryMasterService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -47,12 +48,13 @@ public class PlanningService {
     private final MaterialMapper materialMapper;
     private final MaterialCategoryMapper categoryMapper;
     private final CalcTaskMapper calcTaskMapper;
+    private final FactoryMasterService factoryMasterService;
 
     public PlanningService(PlanMapper planMapper, ForecastMapper forecastMapper,
                           InventoryMapper inventoryMapper, ShipmentMapper shipmentMapper,
                           CapacityMapper capacityMapper, BomExplosionService bomExplosionService,
                           MaterialMapper materialMapper, MaterialCategoryMapper categoryMapper,
-                          CalcTaskMapper calcTaskMapper) {
+                          CalcTaskMapper calcTaskMapper, FactoryMasterService factoryMasterService) {
         this.planMapper = planMapper;
         this.forecastMapper = forecastMapper;
         this.inventoryMapper = inventoryMapper;
@@ -62,6 +64,7 @@ public class PlanningService {
         this.materialMapper = materialMapper;
         this.categoryMapper = categoryMapper;
         this.calcTaskMapper = calcTaskMapper;
+        this.factoryMasterService = factoryMasterService;
     }
 
     @Transactional
@@ -554,13 +557,13 @@ public class PlanningService {
             throw new com.mrp.common.exception.BusinessException("NO_FORECAST", "经营计划数据为空");
         }
 
-        List<String> validFactories = List.of("永惠", "爱培科");
+        List<String> validFactories = factoryMasterService.enabledCodes();
         List<String> invalidFactories = factories.stream()
                 .filter(f -> !validFactories.contains(f))
                 .toList();
         if (!invalidFactories.isEmpty()) {
             throw new com.mrp.common.exception.BusinessException("INVALID_FACTORY",
-                    "经营计划中存在无效的工厂值: " + String.join(", ", invalidFactories) + "。请修改Excel中的工厂列为「永惠」或「爱培科」后重新导入。");
+                    "经营计划中存在无效的工厂值: " + String.join(", ", invalidFactories) + "。请先维护并启用工厂，或修正经营计划后重新导入。");
         }
 
         List<PlanVersion> versions = new ArrayList<>();

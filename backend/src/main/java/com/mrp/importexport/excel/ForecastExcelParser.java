@@ -10,6 +10,7 @@ import org.apache.poi.xssf.model.StylesTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
@@ -31,9 +32,16 @@ public class ForecastExcelParser {
     private static final Logger log = LoggerFactory.getLogger(ForecastExcelParser.class);
 
     private final MaterialMapper materialMapper;
+    private final com.mrp.mrp.service.FactoryMasterService factoryMaster;
 
     public ForecastExcelParser(MaterialMapper materialMapper) {
+        this(materialMapper, null);
+    }
+
+    @Autowired
+    public ForecastExcelParser(MaterialMapper materialMapper, com.mrp.mrp.service.FactoryMasterService factoryMaster) {
         this.materialMapper = materialMapper;
+        this.factoryMaster = factoryMaster;
     }
 
     private static final int HEADER_ROW = 0;
@@ -70,20 +78,26 @@ public class ForecastExcelParser {
             factory.setNamespaceAware(true);
             XMLReader xmlReader = factory.newSAXParser().getXMLReader();
 
-            ForecastSheetHandler handler = new ForecastSheetHandler(sst, styles, versionId, rows, errors, recognizedMonths, materialMapper, rawRows, headers);
+            ForecastSheetHandler handler = new ForecastSheetHandler(sst, styles, versionId, rows, errors, recognizedMonths, materialMapper, rawRows, headers, factoryMaster == null ? com.mrp.mrp.service.ConfigMasterService.FACTORIES : factoryMaster.enabledCodes());
             xmlReader.setContentHandler(handler);
             xmlReader.parse(new InputSource(sheetStream));
 
             totalRows = handler.getDataRowCount();
             sheetStream.close();
+            if (rows.isEmpty() && errors.isEmpty()) {
+                errors.add(ParseError.of(1, "file", "", "NO_DATA", "没有可导入的经营计划数据"));
+            }
 
         } catch (Exception e) {
             log.error("Failed to parse forecast Excel", e);
             errors.add(ParseError.of(0, "file", "", "PARSE_ERROR", e.getMessage()));
         }
 
-        int errorRows = errors.size();
-        int successRows = rows.size();
+        int errorRows = (int) errors.stream()
+                .map(ParseError::rowNumber)
+                .distinct()
+                .count();
+        int successRows = totalRows == 0 ? 0 : Math.max(0, totalRows - errorRows);
         return new ParseResult<>(rows, errors, recognizedMonths, totalRows, successRows, errorRows, rawRows, headers);
     }
 
@@ -95,6 +109,7 @@ public class ForecastExcelParser {
         private final List<ParseError> errors;
         private final List<String> recognizedMonths;
         private final MaterialMapper materialMapper;
+        private final List<String> validFactories;
         private final List<List<String>> rawRows;
         private final List<String> headers;
 
@@ -102,15 +117,21 @@ public class ForecastExcelParser {
         private int currentCol = 0;
         private String cellType;
         private String cellValue;
+        private boolean formulaCell;
+        private boolean inFormula;
+        private final StringBuilder formulaBuilder = new StringBuilder();
         private boolean inValue;
         private StringBuilder valueBuilder = new StringBuilder();
 
         private List<String> headerMonths = new ArrayList<>();
         private List<Object> currentRowData = new ArrayList<>();
+        private List<String> currentRowCellTypes = new ArrayList<>();
+        private int dataRowCount;
+        private final java.util.Map<List<String>, Integer> sourceRows = new java.util.HashMap<>();
 
         ForecastSheetHandler(SharedStrings sst, StylesTable styles, Long versionId,
                             List<ForecastDetail> rows, List<ParseError> errors, List<String> recognizedMonths,
-                            MaterialMapper materialMapper, List<List<String>> rawRows, List<String> headers) {
+                            MaterialMapper materialMapper, List<List<String>> rawRows, List<String> headers, List<String> validFactories) {
             this.sst = sst;
             this.styles = styles;
             this.versionId = versionId;
@@ -118,11 +139,12 @@ public class ForecastExcelParser {
             this.errors = errors;
             this.recognizedMonths = recognizedMonths;
             this.materialMapper = materialMapper;
+            this.validFactories = validFactories;
             this.rawRows = rawRows;
             this.headers = headers;
         }
 
-        int getDataRowCount() { return currentRow; }
+        int getDataRowCount() { return dataRowCount; }
 
         @Override
         public void startElement(String uri, String localName, String qName, Attributes attrs) {
@@ -130,6 +152,7 @@ public class ForecastExcelParser {
                 currentRow++;
                 currentCol = 0;
                 currentRowData.clear();
+                currentRowCellTypes.clear();
                 String rowNum = getAttr(attrs, "r");
                 if (rowNum != null) {
                     currentRow = Integer.parseInt(rowNum) - 1;
@@ -137,6 +160,9 @@ public class ForecastExcelParser {
             } else if ("c".equals(localName) || "c".equals(qName)) {
                 cellType = getAttr(attrs, "t");
                 cellValue = null;
+                formulaCell = false;
+                inFormula = false;
+                formulaBuilder.setLength(0);
                 inValue = false;
                 valueBuilder.setLength(0);
                 // Handle missing cells (sparse)
@@ -145,9 +171,13 @@ public class ForecastExcelParser {
                     int col = colFromRef(ref);
                     while (currentCol < col) {
                         currentRowData.add(null);
+                        currentRowCellTypes.add(null);
                         currentCol++;
                     }
                 }
+            } else if ("f".equals(localName) || "f".equals(qName)) {
+                formulaCell = true;
+                inFormula = true;
             } else if ("v".equals(localName) || "v".equals(qName) || "t".equals(localName) || "t".equals(qName)) {
                 inValue = true;
                 valueBuilder.setLength(0);
@@ -156,6 +186,9 @@ public class ForecastExcelParser {
 
         @Override
         public void characters(char[] ch, int start, int length) {
+            if (inFormula) {
+                formulaBuilder.append(ch, start, length);
+            }
             if (inValue) {
                 valueBuilder.append(ch, start, length);
             }
@@ -163,12 +196,15 @@ public class ForecastExcelParser {
 
         @Override
         public void endElement(String uri, String localName, String qName) {
-            if ("v".equals(localName) || "v".equals(qName) || "t".equals(localName) || "t".equals(qName)) {
+            if ("f".equals(localName) || "f".equals(qName)) {
+                inFormula = false;
+            } else if ("v".equals(localName) || "v".equals(qName) || "t".equals(localName) || "t".equals(qName)) {
                 inValue = false;
                 cellValue = valueBuilder.toString().trim();
             } else if ("c".equals(localName) || "c".equals(qName)) {
-                String resolved = resolveCellValue(cellType, cellValue);
+                String resolved = formulaCell ? "=" + formulaBuilder : resolveCellValue(cellType, cellValue);
                 currentRowData.add(resolved);
+                currentRowCellTypes.add(cellType);
                 currentCol++;
             } else if ("row".equals(localName) || "row".equals(qName)) {
                 processRow();
@@ -186,7 +222,9 @@ public class ForecastExcelParser {
                 return;
             }
             if (currentRow < DATA_START_ROW) return;
-            if (currentRowData.isEmpty()) return;
+            if (currentRowData.isEmpty() || currentRowData.stream().allMatch(this::isBlankCell)) return;
+
+            dataRowCount++;
 
             // Save raw row data for error report (pad to expected column count)
             List<String> rawRow = new ArrayList<>();
@@ -202,10 +240,25 @@ public class ForecastExcelParser {
             rawRows.add(rawRow);
 
             String materialId = getString(COL_MATERIAL_ID);
-            if (materialId == null || materialId.isBlank()) return;
+            if (materialId == null || materialId.isBlank()) {
+                errors.add(ParseError.of(currentRow + 1, "material_id", "", "REQUIRED_FIELD", "料号不能为空"));
+                return;
+            }
+            if (isFormulaValue(materialId)) {
+                errors.add(ParseError.of(currentRow + 1, "material_id", materialId, "INVALID_MATERIAL_ID", "料号必须为文本，不能使用公式"));
+                return;
+            }
+            String materialCellType = currentRowCellTypes.size() > COL_MATERIAL_ID
+                    ? currentRowCellTypes.get(COL_MATERIAL_ID) : null;
+            if (!"s".equals(materialCellType) && !"inlineStr".equals(materialCellType) && !"str".equals(materialCellType)) {
+                errors.add(ParseError.of(currentRow + 1, "material_id", materialId, "INVALID_MATERIAL_ID",
+                        "料号必须设置为文本格式，数值或日期单元格可能丢失前导零或精度"));
+                return;
+            }
 
             // Validate material_id is text, not date/scientific
-            if (materialId.matches("\\d{4}-\\d{2}-\\d{2}.*") || materialId.matches("\\d+\\.\\d+E.*")) {
+            if (materialId.matches("\\d{4}-\\d{2}-\\d{2}.*")
+                    || materialId.matches("(?i)[+-]?\\d+(?:\\.\\d+)?E[+-]?\\d+")) {
                 errors.add(ParseError.of(currentRow + 1, "material_id", materialId, "INVALID_MATERIAL_ID", "料号被Excel转为日期或科学计数法"));
                 return;
             }
@@ -218,6 +271,21 @@ public class ForecastExcelParser {
             }
 
             String factoryCode = getString(COL_FACTORY);
+            if (factoryCode == null || factoryCode.isBlank()) {
+                errors.add(ParseError.of(currentRow + 1, "factory_code", "", "REQUIRED_FIELD", "请填写工厂"));
+                return;
+            }
+            if (!validFactories.contains(factoryCode)) {
+                errors.add(ParseError.of(currentRow + 1, "factory_code", factoryCode, "INVALID_FACTORY",
+                        "工厂不存在或已停用，请先维护工厂主数据"));
+                return;
+            }
+            Integer originalRow = sourceRows.putIfAbsent(List.of(factoryCode, materialId), currentRow + 1);
+            if (originalRow != null) {
+                errors.add(ParseError.of(currentRow + 1, "material_id", materialId, "DUPLICATE_ROW",
+                        "同工厂同整机重复，与第" + originalRow + "行重复"));
+                return;
+            }
             String formType = getString(COL_FORM_TYPE);
             String materialName = material.materialName();
             String project = material.projectModel();
@@ -234,6 +302,11 @@ public class ForecastExcelParser {
                 }
 
                 String qtyStr = getString(COL_FCST_START + i);
+                if (isFormulaValue(qtyStr)) {
+                    errors.add(ParseError.of(currentRow + 1, "fcst_" + monthStr, qtyStr,
+                            "INVALID_QTY", "数量不能使用公式，请填写数值"));
+                    continue;
+                }
                 BigDecimal qty = BigDecimal.ZERO;
                 if (qtyStr != null && !qtyStr.isBlank()) {
                     try {
@@ -242,6 +315,14 @@ public class ForecastExcelParser {
                         errors.add(ParseError.of(currentRow + 1, "fcst_" + monthStr, qtyStr, "INVALID_QTY", "数量格式错误"));
                         continue;
                     }
+                }
+                // The root demand becomes MACHINE_OUTPUT, which is distributed in integer machines.
+                // Reject fractional units before a formal forecast version can be confirmed.
+                if (qty.signum() < 0 || qty.stripTrailingZeros().scale() > 0
+                        || qty.precision() - qty.scale() > 12) {
+                    errors.add(ParseError.of(currentRow + 1, "fcst_" + monthStr, qtyStr,
+                            "INVALID_QTY", "整机数量必须为非负整数，最多12位"));
+                    continue;
                 }
 
                 rows.add(new ForecastDetail(
@@ -252,13 +333,32 @@ public class ForecastExcelParser {
             }
         }
 
+        private boolean isBlankCell(Object cell) {
+            return cell == null || cell.toString().isBlank();
+        }
+
+        private boolean isFormulaValue(String value) {
+            return value != null && value.startsWith("=");
+        }
+
         private void parseHeader() {
             headerMonths.clear();
+            YearMonth previous = null;
             for (int i = COL_FCST_START; i < COL_FCST_START + FCST_MONTHS; i++) {
                 String val = getString(i);
-                if (val != null) {
-                    headerMonths.add(val);
-                    recognizedMonths.add(val);
+                headerMonths.add(val);
+                YearMonth month = parseMonth(val);
+                if (month == null) {
+                    errors.add(ParseError.of(1, "month_" + (i - COL_FCST_START + 1),
+                            val == null ? "" : val, "INVALID_MONTH", "月份表头必须是完整年月"));
+                    previous = null;
+                } else {
+                    if (previous != null && !month.equals(previous.plusMonths(1))) {
+                        errors.add(ParseError.of(1, "month_" + (i - COL_FCST_START + 1), val,
+                                "INVALID_MONTH_SEQUENCE", "月份必须连续且不重复"));
+                    }
+                    recognizedMonths.add(month.toString());
+                    previous = month;
                 }
             }
         }

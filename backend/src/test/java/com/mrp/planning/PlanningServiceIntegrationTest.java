@@ -1,6 +1,7 @@
 package com.mrp.planning;
 
 import com.mrp.MrpApiApplication;
+import com.mrp.BaseIntegrationTest;
 import com.mrp.forecast.domain.ForecastDetail;
 import com.mrp.forecast.domain.ForecastVersion;
 import com.mrp.forecast.repository.ForecastMapper;
@@ -13,7 +14,6 @@ import com.mrp.planning.service.PlanningService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -25,9 +25,8 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = MrpApiApplication.class)
-@ActiveProfiles("local")
 @Transactional
-class PlanningServiceIntegrationTest {
+class PlanningServiceIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     private PlanningService planningService;

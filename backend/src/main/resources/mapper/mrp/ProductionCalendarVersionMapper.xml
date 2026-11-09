@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.mrp.repository.ProductionCalendarVersionMapper">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO production_calendar_version (version_no, factory_code, status, checksum, created_by, published_at)
+        VALUES (#{versionNo}, #{factoryCode}, #{status}, #{checksum}, #{createdBy}, #{publishedAt})
+    </insert>
+    
+    <update id="update">
+        UPDATE production_calendar_version SET status=#{status}, checksum=#{checksum}, published_at=#{publishedAt}
+        WHERE id=#{id}
+    </update>
+    
+    <select id="selectById" resultType="com.mrp.mrp.domain.ProductionCalendarVersion">
+        SELECT * FROM production_calendar_version WHERE id=#{id} AND is_deleted=0
+    </select>
+
+    <select id="selectAll" resultType="com.mrp.mrp.domain.ProductionCalendarVersion">
+        SELECT * FROM production_calendar_version WHERE is_deleted=0 ORDER BY created_at DESC
+    </select>
+
+    <sql id="allScope">
+        EXISTS (SELECT 1 FROM user_role ur JOIN role r ON r.id=ur.role_id
+          JOIN role_data_scope ds ON ds.role_id=r.id
+          WHERE ur.user_id=#{userId} AND r.status='ACTIVE' AND ds.scope_type='ALL')
+    </sql>
+    <!-- The entire version is authorized before reading or replacing any days. -->
+    <sql id="visibleFilter">
+        #{userId} IS NOT NULL AND v.is_deleted=0 AND (
+          <include refid="allScope"/> OR (
+            ((v.factory_code IN (SELECT factory_code FROM mrp_factory) AND
+              <include refid="com.mrp.mrp.repository.PlanningAccessMapper.factoryGrant">
+                <property name="factory" value="v.factory_code"/>
+              </include>)
+             OR (v.factory_code='ALL' AND EXISTS (
+               SELECT 1 FROM production_calendar_day d WHERE d.version_id=v.id)))
+            AND NOT EXISTS (SELECT 1 FROM production_calendar_day d WHERE d.version_id=v.id AND (
+              d.factory_code IS NULL OR d.factory_code NOT IN (SELECT factory_code FROM mrp_factory) OR NOT
+              <include refid="com.mrp.mrp.repository.PlanningAccessMapper.factoryGrant">
+                <property name="factory" value="d.factory_code"/>
+              </include>))))
+    </sql>
+    <select id="selectVisible" resultType="com.mrp.mrp.domain.ProductionCalendarVersion">
+        SELECT v.* FROM production_calendar_version v WHERE <include refid="visibleFilter"/>
+        ORDER BY v.created_at DESC,v.id DESC
+    </select>
+    <select id="canAccess" resultType="int">
+        SELECT COUNT(*) FROM production_calendar_version v WHERE v.id=#{id} AND <include refid="visibleFilter"/>
+    </select>
+    <select id="hasAllScope" resultType="int">
+        SELECT (#{userId} IS NOT NULL AND <include refid="allScope"/>)
+    </select>
+    <select id="canUseFactory" resultType="int">
+        SELECT (#{userId} IS NOT NULL AND (<include refid="allScope"/> OR
+          (#{factoryCode} IN (SELECT factory_code FROM mrp_factory) AND
+            <include refid="com.mrp.mrp.repository.PlanningAccessMapper.factoryGrant">
+              <property name="factory" value="#{factoryCode}"/>
+            </include>)))
+    </select>
+
+    <select id="countReferences" resultType="int">
+        SELECT
+            (SELECT COUNT(*) FROM mrp_calc_batch WHERE production_calendar_version_id=#{id})
+          + (SELECT COUNT(*) FROM mrp_batch_factory_scope WHERE production_calendar_version_id=#{id})
+    </select>
+
+    <update id="markDeleted">
+        UPDATE production_calendar_version
+        SET is_deleted=1, deleted_at=NOW(3)
+        WHERE id=#{id} AND status='DRAFT' AND is_deleted=0
+    </update>
+</mapper>

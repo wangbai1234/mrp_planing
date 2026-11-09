@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.mrp.repository.MrpStockRiskMapper">
+
+    <insert id="copyRun">
+        INSERT INTO mrp_stock_risk (batch_id, run_id, factory_code, risk_type, warehouse_code, material_code,
+            available_qty, used_qty, remaining_qty, safety_stock_qty, warning_stock_qty, root_material_codes,
+            created_at, resolved_at, resolved_by, resolution_code)
+        SELECT #{batchId}, #{runId}, factory_code, risk_type, warehouse_code, material_code,
+            available_qty, used_qty, remaining_qty, safety_stock_qty, warning_stock_qty, root_material_codes,
+            created_at, resolved_at, resolved_by, resolution_code
+        FROM mrp_stock_risk WHERE run_id=#{sourceRunId}
+    </insert>
+
+    <update id="resolvePendingByRunId">
+        UPDATE mrp_stock_risk
+        SET resolved_at=CURRENT_TIMESTAMP(3), resolved_by=#{resolvedBy}, resolution_code=#{resolutionCode}
+        WHERE batch_id=#{batchId} AND run_id=#{runId} AND resolved_at IS NULL
+    </update>
+
+    <delete id="deleteByRunId">
+        DELETE FROM mrp_stock_risk WHERE run_id=#{runId}
+    </delete>
+    <select id="countResolvedByRunId" resultType="int">
+        SELECT COUNT(*) FROM mrp_stock_risk WHERE run_id=#{runId} AND resolved_at IS NOT NULL
+    </select>
+
+    <insert id="insertBatch">
+        INSERT INTO mrp_stock_risk (batch_id, run_id, factory_code, risk_type, warehouse_code, material_code,
+            available_qty, used_qty, remaining_qty, safety_stock_qty, warning_stock_qty, root_material_codes)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.batchId}, #{item.runId}, #{item.factoryCode}, #{item.riskType}, #{item.warehouseCode}, #{item.materialCode},
+             #{item.availableQty}, #{item.usedQty}, #{item.remainingQty}, #{item.safetyStockQty},
+             #{item.warningStockQty}, #{item.rootMaterialCodes})
+        </foreach>
+    </insert>
+
+    <select id="selectByBatchId" resultType="com.mrp.mrp.domain.MrpStockRisk">
+        SELECT * FROM mrp_stock_risk
+        WHERE batch_id=#{batchId} AND resolved_at IS NULL
+        <if test="runId != null">AND run_id=#{runId}</if>
+        ORDER BY FIELD(risk_type, 'SAFETY_STOCK_BREACH', 'WARNING_STOCK_BREACH', 'STOCK_POLICY_MISSING'), material_code
+    </select>
+    <select id="selectPageByBatchId" resultType="com.mrp.mrp.domain.MrpStockRisk">
+        SELECT * FROM mrp_stock_risk WHERE batch_id=#{batchId} AND resolved_at IS NULL
+        <if test="runId != null">AND run_id=#{runId}</if>
+        ORDER BY FIELD(risk_type, 'SAFETY_STOCK_BREACH', 'WARNING_STOCK_BREACH', 'STOCK_POLICY_MISSING'), material_code, id
+        LIMIT #{offset}, #{pageSize}
+    </select>
+    <select id="countByBatchId" resultType="int">
+        SELECT COUNT(*) FROM mrp_stock_risk WHERE batch_id=#{batchId} AND resolved_at IS NULL
+        <if test="runId != null">AND run_id=#{runId}</if>
+    </select>
+</mapper>

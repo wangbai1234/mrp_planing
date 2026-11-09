@@ -1,11 +1,11 @@
-project: mrp-phase-1
+project: mrp-phase-2-daily-net-requirement
 entrypoint: project.md
 status_file: .harness/workflow.yaml
 report_template: .harness/templates/task-report.md
 decision_template: .harness/templates/decision-request.md
 execution_policy:
   ordered: true
-  continue_automatically: false
+  continue_automatically: true
   require_gate_pass: true
   forbid_unapproved_middleware: true
 stages:
@@ -69,3 +69,441 @@ stages:
     prompt: .harness/prompts/09-docker-uat.md
     depends_on: ["08"]
     output: .harness/reports/09-docker-uat-report.md
+  - id: "10"
+    name: contract-migration
+    status: REVIEW
+    prompt: .harness/prompts/10-contract-migration.md
+    depends_on: ["09"]
+    output: .harness/reports/10-contract-migration-report.md
+  - id: "11"
+    name: phase2-schema
+    status: REVIEW
+    prompt: .harness/prompts/11-phase2-schema.md
+    depends_on: ["10"]
+    output: .harness/reports/11-phase2-schema-report.md
+  - id: "12"
+    name: masterdata-and-decisions
+    status: REVIEW
+    prompt: .harness/prompts/12-masterdata-and-decisions.md
+    depends_on: ["11"]
+    output: .harness/reports/12-masterdata-and-decisions-report.md
+  - id: "13"
+    name: inventory-normalization
+    status: REVIEW
+    prompt: .harness/prompts/13-inventory-normalization.md
+    depends_on: ["12"]
+    output: .harness/reports/13-inventory-normalization-report.md
+  - id: "14"
+    name: bom-snapshot-and-net-requirement
+    status: REVIEW
+    prompt: .harness/prompts/14-bom-snapshot-and-net-requirement.md
+    depends_on: ["12", "13"]
+    output: .harness/reports/14-bom-snapshot-and-net-requirement-report.md
+  - id: "15"
+    name: production-calendar-and-daily-planning
+    status: REVIEW
+    prompt: .harness/prompts/15-production-calendar-and-daily-planning.md
+    depends_on: ["14"]
+    output: .harness/reports/15-production-calendar-and-daily-planning-report.md
+  - id: "16"
+    name: phase2-api-and-task-flow
+    status: REVIEW
+    prompt: .harness/prompts/16-phase2-api-and-task-flow.md
+    depends_on: ["15"]
+    output: .harness/reports/16-phase2-api-and-task-flow-report.md
+  - id: "17"
+    name: phase2-frontend
+    status: REVIEW
+    prompt: .harness/prompts/17-phase2-frontend.md
+    depends_on: ["16"]
+    output: .harness/reports/17-phase2-frontend-report.md
+  - id: "18"
+    name: integration-performance-security
+    status: REVIEW
+    prompt: .harness/prompts/18-integration-performance-security.md
+    depends_on: ["16", "17"]
+    output: .harness/reports/18-integration-performance-security-report.md
+  - id: "19"
+    name: docker-uat-final-audit
+    status: REVIEW
+    prompt: .harness/prompts/19-docker-uat-final-audit.md
+    depends_on: ["18"]
+    output: .harness/reports/19-docker-uat-final-audit-report.md
+current_audit:
+  date: "2026-09-29"
+  result: REVIEW_BLOCKED_BY_BUSINESS_DATA
+  verified:
+    - backend_221_tests
+    - flyway_v001_v034
+    - frontend_build_typecheck_18_tests
+    - real_api_and_chrome_smoke
+  blockers:
+    - factory_code_inconsistent
+    - published_factory_warehouse_mapping_missing
+    - warehouse_scoped_inventory_snapshot_missing
+    - published_stock_policy_missing
+    - published_business_week_missing
+    - playwright_browser_binary_missing
+
+# 2026-10-14 用户确认补充需求；自测通过，等待独立阶段复核。
+supplemental_tasks:
+  - id: material-policy-fallback-2026-10-14
+    status: REVIEW
+    stages: ["12", "14", "16", "17"]
+    output: .harness/reports/2026-10-14-material-policy-report.md
+  - id: config-filters-import-audit-api-fallback-2026-10-14
+    status: REVIEW
+    stages: ["12", "16", "17"]
+    output: .harness/reports/2026-10-14-config-fixes-report.md
+  - id: production-calendar-daily-capacity-2026-10-14
+    status: DONE
+    stages: ["15", "16", "17"]
+    output: .harness/reports/2026-10-14-daily-capacity-report.md
+    review: test-evidence/daily-capacity-2026-10-14/independent-review.md
+  - id: factories-runtime-fix-2026-10-14
+    status: DONE
+    stages: ["16", "17"]
+    output: .harness/reports/2026-10-14-factories-runtime-fix-report.md
+    review: test-evidence/factories-runtime-fix-2026-10-14/independent-review.md
+  - id: whole-machine-capacity-2026-10-14
+    status: DONE
+    stages: ["15", "16", "17"]
+    output: .harness/reports/2026-10-14-whole-machine-capacity-report.md
+    review: test-evidence/whole-machine-capacity-2026-10-14/independent-review.md
+  - id: calendar-cleanup-2026-10-14
+    status: DONE
+    stages: ["17"]
+    output: .harness/reports/2026-10-14-calendar-cleanup-report.md
+    review: test-evidence/calendar-cleanup-2026-10-14/independent-review.md
+  - id: planning-redesign-design-2026-10-15
+    status: REVIEW
+    stages: ["15", "16", "17"]
+    output: .harness/reports/2026-10-15-planning-design-report.md
+    scope: design-and-interactive-prototype-only
+  - id: planning-runtime-fix-2026-10-15
+    status: DONE
+    stages: ["16", "17"]
+    output: .harness/reports/2026-10-15-planning-runtime-fix-report.md
+    review: test-evidence/planning-runtime-20261015/independent-review.md
+    scope: runtime-entry-and-legacy-table-compatibility-only
+
+  - id: comprehensive-test-handoff-2026-10-15
+    status: DONE
+    stages: ["18", "19"]
+    output: .harness/reports/2026-10-15-test-kit-report.md
+    scope: isolated-test-data-manual-and-partial-execution-only
+  - id: approved-defects-shanghai-bom-2026-10-16
+    status: DONE
+    stages: ["12", "14", "16", "17", "18", "19"]
+    output: test-kit/2026-10-16/修复完成报告.md
+    review: test-kit/2026-10-16/evidence/repair/independent-repair-review.md
+    scope: approved-targeted-repairs-and-executed-isolated-mysql-regression-only
+    overall_phase_18_19_status: REVIEW
+  - id: planning-load-scroll-and-mapping-validation-2026-10-16
+    status: DONE
+    stages: ["12", "16", "17", "18"]
+    output: test-kit/2026-10-16/排产性能与续修报告.md
+    review: test-kit/2026-10-16/evidence/performance-independent-review.md
+    scope: summary-machine-load-detail-query-column-window-and-factory-validation-only
+    overall_phase_18_19_status: REVIEW
+  - id: planning-factory-access-distribution-conservation-2026-10-16
+    status: DONE
+    stages: ["15", "16", "18"]
+    output: test-kit/2026-10-16/排产权限与负荷接口续修报告.md
+    review: test-kit/2026-10-16/evidence/continuation-independent-review.md
+    scope: batch-factory-access-machine-loads-publication-chunks-distribution-guards-v4-conservation-only
+    overall_phase_18_19_status: REVIEW
+  - id: planning-detail-pagination-2026-10-16
+    status: REVIEW
+    stages: ["16", "18"]
+    output: test-kit/2026-10-16/排产明细分页续修报告.md
+    review: test-kit/2026-10-16/evidence/continuation-details-independent-review.md
+    scope: detail-count-and-stable-single-sort-pagination-performance-remains-open
+    overall_phase_18_19_status: REVIEW
+  - id: import-task-ownership-2026-10-16
+    status: DONE
+    stages: ["16", "18"]
+    output: test-kit/2026-10-16/导入任务归属续修报告.md
+    review: test-kit/2026-10-16/evidence/import-owner-independent-review.md
+    scope: forecast-and-inventory-staging-owner-only
+    overall_phase_18_19_status: REVIEW
+  - id: planning-automatic-detail-index-2026-10-16
+    status: DONE
+    stages: ["16", "18"]
+    output: test-kit/2026-10-16/排产自动明细索引续修报告.md
+    review: test-kit/2026-10-16/evidence/details-index-independent-review.md
+    scope: untouched-batch-detail-pagination-only
+    overall_phase_18_19_status: REVIEW
+  - id: planning-empty-override-projection-2026-10-16
+    status: DONE
+    stages: ["16", "18"]
+    output: test-kit/2026-10-16/无人工调整投影续修报告.md
+    review: test-kit/2026-10-16/evidence/override-empty-independent-review.md
+    scope: empty-override-projection-allocation-only
+    overall_phase_18_19_status: REVIEW
+  - id: inventory-snapshot-factory-scope-2026-10-16
+    status: DONE
+    stages: ["13", "16", "18"]
+    output: test-kit/2026-10-16/库存快照工厂域续修报告.md
+    review: test-kit/2026-10-16/evidence/inventory-scope-independent-review.md
+    scope: snapshot-list-detail-balances-and-http-normalization-only
+    overall_phase_18_19_status: REVIEW
+  - id: user-factory-scope-deletion-2026-10-16
+    status: DONE
+    stages: ["18"]
+    output: test-kit/2026-10-16/用户工厂授权删除续修报告.md
+    review: test-kit/2026-10-16/evidence/user-factory-delete-independent-review.md
+    scope: transactional-deletion-of-direct-user-factory-grants-only
+    overall_phase_18_19_status: REVIEW
+  - id: planning-checksum-stream-2026-10-16
+    status: DONE
+    stages: ["16", "18"]
+    output: test-kit/2026-10-16/排产指纹内存续修报告.md
+    review: test-kit/2026-10-16/evidence/checksum-stream-independent-review.md
+    scope: effective-checksum-join-allocation-only
+    overall_phase_18_19_status: REVIEW
+  - id: legacy-export-task-ownership-2026-10-16
+    status: DONE
+    stages: ["16", "18"]
+    output: test-kit/2026-10-16/导出任务归属续修报告.md
+    review: test-kit/2026-10-16/evidence/export-owner-independent-review.md
+    scope: legacy-export-owner-factory-permission-and-user-local-dedup-only
+    overall_phase_18_19_status: REVIEW
+  - id: current-config-factory-scope-2026-10-16
+    status: DONE
+    stages: ["12", "18"]
+    output: test-kit/2026-10-16/工厂映射与生产日历工厂域续修报告.md
+    review: test-kit/2026-10-16/evidence/calendar-scope-independent-review.md
+    scope: current-factory-mappings-and-production-calendar-http-scope-only
+    overall_phase_18_19_status: REVIEW
+  - id: audit-log-factory-scope-2026-10-16
+    status: DONE
+    stages: ["18"]
+    output: test-kit/2026-10-16/审计日志工厂域续修报告.md
+    review: test-kit/2026-10-16/evidence/audit-scope-independent-review.md
+    scope: audit-list-count-and-new-calendar-mapping-log-scope-only
+    overall_phase_18_19_status: REVIEW
+  - id: automatic-capacity-review-projection-2026-10-16
+    status: DONE
+    stages: ["16", "18"]
+    output: test-kit/2026-10-16/无覆盖产能确认性能续修报告.md
+    review: test-kit/2026-10-16/evidence/capacity-projection-independent-review.md
+    scope: no-override-v3-v4-capacity-review-streaming-projection-only
+    overall_phase_18_19_status: REVIEW
+  - id: current-stock-policy-factory-scope-2026-10-16
+    status: DONE
+    stages: ["12", "18"]
+    output: test-kit/2026-10-16/库存策略工厂域续修报告.md
+    review: test-kit/2026-10-16/evidence/stock-scope-delimiter-independent-review.md
+    scope: current-stock-policy-http-and-new-audit-scope-only
+    overall_phase_18_19_status: REVIEW
+  - id: legacy-calendar-version-factory-scope-2026-10-16
+    status: DONE
+    stages: ["12", "18"]
+    output: test-kit/2026-10-16/历史生产日历版本工厂域续修报告.md
+    review: test-kit/2026-10-16/evidence/legacy-calendar-scope-independent-review.md
+    scope: legacy-calendar-version-http-scope-and-batch-choice-filter-only
+    overall_phase_18_19_status: REVIEW
+  - id: stock-safety-floor-wording-2026-10-16
+    status: DONE
+    stages: ["17", "18"]
+    output: test-kit/2026-10-16/库存安全库存文案续修报告.md
+    review: test-kit/2026-10-16/evidence/stock-wording-independent-review.md
+    scope: stock-policy-safety-floor-helper-text-only
+    overall_phase_18_19_status: REVIEW
+  - id: inventory-composite-key-2026-10-16
+    status: DONE
+    stages: ["13", "18"]
+    output: test-kit/2026-10-16/库存复合键续修报告.md
+    review: test-kit/2026-10-16/evidence/inventory-key-independent-review.md
+    scope: inventory-normalization-and-safety-policy-internal-composite-keys-only
+    overall_phase_18_19_status: REVIEW
+  - id: sparse-override-details-window-2026-10-16
+    status: DONE
+    stages: ["18"]
+    output: test-kit/2026-10-16/人工调整明细分页性能续修报告.md
+    review: test-kit/2026-10-16/evidence/override-window-independent-review.md
+    scope: sparse-virtual-date-override-details-window-only
+    overall_phase_18_19_status: REVIEW
+  - id: legacy-mapping-stock-version-factory-scope-2026-10-16
+    status: DONE
+    stages: ["12", "18"]
+    output: test-kit/2026-10-16/历史映射与库存策略版本工厂域续修报告.md
+    review: test-kit/2026-10-16/evidence/legacy-scope-versions-independent-review.md
+    scope: legacy-mapping-and-stock-version-http-frozen-factory-scope-only
+    overall_phase_18_19_status: REVIEW
+  - id: worker-failure-claim-cas-2026-10-16
+    status: DONE
+    stages: ["16", "18"]
+    output: test-kit/2026-10-16/任务失败CAS与大数据重复计算续修报告.md
+    review: test-kit/2026-10-16/evidence/worker-failure-independent-review.md
+    scope: exception-failure-status-claim-owner-version-cas-only
+    overall_phase_18_19_status: REVIEW
+  - id: repeated-calculation-runtime-2026-10-16
+    status: DONE
+    stages: ["18"]
+    output: test-kit/2026-10-16/任务失败CAS与大数据重复计算续修报告.md
+    review: test-kit/2026-10-16/evidence/repeated-calculation-independent-review.md
+    scope: three-isolated-large-calculations-repeatability-and-tested-invariants-only
+    overall_phase_18_19_status: REVIEW
+  - id: calculation-write-chunks-2026-10-16
+    status: DONE
+    stages: ["16", "18"]
+    output: test-kit/2026-10-16/计算写入分块续修报告.md
+    review: test-kit/2026-10-16/evidence/calculation-chunk-independent-review.md
+    scope: five-calculation-result-writes-bounded-sql-with-original-transaction-only
+    overall_phase_18_19_status: REVIEW
+  - id: stock-risk-generation-2026-10-16
+    status: DONE
+    stages: ["13", "18"]
+    output: test-kit/2026-10-16/库存风险生成续修报告.md
+    review: test-kit/2026-10-16/evidence/stock-risk-independent-review.md
+    scope: stock-risk-composite-keys-linear-maintenance-lookup-and-bounded-insert-only
+    overall_phase_18_19_status: REVIEW
+  - id: dense-override-pagination-2026-10-16
+    status: DONE
+    stages: ["16", "18"]
+    output: test-kit/2026-10-16/高密度人工调整明细分页续修报告.md
+    review: test-kit/2026-10-16/evidence/dense-override-independent-review.md
+    scope: extend-existing-narrow-key-window-to-more-than-one-page-of-virtual-dates-only
+    overall_phase_18_19_status: REVIEW
+  - id: worker-heartbeat-scheduler-2026-10-17
+    status: DONE
+    stages: ["16", "18"]
+    output: test-kit/2026-10-16/Worker心跳调度续修报告.md
+    review: test-kit/2026-10-16/evidence/worker-heartbeat-independent-review.md
+    scope: independent-heartbeat-scheduler-during-synchronous-calculation-only
+    overall_phase_18_19_status: REVIEW
+  - id: worker-failure-batch-state-2026-10-17
+    status: DONE
+    stages: ["16", "18"]
+    output: test-kit/2026-10-16/Worker失败批次状态保护续修报告.md
+    review: test-kit/2026-10-16/evidence/worker-batch-state-independent-review.md
+    scope: failure-cleanup-batch-status-and-current-version-active-run-cas-only
+    overall_phase_18_19_status: REVIEW
+  - id: import-confirmation-atomicity-2026-10-17
+    status: DONE
+    stages: ["13", "16", "18"]
+    output: test-kit/2026-10-16/导入确认幂等与回滚续修报告.md
+    review: test-kit/2026-10-16/evidence/import-confirmation-independent-review.md
+    scope: same-task-confirmation-idempotency-terminal-protection-and-after-commit-cache-removal-only
+    overall_phase_18_19_status: REVIEW
+  - id: import-upload-identity-2026-10-17
+    status: DONE
+    stages: ["13", "16", "18"]
+    output: test-kit/2026-10-16/上传任务身份与并发续修报告.md
+    review: test-kit/2026-10-16/evidence/import-upload-identity-independent-review.md
+    scope: request-key-identity-and-concurrent-first-upload-reuse-for-forecast-and-inventory-only
+    overall_phase_18_19_status: REVIEW
+  - id: forecast-platform-capacity-2026-10-17
+    status: DONE
+    stages: ["13", "18"]
+    output: test-kit/2026-10-16/经营计划规格字段容量续修报告.md
+    review: test-kit/2026-10-16/evidence/forecast-platform-independent-review.md
+    scope: widen-forecast-platform-to-source-specification-capacity-only
+    overall_phase_18_19_status: REVIEW
+  - id: large-import-real-capacity-2026-10-17
+    status: DONE
+    stages: ["13", "18"]
+    output: test-kit/2026-10-16/真实大导入容量与数量核验报告.md
+    review: test-kit/2026-10-16/evidence/large-import-independent-review.md
+    scope: measured-four-import-scales-and-exact-quantities-only
+    overall_phase_18_19_status: REVIEW
+  - id: legacy-test-database-isolation-2026-10-17
+    status: DONE
+    stages: ["18"]
+    output: test-kit/2026-10-16/旧测试数据库隔离续修报告.md
+    review: test-kit/2026-10-16/evidence/legacy-isolation-independent-review.md
+    scope: ten-legacy-local-test-classes-use-existing-testcontainers-base-only
+    overall_phase_18_19_status: REVIEW
+  - id: planning-create-scope-progress-2026-10-19
+    status: REVIEW
+    stages: ["16", "17", "18"]
+    output: .harness/reports/2026-10-19-planning-create-progress-report.md
+    scope: unified-inventory-version-factory-scope-and-top-status-progress
+  - id: planning-actual-calculation-progress-2026-10-19
+    status: REVIEW
+    stages: ["16", "17", "18"]
+    output: .harness/reports/2026-10-19-actual-calculation-progress-report.md
+    scope: narrow-progress-query-independent-throttled-transactions-and-actual-work-counts
+  - id: planning-lifecycle-background-2026-10-19
+    status: REVIEW
+    stages: ["16", "17", "18"]
+    output: .harness/reports/2026-10-19-planning-lifecycle-background-report.md
+    scope: durable-publish-revision-tasks-and-navigation-recovery
+  - id: business-week-rolling-2026-10-19
+    status: DONE
+    stages: ["15", "16", "17", "18"]
+    output: .harness/reports/2026-10-19-business-week-rolling-report.md
+    scope: actual-source-month-week-count-and-one-business-week-earlier-distribution-v5
+    review: .harness/reports/2026-10-19-business-week-rolling-review.md
+  - id: factory-import-template-2026-10-20
+    status: DONE
+    stages: ["13", "16", "17", "18"]
+    output: .harness/reports/2026-10-20-factory-import-template-report.md
+    scope: canonical-factory-hints-examples-and-forecast-import-validation
+    overall_phase_18_19_status: REVIEW
+  - id: inventory-import-optional-fields-2026-10-20
+    status: REVIEW
+    stages: ["13", "16", "17", "18"]
+    output: .harness/reports/2026-10-20-inventory-import-fields-report.md
+    scope: optional-inventory-category-supplier-and-importable-remark
+    overall_phase_18_19_status: REVIEW
+  - id: cancelled-revision-return-current-2026-10-22
+    status: REVIEW
+    stages: ["16", "17", "18"]
+    output: .harness/reports/2026-10-22-cancelled-revision-redirect-fix.md
+    scope: lifecycle-result-navigation-and-resubmission-after-cancelled-revision
+    overall_phase_18_19_status: REVIEW
+  - id: production-calendar-list-actions-2026-10-22
+    status: REVIEW
+    stages: ["17", "18"]
+    output: .harness/reports/2026-10-22-production-calendar-list-actions.md
+    scope: calendar-list-row-log-dialog-edit-and-delete-actions
+    overall_phase_18_19_status: REVIEW
+  - id: planning-release-gates-2026-10-22
+    status: REVIEW
+    stages: ["16", "17", "18"]
+    output: .harness/reports/2026-10-22-planning-release-gates.md
+    scope: scoped-calendar-completeness-and-all-pending-badge-release-gates
+    overall_phase_18_19_status: REVIEW
+  - id: inventory-allocation-continuation-2026-10-23
+    status: DONE
+    stages: ["13", "16", "17", "18"]
+    output: .harness/reports/2026-10-23-inventory-allocation-continuation.md
+    scope: automatic-allocation-display-manual-override-reset-reanalysis-audit-and-pool-allocation-access-scope
+  - id: forecast-version-heading-2026-10-27
+    status: REVIEW
+    stages: ["16", "17", "18"]
+    output: .harness/reports/2026-10-27-forecast-version-heading-report.md
+    scope: compact-version-metadata-pending-preview-and-accurate-draft-difference
+  - id: factory-warehouse-master-and-inventory-import-2026-10-28
+    status: DONE
+    stages: ["12", "13", "16", "17", "18"]
+    output: .harness/reports/2026-10-28-factory-warehouse-master-and-inventory-import.md
+    scope: dynamic-factory-master-one-to-many-warehouses-quality-aware-inventory-import-and-frozen-priority
+  - id: master-data-base-rule-menu-2026-10-28
+    status: DONE
+    stages: ["17", "18"]
+    output: .harness/reports/2026-10-28-master-data-base-rule-menu-report.md
+    scope: split-factory-and-warehouse-maintenance-menu-permissions-and-server-side-list-pages
+  - id: factory-warehouse-requirements-validation-2026-10-28
+    status: DONE
+    stages: ["12", "13", "17", "18"]
+    output: .harness/reports/2026-10-28-factory-warehouse-requirements-validation-report.md
+    scope: product-requirement-checklist-and-complete-feature-validation
+  - id: split-planning-shortage-material-recalculation-2026-10-29
+    status: REVIEW
+    stages: ["16", "17", "18"]
+    output: .harness/reports/2026-10-29-split-planning-shortage-recalculation-report.md
+    scope: machine-schedule-material-analysis-recalculation-and-warehouse-risk-accounting
+  - id: list-ui-consistency-2026-11-09
+    status: REVIEW
+    stages: ["17"]
+    output: .harness/reports/2026-11-09-list-ui-consistency-report.md
+    scope: shared-search-pagination-button-placement-and-style
+  - id: execution-pagination-search-2026-11-09
+    status: REVIEW
+    stages: ["17"]
+    output: .harness/reports/2026-11-09-execution-pagination-search.md
+    scope: execution-server-side-page-keyword-search-and-right-aligned-controls

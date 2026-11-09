@@ -1,0 +1,16 @@
+[
+  {
+    "factoryCode": "爱培科",
+    "factoryName": "爱培科",
+    "warehouseCode": "UAT_APK",
+    "warehouseName": "爱培科测试仓",
+    "enabled": true
+  },
+  {
+    "factoryCode": "永惠",
+    "factoryName": "永惠",
+    "warehouseCode": "UAT_YH",
+    "warehouseName": "永惠测试仓",
+    "enabled": true
+  }
+]

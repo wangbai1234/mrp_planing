@@ -1,0 +1,42 @@
+{
+  "capturedAt": "2026-10-15T19:38:43.811679+08:00",
+  "source": "mrp-mysql/mrp (SELECT only)",
+  "snapshot": {
+    "id": 33,
+    "status": "READY",
+    "checksum": "4235e232629a4138a25a125d9466993454c1289d7c928cd0baeb35cfd75024b1"
+  },
+  "materials": 20053,
+  "categories": 250,
+  "snapshotEdges": 134045,
+  "protected": {
+    "material": {
+      "rows": 20053,
+      "sha256": "56401c0cff19e737dcd5ff372d7516b71955194a47574d6db2862076c01ee6a3"
+    },
+    "material_category": {
+      "rows": 250,
+      "sha256": "021019d39b75ad4832987249f10669cc4b9d3c3a98c04372e0b7adcb95cff611"
+    },
+    "bom_parent": {
+      "rows": 3604,
+      "sha256": "b1f8d82ed92cefbed2bc4db159f7dc51a3774b3b69caeaeebb0162ca766db90d"
+    },
+    "bom_detail": {
+      "rows": 159168,
+      "sha256": "04f0efd131f5c20a4c0162bdab9ae607bb2fd07c2afafd650866af19a2790011"
+    },
+    "bom_sync_status": {
+      "rows": 0,
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    "bom_snapshot": {
+      "rows": 20,
+      "sha256": "576908beeaddc941ecbf9770ba73946712639b06b501ef97f96575987d3470e7"
+    },
+    "bom_snapshot_detail": {
+      "rows": 2391206,
+      "sha256": "e2b41f647f9852b70c867f54b987a65850ddb4f31cbfd826dc08846645123ca3"
+    }
+  }
+}

@@ -6,6 +6,7 @@ public class BomTreeNodeV2 {
     private String spec;
     private Long qty;
     private String version;
+    private String isDefault;
     private boolean hasChildren;
 
     public BomTreeNodeV2() {}
@@ -33,6 +34,8 @@ public class BomTreeNodeV2 {
 
     public String getVersion() { return version; }
     public void setVersion(String version) { this.version = version; }
+    public String getIsDefault() { return isDefault; }
+    public void setIsDefault(String isDefault) { this.isDefault = isDefault; }
 
     public boolean isHasChildren() { return hasChildren; }
     public void setHasChildren(boolean hasChildren) { this.hasChildren = hasChildren; }

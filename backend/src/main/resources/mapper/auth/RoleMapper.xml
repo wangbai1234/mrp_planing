@@ -8,6 +8,12 @@
         WHERE id = #{id}
     </select>
 
+    <select id="selectByIdForUpdate" resultType="com.mrp.auth.domain.Role">
+        SELECT id, code, name, description, status, created_at, updated_at
+        FROM role
+        WHERE id = #{id} FOR UPDATE
+    </select>
+
     <select id="selectByCode" resultType="com.mrp.auth.domain.Role">
         SELECT id, code, name, description, status, created_at, updated_at
         FROM role
@@ -86,7 +92,35 @@
         SELECT permission_id FROM role_permission WHERE role_id = #{roleId}
     </select>
 
+    <select id="selectActivePermissionIds" resultType="java.lang.Long">
+        SELECT id FROM permission WHERE status = 'ACTIVE'
+    </select>
+
     <select id="selectUserIdsByRoleId" resultType="java.lang.Long">
         SELECT user_id FROM user_role WHERE role_id = #{roleId}
     </select>
+
+    <select id="selectDataScopesByRoleId" resultType="com.mrp.auth.domain.RoleDataScope">
+        SELECT id, role_id, scope_type, scope_value, created_at
+        FROM role_data_scope WHERE role_id = #{roleId} ORDER BY id
+    </select>
+
+    <select id="selectEnabledFactoryCodes" resultType="java.lang.String">
+        SELECT factory_code FROM mrp_factory WHERE enabled = 1 ORDER BY id
+    </select>
+
+    <delete id="deleteDataScopesByRoleId">
+        DELETE FROM role_data_scope WHERE role_id = #{roleId}
+    </delete>
+
+    <insert id="insertAllDataScope">
+        INSERT INTO role_data_scope (role_id, scope_type) VALUES (#{roleId}, 'ALL')
+    </insert>
+
+    <insert id="insertFactoryDataScopes">
+        INSERT INTO role_data_scope (role_id, scope_type, scope_value) VALUES
+        <foreach collection="factoryCodes" item="code" separator=",">
+            (#{roleId}, 'FACTORY', #{code})
+        </foreach>
+    </insert>
 </mapper>

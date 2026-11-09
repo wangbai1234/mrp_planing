@@ -1,0 +1,3818 @@
+[
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-10-01",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-10-01",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-10-02",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-10-02",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-10-03",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-10-03",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-10-04",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-10-04",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-10-05",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-10-05",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-10-06",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-10-06",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-10-07",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-10-07",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-10-08",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-10-08",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-10-09",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-10-09",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-10-10",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-10-10",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-10-11",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-10-11",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-10-12",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-10-12",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-10-13",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-10-13",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-10-14",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-10-14",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-10-15",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-10-15",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-10-16",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-10-16",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-10-17",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-10-17",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-10-18",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-10-18",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-10-19",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-10-19",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-10-20",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-10-20",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-10-21",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-10-21",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-10-22",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-10-22",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-10-23",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-10-23",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-10-24",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-10-24",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-10-25",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-10-25",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-10-26",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-10-26",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-10-27",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-10-27",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-10-28",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-10-28",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-10-29",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-10-29",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-10-30",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-10-30",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-10-31",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-10-31",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-11-01",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-11-01",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-11-02",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-11-02",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-11-03",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-11-03",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-11-04",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-11-04",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-11-05",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-11-05",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-11-06",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-11-06",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-11-07",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-11-07",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-11-08",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-11-08",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-11-09",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-11-09",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-11-10",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-11-10",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-11-11",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-11-11",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-11-12",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-11-12",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-11-13",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-11-13",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-11-14",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-11-14",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-11-15",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-11-15",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-11-16",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-11-16",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-11-17",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-11-17",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-11-18",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-11-18",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-11-19",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-11-19",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-11-20",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-11-20",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-11-21",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-11-21",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-11-22",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-11-22",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-11-23",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-11-23",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-11-24",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-11-24",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-11-25",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-11-25",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-11-26",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-11-26",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-11-27",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-11-27",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-11-28",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-11-28",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-11-29",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-11-29",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-11-30",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-11-30",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-12-01",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-12-01",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-12-02",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-12-02",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-12-03",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-12-03",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-12-04",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-12-04",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-12-05",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-12-05",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-12-06",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-12-06",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-12-07",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-12-07",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-12-08",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-12-08",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-12-09",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-12-09",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-12-10",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-12-10",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-12-11",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-12-11",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-12-12",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-12-12",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-12-13",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-12-13",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-12-14",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-12-14",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-12-15",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-12-15",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-12-16",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-12-16",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-12-17",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-12-17",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-12-18",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-12-18",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-12-19",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-12-19",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-12-20",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-12-20",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-12-21",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-12-21",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-12-22",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-12-22",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-12-23",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-12-23",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-12-24",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-12-24",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-12-25",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-12-25",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-12-26",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-12-26",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-12-27",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-12-27",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-12-28",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-12-28",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-12-29",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-12-29",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-12-30",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-12-30",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2026-12-31",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2026-12-31",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-01-01",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-01-01",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-01-02",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-01-02",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-01-03",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-01-03",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-01-04",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-01-04",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-01-05",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-01-05",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-01-06",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-01-06",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-01-07",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-01-07",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-01-08",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-01-08",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-01-09",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-01-09",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-01-10",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-01-10",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-01-11",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-01-11",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-01-12",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-01-12",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-01-13",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-01-13",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-01-14",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-01-14",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-01-15",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-01-15",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-01-16",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-01-16",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-01-17",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-01-17",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-01-18",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-01-18",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-01-19",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-01-19",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-01-20",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-01-20",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-01-21",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-01-21",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-01-22",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-01-22",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-01-23",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-01-23",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-01-24",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-01-24",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-01-25",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-01-25",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-01-26",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-01-26",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-01-27",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-01-27",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-01-28",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-01-28",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-01-29",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-01-29",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-01-30",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-01-30",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-01-31",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-01-31",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-02-01",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-02-01",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-02-02",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-02-02",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-02-03",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-02-03",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-02-04",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-02-04",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-02-05",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-02-05",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-02-06",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-02-06",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-02-07",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-02-07",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-02-08",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-02-08",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-02-09",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-02-09",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-02-10",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-02-10",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-02-11",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-02-11",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-02-12",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-02-12",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-02-13",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-02-13",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-02-14",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-02-14",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-02-15",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-02-15",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-02-16",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-02-16",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-02-17",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-02-17",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-02-18",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-02-18",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-02-19",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-02-19",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-02-20",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-02-20",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-02-21",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-02-21",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-02-22",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-02-22",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-02-23",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-02-23",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-02-24",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-02-24",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-02-25",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-02-25",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-02-26",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-02-26",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-02-27",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-02-27",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-02-28",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-02-28",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-03-01",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-03-01",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-03-02",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-03-02",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-03-03",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-03-03",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-03-04",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-03-04",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-03-05",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-03-05",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-03-06",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-03-06",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-03-07",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-03-07",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-03-08",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-03-08",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-03-09",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-03-09",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-03-10",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-03-10",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-03-11",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-03-11",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-03-12",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-03-12",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-03-13",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-03-13",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-03-14",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-03-14",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-03-15",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-03-15",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-03-16",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-03-16",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-03-17",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-03-17",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-03-18",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-03-18",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-03-19",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-03-19",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-03-20",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-03-20",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-03-21",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-03-21",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-03-22",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-03-22",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-03-23",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-03-23",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-03-24",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-03-24",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-03-25",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-03-25",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-03-26",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-03-26",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-03-27",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-03-27",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-03-28",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-03-28",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-03-29",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-03-29",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-03-30",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-03-30",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-03-31",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-03-31",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-04-01",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-04-01",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-04-02",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-04-02",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-04-03",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-04-03",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-04-04",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-04-04",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-04-05",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-04-05",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-04-06",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-04-06",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-04-07",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-04-07",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-04-08",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-04-08",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-04-09",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-04-09",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-04-10",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-04-10",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-04-11",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-04-11",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-04-12",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-04-12",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-04-13",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-04-13",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-04-14",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-04-14",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-04-15",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-04-15",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-04-16",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-04-16",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-04-17",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-04-17",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-04-18",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-04-18",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-04-19",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-04-19",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-04-20",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-04-20",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-04-21",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-04-21",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-04-22",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-04-22",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-04-23",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-04-23",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-04-24",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-04-24",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-04-25",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-04-25",
+    "productionDay": false,
+    "dailyCapacity": "0",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-04-26",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-04-26",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-04-27",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-04-27",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-04-28",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-04-28",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-04-29",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-04-29",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "爱培科",
+    "calendarDate": "2027-04-30",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  },
+  {
+    "factoryCode": "永惠",
+    "calendarDate": "2027-04-30",
+    "productionDay": true,
+    "dailyCapacity": "10",
+    "capacityUnit": "台",
+    "allocationWeight": "1",
+    "reason": "UAT：周末休息；低产能用于验证超限提示"
+  }
+]

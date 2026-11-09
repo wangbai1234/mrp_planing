@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import { ref, inject, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { get, post, put, del } from '../../api/client'
 import { Plus } from '@element-plus/icons-vue'
 import type { CapacityLine } from '../../api/types'
-
-const setCrumb = inject<(g: string, p: string) => void>('setCrumb')!
+import { mrpApi } from '../../api/mrp'
 
 const lines = ref<CapacityLine[]>([])
+const factories = ref<string[]>([])
 const loading = ref(false)
 const editDialogVisible = ref(false)
 const editingLine = ref<CapacityLine | null>(null)
 const isAdding = ref(false)
 
-const emptyLine: CapacityLine = { factoryCode: '永惠', lineCode: '', lineName: '', weeklyCapacity: 0, isActive: true, remark: '' }
+const emptyLine: CapacityLine = { factoryCode: '', lineCode: '', lineName: '', weeklyCapacity: 0, isActive: true, remark: '' }
 
 async function loadLines() {
   loading.value = true
@@ -29,7 +29,7 @@ async function loadLines() {
 
 function startAdd() {
   isAdding.value = true
-  editingLine.value = { ...emptyLine }
+  editingLine.value = { ...emptyLine, factoryCode: factories.value[0] || '' }
   editDialogVisible.value = true
 }
 
@@ -73,8 +73,8 @@ async function deleteLine(row: CapacityLine) {
 }
 
 onMounted(() => {
-  setCrumb('配置管理', '产能配置')
   loadLines()
+  mrpApi.getFactories().then(items => { factories.value = items || [] }).catch((e: Error) => ElMessage.error('加载工厂失败: ' + e.message))
 })
 </script>
 
@@ -109,7 +109,7 @@ onMounted(() => {
 
     <el-dialog v-model="editDialogVisible" :title="isAdding ? '新增产线' : '编辑产线'" width="500px">
       <el-form v-if="editingLine" label-width="80px">
-        <el-form-item label="工厂"><el-select v-model="editingLine.factoryCode"><el-option label="永惠" value="永惠" /><el-option label="爱培科" value="爱培科" /></el-select></el-form-item>
+        <el-form-item label="工厂"><el-select v-model="editingLine.factoryCode"><el-option v-for="code in factories" :key="code" :label="code" :value="code" /></el-select></el-form-item>
         <el-form-item label="产线编码"><el-input v-model="editingLine.lineCode" /></el-form-item>
         <el-form-item label="产线名称"><el-input v-model="editingLine.lineName" /></el-form-item>
         <el-form-item label="周产能"><el-input-number v-model="editingLine.weeklyCapacity" :min="1" /></el-form-item>

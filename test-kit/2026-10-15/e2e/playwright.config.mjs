@@ -1,0 +1,2 @@
+import {defineConfig} from '../../../frontend/node_modules/@playwright/test/index.mjs';
+export default defineConfig({testDir:'.',testMatch:'*.spec.mjs',workers:1,retries:0,timeout:45000,reporter:[['list'],['html',{outputFolder:'../evidence/playwright-report',open:'never'}]],outputDir:'../evidence/e2e-results',use:{baseURL:'http://127.0.0.1:5181',screenshot:'only-on-failure',trace:'retain-on-failure',browserName:'chromium',channel:process.env.PLAYWRIGHT_USE_SYSTEM_CHROME==='1'?'chrome':undefined}});

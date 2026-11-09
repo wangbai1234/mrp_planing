@@ -168,7 +168,7 @@
         ORDER BY child.INVCODE_B
     </select>
 
-    <select id="selectAllLatestBom" resultMap="detailResultMap">
+    <sql id="latestBomQuery">
         SELECT
             bom.INVCODE AS parent_code,
             bom.INVNAME AS parent_name,
@@ -200,11 +200,35 @@
         INNER JOIN (
             SELECT INVCODE, INVCODE_B, MAX(HVERSION) AS MAX_VERSION
             FROM V_BOM_OUTPUT
+            WHERE ORGNAME = #{organization}
             GROUP BY INVCODE, INVCODE_B
         ) latest ON bom.INVCODE = latest.INVCODE
             AND bom.INVCODE_B = latest.INVCODE_B
             AND bom.HVERSION = latest.MAX_VERSION
+        WHERE bom.ORGNAME = #{organization}
         ORDER BY bom.INVCODE, bom.INVCODE_B
+    </sql>
+
+    <select id="selectAllLatestBom" resultMap="detailResultMap">
+        <include refid="latestBomQuery"/>
+    </select>
+
+    <select id="countLatestBom" resultType="int">
+        SELECT COUNT(*)
+        FROM V_BOM_OUTPUT bom
+        INNER JOIN (
+            SELECT INVCODE, INVCODE_B, MAX(HVERSION) AS MAX_VERSION
+            FROM V_BOM_OUTPUT
+            WHERE ORGNAME = #{organization}
+            GROUP BY INVCODE, INVCODE_B
+        ) latest ON bom.INVCODE = latest.INVCODE
+            AND bom.INVCODE_B = latest.INVCODE_B
+            AND bom.HVERSION = latest.MAX_VERSION
+        WHERE bom.ORGNAME = #{organization}
+    </select>
+
+    <select id="streamLatestBom" resultMap="detailResultMap" fetchSize="1000" resultSetType="FORWARD_ONLY">
+        <include refid="latestBomQuery"/>
     </select>
 
 </mapper>

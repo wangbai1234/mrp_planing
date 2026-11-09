@@ -5,6 +5,7 @@ import com.mrp.bom.domain.BomMaterial;
 import com.mrp.bom.domain.BomTreeNodeV2;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.session.ResultHandler;
 
 import java.util.List;
 
@@ -25,5 +26,9 @@ public interface BomMapper {
 
     List<BomTreeNodeV2> selectTreeChildren(@Param("parentCode") String parentCode);
 
-    List<BomDetail> selectAllLatestBom();
+    List<BomDetail> selectAllLatestBom(@Param("organization") String organization);
+
+    int countLatestBom(@Param("organization") String organization);
+
+    void streamLatestBom(@Param("organization") String organization, ResultHandler<BomDetail> handler);
 }

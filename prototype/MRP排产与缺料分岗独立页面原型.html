@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>排产与缺料分岗页面</title>
+<style>
+body{margin:0;background:#f5f7fa;color:#1f2329;font:14px system-ui,sans-serif}nav{display:flex;gap:16px;background:#fff;padding:12px 24px;border-bottom:1px solid #e5e6eb}button{font:inherit;cursor:pointer;border:1px solid #dcdfe6;border-radius:6px;background:#fff;padding:7px 12px;color:#4e5969}button.primary{background:#1677ff;border-color:#1677ff;color:#fff}button.active{color:#1677ff;border-color:#1677ff}main{padding:24px;max-width:1440px;margin:auto}header{display:flex;justify-content:space-between;align-items:center;gap:16px}h1{font-size:20px;margin:0}section[hidden],dialog:not([open]){display:none}.status,.table{background:#fff;padding:16px;margin-top:16px}.status{border-left:3px solid #1677ff;display:flex;justify-content:space-between;align-items:center}.actions{display:flex;gap:8px}.muted{color:#86909c}table{width:100%;border-collapse:collapse}th,td{padding:12px;border-bottom:1px solid #e5e6eb;text-align:left}dialog{border:0;border-radius:8px;box-shadow:0 8px 32px #0002;max-width:600px;width:80%}dialog::backdrop{background:#0005}@media(max-width:700px){header,.status{align-items:flex-start;flex-direction:column}nav{overflow:auto}}
+</style>
+</head>
+<body>
+<nav><button class="active" id="plan-tab" onclick="show('plan')">排产计划</button><button id="shortage-tab" onclick="show('shortage')">物料缺料</button><button id="execution-tab" onclick="show('execution')">生产执行</button></nav>
+<main>
+<section id="plan"><header><h1>排产计划</h1><div class="actions"><button onclick="document.getElementById('version').showModal()">版本信息</button><button>历史版本</button><button class="primary">生成排产</button></div></header><div class="status"><span>当前排产 · 整机待确认</span><button class="primary">确认整机排产</button></div><div class="table"><table><thead><tr><th>工厂</th><th>整机料号</th><th>10/28</th><th>10/29</th><th>计划合计</th></tr></thead><tbody><tr><td>永惠</td><td>全厂已排负荷 / 冻结日产能</td><td>8 / 10</td><td>9 / 10</td><td>-</td></tr><tr><td>永惠</td><td>A-1000</td><td>3</td><td>4</td><td>7</td></tr></tbody></table></div></section>
+<section id="shortage" hidden><header><h1>物料缺料</h1><div class="actions"><button class="primary">开始物料分析</button><button>导出</button></div></header><div class="status">整机排产已确认，可以开始物料缺料分析</div><div class="table"><table><thead><tr><th>工厂</th><th>末级需求物料</th><th>末级净需求</th><th>库存风险</th><th>操作</th></tr></thead><tbody><tr><td>永惠</td><td>PCBA-D</td><td>147</td><td>1 项</td><td><button>受影响整机</button></td></tr></tbody></table></div></section>
+<section id="execution" hidden><header><h1>生产执行</h1><div class="actions"><button>选择已发布版本</button><button>选择日期</button><button class="primary">锁定日期</button></div></header><div class="status">已发布版本的执行记录与实际完成量</div><div class="table"><table><thead><tr><th>计划行</th><th>排产日期</th><th>计划数量</th><th>实际数量</th><th>执行状态</th></tr></thead><tbody><tr><td>A-1000</td><td>10/29</td><td>4</td><td>-</td><td>已锁定</td></tr></tbody></table></div></section>
+</main>
+<dialog id="version"><h2>版本信息</h2><p>经营计划 #18 · 生产日历 #7 · 库存快照 #12</p><button onclick="this.closest('dialog').close()">关闭</button></dialog>
+<script>function show(id){for(const name of ['plan','shortage','execution']){document.getElementById(name).hidden=name!==id;document.getElementById(name+'-tab').classList.toggle('active',name===id)}}</script>
+</body>
+</html>

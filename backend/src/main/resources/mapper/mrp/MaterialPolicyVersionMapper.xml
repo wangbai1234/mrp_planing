@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.mrp.repository.MaterialPolicyVersionMapper">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO mrp_material_policy_version (version_no, status, checksum, created_by, published_at)
+        VALUES (#{versionNo}, #{status}, #{checksum}, #{createdBy}, #{publishedAt})
+    </insert>
+    
+    <update id="update">
+        UPDATE mrp_material_policy_version SET status=#{status}, checksum=#{checksum}, published_at=#{publishedAt}
+        WHERE id=#{id}
+    </update>
+    
+    <select id="selectById" resultType="com.mrp.mrp.domain.MaterialPolicyVersion">
+        SELECT * FROM mrp_material_policy_version WHERE id=#{id} AND is_deleted=0
+    </select>
+
+    <select id="selectAll" resultType="com.mrp.mrp.domain.MaterialPolicyVersion">
+        SELECT * FROM mrp_material_policy_version WHERE is_deleted=0 ORDER BY created_at DESC
+    </select>
+
+    <select id="countReferences" resultType="int">
+        SELECT COUNT(*) FROM mrp_calc_batch WHERE material_policy_version_id=#{id}
+    </select>
+
+    <update id="markDeleted">
+        UPDATE mrp_material_policy_version
+        SET is_deleted=1, deleted_at=NOW(3)
+        WHERE id=#{id} AND status='DRAFT' AND is_deleted=0
+    </update>
+</mapper>

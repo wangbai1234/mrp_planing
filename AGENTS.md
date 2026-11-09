@@ -68,6 +68,10 @@
 2. 判断是否为环境问题（JDK版本、Node版本、依赖版本等）
 3. **如果是环境问题 → 立即停止，只输出以下格式的消息，然后等待用户回复：**
 
+判定前必须核对失败命令、实际 profile、连接地址和端口，并用 `java -version`、`node -v` 或 `docker info` 等对应证据确认。`Connection refused`、数据库未启动、测试配置指向错误端口、Docker 镜像拉取失败不能仅凭报错文字归类为版本环境不满足；先追踪配置来源和服务状态，修复项目内可修复的配置或测试隔离问题。只有确认本机所需版本或工具确实缺失、不兼容时，才使用以下固定回复。不得把 Docker Hub 相关错误推断为用户修改了 Docker Hub。
+
+Testcontainers 的 `Credential helper/store ... does not have credentials for https://index.docker.io/v1/` 是匿名访问公开镜像时的提示；若容器随后成功启动，不得把它报告成 Docker Hub 故障。
+
 ```
 【环境问题】当前环境不满足项目要求。
 - 问题：[具体描述，如：Java 17，项目要求 Java 21]
@@ -202,7 +206,7 @@ V003__alter_table_xxx.sql
 | 配置项 | 文件 | 当前值 |
 |--------|------|--------|
 | Java 版本 | `pom.xml` | 21 |
-| Node 版本 | `package.json` | LTS |
+| Node 版本 | `.nvmrc` / `package.json` | 24 LTS |
 | Spring Boot 版本 | `pom.xml` | 3.4.1 |
 | 框架选型 | `pom.xml` / `package.json` | 见依赖列表 |
 

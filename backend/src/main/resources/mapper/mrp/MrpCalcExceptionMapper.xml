@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.mrp.repository.MrpCalcExceptionMapper">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO mrp_calc_exception (run_id, batch_id, severity, error_code, scope_key, message, detail_json)
+        VALUES (#{runId}, #{batchId}, #{severity}, #{errorCode}, #{scopeKey}, #{message}, #{detailJson})
+    </insert>
+    
+    <insert id="insertBatch">
+        INSERT INTO mrp_calc_exception (run_id, batch_id, severity, error_code, scope_key, message, detail_json) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.runId}, #{item.batchId}, #{item.severity}, #{item.errorCode}, #{item.scopeKey}, #{item.message}, #{item.detailJson})
+        </foreach>
+    </insert>
+    
+    <select id="selectByRunId" resultType="com.mrp.mrp.domain.MrpCalcException">
+        SELECT * FROM mrp_calc_exception WHERE run_id=#{runId} ORDER BY severity, error_code
+    </select>
+</mapper>

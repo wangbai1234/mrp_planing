@@ -2,13 +2,13 @@ package com.mrp.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mrp.MrpApiApplication;
+import com.mrp.BaseIntegrationTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -21,8 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(classes = MrpApiApplication.class)
 @AutoConfigureMockMvc
-@ActiveProfiles("local")
-class ShipmentApiTest {
+class ShipmentApiTest extends BaseIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -34,7 +33,7 @@ class ShipmentApiTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        Map<String, String> loginRequest = Map.of("username", "admin", "password", "admin123");
+        Map<String, String> loginRequest = Map.of("username", "admin", "password", BaseIntegrationTest.TEST_ADMIN_PASSWORD);
 
         MvcResult result = mockMvc.perform(post("/api/v1/auth/login")
                         .contentType("application/json")

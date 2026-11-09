@@ -14,7 +14,7 @@ Spring Boot API 和 Worker 属于本项目应用，不属于外部中间件。�
 
 Maven 不列入上表，因为它是 Java 项目的构建工具而不是运行时中间件；但 Maven 3.9+ / Maven Wrapper 是强制的后端工程入口，必须提交 Wrapper 文件，并用于开发机、CI 和 Docker 构建。
 
-Node.js LTS + npm 同理属于前端构建工具，不是运行时中间件；必须通过 `.nvmrc` 或 `package.json` `engines` 固定主版本，CI 和 Docker 构建不得使用未声明的 latest。
+Node.js 24 LTS + npm 10/11 同理属于前端构建工具，不是运行时中间件；必须由 `.nvmrc` 和 `package.json` `engines` 同时固定为 Node 24，CI 和 Docker 构建不得使用未声明的 latest。该版本与当前 Vite 8、TypeScript 6、`@types/node` 24 依赖基线一致。
 
 ## 2. 应用内框架和库
 

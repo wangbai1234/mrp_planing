@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.mrp.repository.MrpMaterialPolicyNoticeMapper">
+    <insert id="insertBatch">
+        INSERT INTO mrp_material_policy_notice
+        (batch_id, run_id, factory_code, material_code, material_name, missing_type, effective_explosion_policy, sources_json) VALUES
+        <foreach collection="list" item="r" separator=",">
+            (#{r.batchId}, #{r.runId}, #{r.factoryCode}, #{r.materialCode}, #{r.materialName}, #{r.missingType}, #{r.effectiveExplosionPolicy}, #{r.sourcesJson})
+        </foreach>
+    </insert>
+    <delete id="deleteByRunId">DELETE FROM mrp_material_policy_notice WHERE run_id=#{runId}</delete>
+    <insert id="copyRun">
+        INSERT INTO mrp_material_policy_notice (batch_id, run_id, factory_code, material_code, material_name, missing_type, effective_explosion_policy, sources_json, default_explosion_confirmed_by, default_explosion_confirmed_at)
+        SELECT #{batchId}, #{runId}, factory_code, material_code, material_name, missing_type, effective_explosion_policy, sources_json, default_explosion_confirmed_by, default_explosion_confirmed_at
+        FROM mrp_material_policy_notice WHERE run_id=#{sourceRunId}
+    </insert>
+    <sql id="wherePage"><where>
+        run_id=#{runId}
+        AND (missing_type='SUPPLY' OR default_explosion_confirmed_at IS NULL)
+        <if test="keyword != null and keyword != ''">AND (material_code LIKE CONCAT('%', #{keyword}, '%') OR material_name LIKE CONCAT('%', #{keyword}, '%'))</if>
+        <if test="missingType != null and missingType != ''">AND missing_type=#{missingType}</if>
+    </where></sql>
+    <select id="selectPage" resultType="com.mrp.mrp.domain.MrpMaterialPolicyNotice">
+        SELECT * FROM mrp_material_policy_notice <include refid="wherePage"/> ORDER BY material_code, factory_code LIMIT #{limit} OFFSET #{offset}
+    </select>
+    <select id="countPage" resultType="int">SELECT COUNT(*) FROM mrp_material_policy_notice <include refid="wherePage"/></select>
+    <select id="countPendingDefaultExplosion" resultType="int">
+        SELECT COUNT(*) FROM mrp_material_policy_notice
+        WHERE run_id=#{runId} AND missing_type IN ('EXPLOSION', 'BOTH') AND default_explosion_confirmed_at IS NULL
+    </select>
+    <select id="countConfirmedByRunId" resultType="int">
+        SELECT COUNT(*) FROM mrp_material_policy_notice
+        WHERE run_id=#{runId} AND default_explosion_confirmed_at IS NOT NULL
+    </select>
+    <update id="confirmDefaultExplosion">
+        UPDATE mrp_material_policy_notice
+        SET default_explosion_confirmed_by=#{operatorId}, default_explosion_confirmed_at=CURRENT_TIMESTAMP(3)
+        WHERE run_id=#{runId} AND missing_type IN ('EXPLOSION', 'BOTH') AND default_explosion_confirmed_at IS NULL
+    </update>
+    <select id="canReadFactory" resultType="int">
+        SELECT CASE WHEN EXISTS (SELECT 1 FROM user_factory_scope ufs
+            WHERE ufs.user_id=#{userId} AND ufs.factory_code=#{factory})
+          OR EXISTS (SELECT 1 FROM user_role ur JOIN role r ON r.id=ur.role_id
+            JOIN role_data_scope ds ON ds.role_id=r.id
+            WHERE ur.user_id=#{userId} AND r.status='ACTIVE'
+            AND (ds.scope_type='ALL' OR (ds.scope_type='FACTORY' AND ds.scope_value=#{factory})))
+          THEN 1 ELSE 0 END
+    </select>
+</mapper>

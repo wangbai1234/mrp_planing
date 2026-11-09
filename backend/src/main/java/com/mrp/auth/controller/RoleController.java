@@ -76,6 +76,22 @@ public class RoleController {
         return ApiResponse.ok();
     }
 
+    @GetMapping("/factories")
+    public ApiResponse<List<String>> getFactories() {
+        return ApiResponse.ok(roleService.getEnabledFactoryCodes());
+    }
+
+    @GetMapping("/{id}/data-scope")
+    public ApiResponse<RoleService.DataScope> getDataScope(@PathVariable Long id) {
+        return ApiResponse.ok(roleService.getDataScope(id));
+    }
+
+    @PutMapping("/{id}/configuration")
+    public ApiResponse<Void> updateConfiguration(@PathVariable Long id, @RequestBody ConfigurationRequest request) {
+        roleService.updateConfiguration(id, request.permissionIds(), request.dataScope(), CurrentUser.getUserId());
+        return ApiResponse.ok();
+    }
+
     @PostMapping("/{id}/copy")
     public ApiResponse<Role> copy(@PathVariable Long id, @RequestBody CopyRoleRequest request) {
         Role copied = roleService.copy(id, request.name(), request.code(), CurrentUser.getUserId());
@@ -87,6 +103,8 @@ public class RoleController {
     public record UpdateRoleRequest(String name, String description, String status) {}
 
     public record PermissionsRequest(List<Long> permissionIds) {}
+
+    public record ConfigurationRequest(List<Long> permissionIds, RoleService.DataScope dataScope) {}
 
     public record CopyRoleRequest(String name, String code) {}
 }

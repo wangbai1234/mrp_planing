@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.mrp.repository.MrpDailyPlanDetailMapper">
+    <select id="hasDistributionResult" resultType="boolean">
+        SELECT EXISTS(SELECT 1 FROM mrp_daily_plan_detail WHERE run_id=#{runId})
+            OR EXISTS(SELECT 1 FROM mrp_unallocated_quantity WHERE run_id=#{runId})
+    </select>
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO mrp_daily_plan_detail (run_id, batch_id, factory_code, root_material_code, terminal_material_code, terminal_type, supply_mode, path_group_key, source_month, source_date, schedule_date, system_quantity, is_production_day, revision, row_key)
+        VALUES (#{runId}, #{batchId}, #{factoryCode}, #{rootMaterialCode}, #{terminalMaterialCode}, #{terminalType}, #{supplyMode}, #{pathGroupKey}, #{sourceMonth}, #{sourceDate}, #{scheduleDate}, #{systemQuantity}, #{isProductionDay}, #{revision}, #{rowKey})
+    </insert>
+    
+    <insert id="insertBatch">
+        INSERT INTO mrp_daily_plan_detail (run_id, batch_id, factory_code, root_material_code, terminal_material_code, terminal_type, supply_mode, path_group_key, source_month, source_date, schedule_date, system_quantity, is_production_day, revision, row_key) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.runId}, #{item.batchId}, #{item.factoryCode}, #{item.rootMaterialCode}, #{item.terminalMaterialCode}, #{item.terminalType}, #{item.supplyMode}, #{item.pathGroupKey}, #{item.sourceMonth}, #{item.sourceDate}, #{item.scheduleDate}, #{item.systemQuantity}, #{item.isProductionDay}, #{item.revision}, #{item.rowKey})
+        </foreach>
+    </insert>
+    
+    <select id="selectByRunId" resultType="com.mrp.mrp.domain.MrpDailyPlanDetail">
+        SELECT * FROM mrp_daily_plan_detail WHERE run_id=#{runId} ORDER BY factory_code, root_material_code, terminal_material_code, schedule_date
+    </select>
+
+    <!-- Connector/J streaming avoids retaining the JDBC result and full domain list together.
+         Java checksum sorting defines identity order; SQL must not substitute collation order. -->
+    <select id="streamCapacityFacts" resultType="com.mrp.mrp.domain.MrpDailyPlanDetail"
+            fetchSize="-2147483648" resultSetType="FORWARD_ONLY" useCache="false">
+        SELECT factory_code,root_material_code,terminal_material_code,terminal_type,supply_mode,path_group_key,
+            source_month,source_date,schedule_date,is_production_day,system_quantity
+        FROM mrp_daily_plan_detail WHERE run_id=#{runId}
+    </select>
+
+    <!-- v4 conservation needs source-month totals, including zero overrides and empty-date transfers. -->
+    <select id="selectConservationTotals" resultType="com.mrp.mrp.domain.MrpDailyPlanDetail">
+        SELECT factory_code,root_material_code,terminal_material_code,terminal_type,supply_mode,source_month,
+            SUM(effective_quantity) effective_quantity
+        FROM (
+            SELECT d.factory_code,d.root_material_code,d.terminal_material_code,d.terminal_type,d.supply_mode,
+                d.source_month,COALESCE(o.manual_quantity,d.system_quantity) effective_quantity
+            FROM mrp_daily_plan_detail d LEFT JOIN mrp_daily_plan_override o ON o.batch_id=#{batchId}
+                AND o.factory_code=d.factory_code AND o.root_material_code=d.root_material_code
+                AND o.terminal_material_code=d.terminal_material_code AND o.terminal_type=d.terminal_type
+                AND o.supply_mode=d.supply_mode AND o.path_group_key=d.path_group_key AND o.schedule_date=d.schedule_date
+            WHERE d.run_id=#{runId}
+            UNION ALL
+            SELECT d.factory_code,d.root_material_code,d.terminal_material_code,d.terminal_type,d.supply_mode,
+                d.source_month,o.manual_quantity
+            FROM mrp_daily_plan_override o JOIN mrp_daily_plan_detail d ON d.run_id=#{runId}
+                AND d.factory_code=o.factory_code AND d.root_material_code=o.root_material_code
+                AND d.terminal_material_code=o.terminal_material_code AND d.terminal_type=o.terminal_type
+                AND d.supply_mode=o.supply_mode AND d.path_group_key=o.path_group_key
+            WHERE o.batch_id=#{batchId}
+                AND d.id=(SELECT MIN(t.id) FROM mrp_daily_plan_detail t WHERE t.run_id=d.run_id
+                    AND t.factory_code=d.factory_code AND t.root_material_code=d.root_material_code
+                    AND t.terminal_material_code=d.terminal_material_code AND t.terminal_type=d.terminal_type
+                    AND t.supply_mode=d.supply_mode AND t.path_group_key=d.path_group_key)
+                AND NOT EXISTS(SELECT 1 FROM mrp_daily_plan_detail t WHERE t.run_id=d.run_id
+                    AND t.factory_code=d.factory_code AND t.root_material_code=d.root_material_code
+                    AND t.terminal_material_code=d.terminal_material_code AND t.terminal_type=d.terminal_type
+                    AND t.supply_mode=d.supply_mode AND t.path_group_key=d.path_group_key AND t.schedule_date=o.schedule_date)
+        ) effective
+        GROUP BY factory_code,root_material_code,terminal_material_code,terminal_type,supply_mode,source_month
+    </select>
+    
+    <select id="selectByRunIdAndDateRange" resultType="com.mrp.mrp.domain.MrpDailyPlanDetail">
+        SELECT * FROM mrp_daily_plan_detail WHERE run_id=#{runId} AND schedule_date BETWEEN #{startDate} AND #{endDate} ORDER BY factory_code, root_material_code, terminal_material_code, schedule_date
+    </select>
+    
+    <select id="selectByBatchId" resultType="com.mrp.mrp.domain.MrpDailyPlanDetail">
+        SELECT * FROM mrp_daily_plan_detail WHERE batch_id=#{batchId} ORDER BY factory_code, root_material_code, terminal_material_code, schedule_date
+    </select>
+    
+    <select id="selectByBatchIdAndDateRange" resultType="com.mrp.mrp.domain.MrpDailyPlanDetail">
+        SELECT * FROM mrp_daily_plan_detail WHERE batch_id=#{batchId} AND schedule_date BETWEEN #{startDate} AND #{endDate} ORDER BY factory_code, root_material_code, terminal_material_code, schedule_date
+    </select>
+
+    <select id="selectByRowKey" resultType="com.mrp.mrp.domain.MrpDailyPlanDetail">
+        SELECT * FROM mrp_daily_plan_detail WHERE batch_id=#{batchId} AND row_key=#{rowKey} AND run_id=#{runId} LIMIT 1
+    </select>
+
+    <delete id="deleteByRunId">
+        DELETE FROM mrp_daily_plan_detail WHERE run_id=#{runId}
+    </delete>
+    <delete id="deleteMaterialByRunId">
+        DELETE FROM mrp_daily_plan_detail WHERE run_id=#{runId} AND terminal_type &lt;&gt; 'MACHINE_OUTPUT'
+    </delete>
+</mapper>

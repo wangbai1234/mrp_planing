@@ -1,12 +1,19 @@
-# Stage 1: Build
+FROM node:24-alpine AS frontend
+WORKDIR /frontend
+COPY frontend/package.json frontend/package-lock.json ./
+RUN npm ci
+COPY frontend/ ./
+RUN npm run build
+
 FROM eclipse-temurin:21-jdk-alpine AS builder
 WORKDIR /app
 
-COPY .mvn/ .mvn/
-COPY mvnw pom.xml ./
-RUN ./mvnw dependency:go-offline -B
+COPY backend/.mvn/ .mvn/
+COPY backend/mvnw backend/pom.xml ./
 
-COPY src/ src/
+COPY backend/src/ src/
+RUN rm -rf src/main/resources/static && mkdir -p src/main/resources/static
+COPY --from=frontend /frontend/dist/ src/main/resources/static/
 RUN ./mvnw package -DskipTests -B
 
 # Stage 2: Runtime

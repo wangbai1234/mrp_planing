@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.bom.local.repository.BomSyncTaskMapper">
+    <insert id="insertPending" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO bom_sync_status (sync_type, status, total_rows, synced_rows, phase, started_at)
+        VALUES ('FULL', 'PENDING', 0, 0, '等待同步', NOW(3))
+    </insert>
+    <select id="selectActive" resultType="com.mrp.bom.domain.BomSyncTask">
+        SELECT * FROM bom_sync_status WHERE status IN ('PENDING', 'RUNNING') ORDER BY id DESC LIMIT 1
+    </select>
+    <select id="selectLatest" resultType="com.mrp.bom.domain.BomSyncTask">
+        SELECT * FROM bom_sync_status ORDER BY id DESC LIMIT 1
+    </select>
+    <select id="selectById" resultType="com.mrp.bom.domain.BomSyncTask">
+        SELECT * FROM bom_sync_status WHERE id = #{id}
+    </select>
+    <select id="selectPending" resultType="com.mrp.bom.domain.BomSyncTask">
+        SELECT * FROM bom_sync_status WHERE status = 'PENDING' ORDER BY id LIMIT 1
+    </select>
+    <update id="claim">
+        UPDATE bom_sync_status SET status = 'RUNNING', worker_id = #{workerId},
+            heartbeat_at = NOW(3), started_at = NOW(3), phase = '连接NC'
+        WHERE id = #{id} AND status = 'PENDING'
+    </update>
+    <update id="updateProgress">
+        UPDATE bom_sync_status SET synced_rows = #{current}, total_rows = #{total},
+            phase = #{phase}, heartbeat_at = NOW(3)
+        WHERE id = #{id} AND worker_id = #{workerId} AND status = 'RUNNING'
+    </update>
+    <update id="heartbeat">
+        UPDATE bom_sync_status SET heartbeat_at = NOW(3)
+        WHERE worker_id = #{workerId} AND status = 'RUNNING'
+    </update>
+    <select id="isOwned" resultType="int">
+        SELECT COUNT(*) FROM bom_sync_status
+        WHERE id = #{id} AND worker_id = #{workerId} AND status = 'RUNNING'
+    </select>
+    <update id="finish">
+        UPDATE bom_sync_status SET status = 'SUCCESS', phase = '同步完成',
+            parent_count = #{parentCount}, zero_qty = #{zeroQty},
+            self_reference = #{selfReference}, data_valid = #{dataValid}, finished_at = NOW(3)
+        WHERE id = #{id} AND worker_id = #{workerId} AND status = 'RUNNING'
+    </update>
+    <update id="fail">
+        UPDATE bom_sync_status SET status = 'FAILED', phase = '同步失败',
+            error_message = #{message}, finished_at = NOW(3)
+        WHERE id = #{id} AND worker_id = #{workerId} AND status = 'RUNNING'
+    </update>
+    <update id="failStale">
+        UPDATE bom_sync_status SET status = 'FAILED', phase = '同步中断',
+            error_message = '后台任务中断，请重新同步', finished_at = NOW(3)
+        WHERE status = 'RUNNING' AND heartbeat_at &lt; DATE_SUB(NOW(3), INTERVAL 5 MINUTE)
+    </update>
+</mapper>

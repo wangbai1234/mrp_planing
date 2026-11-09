@@ -13,6 +13,11 @@ public interface ImportTaskMapper {
 
     ImportTask selectById(@Param("id") Long id);
 
+    ImportTask selectByIdForUpdate(@Param("id") Long id);
+
+    int completePending(@Param("id") Long id, @Param("resultResourceId") Long resultResourceId,
+                        @Param("version") Integer version);
+
     ImportTask selectByRequestKey(@Param("requestKey") String requestKey);
 
     int updateStatus(@Param("id") Long id, @Param("status") String status, @Param("version") Integer version);

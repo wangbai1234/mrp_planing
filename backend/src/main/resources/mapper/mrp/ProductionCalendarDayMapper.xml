@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.mrp.repository.ProductionCalendarDayMapper">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO production_calendar_day (version_id, factory_code, calendar_date, is_production_day, allocation_weight, daily_capacity, reason, revision)
+        VALUES (#{versionId}, #{factoryCode}, #{calendarDate}, #{isProductionDay}, #{allocationWeight}, #{dailyCapacity}, #{reason}, #{revision})
+    </insert>
+    
+    <insert id="insertBatch">
+        INSERT INTO production_calendar_day (version_id, factory_code, calendar_date, is_production_day, allocation_weight, daily_capacity, reason, revision) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.versionId}, #{item.factoryCode}, #{item.calendarDate}, #{item.isProductionDay}, #{item.allocationWeight}, #{item.dailyCapacity}, #{item.reason}, #{item.revision})
+        </foreach>
+    </insert>
+    
+    <update id="update">
+        UPDATE production_calendar_day SET is_production_day=#{isProductionDay}, allocation_weight=#{allocationWeight}, daily_capacity=#{dailyCapacity}, reason=#{reason}, revision=#{revision}
+        WHERE id=#{id}
+    </update>
+    
+    <select id="selectByVersionId" resultType="com.mrp.mrp.domain.ProductionCalendarDay">
+        SELECT * FROM production_calendar_day WHERE version_id=#{versionId} ORDER BY factory_code, calendar_date
+    </select>
+    
+    <select id="selectByFactoryAndDateRange" resultType="com.mrp.mrp.domain.ProductionCalendarDay">
+        SELECT * FROM production_calendar_day WHERE version_id=#{versionId} AND factory_code=#{factoryCode} AND calendar_date BETWEEN #{startDate} AND #{endDate} ORDER BY calendar_date
+    </select>
+
+    <delete id="deleteByVersionId">
+        DELETE FROM production_calendar_day WHERE version_id=#{versionId}
+    </delete>
+</mapper>

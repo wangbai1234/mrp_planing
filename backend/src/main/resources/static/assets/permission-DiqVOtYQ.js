@@ -1,0 +1,1 @@
+import{r as e}from"./client-BhnmMrw_.js";function t(){return e(`/permissions/tree`)}export{t};

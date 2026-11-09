@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.mrp.repository.InventorySnapshotGroupMapper">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO inventory_snapshot_group (group_name, snapshot_date, status, checksum, created_by, published_at)
+        VALUES (#{groupName}, #{snapshotDate}, 'PUBLISHED', #{checksum}, #{createdBy}, NOW(3))
+    </insert>
+    <insert id="insertMember">
+        INSERT INTO inventory_snapshot_group_member (group_id, warehouse_code, inventory_snapshot_id)
+        VALUES (#{groupId}, #{warehouseCode}, #{inventorySnapshotId})
+    </insert>
+    <select id="selectSnapshotId" resultType="java.lang.Long">
+        SELECT inventory_snapshot_id FROM inventory_snapshot_group_member
+        WHERE group_id=#{groupId} AND warehouse_code=#{warehouseCode}
+    </select>
+</mapper>

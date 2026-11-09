@@ -1,6 +1,7 @@
 package com.mrp.auth.repository;
 
 import com.mrp.auth.domain.Role;
+import com.mrp.auth.domain.RoleDataScope;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -10,6 +11,8 @@ import java.util.List;
 public interface RoleMapper {
 
     Role selectById(@Param("id") Long id);
+
+    Role selectByIdForUpdate(@Param("id") Long id);
 
     Role selectByCode(@Param("code") String code);
 
@@ -39,5 +42,17 @@ public interface RoleMapper {
 
     List<Long> selectPermissionIdsByRoleId(@Param("roleId") Long roleId);
 
+    List<Long> selectActivePermissionIds();
+
     List<Long> selectUserIdsByRoleId(@Param("roleId") Long roleId);
+
+    List<RoleDataScope> selectDataScopesByRoleId(@Param("roleId") Long roleId);
+
+    List<String> selectEnabledFactoryCodes();
+
+    int deleteDataScopesByRoleId(@Param("roleId") Long roleId);
+
+    int insertAllDataScope(@Param("roleId") Long roleId);
+
+    int insertFactoryDataScopes(@Param("roleId") Long roleId, @Param("factoryCodes") List<String> factoryCodes);
 }

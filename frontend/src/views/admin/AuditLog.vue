@@ -4,24 +4,14 @@ import { ElMessage } from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
 import AdminLayout from './AdminLayout.vue'
 import { get } from '../../api/client'
-
-interface AuditLog {
-  id: number
-  operatorId: number
-  operatorRole: string
-  factoryScope: string
-  action: string
-  resourceType: string
-  resourceId: string
-  beforeValue: string
-  afterValue: string
-  traceId: string
-  ipAddress: string
-  createdAt: string
-}
+import AuditLogViewer from '../../components/AuditLogViewer.vue'
+import type { AuditLogRecord } from '../../api/audit'
+import { auditAction, auditResource } from '../../utils/auditPresentation'
 
 const loading = ref(false)
-const logs = ref<AuditLog[]>([])
+const logs = ref<AuditLogRecord[]>([])
+const selectedLog = ref<AuditLogRecord | null>(null)
+const detailVisible = ref(false)
 const total = ref(0)
 const page = ref(1)
 const pageSize = ref(20)
@@ -46,7 +36,7 @@ async function loadLogs() {
     if (filters.value.startDate) params.set('startDate', filters.value.startDate)
     if (filters.value.endDate) params.set('endDate', filters.value.endDate)
 
-    const res = await get<{ items: AuditLog[]; total: number }>(`/audit-logs?${params.toString()}`)
+    const res = await get<{ items: AuditLogRecord[]; total: number }>(`/audit-logs?${params.toString()}`)
     logs.value = res.items
     total.value = res.total
   } catch (e: any) {
@@ -74,33 +64,6 @@ function handleSizeChange(s: number) {
   loadLogs()
 }
 
-function getActionLabel(action: string): string {
-  const labels: Record<string, string> = {
-    CREATE: '创建',
-    UPDATE: '更新',
-    DELETE: '删除',
-    ENABLE: '启用',
-    DISABLE: '禁用',
-    ASSIGN_ROLE: '分配角色',
-    UPDATE_PERMISSIONS: '更新权限',
-    RESET_PASSWORD: '重置密码',
-    COPY_ROLE: '复制角色',
-    LOGIN: '登录'
-  }
-  return labels[action] || action
-}
-
-function getResourceTypeLabel(type: string): string {
-  const labels: Record<string, string> = {
-    USER: '用户',
-    ROLE: '角色',
-    PERMISSION: '权限',
-    FORECAST: '经营计划',
-    INVENTORY: '库存',
-    PLAN: '排产'
-  }
-  return labels[type] || type
-}
 </script>
 
 <template>
@@ -114,9 +77,10 @@ function getResourceTypeLabel(type: string): string {
         <el-input
           v-model="filters.keyword"
           placeholder="搜索操作人/对象"
-          style="width: 180px"
+          style="width: 220px"
           clearable
           @keyup.enter="handleSearch"
+          @clear="handleSearch"
         >
           <template #prefix>
             <el-icon><Search /></el-icon>
@@ -150,7 +114,6 @@ function getResourceTypeLabel(type: string): string {
           style="width: 140px"
           @change="handleSearch"
         />
-        <el-button @click="handleSearch">查询</el-button>
       </div>
 
       <el-table :data="logs" v-loading="loading" style="width: 100%">
@@ -162,12 +125,12 @@ function getResourceTypeLabel(type: string): string {
         <el-table-column prop="operator_id" label="操作人ID" width="100" />
         <el-table-column prop="action" label="操作类型" width="120">
           <template #default="{ row }">
-            <el-tag size="small">{{ getActionLabel(row.action) }}</el-tag>
+            <el-tag size="small">{{ auditAction(row.action) }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="resource_type" label="对象类型" width="100">
           <template #default="{ row }">
-            {{ getResourceTypeLabel(row.resource_type) }}
+            {{ auditResource(row.resource_type) }}
           </template>
         </el-table-column>
         <el-table-column prop="resource_id" label="对象ID" width="100" />
@@ -175,19 +138,15 @@ function getResourceTypeLabel(type: string): string {
         <el-table-column prop="trace_id" label="TraceID" width="120" />
         <el-table-column label="详情" width="80">
           <template #default="{ row }">
-            <el-tooltip v-if="row.before_value || row.after_value" placement="left">
-              <template #content>
-                <div style="max-width: 400px; white-space: pre-wrap;">
-                  <div v-if="row.before_value"><strong>修改前:</strong> {{ row.before_value }}</div>
-                  <div v-if="row.after_value"><strong>修改后:</strong> {{ row.after_value }}</div>
-                </div>
-              </template>
-              <el-button link>查看</el-button>
-            </el-tooltip>
-            <span v-else>-</span>
+            <el-button type="primary" link @click="selectedLog = row; detailVisible = true">查看</el-button>
           </template>
         </el-table-column>
       </el-table>
+      <el-empty v-if="!loading && !logs.length" description="暂无操作日志" />
+
+      <el-dialog v-model="detailVisible" title="查看日志" width="min(760px, 96vw)">
+        <AuditLogViewer :logs="selectedLog ? [selectedLog] : []" />
+      </el-dialog>
 
       <div class="pagination">
         <el-pagination

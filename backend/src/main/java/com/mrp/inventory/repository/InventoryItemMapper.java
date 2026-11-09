@@ -17,7 +17,20 @@ public interface InventoryItemMapper {
                                                 @Param("offset") int offset,
                                                 @Param("limit") int limit);
 
+    List<InventoryItem> selectFilteredPageBySnapshotId(@Param("snapshotId") Long snapshotId,
+                                                        @Param("keyword") String keyword,
+                                                        @Param("offset") int offset,
+                                                        @Param("limit") int limit);
+
+    int countFilteredBySnapshotId(@Param("snapshotId") Long snapshotId,
+                                   @Param("keyword") String keyword);
+
     int countBySnapshotId(@Param("snapshotId") Long snapshotId);
+
+    int countBySnapshotIdAndWarehouseCode(@Param("snapshotId") Long snapshotId,
+                                          @Param("warehouseCode") String warehouseCode);
+
+    List<String> selectWarehouseCodesBySnapshotId(@Param("snapshotId") Long snapshotId);
 
     int deleteBySnapshotId(@Param("snapshotId") Long snapshotId);
 }

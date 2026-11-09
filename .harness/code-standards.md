@@ -3,9 +3,9 @@
 ## Java
 
 - Java 21；优先使用不可变 `record` 作为输入/输出值对象；
-- 数量为 `long`，不得用 `int` 承载可能累计的生产量；
-- 月份领域值使用 `YearMonth`，周使用 `LocalDate` 且校验周一；
-- 所有事务边界放在 Application Service；Controller 不加复杂事务；
+- Phase 2 数量和比例为 `BigDecimal`，持久化使用 `DECIMAL(18,6)`；旧 `long` 只用于 Phase 1 兼容，禁止 `.longValue()` 截断新链路；
+- 月份领域值使用 `YearMonth`，来源日期/排产日期使用 `LocalDate`；周属性必须通过已发布 `planning_week_definition` 的日期范围查找，禁止在 Phase 2 新链路中使用周一/周日推算业务周；
+- 所有事务边界放在 Application Service 或独立 Writer Bean；禁止依赖同类自调用 `@Transactional`；Controller 不加复杂事务；
 - 捕获异常必须保留 cause 和 traceId，禁止空 catch；
 - 禁止静态全局可变状态；禁止使用系统当前时间散落计算，统一注入 `Clock`；
 - 计算领域层不得依赖 Spring、数据库、HTTP、Redis；
@@ -20,7 +20,7 @@
 - 新查询在任务报告中给出索引使用说明；大查询使用 `EXPLAIN`；
 - 所有列表稳定排序，分页条件包含唯一键；
 - 禁止 `SELECT *` 用于正式 Mapper；
-- 版本结果表禁止 UPDATE 数量；新计算写新版本。
+- 版本系统值禁止 UPDATE 覆盖；新计算写新版本，人工覆盖写独立 override 并保留系统值。
 
 ## Vue / TypeScript
 

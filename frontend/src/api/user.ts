@@ -46,7 +46,7 @@ export function getUser(id: number) {
 }
 
 export function createUser(data: CreateUserRequest) {
-  return post<User>('/users', data)
+  return post<{ user: User; temporaryPassword: string }>('/users', data)
 }
 
 export function updateUser(id: number, data: UpdateUserRequest) {
@@ -77,5 +77,5 @@ export function updateUserPermissions(id: number, permissions: Array<{
 }
 
 export function resetUserPassword(id: number) {
-  return put<void>(`/users/${id}/reset-password`, {})
+  return put<{ temporaryPassword: string }>(`/users/${id}/reset-password`, {})
 }

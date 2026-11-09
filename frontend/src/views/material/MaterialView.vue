@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { ref, inject, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { get, upload, post, put, del, download } from '../../api/client'
+import { usePermission } from '../../composables/usePermission'
 
-const setCrumb = inject<(g: string, p: string) => void>('setCrumb')!
+const { hasPermission } = usePermission()
 
 const materials = ref<any[]>([])
 const loading = ref(false)
@@ -32,6 +33,8 @@ const total = ref(0)
 const categories = ['原材料', '整机']
 const regions = ['上海', '惠州']
 const attributes = ['限制使用', '差异', '通用']
+const duplicateCodes = ref<string[]>([])
+const duplicateDialogVisible = ref(false)
 
 // Category tree for filter and form
 const categoryTree = ref<any[]>([])
@@ -122,7 +125,7 @@ async function handleSubmit() {
     ElMessage.warning('料号和物料名称必填')
     return
   }
-  
+
   formLoading.value = true
   try {
     if (formMode.value === 'add') {
@@ -210,9 +213,9 @@ async function handleUpload(f: File) {
     const formData = new FormData()
     formData.append('file', f)
     const res = await upload<any>('/materials/import', formData)
-    stagingResult.value = res.data
+    stagingResult.value = res
     if (res?.errorRows > 0) {
-      ElMessage.warning(`解析完成: ${res.successRows} 行成功, ${res.errorRows} 行有错误`)
+      ElMessage.error(`解析完成: ${res.successRows} 行成功, ${res.errorRows} 行有错误，无法导入`)
     }
   } catch (e: any) {
     ElMessage.error('上传失败: ' + e.message)
@@ -229,7 +232,7 @@ function removeFile() {
 
 async function handleImportConfirm() {
   if (!stagingResult.value?.checksum) return
-  
+
   confirmLoading.value = true
   try {
     const res = await post<any>('/materials/import/confirm', {
@@ -237,6 +240,13 @@ async function handleImportConfirm() {
       skipDuplicates: true
     })
     ElMessage.success(`导入成功: ${res?.imported} 条`)
+
+    // 如果有重复料号，展示给用户
+    if (res?.duplicateCodes && res.duplicateCodes.length > 0) {
+      duplicateCodes.value = res.duplicateCodes
+      duplicateDialogVisible.value = true
+    }
+
     handleImportClose()
     currentPage.value = 1
     await loadMaterials()
@@ -267,7 +277,6 @@ function formatFileSize(bytes: number): string {
 }
 
 onMounted(() => {
-  setCrumb('数据管理', '物料管理')
   loadCategoryTree()
   loadMaterials()
 })
@@ -279,10 +288,10 @@ onMounted(() => {
     <div class="page-header">
       <h1 class="page-title">物料管理</h1>
       <div class="page-actions">
-        <el-button type="primary" @click="openImportDialog">
+        <el-button v-if="hasPermission('material:manage')" type="primary" @click="openImportDialog">
           <el-icon><Upload /></el-icon>导入
         </el-button>
-        <el-button type="primary" @click="openAddDialog">
+        <el-button v-if="hasPermission('material:manage')" type="primary" @click="openAddDialog">
           <el-icon><Plus /></el-icon>新增
         </el-button>
       </div>
@@ -306,7 +315,7 @@ onMounted(() => {
       <el-select v-model="filterRegion" placeholder="所属区域" clearable style="width: 140px" @change="handleSearch">
         <el-option v-for="r in regions" :key="r" :label="r" :value="r" />
       </el-select>
-      <el-input v-model="filterKeyword" placeholder="搜索料号/名称/型号" clearable style="width: 220px" @keyup.enter="handleSearch">
+      <el-input v-model="filterKeyword" placeholder="搜索料号/名称/型号" clearable style="width: 220px" @keyup.enter="handleSearch" @clear="handleSearch">
         <template #prefix>
           <el-icon><Search /></el-icon>
         </template>
@@ -347,21 +356,20 @@ onMounted(() => {
         <el-table-column prop="originPlace" label="产地" width="80" align="center" />
         <el-table-column label="操作" width="120" fixed="right" align="center">
           <template #default="{ row }">
-            <el-button type="primary" link size="small" @click="openEditDialog(row)">编辑</el-button>
-            <el-button type="danger" link size="small" @click="handleDelete(row)">删除</el-button>
+            <el-button v-if="hasPermission('material:manage')" type="primary" link size="small" @click="openEditDialog(row)">编辑</el-button>
+            <el-button v-if="hasPermission('material:manage')" type="danger" link size="small" @click="handleDelete(row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
 
       <!-- 分页 -->
       <div class="pagination-bar">
-        <span class="total-text">共 {{ total }} 条</span>
         <el-pagination
             v-model:current-page="currentPage"
             v-model:page-size="pageSize"
             :total="total"
             :page-sizes="[20, 50, 100]"
-            layout="sizes, prev, pager, next"
+            layout="total, sizes, prev, pager, next"
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
         />
@@ -375,7 +383,7 @@ onMounted(() => {
       <template #header>
         <div class="dialog-title">{{ formMode === 'add' ? '新增物料' : '编辑物料' }}</div>
       </template>
-      
+
       <el-form :model="formData" label-width="100px" label-position="top">
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px;">
           <el-form-item label="料号" required>
@@ -458,7 +466,7 @@ onMounted(() => {
       </div>
 
       <div class="upload-section">
-        <div 
+        <div
           v-if="!file && !uploadLoading"
           class="upload-area"
           :class="{ 'is-dragover': isDragOver }"
@@ -534,15 +542,29 @@ onMounted(() => {
       <template #footer>
         <div class="dialog-footer">
           <el-button @click="handleImportClose">取消</el-button>
-          <el-button 
-            type="primary" 
-            @click="handleImportConfirm" 
+          <el-button
+            type="primary"
+            @click="handleImportConfirm"
             :loading="confirmLoading"
             :disabled="!stagingResult || stagingResult.errorRows > 0"
           >
             开始导入
           </el-button>
         </div>
+      </template>
+    </el-dialog>
+
+    <!-- 重复料号弹窗 -->
+    <el-dialog v-model="duplicateDialogVisible" title="重复料号提示" width="500px">
+      <div class="duplicate-info">
+        <p>以下料号在系统中已存在，已自动跳过：</p>
+        <div class="duplicate-list">
+          <el-tag v-for="code in duplicateCodes" :key="code" class="duplicate-tag">{{ code }}</el-tag>
+        </div>
+        <p class="duplicate-count">共 {{ duplicateCodes.length }} 条重复</p>
+      </div>
+      <template #footer>
+        <el-button type="primary" @click="duplicateDialogVisible = false">我知道了</el-button>
       </template>
     </el-dialog>
   </div>
@@ -818,5 +840,32 @@ onMounted(() => {
   font-size: 13px;
   color: #4E5969;
   line-height: 28px;
+}
+
+.duplicate-info p {
+  font-size: 14px;
+  color: #4E5969;
+  margin-bottom: 12px;
+}
+
+.duplicate-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 12px;
+  background: #F7F8FA;
+  border-radius: 8px;
+}
+
+.duplicate-tag {
+  margin: 0;
+}
+
+.duplicate-count {
+  margin-top: 12px;
+  font-size: 13px;
+  color: #86909C;
 }
 </style>

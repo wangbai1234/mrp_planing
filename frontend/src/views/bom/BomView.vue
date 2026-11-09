@@ -1,10 +1,26 @@
 <script setup lang="ts">
-import { ref, inject, onMounted } from 'vue'
+import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { get, post } from '../../api/client'
 import { Search, Refresh, Close, Share, Download } from '@element-plus/icons-vue'
+import { usePermission } from '../../composables/usePermission'
 
-const setCrumb = inject<(g: string, p: string) => void>('setCrumb')!
+const { hasPermission } = usePermission()
+
+interface BomSyncTask {
+  id: number
+  status: 'PENDING' | 'RUNNING' | 'SUCCESS' | 'FAILED'
+  phase: string | null
+  totalRows: number | null
+  syncedRows: number | null
+  parentCount: number | null
+  zeroQty: number | null
+  selfReference: number | null
+  dataValid: boolean | null
+  errorMessage: string | null
+  startedAt: string | null
+  finishedAt: string | null
+}
 
 interface BomMaterial {
   invCode: string
@@ -46,6 +62,7 @@ interface BomTreeNode {
   spec: string
   qty: number
   version: string
+  isDefault?: string
   hasChildren: boolean
   isLeaf?: boolean
   children?: BomTreeNode[]
@@ -93,8 +110,48 @@ const isDragging = ref(false)
 const drawerVisible = ref(false)
 const treeData = ref<BomTreeNode[]>([])
 const treeLoading = ref(false)
-const syncLoading = ref(false)
 const treeRef = ref<any>(null)
+
+const syncDialogVisible = ref(false)
+const syncTask = ref<BomSyncTask | null>(null)
+const syncProgressRetrying = ref(false)
+const syncing = computed(() => ['PENDING', 'RUNNING'].includes(syncTask.value?.status || ''))
+const syncPercent = computed(() => syncTask.value?.status === 'SUCCESS' ? 100 :
+  syncTask.value?.totalRows ? Math.min(99, Math.round((syncTask.value.syncedRows || 0) * 100 / syncTask.value.totalRows)) : 0)
+let syncTimer: ReturnType<typeof setTimeout> | undefined
+let disposed = false
+
+async function pollSync(taskId: number) {
+  try {
+    const task = await get<BomSyncTask>(`/bom/sync/${taskId}`)
+    if (disposed || syncTask.value?.id !== taskId) return
+    syncTask.value = task
+    syncProgressRetrying.value = false
+    if (task.status === 'SUCCESS') await loadMaterials()
+  } catch (error: unknown) {
+    if (disposed) return
+    syncProgressRetrying.value = true
+    console.warn('读取BOM同步进度失败，将自动重试', error)
+  } finally {
+    if (!disposed && syncTask.value?.id === taskId && (syncing.value || syncProgressRetrying.value)) {
+      syncTimer = setTimeout(() => pollSync(taskId), 2000)
+    }
+  }
+}
+
+async function restoreSync() {
+  try {
+    const task = await get<BomSyncTask | null>('/bom/sync/latest')
+    if (disposed || !task) return
+    syncTask.value = task
+    if (['PENDING', 'RUNNING'].includes(task.status)) {
+      syncDialogVisible.value = true
+      pollSync(task.id)
+    }
+  } catch (error: unknown) {
+    console.warn('读取最近BOM同步任务失败', error)
+  }
+}
 
 const treeProps = {
   children: 'children',
@@ -121,8 +178,12 @@ async function loadMaterials() {
 }
 
 async function handleSync() {
+  if (syncing.value && syncTask.value) {
+    syncDialogVisible.value = true
+    return
+  }
   try {
-    await ElMessageBox.confirm('从Oracle同步BOM数据可能需要几分钟，确定继续？', '同步确认', {
+    await ElMessageBox.confirm('从NC同步BOM数据可能需要几分钟，确定继续？', '同步确认', {
       confirmButtonText: '开始同步',
       cancelButtonText: '取消',
       type: 'warning'
@@ -131,15 +192,13 @@ async function handleSync() {
     return
   }
 
-  syncLoading.value = true
   try {
-    const res = await post<any>('/bom/sync')
-    ElMessage.success(`同步完成！父项: ${res?.parentCount}, 子项: ${res?.detailCount}, 耗时: ${res?.elapsed}`)
-    await loadMaterials()
-  } catch (e: any) {
-    ElMessage.error('同步失败: ' + e.message)
-  } finally {
-    syncLoading.value = false
+    const task = await post<BomSyncTask>('/bom/sync')
+    syncTask.value = task
+    syncDialogVisible.value = true
+    pollSync(task.id)
+  } catch (error: unknown) {
+    ElMessage.error('创建同步任务失败: ' + (error instanceof Error ? error.message : '未知错误'))
   }
 }
 
@@ -297,7 +356,17 @@ function getAllNodeKeys(nodes: BomTreeNode[]): string[] {
 }
 
 function handleExport() {
-  ElMessage.info('导出功能开发中')
+  const headers = ['物料编码', '物料名称', '版本', '单位', '组织', '机型号', '子项数']
+  const rows = materials.value.map(m => [
+    m.invCode, m.invName, m.version, m.unit, m.orgName, m.bodyCode, String(m.childCount)
+  ])
+  const csvContent = [headers, ...rows].map(r => r.join(',')).join('\n')
+  const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' })
+  const link = document.createElement('a')
+  link.href = URL.createObjectURL(blob)
+  link.download = `BOM视图_${new Date().toLocaleDateString('zh-CN')}.csv`
+  link.click()
+  URL.revokeObjectURL(link.href)
 }
 
 const tableRowClassName = ({ row }: { row: BomMaterial }) => {
@@ -308,9 +377,13 @@ const tableRowClassName = ({ row }: { row: BomMaterial }) => {
 }
 
 onMounted(() => {
-  setCrumb('数据管理', 'BOM管理')
   loadCategoryMap()
   loadMaterials()
+  restoreSync()
+})
+onBeforeUnmount(() => {
+  disposed = true
+  if (syncTimer) clearTimeout(syncTimer)
 })
 </script>
 
@@ -319,9 +392,9 @@ onMounted(() => {
     <div class="page-header">
       <h1 class="page-title">BOM管理</h1>
       <div class="page-actions">
-        <el-button type="primary" @click="handleSync" :loading="syncLoading">
+        <el-button v-if="hasPermission('bom:manage')" type="primary" @click="handleSync">
           <el-icon><Download /></el-icon>
-          从Oracle同步
+          {{ syncing ? '查看同步进度' : '从NC同步' }}
         </el-button>
         <el-button type="primary" @click="openBomTree" :disabled="!selectedMaterial">
           <el-icon><Share /></el-icon>
@@ -410,7 +483,7 @@ onMounted(() => {
               <el-icon><Refresh /></el-icon>
               刷新
             </el-button>
-            <el-button size="small" @click="handleExport">导出</el-button>
+            <el-button type="primary" size="small" @click="handleExport">导出</el-button>
             <el-button size="small" @click="handleDetailClose">
               <el-icon><Close /></el-icon>
               关闭
@@ -463,7 +536,7 @@ onMounted(() => {
           <div class="drawer-title-section">
             <div class="drawer-title">BOM多层结构</div>
             <div class="drawer-subtitle" v-if="selectedMaterial">
-              根物料：<span class="root-code">{{ selectedMaterial.invCode }}</span> · 
+              根物料：<span class="root-code">{{ selectedMaterial.invCode }}</span> ·
               <span class="root-version">V{{ selectedMaterial.version }}</span>
             </div>
           </div>
@@ -480,8 +553,9 @@ onMounted(() => {
           </div>
         </div>
       </template>
-      
+
       <div v-loading="treeLoading" class="tree-container">
+          <el-alert title="此树展示当前同步的全部BOM关系。排产沿这些下级逐层计算；只有物料配置为停止下钻时才在该节点终止。" type="info" :closable="false" style="margin-bottom: 12px" />
         <el-tree
           ref="treeRef"
           v-if="treeData.length > 0"
@@ -505,6 +579,39 @@ onMounted(() => {
         <el-empty v-else description="暂无BOM树数据" />
       </div>
     </el-drawer>
+
+    <el-dialog
+      v-model="syncDialogVisible"
+      title="同步BOM数据"
+      :close-on-click-modal="false"
+      width="420"
+    >
+      <div v-if="syncTask" class="sync-progress" aria-live="polite">
+        <div class="sync-progress-row">
+          <el-progress class="progress-bar" :percentage="syncPercent" :indeterminate="syncing && !syncTask.totalRows"
+            :stroke-width="8" :show-text="false" :status="syncTask.status === 'FAILED' ? 'exception' : syncTask.status === 'SUCCESS' ? 'success' : undefined" />
+          <span v-if="syncTask.totalRows || syncTask.status === 'SUCCESS'" class="progress-percent">{{ syncPercent }}%</span>
+          <span>{{ syncTask.phase || '等待同步' }}<span v-if="syncProgressRetrying">（进度更新重试中）</span></span>
+        </div>
+        <p v-if="syncTask.totalRows" class="sync-count">已拉取 {{ syncTask.syncedRows || 0 }} / {{ syncTask.totalRows }} 条</p>
+        <el-alert v-if="syncTask.status === 'FAILED'" type="error" :title="syncTask.errorMessage || '同步失败'" :closable="false" />
+        <el-descriptions v-if="syncTask.status === 'SUCCESS'" :column="1" border size="small">
+          <el-descriptions-item label="父项数量">{{ syncTask.parentCount }}</el-descriptions-item>
+          <el-descriptions-item label="子项数量">{{ syncTask.totalRows }}</el-descriptions-item>
+          <el-descriptions-item label="数据质量">
+            <el-tag :type="syncTask.dataValid ? 'success' : 'warning'">{{ syncTask.dataValid ? '正常' : '有问题' }}</el-tag>
+          </el-descriptions-item>
+          <el-descriptions-item v-if="syncTask.zeroQty" label="数量为0的记录">{{ syncTask.zeroQty }} 条</el-descriptions-item>
+          <el-descriptions-item v-if="syncTask.selfReference" label="自引用记录">{{ syncTask.selfReference }} 条</el-descriptions-item>
+        </el-descriptions>
+      </div>
+      <template #footer>
+        <el-button @click="syncDialogVisible = false">关闭</el-button>
+        <el-button v-if="syncTask?.status === 'SUCCESS'" type="primary" @click="syncDialogVisible = false; loadMaterials()">
+          刷新列表
+        </el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -515,6 +622,12 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
 }
+
+.sync-progress { padding: 16px 0; color: #4E5969; font-size: 13px; }
+.sync-progress-row { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.progress-bar { width: 180px; max-width: 100%; flex-shrink: 0; }
+.progress-percent { font-variant-numeric: tabular-nums; }
+.sync-count { margin: 12px 0; color: #86909C; }
 
 .page-header {
   display: flex;
@@ -738,7 +851,7 @@ onMounted(() => {
     padding: 16px 20px;
     border-bottom: 1px solid #e4e7ed;
   }
-  
+
   .el-drawer__body {
     padding: 0;
   }

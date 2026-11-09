@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { ref, inject, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { get } from '../../api/client'
 import type { PlanVersion } from '../../api/types'
-
-const setCrumb = inject<(g: string, p: string) => void>('setCrumb')!
+import { mrpApi } from '../../api/mrp'
 
 const versions = ref<PlanVersion[]>([])
 const loading = ref(false)
-const factoryCode = ref('永惠')
+const factoryCode = ref('')
+const factories = ref<string[]>([])
 const compareVisible = ref(false)
 const compareBaseId = ref<number | null>(null)
 const compareCurrentId = ref<number | null>(null)
@@ -44,8 +44,7 @@ async function doCompare() {
 }
 
 onMounted(() => {
-  setCrumb('计划管理', '版本记录')
-  loadVersions()
+  mrpApi.getFactories().then(items => { factories.value = items || []; factoryCode.value = factories.value[0] || ''; if (factoryCode.value) loadVersions() }).catch(e => ElMessage.error('加载工厂失败: ' + String(e)))
 })
 </script>
 
@@ -56,8 +55,7 @@ onMounted(() => {
       <h1 class="page-title">版本记录</h1>
       <div style="display: flex; gap: 8px; align-items: center">
         <el-select v-model="factoryCode" style="width: 140px" @change="loadVersions">
-          <el-option label="永惠" value="永惠" />
-          <el-option label="爱培科" value="爱培科" />
+          <el-option v-for="code in factories" :key="code" :label="code" :value="code" />
         </el-select>
         <el-button type="primary" @click="$router.push('/planning')">
           <el-icon><Calendar /></el-icon>返回当前排产

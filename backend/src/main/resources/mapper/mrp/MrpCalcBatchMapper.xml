@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.mrp.repository.MrpCalcBatchMapper">
+    <select id="selectSummaryCounts" resultType="com.mrp.mrp.repository.MrpCalcBatchMapper$SummaryCounts">
+        SELECT i.total_issues, i.open_issues, d.daily_plan_count, u.unallocated_count, u.pending_unallocated,
+            p.pool_count, p.total_available, p.total_allocated
+        FROM (SELECT COUNT(*) total_issues, COALESCE(SUM(status='OPEN'),0) open_issues
+            FROM mrp_decision_issue WHERE batch_id=#{batchId}) i
+        CROSS JOIN (SELECT COUNT(*) daily_plan_count FROM mrp_daily_plan_detail WHERE run_id=#{runId}) d
+        CROSS JOIN (SELECT COUNT(*) unallocated_count, COALESCE(SUM(status='PENDING'),0) pending_unallocated
+            FROM mrp_unallocated_quantity WHERE run_id=#{runId}) u
+        CROSS JOIN (SELECT COUNT(*) pool_count, COALESCE(SUM(available_qty),0) total_available,
+            COALESCE(SUM(allocated_qty),0) total_allocated FROM mrp_inventory_pool WHERE batch_id=#{batchId}) p
+    </select>
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO mrp_calc_batch (factory_code, status, forecast_version_id, inventory_snapshot_id,
+            inventory_snapshot_group_id, bom_snapshot_id, bom_source_checksum, category_role_version_id, material_policy_version_id,
+            production_calendar_version_id, factory_warehouse_mapping_version_id, stock_policy_version_id,
+            business_week_version_id, decision_checksum, rule_version, input_checksum, result_checksum,
+            version_no, active_run_id, published_at, active_request_key, revision_of_batch_id, revision_no,
+            superseded_by_batch_id, issue_count, unresolved_count, version, created_by)
+        VALUES (#{factoryCode}, #{status}, #{forecastVersionId}, #{inventorySnapshotId},
+            #{inventorySnapshotGroupId}, #{bomSnapshotId}, #{bomSourceChecksum}, #{categoryRoleVersionId}, #{materialPolicyVersionId},
+            #{productionCalendarVersionId}, #{factoryWarehouseMappingVersionId}, #{stockPolicyVersionId},
+            #{businessWeekVersionId}, #{decisionChecksum}, #{ruleVersion}, #{inputChecksum}, #{resultChecksum},
+            #{versionNo}, #{activeRunId}, #{publishedAt}, #{activeRequestKey}, #{revisionOfBatchId}, #{revisionNo},
+            #{supersededByBatchId}, #{issueCount}, #{unresolvedCount}, #{version}, #{createdBy})
+    </insert>
+    
+    <update id="update">
+        UPDATE mrp_calc_batch SET status=#{status}, forecast_version_id=#{forecastVersionId}, inventory_snapshot_id=#{inventorySnapshotId},
+            inventory_snapshot_group_id=#{inventorySnapshotGroupId}, bom_snapshot_id=#{bomSnapshotId},
+            bom_source_checksum=#{bomSourceChecksum},
+            category_role_version_id=#{categoryRoleVersionId}, material_policy_version_id=#{materialPolicyVersionId},
+            production_calendar_version_id=#{productionCalendarVersionId},
+            factory_warehouse_mapping_version_id=#{factoryWarehouseMappingVersionId},
+            stock_policy_version_id=#{stockPolicyVersionId}, business_week_version_id=#{businessWeekVersionId},
+            decision_checksum=#{decisionChecksum}, rule_version=#{ruleVersion}, input_checksum=#{inputChecksum},
+            result_checksum=#{resultChecksum}, version_no=#{versionNo}, active_run_id=#{activeRunId},
+            published_at=#{publishedAt}, active_request_key=#{activeRequestKey}, revision_of_batch_id=#{revisionOfBatchId},
+            revision_no=#{revisionNo}, superseded_by_batch_id=#{supersededByBatchId}, issue_count=#{issueCount},
+            unresolved_count=#{unresolvedCount}, version=version+1
+        WHERE id=#{id} AND version=#{version}
+    </update>
+    
+    <select id="selectForUpdate" resultType="com.mrp.mrp.domain.MrpCalcBatch">SELECT * FROM mrp_calc_batch WHERE id=#{id} FOR UPDATE</select>
+    <select id="selectById" resultType="com.mrp.mrp.domain.MrpCalcBatch">
+        SELECT * FROM mrp_calc_batch WHERE id=#{id}
+    </select>
+    
+    <select id="selectByRequestKey" resultType="com.mrp.mrp.domain.MrpCalcBatch">
+        SELECT * FROM mrp_calc_batch WHERE active_request_key=#{requestKey}
+    </select>
+    
+    <select id="selectByStatus" resultType="com.mrp.mrp.domain.MrpCalcBatch">
+        SELECT * FROM mrp_calc_batch WHERE status=#{status} ORDER BY created_at DESC
+    </select>
+    
+    <select id="selectAll" resultType="com.mrp.mrp.domain.MrpCalcBatch">
+        SELECT * FROM mrp_calc_batch ORDER BY created_at DESC
+    </select>
+
+    <select id="selectCurrent" resultType="com.mrp.mrp.domain.MrpCalcBatch">
+        SELECT b.*
+        FROM mrp_calc_batch b
+        WHERE b.status NOT IN ('SUPERSEDED', 'CANCELLED', 'FAILED', 'STALE')
+        ORDER BY b.created_at DESC, b.id DESC
+        LIMIT 1
+    </select>
+    
+    <update id="updateStatus">
+        UPDATE mrp_calc_batch SET status=#{status}, version=version+1 WHERE id=#{id} AND version=#{version}
+    </update>
+    
+    <update id="updateStatusForce">
+        UPDATE mrp_calc_batch SET status=#{status}, version=version+1 WHERE id=#{id} AND status&lt;&gt;'STALE'
+    </update>
+
+    <update id="resetAfterCalculationFailure">
+        UPDATE mrp_calc_batch SET status='READY_TO_CALCULATE', version=version+1
+        WHERE id=#{id} AND version=#{expectedVersion}
+          AND active_run_id &lt;=&gt; #{expectedActiveRunId,jdbcType=BIGINT}
+          AND status IN ('CALCULATING', 'WAITING_DAILY_DISTRIBUTION', 'WRITING', 'FAILED')
+    </update>
+
+    <update id="restoreExpiredMaterialTask">
+        UPDATE mrp_calc_batch SET status=#{status}, version=version+1
+        WHERE id=#{id} AND status='CALCULATING'
+          AND active_run_id &lt;=&gt; #{runId,jdbcType=BIGINT}
+    </update>
+
+    <update id="activateRunAndStatus">
+        UPDATE mrp_calc_batch
+        SET active_run_id=#{runId}, status=#{status}, version=version+1
+        WHERE id=#{id} AND status&lt;&gt;'STALE'
+    </update>
+    
+    <select id="selectPage" resultType="com.mrp.mrp.domain.MrpCalcBatch">
+        SELECT * FROM mrp_calc_batch
+        <where>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+            <if test="keyword != null and keyword != ''">
+                AND (factory_code LIKE CONCAT('%', #{keyword}, '%')
+                OR id LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+        </where>
+        ORDER BY created_at DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+    
+    <select id="countPage" resultType="long">
+        SELECT COUNT(*) FROM mrp_calc_batch
+        <where>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+            <if test="keyword != null and keyword != ''">
+                AND (factory_code LIKE CONCAT('%', #{keyword}, '%')
+                OR id LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertFactoryScope">
+        INSERT INTO mrp_batch_factory_scope
+            (batch_id, factory_code, warehouse_code, production_calendar_version_id, inventory_snapshot_id)
+        VALUES (#{batchId}, #{factoryCode}, #{warehouseCode}, #{productionCalendarVersionId}, #{inventorySnapshotId})
+    </insert>
+
+    <insert id="insertBusinessWeekScope">
+        INSERT INTO mrp_batch_business_week_scope(batch_id, business_month, business_week_version_id)
+        VALUES (#{batchId}, #{businessMonth}, #{businessWeekVersionId})
+    </insert>
+
+    <select id="selectBusinessWeekMonthsByBatchId" resultType="java.time.LocalDate">
+        SELECT business_month FROM mrp_batch_business_week_scope
+        WHERE batch_id=#{batchId} ORDER BY business_month
+    </select>
+
+    <select id="selectBusinessWeeksByBatchAndRange" resultType="com.mrp.mrp.domain.BusinessWeekDetail">
+        SELECT d.*, s.business_month AS business_month
+        FROM mrp_batch_business_week_scope s
+        JOIN business_week_detail d ON d.version_id=s.business_week_version_id
+        WHERE s.batch_id=#{batchId}
+          AND d.end_date &gt;= #{startDate}
+          AND d.start_date &lt;= #{endDate}
+        ORDER BY d.start_date, d.sort_no
+    </select>
+
+    <update id="updateFactoryScopeCalendar">UPDATE mrp_batch_factory_scope SET production_calendar_version_id=#{calendarVersionId} WHERE batch_id=#{batchId}</update>
+
+    <insert id="copyFactoryScopes">
+        INSERT INTO mrp_batch_factory_scope
+            (batch_id, factory_code, warehouse_code, production_calendar_version_id, inventory_snapshot_id)
+        SELECT #{targetBatchId}, factory_code, warehouse_code, production_calendar_version_id, inventory_snapshot_id
+        FROM mrp_batch_factory_scope WHERE batch_id=#{sourceBatchId}
+    </insert>
+
+    <insert id="copyBusinessWeekScopes">
+        INSERT INTO mrp_batch_business_week_scope(batch_id, business_month, business_week_version_id)
+        SELECT #{targetBatchId}, business_month, business_week_version_id
+        FROM mrp_batch_business_week_scope WHERE batch_id=#{sourceBatchId}
+    </insert>
+
+    <select id="selectFactoryWarehousesByBatchId"
+            resultType="com.mrp.mrp.domain.FactoryWarehouseMappingDetail">
+        SELECT s.factory_code AS factoryCode,
+               s.warehouse_code AS warehouseCode,
+               COALESCE(d.warehouse_name, s.warehouse_code) AS warehouseName,
+               d.is_good_warehouse AS goodWarehouse,
+               d.priority_no AS priorityNo,
+               d.maintenance_order AS maintenanceOrder
+        FROM mrp_batch_factory_scope s
+        LEFT JOIN mrp_calc_batch b ON b.id = s.batch_id
+        LEFT JOIN factory_warehouse_mapping_detail d
+          ON d.version_id = b.factory_warehouse_mapping_version_id
+         AND d.factory_code = s.factory_code
+         AND d.warehouse_code = s.warehouse_code
+         AND d.enabled = 1
+        WHERE s.batch_id = #{batchId} ORDER BY s.id
+    </select>
+    <select id="selectFactoryCodesByBatchId" resultType="string">
+        SELECT factory_code FROM mrp_batch_factory_scope WHERE batch_id=#{batchId} GROUP BY factory_code ORDER BY MIN(id)
+    </select>
+</mapper>

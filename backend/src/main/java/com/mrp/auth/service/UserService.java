@@ -11,12 +11,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.security.SecureRandom;
 import java.util.stream.Collectors;
 
 @Service
 public class UserService {
 
-    private static final String DEFAULT_PASSWORD = "Mrp@123456";
+    private static final SecureRandom PASSWORD_RANDOM = new SecureRandom();
 
     private final UserMapper userMapper;
     private final UserPermissionMapper userPermissionMapper;
@@ -50,6 +51,17 @@ public class UserService {
         return userMapper.selectByUsername(username);
     }
 
+    public AuthenticationState authenticationStateForActiveUser(Long id, String username) {
+        if (id == null || username == null) return null;
+        Map<String, Object> row = userMapper.selectAuthenticationStateForActiveUser(id, username);
+        if (row == null) return null;
+        if (LegacyAdminBootstrap.isSeededAdmin(username, (String) row.get("password_hash"))) return null;
+        return new AuthenticationState(Boolean.TRUE.equals(row.get("need_change_password")),
+                (String) row.get("password_hash"));
+    }
+
+    public record AuthenticationState(boolean passwordChangeRequired, String passwordHash) {}
+
     public Map<String, Object> list(String keyword, Boolean isActive, Long roleId, int page, int pageSize) {
         int offset = (page - 1) * pageSize;
         List<User> users = userMapper.selectWithRoles(keyword, isActive, roleId, offset, pageSize);
@@ -61,8 +73,9 @@ public class UserService {
     }
 
     @Transactional
-    public User create(User user, List<Long> roleIds, Long operatorId) {
-        user.setPasswordHash(passwordEncoder.encode(DEFAULT_PASSWORD));
+    public CreatedUser create(User user, List<Long> roleIds, Long operatorId) {
+        String temporaryPassword = newTemporaryPassword();
+        user.setPasswordHash(passwordEncoder.encode(temporaryPassword));
         user.setIsActive(true);
         userMapper.insert(user);
 
@@ -76,7 +89,7 @@ public class UserService {
                 "CREATE", "USER", user.getId().toString(),
                 null, user, null, null);
 
-        return user;
+        return new CreatedUser(user, temporaryPassword);
     }
 
     @Transactional
@@ -114,14 +127,27 @@ public class UserService {
     }
 
     @Transactional
-    public void resetPassword(Long id, Long operatorId) {
-        String hash = passwordEncoder.encode(DEFAULT_PASSWORD);
+    public String resetPassword(Long id, Long operatorId) {
+        if (userMapper.selectById(id) == null) {
+            throw new IllegalArgumentException("用户不存在");
+        }
+        String temporaryPassword = newTemporaryPassword();
+        String hash = passwordEncoder.encode(temporaryPassword);
         userMapper.updatePassword(id, hash);
 
         auditService.log(operatorId, "ADMIN", null,
                 "RESET_PASSWORD", "USER", id.toString(),
                 null, null, null, null);
+        return temporaryPassword;
     }
+
+    private static String newTemporaryPassword() {
+        byte[] random = new byte[24];
+        PASSWORD_RANDOM.nextBytes(random);
+        return "A1!" + Base64.getUrlEncoder().withoutPadding().encodeToString(random);
+    }
+
+    public record CreatedUser(User user, String temporaryPassword) {}
 
     @Transactional
     public void delete(Long id, Long operatorId) {
@@ -139,6 +165,7 @@ public class UserService {
 
         roleMapper.deleteUserRoles(id);
         userPermissionMapper.deleteByUserId(id);
+        userMapper.deleteFactoryScopesByUserId(id);
         userMapper.deleteById(id);
         cacheService.evictUserPermissions(id);
 
@@ -191,11 +218,6 @@ public class UserService {
     }
 
     public Set<String> getEffectivePermissions(Long userId) {
-        List<String> cached = cacheService.getCachedPermissions(userId);
-        if (cached != null) {
-            return new HashSet<>(cached);
-        }
-
         Set<String> effective = new HashSet<>();
 
         // Role permissions
@@ -212,7 +234,6 @@ public class UserService {
             }
         }
 
-        cacheService.cachePermissions(userId, new ArrayList<>(effective));
         return effective;
     }
 

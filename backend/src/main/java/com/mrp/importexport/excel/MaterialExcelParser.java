@@ -219,10 +219,8 @@ public class MaterialExcelParser {
             if (currentRow < DATA_START_ROW) return;
             if (currentRowData.isEmpty()) return;
 
-            dataRowCount++;
-
             // Check row limit during parsing
-            if (dataRowCount > MAX_ROWS) {
+            if (dataRowCount >= MAX_ROWS) {
                 rawRows.add(rawRow);
                 return; // Will be checked after parse
             }
@@ -230,20 +228,23 @@ public class MaterialExcelParser {
             // Skip sample rows (first column is "示例")
             String displayName = getString(0);
             if ("示例".equals(displayName)) {
-                dataRowCount--;
                 return;
             }
 
-            rawRows.add(rawRow);
-
             String materialCode = getString(1); // 料号
-            if (materialCode == null || materialCode.isBlank()) return;
+            if (materialCode == null || materialCode.isBlank()) {
+                errors.add(ParseError.of(currentRow + 1, "料号", "", "REQUIRED", "料号必填"));
+                return;
+            }
 
             String materialName = getString(2); // 物料名称
             if (materialName == null || materialName.isBlank()) {
                 errors.add(ParseError.of(currentRow + 1, "物料名称", "", "REQUIRED", "物料名称必填"));
                 return;
             }
+
+            dataRowCount++;
+            rawRows.add(rawRow);
 
             String isActiveStr = getString(11); // 是否有效
             Boolean isActive = "是".equals(isActiveStr) || "1".equals(isActiveStr) || "true".equalsIgnoreCase(isActiveStr);

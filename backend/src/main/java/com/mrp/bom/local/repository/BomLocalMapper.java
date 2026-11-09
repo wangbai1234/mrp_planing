@@ -39,4 +39,14 @@ public interface BomLocalMapper {
     int insertDetailBatch(@Param("list") List<BomDetail> list);
 
     boolean isParent(@Param("invCode") String invCode);
+
+    int countAllDetails();
+
+    int countEmptyParentCode();
+
+    int countEmptyChildCode();
+
+    int countZeroQty();
+
+    int countSelfReference();
 }

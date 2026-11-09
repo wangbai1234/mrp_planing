@@ -164,6 +164,11 @@ public class BomExplosionService {
         }
 
         Set<String> targetCategorySet = new HashSet<>(targetCategories);
+        Set<String> knownCategoryCodes = graph.categoryByCode().keySet();
+        if (targetCategorySet.stream().anyMatch(code -> !knownCategoryCodes.contains(code))) {
+            throw new ValidationException("目标分类不存在: " + targetCategorySet.stream()
+                    .filter(code -> !knownCategoryCodes.contains(code)).findFirst().orElse(""));
+        }
 
         // 从 graph 中查找根物料
         Material rootMaterial = null;
@@ -272,8 +277,13 @@ public class BomExplosionService {
             node.setQuantityMultiplier(accumulatedQty);
             result.getSchedulingNodes().add(node);
 
-            visited.remove(materialCode);
-            return;
+            // A matching category is a scheduling checkpoint, not an implicit
+            // stop: when it has BOM children, continue so callers selecting
+            // multiple levels receive nodes for each selected level.
+            if (graph.childrenMap().getOrDefault(materialCode, List.of()).isEmpty()) {
+                visited.remove(materialCode);
+                return;
+            }
         }
 
         // 从内存 Map 获取子项，无 SQL 查询

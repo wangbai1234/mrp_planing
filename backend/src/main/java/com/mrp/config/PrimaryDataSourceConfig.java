@@ -31,7 +31,8 @@ import javax.sql.DataSource;
         "com.mrp.importexport.repository",
         "com.mrp.audit.repository",
         "com.mrp.task.repository",
-        "com.mrp.bom.local.repository"
+        "com.mrp.bom.local.repository",
+        "com.mrp.mrp.repository"
     },
     sqlSessionFactoryRef = "primarySqlSessionFactory"
 )

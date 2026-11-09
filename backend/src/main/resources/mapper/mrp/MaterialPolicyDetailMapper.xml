@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.mrp.repository.MaterialPolicyDetailMapper">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO mrp_material_policy_detail (version_id, material_code, supply_mode, explosion_policy, revision)
+        VALUES (#{versionId}, #{materialCode}, #{supplyMode}, #{explosionPolicy}, #{revision})
+    </insert>
+    
+    <insert id="insertBatch">
+        INSERT INTO mrp_material_policy_detail (version_id, material_code, supply_mode, explosion_policy, revision) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.versionId}, #{item.materialCode}, #{item.supplyMode}, #{item.explosionPolicy}, #{item.revision})
+        </foreach>
+    </insert>
+    
+    <update id="update">
+        UPDATE mrp_material_policy_detail SET supply_mode=#{supplyMode}, explosion_policy=#{explosionPolicy}, revision=#{revision}
+        WHERE id=#{id}
+    </update>
+    
+    <select id="selectByVersionId" resultType="com.mrp.mrp.domain.MaterialPolicyDetail">
+        SELECT * FROM mrp_material_policy_detail WHERE version_id=#{versionId} ORDER BY material_code
+    </select>
+
+    <delete id="deleteByVersionId">
+        DELETE FROM mrp_material_policy_detail WHERE version_id=#{versionId}
+    </delete>
+</mapper>

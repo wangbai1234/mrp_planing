@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.mrp.repository.MrpUnallocatedQuantityMapper">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO mrp_unallocated_quantity (run_id, batch_id, demand_key, source_date, attempted_schedule_date, quantity, reason_code, status, resolved_schedule_date, revision)
+        VALUES (#{runId}, #{batchId}, #{demandKey}, #{sourceDate}, #{attemptedScheduleDate}, #{quantity}, #{reasonCode}, #{status}, #{resolvedScheduleDate}, #{revision})
+    </insert>
+    
+    <insert id="insertBatch">
+        INSERT INTO mrp_unallocated_quantity (run_id, batch_id, demand_key, source_date, attempted_schedule_date, quantity, reason_code, status, resolved_schedule_date, revision) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.runId}, #{item.batchId}, #{item.demandKey}, #{item.sourceDate}, #{item.attemptedScheduleDate}, #{item.quantity}, #{item.reasonCode}, #{item.status}, #{item.resolvedScheduleDate}, #{item.revision})
+        </foreach>
+    </insert>
+    
+    <update id="update">
+        UPDATE mrp_unallocated_quantity SET status=#{status}, resolved_schedule_date=#{resolvedScheduleDate}, revision=#{revision}
+        WHERE id=#{id}
+    </update>
+    
+    <select id="selectByRunId" resultType="com.mrp.mrp.domain.MrpUnallocatedQuantity">
+        SELECT * FROM mrp_unallocated_quantity WHERE run_id=#{runId} ORDER BY demand_key, source_date
+    </select>
+
+    <select id="selectByRunIdAndStatus" resultType="com.mrp.mrp.domain.MrpUnallocatedQuantity">
+        SELECT * FROM mrp_unallocated_quantity
+        WHERE run_id=#{runId} AND status=#{status}
+        ORDER BY demand_key, source_date
+    </select>
+    <sql id="pageFilters">
+        WHERE run_id=#{runId} AND status=#{status}
+        <if test="keyword != null and keyword != ''">
+            AND (demand_key LIKE CONCAT('%', #{keyword}, '%') OR reason_code LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+    </sql>
+    <select id="selectPageByRunIdAndStatus" resultType="com.mrp.mrp.domain.MrpUnallocatedQuantity">
+        SELECT * FROM mrp_unallocated_quantity <include refid="pageFilters"/>
+        ORDER BY demand_key, source_date, id LIMIT #{limit} OFFSET #{offset}
+    </select>
+    <select id="countByRunIdAndStatus" resultType="int">
+        SELECT COUNT(*) FROM mrp_unallocated_quantity <include refid="pageFilters"/>
+    </select>
+    
+    <select id="selectByBatchId" resultType="com.mrp.mrp.domain.MrpUnallocatedQuantity">
+        SELECT * FROM mrp_unallocated_quantity WHERE batch_id=#{batchId} ORDER BY demand_key, source_date
+    </select>
+    
+    <select id="selectByBatchIdAndStatus" resultType="com.mrp.mrp.domain.MrpUnallocatedQuantity">
+        SELECT * FROM mrp_unallocated_quantity WHERE batch_id=#{batchId} AND status=#{status} ORDER BY demand_key, source_date
+    </select>
+
+    <delete id="deleteByRunId">
+        DELETE FROM mrp_unallocated_quantity WHERE run_id=#{runId}
+    </delete>
+    <select id="countResolvedMaterialByRunId" resultType="int">
+        SELECT COUNT(*) FROM mrp_unallocated_quantity u
+        WHERE u.run_id=#{runId} AND u.status='RESOLVED'
+          AND EXISTS (SELECT 1 FROM mrp_terminal_demand d
+            WHERE d.run_id=u.run_id AND d.terminal_type &lt;&gt; 'MACHINE_OUTPUT'
+              AND (u.demand_key=CONCAT(d.factory_code,'|',d.root_material_code,'|',
+                d.terminal_material_code,'|',d.terminal_type,'|',d.supply_mode,'|',DATE_FORMAT(d.source_month,'%Y-%m'))
+                OR u.demand_key=CONCAT(d.root_material_code,'|',d.terminal_material_code,'|',
+                  d.terminal_type,'|',d.supply_mode,'|',DATE_FORMAT(d.source_month,'%Y-%m'))))
+    </select>
+    <delete id="deleteMaterialByRunId">
+        DELETE u FROM mrp_unallocated_quantity u
+        WHERE u.run_id=#{runId} AND EXISTS (
+          SELECT 1 FROM mrp_terminal_demand d
+          WHERE d.run_id=u.run_id AND d.terminal_type &lt;&gt; 'MACHINE_OUTPUT'
+            AND (u.demand_key=CONCAT(d.factory_code,'|',d.root_material_code,'|',
+              d.terminal_material_code,'|',d.terminal_type,'|',d.supply_mode,'|',DATE_FORMAT(d.source_month,'%Y-%m'))
+              OR u.demand_key=CONCAT(d.root_material_code,'|',d.terminal_material_code,'|',
+                d.terminal_type,'|',d.supply_mode,'|',DATE_FORMAT(d.source_month,'%Y-%m')))
+        )
+    </delete>
+</mapper>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.mrp.repository.MrpInventoryBalanceMapper">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO mrp_inventory_balance (inventory_snapshot_id, factory_code, inventory_org, warehouse_scope, material_code, inventory_quality, available_quantity, source_row_ref, included_flag, normalization_rule_version)
+        VALUES (#{inventorySnapshotId}, #{factoryCode}, #{inventoryOrg}, #{warehouseScope}, #{materialCode}, #{inventoryQuality}, #{availableQuantity}, #{sourceRowRef}, #{includedFlag}, #{normalizationRuleVersion})
+    </insert>
+
+    <insert id="insertBatch">
+        INSERT INTO mrp_inventory_balance (inventory_snapshot_id, factory_code, inventory_org, warehouse_scope, material_code, inventory_quality, available_quantity, source_row_ref, included_flag, normalization_rule_version) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.inventorySnapshotId}, #{item.factoryCode}, #{item.inventoryOrg}, #{item.warehouseScope}, #{item.materialCode}, #{item.inventoryQuality}, #{item.availableQuantity}, #{item.sourceRowRef}, #{item.includedFlag}, #{item.normalizationRuleVersion})
+        </foreach>
+    </insert>
+    
+    <update id="update">
+        UPDATE mrp_inventory_balance SET available_quantity=#{availableQuantity}, included_flag=#{includedFlag}, normalization_rule_version=#{normalizationRuleVersion}
+        WHERE id=#{id}
+    </update>
+
+    <delete id="deleteBySnapshotId">
+        DELETE FROM mrp_inventory_balance WHERE inventory_snapshot_id=#{snapshotId}
+    </delete>
+    
+    <select id="selectBySnapshotId" resultType="com.mrp.mrp.domain.MrpInventoryBalance">
+        SELECT * FROM mrp_inventory_balance WHERE inventory_snapshot_id=#{snapshotId} ORDER BY factory_code, material_code
+    </select>
+
+    <select id="selectAllBySnapshotId" resultType="com.mrp.mrp.domain.MrpInventoryBalance">
+        SELECT * FROM mrp_inventory_balance WHERE inventory_snapshot_id=#{snapshotId} ORDER BY factory_code, material_code
+    </select>
+
+    <select id="selectGoodBySnapshotId" resultType="com.mrp.mrp.domain.MrpInventoryBalance">
+        SELECT * FROM mrp_inventory_balance WHERE inventory_snapshot_id=#{snapshotId} AND included_flag=1 ORDER BY factory_code, material_code
+    </select>
+    
+    <select id="selectByMaterialCode" resultType="com.mrp.mrp.domain.MrpInventoryBalance">
+        SELECT * FROM mrp_inventory_balance WHERE inventory_snapshot_id=#{snapshotId} AND material_code=#{materialCode} AND included_flag=1
+    </select>
+    
+    <select id="selectAggregatedBySnapshotId" resultType="com.mrp.mrp.domain.MrpInventoryBalance">
+        SELECT
+            inventory_snapshot_id as inventory_snapshot_id,
+            factory_code,
+            inventory_org,
+            warehouse_scope,
+            material_code,
+            inventory_quality,
+            SUM(available_quantity) as available_quantity,
+            included_flag
+        FROM mrp_inventory_balance
+        WHERE inventory_snapshot_id=#{snapshotId} AND included_flag=1
+        GROUP BY factory_code, inventory_org, warehouse_scope, material_code, inventory_quality
+        ORDER BY factory_code, material_code, inventory_quality
+    </select>
+</mapper>

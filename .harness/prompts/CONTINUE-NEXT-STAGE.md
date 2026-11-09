@@ -13,7 +13,7 @@
 - 按 Prompt 实施；
 - 报告写到 workflow.yaml 声明的 output；
 - 门禁全部通过后改为 REVIEW，先不要改为 DONE；
-- 完成后暂停，等待阶段复核 Prompt。
+- 完成后自动触发独立阶段复核；FAIL 自动进入 REPAIR-GATE，PASS 自动继续下一阶段。
 
 如果没有可执行阶段，说明具体依赖或决策阻塞，不得跳过阶段。
 ```

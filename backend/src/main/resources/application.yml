@@ -30,3 +30,8 @@ logging:
     org.springframework.batch: INFO
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] [%X{traceId}] %-5level %logger{36} - %msg%n"
+
+feishu:
+  app-id: ${FEISHU_APP_ID}
+  app-secret: ${FEISHU_APP_SECRET}
+  redirect-uri: ${FEISHU_REDIRECT_URI:http://localhost:5180/login/callback/}

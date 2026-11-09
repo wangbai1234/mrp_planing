@@ -1,0 +1,8 @@
+ALTER TABLE bom_sync_status
+    ADD COLUMN phase VARCHAR(64) DEFAULT NULL,
+    ADD COLUMN parent_count BIGINT DEFAULT NULL,
+    ADD COLUMN worker_id VARCHAR(100) DEFAULT NULL,
+    ADD COLUMN heartbeat_at DATETIME(3) DEFAULT NULL,
+    ADD COLUMN active_sync_key TINYINT GENERATED ALWAYS AS
+        (CASE WHEN status IN ('PENDING', 'RUNNING') THEN 1 ELSE NULL END) STORED,
+    ADD UNIQUE KEY uk_bom_sync_active (active_sync_key);

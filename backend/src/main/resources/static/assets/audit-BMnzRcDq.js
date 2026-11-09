@@ -1,0 +1,1 @@
+import{r as e}from"./client-BhnmMrw_.js";function t(t){return e(`/audit-logs?${new URLSearchParams(Object.entries(t).map(([e,t])=>[e,String(t)]))}`)}export{t};

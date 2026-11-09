@@ -1,0 +1,4 @@
+ALTER TABLE bom_sync_status
+    ADD COLUMN zero_qty BIGINT DEFAULT NULL,
+    ADD COLUMN self_reference BIGINT DEFAULT NULL,
+    ADD COLUMN data_valid BOOLEAN DEFAULT NULL;

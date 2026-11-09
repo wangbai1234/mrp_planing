@@ -2,13 +2,13 @@ package com.mrp.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mrp.MrpApiApplication;
+import com.mrp.BaseIntegrationTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -19,8 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(classes = MrpApiApplication.class)
 @AutoConfigureMockMvc
-@ActiveProfiles("local")
-class RoleBasedAccessTest {
+class RoleBasedAccessTest extends BaseIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -33,7 +32,7 @@ class RoleBasedAccessTest {
     @BeforeEach
     void setUp() throws Exception {
         // Login as admin to get token
-        Map<String, String> loginRequest = Map.of("username", "admin", "password", "admin123");
+        Map<String, String> loginRequest = Map.of("username", "admin", "password", BaseIntegrationTest.TEST_ADMIN_PASSWORD);
 
         MvcResult result = mockMvc.perform(post("/api/v1/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -75,46 +74,46 @@ class RoleBasedAccessTest {
     }
 
     @Test
-    void invalidToken_returns403() throws Exception {
+    void invalidToken_returns401() throws Exception {
         String invalidToken = "invalid.token.here";
 
         mockMvc.perform(get("/api/v1/users")
                         .header("Authorization", "Bearer " + invalidToken))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
 
         mockMvc.perform(get("/api/v1/materials")
                         .header("Authorization", "Bearer " + invalidToken))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void noToken_returns403() throws Exception {
+    void noToken_returns401() throws Exception {
         mockMvc.perform(get("/api/v1/users"))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
 
         mockMvc.perform(get("/api/v1/materials"))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
 
         mockMvc.perform(get("/api/v1/plans"))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
 
         mockMvc.perform(get("/api/v1/roles"))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void malformedToken_returns403() throws Exception {
+    void malformedToken_returns401() throws Exception {
         String malformedToken = "eyJhbGciOiJIUzM4NCJ9.invalid.payload";
 
         mockMvc.perform(get("/api/v1/users")
                         .header("Authorization", "Bearer " + malformedToken))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
     void login_isPublic() throws Exception {
         // Login endpoint should be accessible without token
-        Map<String, String> loginRequest = Map.of("username", "admin", "password", "admin123");
+        Map<String, String> loginRequest = Map.of("username", "admin", "password", BaseIntegrationTest.TEST_ADMIN_PASSWORD);
 
         mockMvc.perform(post("/api/v1/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -168,21 +167,21 @@ class RoleBasedAccessTest {
 
         for (String endpoint : endpoints) {
             mockMvc.perform(get(endpoint))
-                    .andExpect(status().isForbidden());
+                    .andExpect(status().isUnauthorized());
         }
     }
 
     @Test
-    void accessWithoutToken_shouldReturn403() throws Exception {
+    void accessWithoutToken_shouldReturn401() throws Exception {
         mockMvc.perform(get("/api/v1/plans"))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void accessWithInvalidToken_shouldReturn403() throws Exception {
+    void accessWithInvalidToken_shouldReturn401() throws Exception {
         mockMvc.perform(get("/api/v1/plans")
                         .header("Authorization", "Bearer invalid-token"))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -193,6 +192,6 @@ class RoleBasedAccessTest {
         // Try to publish (requires schedule:publish permission)
         mockMvc.perform(post("/api/v1/plans/1/publish")
                         .header("Authorization", "Bearer " + limitedToken))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
     }
 }

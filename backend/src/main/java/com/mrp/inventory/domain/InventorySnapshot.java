@@ -9,6 +9,7 @@ public class InventorySnapshot {
 
     private Long id;
     private LocalDate snapshotDate;
+    private String warehouseCode;
     private String fileName;
     private String fileChecksum;
     private String status;
@@ -19,8 +20,15 @@ public class InventorySnapshot {
 
     public InventorySnapshot(Long id, LocalDate snapshotDate, String fileName, String fileChecksum,
                              String status, Long createdBy, Instant createdAt) {
+        this(id, snapshotDate, null, fileName, fileChecksum, status, createdBy, createdAt);
+    }
+
+    public InventorySnapshot(Long id, LocalDate snapshotDate, String warehouseCode,
+                             String fileName, String fileChecksum,
+                             String status, Long createdBy, Instant createdAt) {
         this.id = id;
         this.snapshotDate = snapshotDate;
+        this.warehouseCode = warehouseCode;
         this.fileName = fileName;
         this.fileChecksum = fileChecksum;
         this.status = status;
@@ -32,6 +40,8 @@ public class InventorySnapshot {
     public void setId(Long id) { this.id = id; }
     public LocalDate getSnapshotDate() { return snapshotDate; }
     public void setSnapshotDate(LocalDate snapshotDate) { this.snapshotDate = snapshotDate; }
+    public String getWarehouseCode() { return warehouseCode; }
+    public void setWarehouseCode(String warehouseCode) { this.warehouseCode = warehouseCode; }
     public String getFileName() { return fileName; }
     public void setFileName(String fileName) { this.fileName = fileName; }
     public String getFileChecksum() { return fileChecksum; }

@@ -2,6 +2,8 @@ package com.mrp.importexport.service;
 
 import com.mrp.common.exception.BusinessException;
 import com.mrp.common.exception.ValidationException;
+import com.mrp.common.security.CurrentUser;
+import com.mrp.mrp.service.PlanningFactoryAccessService;
 import com.mrp.planning.domain.PlanDetail;
 import com.mrp.planning.domain.PlanVersion;
 import com.mrp.planning.repository.PlanMapper;
@@ -13,6 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -22,7 +26,6 @@ import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -33,11 +36,13 @@ public class ExportService {
     private final PlanMapper planMapper;
     private final ExportTaskMapper exportTaskMapper;
     private final Path exportDir;
+    private final PlanningFactoryAccessService access;
 
-    public ExportService(PlanMapper planMapper, ExportTaskMapper exportTaskMapper,
+    public ExportService(PlanMapper planMapper, ExportTaskMapper exportTaskMapper, PlanningFactoryAccessService access,
                         @Value("${mrp.file.upload-dir:./data/uploads}") String uploadDir) {
         this.planMapper = planMapper;
         this.exportTaskMapper = exportTaskMapper;
+        this.access = access;
         this.exportDir = Paths.get(uploadDir, "exports");
         try {
             Files.createDirectories(this.exportDir);
@@ -49,16 +54,25 @@ public class ExportService {
     public ExportTask createExportTask(Long planVersionId, String factoryCode, List<String> fields,
                                        boolean includePriority, boolean includeActual,
                                        Long userId) {
+        if (userId == null || !Objects.equals(userId, CurrentUser.getUserId())) throw forbidden();
+        if (fields == null || fields.isEmpty() || fields.stream().anyMatch(f -> f == null || f.isBlank()))
+            throw new ValidationException("请选择导出字段");
         log.info("Export request: planVersionId={}, factoryCode={}, fields={}, count={}",
                 planVersionId, factoryCode, fields, fields != null ? fields.size() : 0);
 
         PlanVersion version = planMapper.selectVersionById(planVersionId);
         if (version == null) throw new BusinessException("MRP_NOT_FOUND", "Plan version not found");
+        requireFactory(version.getFactoryCode());
+        String scope = factoryCode == null || factoryCode.isBlank() ? version.getFactoryCode() : factoryCode;
+        if (!Objects.equals(scope, version.getFactoryCode()) && !"ALL".equals(version.getFactoryCode()))
+            throw forbidden();
+        requireFactory(scope);
 
-        String requestKey = buildRequestKey(planVersionId, factoryCode, fields);
+        String requestKey = buildRequestKey(planVersionId, scope, fields, includePriority, includeActual, userId);
         log.info("Export requestKey length={}", requestKey.length());
         ExportTask existing = exportTaskMapper.selectByRequestKey(requestKey);
         if (existing != null) {
+            requireOwner(existing);
             if (ExportTask.STATUS_SUCCEEDED.equals(existing.getStatus()) && existing.getFilePath() != null) {
                 return existing;
             }
@@ -67,7 +81,7 @@ public class ExportService {
         }
 
         ExportTask task = new ExportTask(
-                null, "PLAN_EXPORT", version.getFactoryCode(),
+                null, "PLAN_EXPORT", scope,
                 requestKey, ExportTask.STATUS_PENDING, 0,
                 null, null, null, 0, 0, 0, 3, null,
                 null, null, null, null, null,
@@ -78,11 +92,13 @@ public class ExportService {
         // Generate Excel synchronously (small datasets)
         try {
             List<PlanDetail> details;
-            if (factoryCode != null && !factoryCode.isBlank()) {
-                details = planMapper.selectDetailsByVersionAndFactory(planVersionId, factoryCode);
-            } else {
+            if ("ALL".equals(scope)) {
                 details = planMapper.selectDetailsByVersionId(planVersionId);
+            } else {
+                details = planMapper.selectDetailsByVersionAndFactory(planVersionId, scope);
             }
+            for (String actualFactory : details.stream().map(PlanDetail::factoryCode).distinct().toList())
+                requireFactory(actualFactory);
             log.info("Export query: planVersionId={}, factoryCode={}, detailCount={}", planVersionId, factoryCode, details.size());
             Path filePath = generateExcel(details, fields, includePriority, includeActual);
             String filePathStr = filePath.toString();
@@ -90,6 +106,9 @@ public class ExportService {
             log.info("Export generated: taskId={}, file={}", task.getId(), filePath);
             ExportTask result = exportTaskMapper.selectById(task.getId());
             return result;
+        } catch (ResponseStatusException e) {
+            exportTaskMapper.updateFailure(task.getId(), ExportTask.STATUS_FAILED, "FORBIDDEN", "无权导出该工厂", 0);
+            throw e;
         } catch (Exception e) {
             exportTaskMapper.updateFailure(task.getId(), ExportTask.STATUS_FAILED, "EXPORT_ERROR", e.getMessage(), 0);
             throw new BusinessException("MRP_EXPORT_ERROR", "Export failed: " + e.getMessage());
@@ -97,7 +116,44 @@ public class ExportService {
     }
 
     public ExportTask getExportTask(Long id) {
-        return exportTaskMapper.selectById(id);
+        ExportTask task = exportTaskMapper.selectById(id);
+        if (task != null) requireOwner(task);
+        return task;
+    }
+
+    public Path getDownloadPath(Long id) {
+        ExportTask task = getExportTask(id);
+        if (task == null || !ExportTask.STATUS_SUCCEEDED.equals(task.getStatus()) || task.getFilePath() == null)
+            throw exportFileNotFound();
+        try {
+            Path root = exportDir.toRealPath();
+            Path file = Paths.get(task.getFilePath()).toRealPath();
+            if (!file.startsWith(root) || !Files.isRegularFile(file) || !file.getFileName().toString().endsWith(".xlsx"))
+                throw exportFileNotFound();
+            return file;
+        } catch (IOException | java.nio.file.InvalidPathException e) {
+            throw exportFileNotFound();
+        }
+    }
+
+    private static ResponseStatusException exportFileNotFound() {
+        return new ResponseStatusException(HttpStatus.NOT_FOUND, "Export file not found");
+    }
+
+    private void requireOwner(ExportTask task) {
+        Long actor = CurrentUser.getUserId();
+        if (actor == null || !Objects.equals(actor, task.getCreatedBy()) || !"PLAN_EXPORT".equals(task.getTaskType()))
+            throw forbidden();
+        requireFactory(task.getBusinessScope());
+    }
+
+    private void requireFactory(String factory) {
+        if (factory == null || factory.isBlank()) throw forbidden();
+        access.requireFactory(factory);
+    }
+
+    private static ResponseStatusException forbidden() {
+        return new ResponseStatusException(HttpStatus.FORBIDDEN, "无权访问该导出任务或工厂");
     }
 
     private Path generateExcel(List<PlanDetail> details, List<String> fields,
@@ -155,7 +211,7 @@ public class ExportService {
                 if (includeActual) row.createCell(col++).setCellValue("");
             }
 
-            Path filePath = exportDir.resolve("plan_" + System.currentTimeMillis() + ".xlsx");
+            Path filePath = exportDir.resolve("plan_" + UUID.randomUUID() + ".xlsx");
             try (var os = Files.newOutputStream(filePath)) {
                 wb.write(os);
             }
@@ -163,14 +219,14 @@ public class ExportService {
         }
     }
 
-    private String buildRequestKey(Long planVersionId, String factoryCode, List<String> fields) {
-        String fieldsStr = String.join(",", fields);
-        String raw = "export:" + planVersionId + ":" + factoryCode + ":" + fieldsStr;
-        if (raw.length() <= 128) {
-            return raw;
-        }
-        String fieldsHash = sha256Hex(fieldsStr);
-        return "export:" + planVersionId + ":" + factoryCode + ":" + fieldsHash;
+    private String buildRequestKey(Long planVersionId, String factoryCode, List<String> fields,
+                                   boolean includePriority, boolean includeActual, Long userId) {
+        StringBuilder raw = new StringBuilder();
+        for (String part : List.of(userId.toString(), planVersionId.toString(), factoryCode,
+                Boolean.toString(includePriority), Boolean.toString(includeActual)))
+            raw.append(part.length()).append(':').append(part);
+        for (String field : fields) raw.append(field.length()).append(':').append(field);
+        return "export:v2:" + sha256Hex(raw.toString());
     }
 
     private static String sha256Hex(String input) {

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.mrp.repository.BomSnapshotDetailMapper">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO bom_snapshot_detail (snapshot_id, parent_code, child_code, parent_qty, child_qty, bom_version, effective_date, organization_code, body_scope, path_metadata)
+        VALUES (#{snapshotId}, #{parentCode}, #{childCode}, #{parentQty}, #{childQty}, #{bomVersion}, #{effectiveDate}, #{organizationCode}, #{bodyScope}, #{pathMetadata})
+    </insert>
+    
+    <insert id="insertBatch">
+        INSERT INTO bom_snapshot_detail (snapshot_id, parent_code, child_code, parent_qty, child_qty, bom_version, effective_date, organization_code, body_scope, path_metadata) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.snapshotId}, #{item.parentCode}, #{item.childCode}, #{item.parentQty}, #{item.childQty}, #{item.bomVersion}, #{item.effectiveDate}, #{item.organizationCode}, #{item.bodyScope}, #{item.pathMetadata})
+        </foreach>
+    </insert>
+    
+    <select id="selectBySnapshotId" resultType="com.mrp.mrp.domain.BomSnapshotDetail">
+        SELECT * FROM bom_snapshot_detail WHERE snapshot_id=#{snapshotId} ORDER BY parent_code, child_code
+    </select>
+    
+    <select id="selectByParentCode" resultType="com.mrp.mrp.domain.BomSnapshotDetail">
+        SELECT * FROM bom_snapshot_detail WHERE snapshot_id=#{snapshotId} AND parent_code=#{parentCode} ORDER BY child_code
+    </select>
+</mapper>

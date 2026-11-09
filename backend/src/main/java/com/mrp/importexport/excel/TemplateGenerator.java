@@ -3,6 +3,7 @@ package com.mrp.importexport.excel;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Component;
+import com.mrp.mrp.domain.ProductionCalendarEntry;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -43,9 +44,76 @@ public class TemplateGenerator {
         return generate(columns, sampleData, "物料导入模板");
     }
 
+    public byte[] generateStockPolicyTemplate() throws IOException {
+        List<TemplateColumn> columns = List.of(
+                new TemplateColumn("仓库编码*", "warehouse", "必填，与物料料号一起唯一", true),
+                new TemplateColumn("物料料号*", "material", "必填", true),
+                new TemplateColumn("安全库存*", "safety", "必填，数字，不能为负，且不能大于预警库存", true),
+                new TemplateColumn("预警库存*", "warning", "必填，数字，不能为负", true));
+        List<List<String>> sample = List.of(List.of("示例", "M001", "10", "40"));
+        return generate(columns, sample, "库存控制策略");
+    }
+
+    public byte[] generateFactoryWarehouseTemplate() throws IOException {
+        List<TemplateColumn> columns = List.of(
+                new TemplateColumn("工厂编码*", "factory", "必填，须为已维护的工厂", true),
+                new TemplateColumn("仓库编码*", "warehouse", "必填，一个仓库只能对应一个工厂", true),
+                new TemplateColumn("仓库名称*", "warehouseName", "必填", true),
+                new TemplateColumn("仓库管理员", "warehouseManager", "选填", false),
+                new TemplateColumn("对应供应商", "supplierName", "选填", false),
+                new TemplateColumn("是否良品仓*", "goodWarehouse", "必填：是或否", true),
+                new TemplateColumn("仓库属性*", "warehouseAttribute", "必填：自有仓、加工厂外协仓、ODM仓、NC-ODM虚拟仓、海外三方仓、OEM仓、采购仓", true),
+                new TemplateColumn("优先级", "priorityNo", "选填，正整数；数字越小越先扣，空值按导入顺序", false),
+                new TemplateColumn("启用", "enabled", "选填：启用或停用，默认启用", false));
+        return generate(columns, List.of(List.of("示例：永惠", "WH01", "示例仓", "", "", "是", "自有仓", "1", "启用")), "工厂仓库映射");
+    }
+
+    public byte[] generateMaterialPolicyTemplate() throws IOException {
+        List<TemplateColumn> columns = List.of(
+                new TemplateColumn("物料料号*", "material", "必填，一个物料一行", true),
+                new TemplateColumn("供应方式*", "supply", "必填：自制、外购、委外", true),
+                new TemplateColumn("下钻策略*", "explosion", "必填：继续下钻、停止下钻", true));
+        return generate(columns, List.of(List.of("示例", "自制", "继续下钻")), "物料策略");
+    }
+
+    public byte[] generateProductionCalendarTemplate() throws IOException {
+        return generate(calendarColumns(), List.of(List.of("示例爱培科", "2026-10-01", "是", "1000", "台", "示例行不导入")), "生产日历");
+    }
+
+    private List<TemplateColumn> calendarColumns() {
+        return List.of(new TemplateColumn("工厂编码*", "factory", "必填：已维护且启用的工厂", true),
+                new TemplateColumn("日期*", "date", "必填，格式 yyyy-MM-dd", true),
+                new TemplateColumn("生产日*", "production", "必填，填是或否", true),
+                new TemplateColumn("日产能*", "capacity", "整机台/日；生产日填正整数，休息日填0", true),
+                new TemplateColumn("单位", "capacityUnit", "生产日必填，固定填台；旧单位须重新确认", false),
+                new TemplateColumn("备注", "reason", "选填，最多256个字符", false));
+    }
+
+    public byte[] generateProductionCalendarExport(List<ProductionCalendarEntry> rows) throws IOException {
+        return generate(calendarColumns(), rows.stream().map(row -> List.of(row.getFactoryCode(), row.getCalendarDate().toString(),
+                Boolean.TRUE.equals(row.getProductionDay()) ? "是" : "否",
+                row.getDailyCapacity() == null ? "" : row.getDailyCapacity().toPlainString(),
+                row.getCapacityUnit() == null ? "" : row.getCapacityUnit(), row.getReason() == null ? "" : row.getReason())).toList(), "生产日历");
+    }
+
+    public byte[] generateBusinessWeekTemplate() throws IOException {
+        List<TemplateColumn> columns = List.of(
+                new TemplateColumn("业务月份*", "month", "必填，格式 yyyy-MM；出现的月份必须整月覆盖", true),
+                new TemplateColumn("周编码*", "week", "必填，同月内不能重复", true),
+                new TemplateColumn("开始日期*", "start", "必填，格式 yyyy-MM-dd", true),
+                new TemplateColumn("结束日期*", "end", "必填，格式 yyyy-MM-dd，各周连续且不重叠", true));
+        return generate(columns, List.of(
+                List.of("示例", "W1", "2026-10-01", "2026-10-07"),
+                List.of("示例", "W2", "2026-10-08", "2026-10-31")), "业务周期间");
+    }
+
+    public byte[] generateConfigErrorReport(List<String> headers, List<List<String>> rawRows, List<ParseError> errors) throws IOException {
+        return generateInventoryErrorReport(headers, rawRows, errors);
+    }
+
     public byte[] generateForecastTemplate() throws IOException {
         List<TemplateColumn> columns = new ArrayList<>();
-        columns.add(new TemplateColumn("工厂", "factory", "请在此列填写工厂代码（本列必填）", true));
+        columns.add(new TemplateColumn("工厂", "factory", "必填，填写已维护且启用的工厂编码", true));
         columns.add(new TemplateColumn("形态", "form_type", "请在此列填写形态（本列必填）", true));
         columns.add(new TemplateColumn("料号", "material_id", "请在此列填写料号（本列必填）", true));
         columns.add(new TemplateColumn("模具", "mold", "请在此列填写模具（非必填）", false));
@@ -63,8 +131,8 @@ public class TemplateGenerator {
         columns.add(new TemplateColumn("fcst-total", "fcst_total", "系统自动计算，无需填写", false));
 
         List<List<String>> sampleData = List.of(
-                List.of("F001", "整机", "3308AA800180", "模具A", "正常", "1000", "1200", "1100", "1300", "1400", "1500", "7500"),
-                List.of("F002", "组件", "6610AA800551", "", "", "500", "600", "550", "650", "700", "750", "3750")
+                List.of("永惠", "整机", "3308AA800180", "模具A", "正常", "1000", "1200", "1100", "1300", "1400", "1500", "7500"),
+                List.of("爱培科", "整机", "6610AA800551", "", "", "500", "600", "550", "650", "700", "750", "3750")
         );
 
         return generate(columns, sampleData, "经营计划导入模板");
@@ -72,24 +140,21 @@ public class TemplateGenerator {
 
     public byte[] generateInventoryTemplate() throws IOException {
         List<TemplateColumn> columns = List.of(
-                new TemplateColumn("产品线", "product_line", "请在此列填写产品线", false),
-                new TemplateColumn("库存分类*", "inventory_category", "请在此列填写库存分类（本列必填）", true),
+                new TemplateColumn("仓库编码*", "warehouse_code", "请填写工厂仓库映射中已发布的仓库编码（本列必填）", true),
+                new TemplateColumn("仓库名称", "warehouse_name", "请填写仓库名称（可选）", false),
+                new TemplateColumn("库存分类", "inventory_category", "请填写库存分类（非必填，仅供展示和查询）", false),
                 new TemplateColumn("料号*", "material_id", "请在此列填写料号（本列必填）", true),
-                new TemplateColumn("供应商名称*", "supplier_name", "请在此列填写供应商名称（本列必填）", true),
-                new TemplateColumn("产品模式", "product_mode", "请在此列填写产品模式", false),
-                new TemplateColumn("ODM供应商仓", "odm_supplier_qty", "请输入数量", false),
-                new TemplateColumn("XA400咪哈成品仓", "xa400_qty", "请输入数量", false),
-                new TemplateColumn("XA378永惠成品仓", "xa378_qty", "请输入数量", false),
-                new TemplateColumn("XA226惠州仓", "xa226_qty", "请输入数量", false),
-                new TemplateColumn("分类", "classification", "请在此列填写分类", false),
-                new TemplateColumn("产品条形码", "barcode", "请在此列填写产品条形码", false),
-                new TemplateColumn("备注", "remark", "请在此列填写备注", false),
-                new TemplateColumn("订单未交数量", "order_pending_qty", "请输入数量", false),
-                new TemplateColumn("销售状态", "sales_status", "请在此列填写销售状态", false),
-                new TemplateColumn("父记录", "parent_record", "请在此列填写父记录", false)
+                new TemplateColumn("供应商名称", "supplier_name", "请填写供应商名称（非必填）", false),
+                new TemplateColumn("库存数量*", "inventory_qty", "请输入该仓库库存数量；品质由仓库主数据决定（本列必填）", true),
+                new TemplateColumn("备注", "remark", "请填写备注（非必填，最多512个字符）", false)
         );
 
-        return generate(columns, List.of(), "库存导入模板");
+        List<List<String>> sampleData = List.of(
+                List.of("XA378_YONGHUI", "XA378永惠成品仓", "原材料", "3308AA800180", "供应商A", "1000", "常规库存"),
+                List.of("XA400_APK", "XA400爱培科仓", "", "6610AA800551", "", "25", "")
+        );
+
+        return generate(columns, sampleData, "库存导入模板");
     }
 
     public byte[] generateInventoryErrorReport(List<String> headers, List<List<String>> rawRows, List<ParseError> errors) throws IOException {
@@ -128,8 +193,9 @@ public class TemplateGenerator {
                 cell.setCellStyle(headerStyle);
             }
             Cell errorHeaderCell = headerRow.createCell(headers.size());
-            errorHeaderCell.setCellValue("错误原因");
-            errorHeaderCell.setCellStyle(headerStyle);
+            String headerError = errorMap.get(1);
+            errorHeaderCell.setCellValue(headerError == null ? "错误原因" : "错误原因：" + headerError);
+            errorHeaderCell.setCellStyle(headerError == null ? headerStyle : errorStyle);
 
             // Data rows
             for (int rowIdx = 0; rowIdx < rawRows.size(); rowIdx++) {
@@ -198,8 +264,9 @@ public class TemplateGenerator {
                 cell.setCellStyle(headerStyle);
             }
             Cell errorHeaderCell = headerRow.createCell(headers.size());
-            errorHeaderCell.setCellValue("错误原因");
-            errorHeaderCell.setCellStyle(headerStyle);
+            String headerError = errorMap.get(1);
+            errorHeaderCell.setCellValue(headerError == null ? "错误原因" : "错误原因：" + headerError);
+            errorHeaderCell.setCellStyle(headerError == null ? headerStyle : errorStyle);
 
             // Data rows
             for (int rowIdx = 0; rowIdx < rawRows.size(); rowIdx++) {

@@ -4,7 +4,9 @@ import com.mrp.auth.domain.User;
 import com.mrp.auth.service.UserService;
 import com.mrp.common.response.ApiResponse;
 import com.mrp.common.security.CurrentUser;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Map;
@@ -39,14 +41,18 @@ public class UserController {
     }
 
     @PostMapping
-    public ApiResponse<User> create(@RequestBody CreateUpdateUserRequest request) {
+    public ApiResponse<UserService.CreatedUser> create(@RequestBody CreateUpdateUserRequest request) {
+        if (request.roleIds() != null && !request.roleIds().isEmpty()
+                && !CurrentUser.hasPermission("user:assign_role")) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Insufficient permissions");
+        }
         User user = new User();
         user.setUsername(request.username());
         user.setDisplayName(request.displayName());
         user.setDepartment(request.department());
         user.setEmail(request.email());
         user.setPhone(request.phone());
-        User created = userService.create(user, request.roleIds(), CurrentUser.getUserId());
+        UserService.CreatedUser created = userService.create(user, request.roleIds(), CurrentUser.getUserId());
         return ApiResponse.ok(created);
     }
 
@@ -69,6 +75,10 @@ public class UserController {
 
     @PutMapping("/{id}/status")
     public ApiResponse<Void> updateStatus(@PathVariable Long id, @RequestBody StatusRequest request) {
+        String required = request.isActive() ? "user:enable" : "user:disable";
+        if (!CurrentUser.hasPermission(required)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Insufficient permissions");
+        }
         userService.updateStatus(id, request.isActive(), CurrentUser.getUserId());
         return ApiResponse.ok();
     }
@@ -91,9 +101,9 @@ public class UserController {
     }
 
     @PutMapping("/{id}/reset-password")
-    public ApiResponse<Void> resetPassword(@PathVariable Long id) {
-        userService.resetPassword(id, CurrentUser.getUserId());
-        return ApiResponse.ok();
+    public ApiResponse<Map<String, String>> resetPassword(@PathVariable Long id) {
+        String temporaryPassword = userService.resetPassword(id, CurrentUser.getUserId());
+        return ApiResponse.ok(Map.of("temporaryPassword", temporaryPassword));
     }
 
     public record CreateUpdateUserRequest(

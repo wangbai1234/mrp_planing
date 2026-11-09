@@ -1,0 +1,1 @@
+import{t as e}from"./permission-Cb_BKj9m.js";function t(){let t=e();return{hasPermission:e=>t.hasPermission(e),hasAnyPermission:e=>t.hasAnyPermission(e),hasAllPermissions:e=>t.hasAllPermissions(e)}}export{t};

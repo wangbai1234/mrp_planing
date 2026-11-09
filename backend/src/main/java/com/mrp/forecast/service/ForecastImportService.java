@@ -6,16 +6,22 @@ import com.mrp.common.response.PageResult;
 import com.mrp.forecast.domain.ForecastDetail;
 import com.mrp.forecast.domain.ForecastVersion;
 import com.mrp.forecast.repository.ForecastMapper;
+import com.mrp.forecast.repository.ForecastWorkspaceMapper;
 import com.mrp.importexport.excel.ForecastExcelParser;
 import com.mrp.importexport.excel.ParseResult;
 import com.mrp.importexport.service.FileStorageService;
 import com.mrp.importexport.service.FileStorageService.StoredFile;
 import com.mrp.task.domain.ImportTask;
+import com.mrp.task.service.ImportTaskAccess;
+import com.mrp.task.service.ImportTaskCreation;
 import com.mrp.task.repository.ImportTaskMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.beans.factory.annotation.Qualifier;
+import com.mrp.audit.service.AuditService;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,6 +43,13 @@ public class ForecastImportService {
     private final ForecastExcelParser excelParser;
     private final ForecastMapper forecastMapper;
     private final ImportTaskMapper importTaskMapper;
+    @org.springframework.beans.factory.annotation.Autowired(required = false)
+    private ForecastWorkspaceMapper workspace;
+    @org.springframework.beans.factory.annotation.Autowired(required = false)
+    @Qualifier("primaryJdbcTemplate")
+    private JdbcTemplate jdbc;
+    @org.springframework.beans.factory.annotation.Autowired(required = false)
+    private AuditService audit;
 
     private final Map<Long, ParseResult<ForecastDetail>> stagingCache = new ConcurrentHashMap<>();
 
@@ -49,10 +62,12 @@ public class ForecastImportService {
     }
 
     public ImportTask upload(InputStream fileStream, String fileName, Long userId) throws IOException {
+        ImportTaskAccess.requireActor(userId);
         StoredFile stored = fileStorage.store(fileStream, fileName);
 
         // Check idempotency
-        ImportTask existing = importTaskMapper.selectByRequestKey("forecast:" + stored.checksum());
+        String requestKey = ImportTaskAccess.requestKey("forecast:", stored.checksum(), userId);
+        ImportTask existing = importTaskMapper.selectByRequestKey(requestKey);
         if (existing != null) {
             // 检查 staging cache 是否还有数据
             ParseResult<ForecastDetail> cachedResult = stagingCache.get(existing.id());
@@ -70,23 +85,12 @@ public class ForecastImportService {
         // Create import task
         ImportTask task = new ImportTask(
                 null, ImportTask.TYPE_FORECAST, null,
-                "forecast:" + stored.checksum(), ImportTask.STATUS_PENDING, 0,
+                requestKey, ImportTask.STATUS_PENDING, 0,
                 null, null, null, 0, 0, 0, 3, null,
                 null, stored.checksum(), null, null, null,
                 userId, null, null, null, 0
         );
-        importTaskMapper.insert(task);
-        Long generatedId = importTaskMapper.selectLastInsertId();
-        task = new ImportTask(
-                generatedId, task.taskType(), task.businessScope(),
-                task.requestKey(), task.status(), task.priority(),
-                task.workerId(), task.leaseUntil(), task.heartbeatAt(),
-                task.progressCurrent(), task.progressTotal(), task.attemptCount(),
-                task.maxAttempts(), task.nextRunAt(), task.inputPayload(),
-                task.inputChecksum(), task.resultResourceId(), task.errorCode(),
-                task.errorMessage(), task.createdBy(), task.createdAt(),
-                task.startedAt(), task.finishedAt(), task.version()
-        );
+        task = ImportTaskCreation.createOrGet(importTaskMapper, task);
 
         // Parse Excel to staging
         ParseResult<ForecastDetail> result = excelParser.parse(stored.path(), null);
@@ -100,6 +104,7 @@ public class ForecastImportService {
     }
 
     public ParseResult<ForecastDetail> getStagingResult(Long taskId) {
+        ImportTaskAccess.requireOwner(importTaskMapper, taskId, ImportTask.TYPE_FORECAST, "forecast:");
         ParseResult<ForecastDetail> result = stagingCache.get(taskId);
         if (result == null) {
             throw new BusinessException("MRP_STAGING_EXPIRED", "Staging data expired, please re-upload");
@@ -109,7 +114,17 @@ public class ForecastImportService {
 
     @Transactional
     public ForecastVersion confirm(Long taskId, Long userId) {
-        ParseResult<ForecastDetail> result = stagingCache.get(taskId);
+        ImportTaskAccess.requireActor(userId);
+        ImportTask task = ImportTaskAccess.lockForConfirmation(importTaskMapper, taskId, ImportTask.TYPE_FORECAST, "forecast:");
+        if (ImportTask.STATUS_SUCCEEDED.equals(task.status())) {
+            ForecastVersion existing = task.resultResourceId() == null ? null
+                    : forecastMapper.selectVersionById(task.resultResourceId());
+            if (existing == null || !java.util.Objects.equals(existing.createdBy(), task.createdBy())) {
+                throw ImportTaskAccess.conflict();
+            }
+            return existing;
+        }
+        ParseResult<ForecastDetail> result = getStagingResult(taskId);
         if (result == null) {
             throw new BusinessException("MRP_STAGING_EXPIRED", "Staging data expired, please re-upload");
         }
@@ -118,6 +133,12 @@ public class ForecastImportService {
         }
         if (result.rows().isEmpty()) {
             throw new ValidationException("No data to import");
+        }
+        if (workspace != null) {
+            workspace.headForUpdate();
+            if (workspace.activeDraft() != null) {
+                throw new com.mrp.common.exception.ConcurrentChangeException("存在人工编辑草稿，请先发布或放弃草稿");
+            }
         }
 
         // Get next version number
@@ -151,12 +172,19 @@ public class ForecastImportService {
             List<ForecastDetail> batch = details.subList(i, Math.min(i + 500, details.size()));
             forecastMapper.insertDetails(batch);
         }
+        forecastMapper.assignPrioritySequence(versionId);
+        if (workspace != null) {
+            workspace.markImportedVersionEffective(versionId, userId);
+            workspace.advanceHead(versionId);
+            if (jdbc != null) ForecastBatchInvalidation.staleBatches(jdbc, versionId);
+        }
+        if (audit != null) {
+            audit.log(userId,null,"ALL","IMPORT","forecast_version",versionId.toString(),null,
+                    Map.of("versionNo",version.versionNo(),"taskId",taskId),null,null);
+        }
 
         // Update task
-        ImportTask task = importTaskMapper.selectById(taskId);
-        importTaskMapper.updateResult(taskId, ImportTask.STATUS_SUCCEEDED, version.id(), task.version());
-
-        stagingCache.remove(taskId);
+        ImportTaskAccess.completeAfterCommit(importTaskMapper, task, version.id(), stagingCache, result);
         log.info("Forecast import confirmed: version={}, details={}", version.id(), details.size());
 
         return version;
@@ -193,7 +221,7 @@ public class ForecastImportService {
         List<Map<String, Object>> items = new ArrayList<>();
         for (Map<String, Object> material : materials) {
             String materialId = (String) material.get("material_id");
-            List<ForecastDetail> details = forecastMapper.selectDetailsByVersionIdAndMaterial(versionId, materialId);
+            List<ForecastDetail> details = forecastMapper.selectDetailsByVersionIdAndMaterial(versionId, materialId, (String) material.get("factory_code"));
             
             Map<String, Object> item = new HashMap<>();
             item.put("materialId", materialId);

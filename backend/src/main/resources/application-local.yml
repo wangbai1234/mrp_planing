@@ -2,7 +2,7 @@ spring:
   datasource:
     url: ${MRP_DB_URL:jdbc:mysql://localhost:3307/mrp?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&characterEncoding=UTF-8}
     username: ${MRP_DB_USERNAME:mrp}
-    password: ${MRP_DB_PASSWORD:mrp_dev}
+    password: ${MRP_DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       maximum-pool-size: 10
@@ -14,7 +14,7 @@ spring:
     baseline-on-migrate: true
     url: ${MRP_DB_URL:jdbc:mysql://localhost:3307/mrp?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&characterEncoding=UTF-8}
     user: ${MRP_DB_USERNAME:mrp}
-    password: ${MRP_DB_PASSWORD:mrp_dev}
+    password: ${MRP_DB_PASSWORD}
 
   data:
     redis:
@@ -27,7 +27,7 @@ spring:
 
 redisson:
   single-server-config:
-    address: "redis://127.0.0.1:6379"
+    address: "redis://${MRP_REDIS_HOST:127.0.0.1}:${MRP_REDIS_PORT:6379}"
 
 mybatis:
   mapper-locations: classpath:mapper/**/*.xml
@@ -40,7 +40,12 @@ server:
 
 mrp:
   jwt:
-    secret: ${MRP_JWT_SECRET:dev-only-change-in-production-must-be-at-least-256-bits}
+    secret: ${MRP_JWT_SECRET}
     expiration-seconds: ${MRP_JWT_EXPIRATION:3600}
   file:
     upload-dir: ${MRP_FILE_UPLOAD_DIR:./data/uploads}
+
+feishu:
+  app-id: ${FEISHU_APP_ID:your-feishu-app-id}
+  app-secret: ${FEISHU_APP_SECRET:your-feishu-app-secret}
+  redirect-uri: ${FEISHU_REDIRECT_URI:http://localhost:5180/login/callback/}

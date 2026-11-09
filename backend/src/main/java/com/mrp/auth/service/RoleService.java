@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Service
 public class RoleService {
@@ -55,6 +57,12 @@ public class RoleService {
     @Transactional
     public Role update(Long id, Role role, Long operatorId) {
         Role before = roleMapper.selectById(id);
+        if (before == null) throw new IllegalArgumentException("角色不存在");
+        if (role.getName() == null) role.setName(before.getName());
+        if (role.getDescription() == null) role.setDescription(before.getDescription());
+        if (role.getStatus() == null) role.setStatus(before.getStatus());
+        if (!Role.STATUS_ACTIVE.equals(role.getStatus()) && !Role.STATUS_DISABLED.equals(role.getStatus()))
+            throw new IllegalArgumentException("无效的角色状态");
 
         if ("ADMIN".equals(before.getCode())) {
             if (!Role.STATUS_ACTIVE.equals(role.getStatus())) {
@@ -65,6 +73,10 @@ public class RoleService {
         role.setId(id);
         roleMapper.update(role);
 
+        if (!before.getStatus().equals(role.getStatus())) {
+            roleMapper.selectUserIdsByRoleId(id).forEach(cacheService::evictUserPermissions);
+        }
+
         auditService.log(operatorId, "ADMIN", null,
                 "UPDATE", "ROLE", id.toString(),
                 before, role, null, null);
@@ -74,7 +86,7 @@ public class RoleService {
 
     @Transactional
     public void delete(Long id, Long operatorId) {
-        Role role = roleMapper.selectById(id);
+        Role role = roleMapper.selectByIdForUpdate(id);
         if (role == null) {
             throw new IllegalArgumentException("角色不存在");
         }
@@ -84,11 +96,11 @@ public class RoleService {
         }
 
         List<Long> userIds = roleMapper.selectUserIdsByRoleId(id);
+        if (!userIds.isEmpty()) {
+            throw new IllegalStateException("角色已关联用户，请先移除用户的角色分配");
+        }
         roleMapper.deleteRolePermissions(id);
         roleMapper.deleteById(id);
-
-        // Evict cache for all affected users
-        userIds.forEach(cacheService::evictUserPermissions);
 
         auditService.log(operatorId, "ADMIN", null,
                 "DELETE", "ROLE", id.toString(),
@@ -101,6 +113,7 @@ public class RoleService {
         if (role == null) {
             throw new IllegalArgumentException("角色不存在");
         }
+        requireAdminPermissions(role, permissionIds);
 
         List<Long> before = roleMapper.selectPermissionIdsByRoleId(roleId);
 
@@ -137,6 +150,15 @@ public class RoleService {
         if (!permissionIds.isEmpty()) {
             roleMapper.batchInsertRolePermissions(newRole.getId(), permissionIds);
         }
+        List<RoleDataScope> scopes = roleMapper.selectDataScopesByRoleId(sourceId);
+        if (scopes.stream().anyMatch(s -> RoleDataScope.SCOPE_ALL.equals(s.getScopeType()))) {
+            roleMapper.insertAllDataScope(newRole.getId());
+        } else {
+            List<String> factories = scopes.stream()
+                    .filter(s -> RoleDataScope.SCOPE_FACTORY.equals(s.getScopeType()))
+                    .map(RoleDataScope::getScopeValue).distinct().toList();
+            if (!factories.isEmpty()) roleMapper.insertFactoryDataScopes(newRole.getId(), factories);
+        }
 
         auditService.log(operatorId, "ADMIN", null,
                 "COPY_ROLE", "ROLE", newRole.getId().toString(),
@@ -147,5 +169,67 @@ public class RoleService {
 
     public List<Long> getPermissionIds(Long roleId) {
         return roleMapper.selectPermissionIdsByRoleId(roleId);
+    }
+
+    public record DataScope(String scopeType, List<String> factoryCodes) {}
+
+    public List<String> getEnabledFactoryCodes() {
+        return roleMapper.selectEnabledFactoryCodes();
+    }
+
+    public DataScope getDataScope(Long roleId) {
+        if (roleMapper.selectById(roleId) == null) throw new IllegalArgumentException("角色不存在");
+        List<RoleDataScope> scopes = roleMapper.selectDataScopesByRoleId(roleId);
+        if (scopes.stream().anyMatch(s -> RoleDataScope.SCOPE_ALL.equals(s.getScopeType()))) {
+            return new DataScope("ALL", List.of());
+        }
+        List<String> factories = scopes.stream()
+                .filter(s -> RoleDataScope.SCOPE_FACTORY.equals(s.getScopeType()))
+                .map(RoleDataScope::getScopeValue).distinct().toList();
+        if (scopes.size() != factories.size()) {
+            throw new IllegalStateException("角色存在不支持在此页面编辑的数据范围");
+        }
+        return new DataScope(factories.isEmpty() ? "NONE" : "FACTORY", factories);
+    }
+
+    @Transactional
+    public void updateConfiguration(Long roleId, List<Long> permissionIds, DataScope scope, Long operatorId) {
+        Role role = roleMapper.selectById(roleId);
+        if (role == null) throw new IllegalArgumentException("角色不存在");
+        requireAdminPermissions(role, permissionIds);
+        if (scope == null || scope.scopeType() == null) throw new IllegalArgumentException("请选择工厂可见范围");
+        Set<String> factories = new LinkedHashSet<>(scope.factoryCodes() == null ? List.of() : scope.factoryCodes());
+        switch (scope.scopeType()) {
+            case "ALL", "NONE" -> {
+                if (!factories.isEmpty()) throw new IllegalArgumentException("该范围不能指定工厂");
+            }
+            case "FACTORY" -> {
+                if (factories.isEmpty() || !roleMapper.selectEnabledFactoryCodes().containsAll(factories))
+                    throw new IllegalArgumentException("请选择有效工厂");
+            }
+            default -> throw new IllegalArgumentException("无效的工厂可见范围");
+        }
+        if ("ADMIN".equals(role.getCode()) && !"ALL".equals(scope.scopeType()))
+            throw new IllegalArgumentException("系统管理员必须保留全部工厂范围");
+
+        List<Long> beforePermissions = roleMapper.selectPermissionIdsByRoleId(roleId);
+        DataScope beforeScope = getDataScope(roleId);
+        roleMapper.deleteRolePermissions(roleId);
+        if (permissionIds != null && !permissionIds.isEmpty())
+            roleMapper.batchInsertRolePermissions(roleId, permissionIds);
+        roleMapper.deleteDataScopesByRoleId(roleId);
+        if ("ALL".equals(scope.scopeType())) roleMapper.insertAllDataScope(roleId);
+        if ("FACTORY".equals(scope.scopeType())) roleMapper.insertFactoryDataScopes(roleId, List.copyOf(factories));
+        roleMapper.selectUserIdsByRoleId(roleId).forEach(cacheService::evictUserPermissions);
+        auditService.log(operatorId, "ADMIN", null, "UPDATE_PERMISSIONS", "ROLE", roleId.toString(),
+                java.util.Map.of("permissions", beforePermissions, "dataScope", beforeScope),
+                java.util.Map.of("permissions", permissionIds == null ? List.of() : permissionIds,
+                        "dataScope", new DataScope(scope.scopeType(), List.copyOf(factories))), null, null);
+    }
+
+    private void requireAdminPermissions(Role role, List<Long> permissionIds) {
+        if ("ADMIN".equals(role.getCode()) &&
+                (permissionIds == null || !permissionIds.containsAll(roleMapper.selectActivePermissionIds())))
+            throw new IllegalArgumentException("系统管理员必须保留全部有效权限");
     }
 }

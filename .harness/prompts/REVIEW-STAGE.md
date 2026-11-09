@@ -3,7 +3,7 @@
 请复制下方正文，在 Mimo 完成任一阶段后使用：
 
 ```text
-现在只复核刚完成的 Harness 阶段，不要开始下一阶段，也不要增加新功能。
+现在由独立 Reviewer 只复核刚完成的 Harness 阶段，不增加新功能。
 
 读取：
 - project.md
@@ -13,6 +13,8 @@
 - 当前阶段引用的契约
 - .harness/test-and-gates.md
 - .harness/traceability-matrix.md
+- docs/MRP需求文档v4.0（Phase 2）.md
+- 当前阶段的 .superpowers/sdd task brief/report
 
 逐项核验：
 1. 实际修改是否超出当前阶段；
@@ -23,6 +25,8 @@
 6. 当前门禁是否全部 PASS；
 7. 失败时是否错误地标为 DONE；
 8. 是否更新了 workflow.yaml、阶段报告和追踪矩阵。
+9. 是否覆盖用户原有改动、修改旧迁移、伪造 Superpowers/测试或违反 Agent 文件所有权；
+10. 是否完成编译、自动测试、真实 API/curl 和浏览器验证（文档阶段按其门禁）。
 
-输出：PASS 或 FAIL；列出证据、阻断问题和最小修复清单。FAIL 时把阶段状态设为 REVIEW，不得进入下一阶段。PASS 时可以保持 DONE，但仍然暂停等待我的指令。
+输出：PASS 或 FAIL；列出证据、阻断问题和最小修复清单。FAIL 时保持 REVIEW 并触发 REPAIR-GATE。PASS 时由 Coordinator 把阶段置 DONE；若 workflow 允许自动继续且无业务/环境阻塞，执行 CONTINUE-NEXT-STAGE。
 ```

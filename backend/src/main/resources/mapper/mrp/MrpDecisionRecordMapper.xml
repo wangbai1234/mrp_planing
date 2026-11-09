@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.mrp.repository.MrpDecisionRecordMapper">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO mrp_decision_record (issue_id, decision_code, decision_payload, reason, operator_id, expected_revision, decision_checksum)
+        VALUES (#{issueId}, #{decisionCode}, #{decisionPayload}, #{reason}, #{operatorId}, #{expectedRevision}, #{decisionChecksum})
+    </insert>
+    
+    <select id="selectById" resultType="com.mrp.mrp.domain.MrpDecisionRecord">
+        SELECT * FROM mrp_decision_record WHERE id=#{id}
+    </select>
+</mapper>

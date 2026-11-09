@@ -170,4 +170,24 @@
         SELECT COUNT(*) > 0 FROM bom_parent WHERE inv_code = #{invCode}
     </select>
 
+    <select id="countAllDetails" resultType="int">
+        SELECT COUNT(*) FROM bom_detail
+    </select>
+
+    <select id="countEmptyParentCode" resultType="int">
+        SELECT COUNT(*) FROM bom_detail WHERE parent_code IS NULL OR parent_code = ''
+    </select>
+
+    <select id="countEmptyChildCode" resultType="int">
+        SELECT COUNT(*) FROM bom_detail WHERE child_code IS NULL OR child_code = ''
+    </select>
+
+    <select id="countZeroQty" resultType="int">
+        SELECT COUNT(*) FROM bom_detail WHERE child_qty &lt;= 0
+    </select>
+
+    <select id="countSelfReference" resultType="int">
+        SELECT COUNT(*) FROM bom_detail WHERE parent_code = child_code
+    </select>
+
 </mapper>

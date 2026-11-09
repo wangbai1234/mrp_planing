@@ -69,6 +69,20 @@
         AND is_deleted = 0
     </select>
 
+    <select id="selectCategoryCodesByMaterialCodes" resultType="map">
+        SELECT m.material_code AS materialCode, mc.code AS categoryCode
+        FROM material m
+        LEFT JOIN material_category mc
+          ON mc.id = m.material_category_id
+         AND mc.is_deleted = 0
+         AND mc.enabled = 1
+        WHERE m.material_code IN
+        <foreach collection="codes" item="code" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+        AND m.is_deleted = 0
+    </select>
+
     <select id="selectAll" resultType="com.mrp.masterdata.domain.Material">
         SELECT <include refid="selectColumns"/> FROM material
         <include refid="whereClause"/>

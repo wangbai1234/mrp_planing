@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.mrp.repository.MrpInventoryAllocationMapper">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO mrp_inventory_allocation (pool_id, demand_key, root_material_code, source_month, priority_seq, path_hash, gross_qty, allocated_qty, allocation_type, adjustment_reason, manual_confirmed, revision)
+        VALUES (#{poolId}, #{demandKey}, #{rootMaterialCode}, #{sourceMonth}, #{prioritySeq}, #{pathHash}, #{grossQty}, #{allocatedQty}, #{allocationType}, #{adjustmentReason}, #{manualConfirmed}, #{revision})
+    </insert>
+    
+    <insert id="insertBatch">
+        INSERT INTO mrp_inventory_allocation (pool_id, demand_key, root_material_code, source_month, priority_seq, path_hash, gross_qty, allocated_qty, allocation_type, adjustment_reason, manual_confirmed, revision) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.poolId}, #{item.demandKey}, #{item.rootMaterialCode}, #{item.sourceMonth}, #{item.prioritySeq}, #{item.pathHash}, #{item.grossQty}, #{item.allocatedQty}, #{item.allocationType}, #{item.adjustmentReason}, #{item.manualConfirmed}, #{item.revision})
+        </foreach>
+    </insert>
+    
+    <update id="update">
+        UPDATE mrp_inventory_allocation SET allocated_qty=#{allocatedQty}, allocation_type=#{allocationType}, adjustment_reason=#{adjustmentReason}, manual_confirmed=#{manualConfirmed}, revision=#{revision}
+        WHERE id=#{id} AND revision=#{revision} - 1
+    </update>
+    
+    <select id="selectByPoolId" resultType="com.mrp.mrp.domain.MrpInventoryAllocation">
+        SELECT * FROM mrp_inventory_allocation WHERE pool_id=#{poolId} ORDER BY demand_key
+    </select>
+    <select id="countByPoolId" resultType="int">SELECT COUNT(*) FROM mrp_inventory_allocation WHERE pool_id=#{poolId}</select>
+    
+    <select id="selectById" resultType="com.mrp.mrp.domain.MrpInventoryAllocation">
+        SELECT * FROM mrp_inventory_allocation WHERE id=#{id}
+    </select>
+    
+    <select id="selectByBatchId" resultType="com.mrp.mrp.domain.MrpInventoryAllocation">
+        SELECT a.* FROM mrp_inventory_allocation a
+        INNER JOIN mrp_inventory_pool p ON a.pool_id = p.id
+        WHERE p.batch_id=#{batchId} ORDER BY a.demand_key
+    </select>
+    <delete id="deleteAutoByBatchId">
+        DELETE a FROM mrp_inventory_allocation a
+        INNER JOIN mrp_inventory_pool p ON p.id = a.pool_id
+        WHERE p.batch_id=#{batchId} AND COALESCE(a.allocation_type, 'AUTO_PRIORITY')='AUTO_PRIORITY'
+    </delete>
+    <delete id="deleteAutoMaterialByBatchId">
+        DELETE a FROM mrp_inventory_allocation a
+        INNER JOIN mrp_inventory_pool p ON p.id=a.pool_id
+        WHERE p.batch_id=#{batchId} AND COALESCE(a.allocation_type, 'AUTO_PRIORITY')='AUTO_PRIORITY'
+          AND (a.path_hash IS NOT NULL AND a.path_hash &lt;&gt; a.root_material_code
+            OR a.path_hash IS NULL AND (p.material_code &lt;&gt; a.root_material_code OR a.demand_key &lt;&gt;
+              CONCAT(a.root_material_code,'|',a.root_material_code,'|',DATE_FORMAT(a.source_month,'%Y-%m-%d'))))
+    </delete>
+</mapper>

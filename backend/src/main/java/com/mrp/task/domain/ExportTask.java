@@ -1,5 +1,6 @@
 package com.mrp.task.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.Instant;
 
 public class ExportTask {
@@ -115,6 +116,7 @@ public class ExportTask {
     public void setFinishedAt(Instant finishedAt) { this.finishedAt = finishedAt; }
     public Integer getVersion() { return version; }
     public void setVersion(Integer version) { this.version = version; }
+    @JsonIgnore
     public String getFilePath() { return filePath; }
     public void setFilePath(String filePath) { this.filePath = filePath; }
 }

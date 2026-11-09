@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.mrp.repository.MrpWorkbenchReviewMapper">
+    <insert id="insert">
+        INSERT INTO mrp_workbench_review(batch_id,review_type,run_id,schedule_fingerprint,material_fingerprint,operator_id)
+        VALUES(#{batchId},#{reviewType},#{runId},#{scheduleFingerprint},#{materialFingerprint},#{operatorId})
+    </insert>
+    <select id="latest" resultType="com.mrp.mrp.repository.MrpWorkbenchReviewMapper$Review">
+        SELECT id,batch_id,review_type,run_id,schedule_fingerprint,material_fingerprint,operator_id,created_at
+        FROM mrp_workbench_review WHERE batch_id=#{batchId} AND review_type=#{reviewType}
+        ORDER BY id DESC LIMIT 1
+    </select>
+    <insert id="copyPublished">
+        INSERT INTO mrp_workbench_review(batch_id,review_type,run_id,schedule_fingerprint,material_fingerprint,operator_id,created_at)
+        SELECT #{targetBatchId},review_type,#{targetRunId},schedule_fingerprint,material_fingerprint,operator_id,created_at
+        FROM mrp_workbench_review r
+        WHERE r.batch_id=#{sourceBatchId} AND r.review_type IN ('SCHEDULE','MATERIAL')
+          AND r.id=(SELECT MAX(x.id) FROM mrp_workbench_review x
+                    WHERE x.batch_id=#{sourceBatchId} AND x.review_type=r.review_type)
+    </insert>
+</mapper>

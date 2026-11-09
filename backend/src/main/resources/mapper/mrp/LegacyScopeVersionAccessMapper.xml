@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.mrp.repository.LegacyScopeVersionAccessMapper">
+    <sql id="allScope">
+        EXISTS (SELECT 1 FROM user_role ur JOIN role r ON r.id=ur.role_id
+          JOIN role_data_scope ds ON ds.role_id=r.id
+          WHERE ur.user_id=#{userId} AND r.status='ACTIVE' AND ds.scope_type='ALL')
+    </sql>
+    <sql id="mappingVisible">
+        #{userId} IS NOT NULL AND v.is_deleted=0 AND (
+          <include refid="allScope"/> OR (
+            EXISTS (SELECT 1 FROM factory_warehouse_mapping_detail d WHERE d.version_id=v.id)
+            AND NOT EXISTS (SELECT 1 FROM factory_warehouse_mapping_detail d WHERE d.version_id=v.id AND (
+              d.factory_code IS NULL OR d.factory_code NOT IN (SELECT factory_code FROM mrp_factory) OR NOT
+              <include refid="com.mrp.mrp.repository.PlanningAccessMapper.factoryGrant">
+                <property name="factory" value="d.factory_code"/>
+              </include>))))
+    </sql>
+    <!-- Historical warehouse ownership must come from every referencing batch's frozen mapping.
+         An unbound/empty version or any unknown warehouse has no provable factory boundary. -->
+    <sql id="stockVisible">
+        #{userId} IS NOT NULL AND v.is_deleted=0 AND (
+          <include refid="allScope"/> OR (
+            EXISTS (SELECT 1 FROM stock_policy_detail d WHERE d.version_id=v.id)
+            AND EXISTS (SELECT 1 FROM mrp_calc_batch b WHERE b.stock_policy_version_id=v.id)
+            AND NOT EXISTS (
+              SELECT 1 FROM mrp_calc_batch b JOIN stock_policy_detail d ON d.version_id=b.stock_policy_version_id
+              WHERE b.stock_policy_version_id=v.id AND (
+                NOT EXISTS (SELECT 1 FROM factory_warehouse_mapping_detail fm
+                  WHERE fm.version_id=b.factory_warehouse_mapping_version_id AND fm.warehouse_code=d.warehouse_code)
+                OR EXISTS (SELECT 1 FROM factory_warehouse_mapping_detail fm
+                  WHERE fm.version_id=b.factory_warehouse_mapping_version_id AND fm.warehouse_code=d.warehouse_code AND (
+                    fm.factory_code IS NULL OR fm.factory_code NOT IN (SELECT factory_code FROM mrp_factory) OR NOT
+                    <include refid="com.mrp.mrp.repository.PlanningAccessMapper.factoryGrant">
+                      <property name="factory" value="fm.factory_code"/>
+                    </include>))))
+          ))
+    </sql>
+    <sql id="headerColumns">
+        v.id,v.version_no AS versionNo,v.status,v.effective_date AS effectiveDate,
+        v.checksum,v.created_by AS createdBy,v.created_at AS createdAt,v.published_at AS publishedAt
+    </sql>
+    <select id="mappingVersions" resultType="map">
+        SELECT <include refid="headerColumns"/> FROM factory_warehouse_mapping_version v
+        WHERE <include refid="mappingVisible"/> ORDER BY v.id DESC
+    </select>
+    <select id="stockVersions" resultType="map">
+        SELECT <include refid="headerColumns"/> FROM stock_policy_version v
+        WHERE <include refid="stockVisible"/> ORDER BY v.id DESC
+    </select>
+    <select id="canReadMapping" resultType="int">
+        SELECT COUNT(*) FROM factory_warehouse_mapping_version v WHERE v.id=#{id} AND <include refid="mappingVisible"/>
+    </select>
+    <select id="canReadStock" resultType="int">
+        SELECT COUNT(*) FROM stock_policy_version v WHERE v.id=#{id} AND <include refid="stockVisible"/>
+    </select>
+    <select id="hasAllScope" resultType="int">
+        SELECT (#{userId} IS NOT NULL AND <include refid="allScope"/>)
+    </select>
+    <select id="canUseFactory" resultType="int">
+        SELECT (#{userId} IS NOT NULL AND (<include refid="allScope"/> OR
+          (#{factoryCode} IN (SELECT factory_code FROM mrp_factory) AND
+            <include refid="com.mrp.mrp.repository.PlanningAccessMapper.factoryGrant">
+              <property name="factory" value="#{factoryCode}"/>
+            </include>)))
+    </select>
+</mapper>

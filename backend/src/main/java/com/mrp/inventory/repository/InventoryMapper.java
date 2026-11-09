@@ -18,6 +18,14 @@ public interface InventoryMapper {
 
     List<InventorySnapshot> selectAllSnapshots();
 
+    List<InventorySnapshot> selectSnapshotsByWarehouseCode(@Param("warehouseCode") String warehouseCode);
+
+    List<InventorySnapshot> selectSnapshotsPage(@Param("keyword") String keyword,
+                                                 @Param("offset") int offset,
+                                                 @Param("pageSize") int pageSize);
+
+    long countSnapshotsPage(@Param("keyword") String keyword);
+
     int insertDetails(@Param("list") List<InventoryDetail> details);
 
     List<InventoryDetail> selectDetailsBySnapshotId(@Param("snapshotId") Long snapshotId);

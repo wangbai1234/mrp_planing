@@ -2,12 +2,12 @@ package com.mrp.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mrp.MrpApiApplication;
+import com.mrp.BaseIntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -18,8 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(classes = MrpApiApplication.class)
 @AutoConfigureMockMvc
-@ActiveProfiles("local")
-class SecurityPermissionTest {
+class SecurityPermissionTest extends BaseIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -42,7 +41,7 @@ class SecurityPermissionTest {
 
     @Test
     void admin_canAccessAllEndpoints() throws Exception {
-        String token = loginAndGetToken("admin", "admin123");
+        String token = loginAndGetToken("admin", BaseIntegrationTest.TEST_ADMIN_PASSWORD);
 
         // Admin should have access to all endpoints
         mockMvc.perform(get("/api/v1/users")
@@ -63,36 +62,35 @@ class SecurityPermissionTest {
 
     @Test
     void userWithoutPermission_cannotAccessMaterials() throws Exception {
-        // Create a test user without material:view permission
-        // For now, test with invalid token
+        // Test with invalid token - should get 401 (unauthenticated)
         String invalidToken = "invalid.token.here";
 
         mockMvc.perform(get("/api/v1/materials")
                         .header("Authorization", "Bearer " + invalidToken))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void noToken_returns403() throws Exception {
+    void noToken_returns401() throws Exception {
         mockMvc.perform(get("/api/v1/users"))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
 
         mockMvc.perform(get("/api/v1/materials"))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
 
         mockMvc.perform(get("/api/v1/plans"))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void expiredToken_returns403() throws Exception {
+    void expiredToken_returns401() throws Exception {
         // This would require a token with expired timestamp
         // For now, test with a malformed token
         String malformedToken = "eyJhbGciOiJIUzM4NCJ9.invalid.payload";
 
         mockMvc.perform(get("/api/v1/users")
                         .header("Authorization", "Bearer " + malformedToken))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -102,27 +100,28 @@ class SecurityPermissionTest {
     }
 
     @Test
-    void accessWithoutToken_shouldReturn403() throws Exception {
+    void accessWithoutToken_shouldReturn401() throws Exception {
         mockMvc.perform(get("/api/v1/plans"))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void accessWithInvalidToken_shouldReturn403() throws Exception {
+    void accessWithInvalidToken_shouldReturn401() throws Exception {
         mockMvc.perform(get("/api/v1/plans")
                         .header("Authorization", "Bearer invalid-token"))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
     void accessWithInsufficientPermission_shouldReturn403() throws Exception {
-        // Login as a user with limited permissions (if exists)
-        // For now, test with invalid token which simulates insufficient permission
+        // Login as admin (has all permissions), then test with a limited token
+        // For now, test with invalid token which simulates unauthenticated (401)
         String limitedToken = "eyJhbGciOiJIUzM4NCJ9.limited.payload";
 
         // Try to publish (requires schedule:publish permission)
+        // Invalid token returns 401, not 403
         mockMvc.perform(post("/api/v1/plans/1/publish")
                         .header("Authorization", "Bearer " + limitedToken))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
     }
 }

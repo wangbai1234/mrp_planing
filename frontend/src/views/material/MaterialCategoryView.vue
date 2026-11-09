@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { ref, inject, onMounted, computed } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { get, post, put, del } from '../../api/client'
+import { usePermission } from '../../composables/usePermission'
 
-const setCrumb = inject<(g: string, p: string) => void>('setCrumb')!
+const { hasPermission } = usePermission()
 
 interface MaterialCategory {
   id: number
@@ -20,6 +21,7 @@ interface MaterialCategory {
 const categories = ref<MaterialCategory[]>([])
 const loading = ref(false)
 const searchKeyword = ref('')
+const appliedKeyword = ref('')
 const expandAll = ref(true)
 
 const formVisible = ref(false)
@@ -44,8 +46,8 @@ async function loadCategories() {
 }
 
 const filteredCategories = computed(() => {
-  if (!searchKeyword.value) return categories.value
-  const keyword = searchKeyword.value.toLowerCase()
+  if (!appliedKeyword.value) return categories.value
+  const keyword = appliedKeyword.value.toLowerCase()
   return filterTree(categories.value, keyword)
 })
 
@@ -135,7 +137,6 @@ async function toggleEnabled(row: MaterialCategory) {
 }
 
 onMounted(() => {
-  setCrumb('基础数据', '物料分类')
   loadCategories()
 })
 </script>
@@ -145,14 +146,14 @@ onMounted(() => {
     <div class="page-header">
       <h1 class="page-title">物料分类</h1>
       <div class="page-actions">
-        <el-button type="primary" @click="openAddDialog()">
+        <el-button v-if="hasPermission('material_category:manage')" type="primary" @click="openAddDialog()">
           <el-icon><Plus /></el-icon>新增
         </el-button>
       </div>
     </div>
 
     <div class="filter-bar">
-      <el-input v-model="searchKeyword" placeholder="搜索分类编码/名称" clearable style="width: 220px">
+      <el-input v-model="searchKeyword" placeholder="搜索分类编码/名称" clearable style="width: 220px" @input="!searchKeyword && (appliedKeyword = '')" @keyup.enter="appliedKeyword = searchKeyword.trim()" @clear="appliedKeyword = ''">
         <template #prefix>
           <el-icon><Search /></el-icon>
         </template>
@@ -190,12 +191,12 @@ onMounted(() => {
         </el-table-column>
         <el-table-column label="操作" width="280" fixed="right" align="center">
           <template #default="{ row }">
-            <el-button v-if="row.level === 1" type="primary" link size="small" @click="openAddDialog(row.id)">添加子分类</el-button>
-            <el-button type="primary" link size="small" @click="openEditDialog(row)">编辑</el-button>
-            <el-button :type="row.enabled ? 'warning' : 'success'" link size="small" @click="toggleEnabled(row)">
+            <el-button v-if="row.level === 1 && hasPermission('material_category:manage')" type="primary" link size="small" @click="openAddDialog(row.id)">添加子分类</el-button>
+            <el-button v-if="hasPermission('material_category:manage')" type="primary" link size="small" @click="openEditDialog(row)">编辑</el-button>
+            <el-button v-if="hasPermission('material_category:manage')" :type="row.enabled ? 'warning' : 'success'" link size="small" @click="toggleEnabled(row)">
               {{ row.enabled ? '停用' : '启用' }}
             </el-button>
-            <el-button type="danger" link size="small" @click="handleDelete(row)">删除</el-button>
+            <el-button v-if="hasPermission('material_category:manage')" type="danger" link size="small" @click="handleDelete(row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

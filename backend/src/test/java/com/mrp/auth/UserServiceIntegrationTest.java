@@ -1,21 +1,20 @@
 package com.mrp.auth;
 
 import com.mrp.MrpApiApplication;
+import com.mrp.BaseIntegrationTest;
 import com.mrp.auth.domain.User;
 import com.mrp.auth.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = MrpApiApplication.class)
-@ActiveProfiles("local")
-class UserServiceIntegrationTest {
+class UserServiceIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     private UserService userService;

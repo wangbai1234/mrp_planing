@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: ${MRP_DB_URL:jdbc:mysql://localhost:3307/mrp_test?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&characterEncoding=UTF-8}
-    username: ${MRP_DB_USERNAME:mrp}
-    password: ${MRP_DB_PASSWORD:mrp_dev}
+    url: ${MRP_DB_URL}
+    username: ${MRP_DB_USERNAME}
+    password: ${MRP_DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   flyway:
@@ -26,6 +26,11 @@ mrp:
     expiration: 3600
   file:
     upload-dir: ./data/test-uploads
+
+feishu:
+  app-id: ${FEISHU_APP_ID:test-app-id}
+  app-secret: ${FEISHU_APP_SECRET:test-app-secret}
+  redirect-uri: ${FEISHU_REDIRECT_URI:http://localhost:5180/login/callback/}
 
 logging:
   level:

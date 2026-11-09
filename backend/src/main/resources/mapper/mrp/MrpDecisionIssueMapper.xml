@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.mrp.repository.MrpDecisionIssueMapper">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO mrp_decision_issue (batch_id, factory_code, issue_key, issue_type, severity, scope_type, scope_key, payload_json, status, revision)
+        VALUES (#{batchId}, #{factoryCode}, #{issueKey}, #{issueType}, #{severity}, #{scopeType}, #{scopeKey}, #{payloadJson}, #{status}, #{revision})
+    </insert>
+
+    <insert id="insertBatch">
+        INSERT IGNORE INTO mrp_decision_issue (batch_id, factory_code, issue_key, issue_type, severity, scope_type, scope_key, payload_json, status, revision) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.batchId}, #{item.factoryCode}, #{item.issueKey}, #{item.issueType}, #{item.severity}, #{item.scopeType}, #{item.scopeKey}, #{item.payloadJson}, #{item.status}, #{item.revision})
+        </foreach>
+    </insert>
+    
+    <update id="update">
+        UPDATE mrp_decision_issue SET status=#{status}, resolved_at=#{resolvedAt}, revision=#{revision}
+        WHERE id=#{id}
+    </update>
+
+    <delete id="deleteByBatchIdAndStatus">
+        DELETE FROM mrp_decision_issue WHERE batch_id=#{batchId} AND status=#{status}
+    </delete>
+    <delete id="deleteOpenMaterialByBatchId">
+        DELETE FROM mrp_decision_issue WHERE batch_id=#{batchId} AND status='OPEN'
+          AND scope_type='MATERIAL'
+    </delete>
+    <select id="countResolvedMaterialByBatchId" resultType="int">
+        SELECT COUNT(*) FROM mrp_decision_issue WHERE batch_id=#{batchId}
+          AND status IN ('RESOLVED','DISMISSED') AND scope_type='MATERIAL'
+    </select>
+    
+    <select id="selectById" resultType="com.mrp.mrp.domain.MrpDecisionIssue">
+        SELECT * FROM mrp_decision_issue WHERE id=#{id}
+    </select>
+
+    <select id="selectByBatchIdAndKey" resultType="com.mrp.mrp.domain.MrpDecisionIssue">
+        SELECT * FROM mrp_decision_issue WHERE batch_id=#{batchId} AND issue_key=#{issueKey} LIMIT 1
+    </select>
+    
+    <select id="selectByBatchId" resultType="com.mrp.mrp.domain.MrpDecisionIssue">
+        SELECT * FROM mrp_decision_issue WHERE batch_id=#{batchId} ORDER BY created_at
+    </select>
+    
+    <select id="selectByBatchIdAndStatus" resultType="com.mrp.mrp.domain.MrpDecisionIssue">
+        SELECT * FROM mrp_decision_issue WHERE batch_id=#{batchId} AND status=#{status} ORDER BY created_at
+    </select>
+    <select id="selectPageByBatchId" resultType="com.mrp.mrp.domain.MrpDecisionIssue">
+        SELECT * FROM mrp_decision_issue WHERE batch_id=#{batchId}
+        <if test="status != null and status != ''">AND status=#{status}</if>
+        <if test="keyword != null and keyword != ''">AND (scope_key LIKE CONCAT('%', #{keyword}, '%') OR issue_type LIKE CONCAT('%', #{keyword}, '%'))</if>
+        ORDER BY created_at, id LIMIT #{offset}, #{pageSize}
+    </select>
+    <select id="countByBatchId" resultType="int">
+        SELECT COUNT(*) FROM mrp_decision_issue WHERE batch_id=#{batchId}
+        <if test="status != null and status != ''">AND status=#{status}</if>
+        <if test="keyword != null and keyword != ''">AND (scope_key LIKE CONCAT('%', #{keyword}, '%') OR issue_type LIKE CONCAT('%', #{keyword}, '%'))</if>
+    </select>
+</mapper>

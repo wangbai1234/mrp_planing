@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.audit.repository.AuditLogMapper">
+    <!-- Deleted historical resources retain their factory in the immutable business key.
+         Unknown/null and multi-factory summaries must never become global by default. -->
+    <sql id="effectiveFactory">
+        CASE
+            WHEN NULLIF(TRIM(al.factory_scope), '') IS NOT NULL THEN TRIM(al.factory_scope)
+            WHEN al.resource_type='factory_warehouse_mapping' AND al.resource_id&lt;&gt;'IMPORT'
+                THEN SUBSTRING_INDEX(al.resource_id, '|', 1)
+            WHEN al.resource_type='mrp_factory' AND al.resource_id&lt;&gt;'IMPORT'
+                THEN al.resource_id
+            WHEN al.resource_type='mrp_production_calendar' AND LOCATE('|', al.resource_id)&gt;1
+                THEN SUBSTRING_INDEX(al.resource_id, '|', 1)
+            ELSE NULL
+        END
+    </sql>
+    <sql id="visibleWhere">
+        WHERE #{userId} IS NOT NULL AND (
+            EXISTS (SELECT 1 FROM user_role ur JOIN role r ON r.id=ur.role_id
+                JOIN role_data_scope ds ON ds.role_id=r.id
+                WHERE ur.user_id=#{userId} AND r.status='ACTIVE' AND ds.scope_type='ALL')
+            OR (al.resource_type IN ('USER','ROLE','PERMISSION','material_policy','business_week')
+                AND NULLIF(TRIM(al.factory_scope),'') IS NULL)
+            OR (
+                (<include refid="effectiveFactory"/>)&lt;&gt;'ALL'
+                AND (
+                    EXISTS (SELECT 1 FROM user_factory_scope ufs WHERE ufs.user_id=#{userId}
+                        AND ufs.factory_code=(<include refid="effectiveFactory"/>))
+                    OR EXISTS (SELECT 1 FROM user_role ur JOIN role r ON r.id=ur.role_id
+                        JOIN role_data_scope ds ON ds.role_id=r.id
+                        WHERE ur.user_id=#{userId} AND r.status='ACTIVE' AND ds.scope_type='FACTORY'
+                        AND ds.scope_value=(<include refid="effectiveFactory"/>))
+                )
+            )
+            OR (al.factory_scope='ALL' AND al.resource_type IN ('forecast_draft','forecast_version')
+                AND EXISTS (SELECT 1 FROM mrp_factory f WHERE f.enabled=1)
+                AND NOT EXISTS (SELECT 1 FROM mrp_factory f WHERE f.enabled=1 AND NOT (
+                    EXISTS (SELECT 1 FROM user_factory_scope ufs
+                        WHERE ufs.user_id=#{userId} AND ufs.factory_code=f.factory_code)
+                    OR EXISTS (SELECT 1 FROM user_role ur JOIN role r ON r.id=ur.role_id
+                        JOIN role_data_scope ds ON ds.role_id=r.id
+                        WHERE ur.user_id=#{userId} AND r.status='ACTIVE' AND ds.scope_type='FACTORY'
+                        AND ds.scope_value=f.factory_code))))
+        )
+        <if test="filters.keyword != null and filters.keyword != ''">
+            AND (al.resource_id LIKE CONCAT('%',#{filters.keyword},'%')
+                OR al.operator_id LIKE CONCAT('%',#{filters.keyword},'%'))
+        </if>
+        <if test="filters.action != null and filters.action != ''">AND al.action=#{filters.action}</if>
+        <if test="filters.resourceType != null and filters.resourceType != '' and filters.resourceType != 'forecast'">AND al.resource_type=#{filters.resourceType}</if>
+        <if test="filters.resourceType == 'forecast'">AND al.resource_type IN ('forecast_line','forecast_draft','forecast_version')</if>
+        <if test="filters.resourceId != null and filters.resourceId != ''">AND al.resource_id=#{filters.resourceId}</if>
+        <if test="filters.startDate != null and filters.startDate != ''">AND al.created_at&gt;=#{filters.startDate}</if>
+        <if test="filters.endDate != null and filters.endDate != ''">AND al.created_at&lt;=CONCAT(#{filters.endDate},' 23:59:59')</if>
+    </sql>
+    <select id="countVisible" resultType="long">
+        SELECT COUNT(*) FROM audit_log al <include refid="visibleWhere"/>
+    </select>
+    <select id="selectVisible" resultType="map">
+        SELECT al.id, al.operator_id, al.operator_role, al.factory_scope,
+            al.action, al.resource_type, al.resource_id, al.before_value, al.after_value,
+            al.trace_id, al.ip_address, al.created_at, u.display_name AS operator_name,
+            u.avatar_url AS operator_avatar_url
+        FROM audit_log al LEFT JOIN `user` u ON u.id=al.operator_id
+        <include refid="visibleWhere"/>
+        ORDER BY al.created_at DESC, al.id DESC LIMIT #{limit} OFFSET #{offset}
+    </select>
+</mapper>

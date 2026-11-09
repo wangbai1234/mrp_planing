@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.mrp.repository.StockPolicyAccessMapper">
+    <!-- Disabled mappings still establish ownership of existing policies. Unknown ownership is ALL only. -->
+    <sql id="warehouseScope">
+        #{userId} IS NOT NULL AND (
+            EXISTS (SELECT 1 FROM user_role ur JOIN role r ON r.id=ur.role_id
+                JOIN role_data_scope ds ON ds.role_id=r.id
+                WHERE ur.user_id=#{userId} AND r.status='ACTIVE' AND ds.scope_type='ALL')
+            OR EXISTS (SELECT 1 FROM factory_warehouse_mapping fm WHERE fm.warehouse_code=${warehouseColumn}
+                AND NULLIF(TRIM(fm.factory_code),'') IS NOT NULL AND fm.factory_code&lt;&gt;'ALL'
+                AND <include refid="com.mrp.mrp.repository.PlanningAccessMapper.factoryGrant"><property name="factory" value="fm.factory_code"/></include>)
+        )
+    </sql>
+    <sql id="visibleWhere">
+        WHERE <include refid="warehouseScope"><property name="warehouseColumn" value="p.warehouse_code"/></include>
+        <if test="keyword != null and keyword != ''">
+            AND (p.material_code LIKE CONCAT('%',#{keyword},'%') OR m.material_name LIKE CONCAT('%',#{keyword},'%')
+                OR m.spec_model LIKE CONCAT('%',#{keyword},'%') OR p.warehouse_code LIKE CONCAT('%',#{keyword},'%'))
+        </if>
+        <if test="warehouse != null and warehouse != ''">AND p.warehouse_code=#{warehouse}</if>
+    </sql>
+    <select id="visible" resultType="com.mrp.mrp.domain.StockPolicy">
+        SELECT p.*,cu.display_name AS created_by_name,uu.display_name AS updated_by_name
+        FROM stock_policy p LEFT JOIN material m ON m.material_code=p.material_code
+        LEFT JOIN user cu ON cu.id=p.created_by LEFT JOIN user uu ON uu.id=p.updated_by
+        <include refid="visibleWhere"/>
+        <choose><when test="limit != null">ORDER BY p.material_code,p.id LIMIT #{limit} OFFSET #{offset}</when>
+            <otherwise>ORDER BY p.warehouse_code,p.material_code,p.id</otherwise></choose>
+    </select>
+    <select id="countVisible" resultType="int">
+        SELECT COUNT(*) FROM stock_policy p LEFT JOIN material m ON m.material_code=p.material_code
+        <include refid="visibleWhere"/>
+    </select>
+    <select id="canUseWarehouse" resultType="int">
+        SELECT CASE WHEN <include refid="warehouseScope"><property name="warehouseColumn" value="#{warehouse}"/></include>
+            THEN 1 ELSE 0 END
+    </select>
+</mapper>

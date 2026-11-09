@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrp.mrp.repository.RollingPlanningMapper">
+    <select id="selectMonths" resultType="java.time.LocalDate">
+        SELECT DISTINCT plan_month FROM forecast_detail WHERE version_id=#{forecastVersionId} ORDER BY plan_month
+    </select>
+    <select id="selectFactDates" resultType="java.time.LocalDate">
+        SELECT MIN(schedule_date) FROM mrp_daily_plan_detail WHERE run_id=#{runId}
+        UNION SELECT MAX(schedule_date) FROM mrp_daily_plan_detail WHERE run_id=#{runId}
+        UNION SELECT MIN(o.schedule_date) FROM mrp_daily_plan_override o
+        WHERE o.batch_id=#{batchId} AND EXISTS (SELECT 1 FROM mrp_daily_plan_detail d WHERE d.run_id=#{runId}
+          AND d.factory_code=o.factory_code AND d.root_material_code=o.root_material_code
+          AND d.terminal_material_code=o.terminal_material_code AND d.terminal_type=o.terminal_type
+          AND d.supply_mode=o.supply_mode AND d.path_group_key=o.path_group_key)
+        UNION SELECT MAX(o.schedule_date) FROM mrp_daily_plan_override o
+        WHERE o.batch_id=#{batchId} AND EXISTS (SELECT 1 FROM mrp_daily_plan_detail d WHERE d.run_id=#{runId}
+          AND d.factory_code=o.factory_code AND d.root_material_code=o.root_material_code
+          AND d.terminal_material_code=o.terminal_material_code AND d.terminal_type=o.terminal_type
+          AND d.supply_mode=o.supply_mode AND d.path_group_key=o.path_group_key)
+    </select>
+    <sql id="rowFilter">
+        run_id=#{runId}
+        <choose><when test="view == 'MACHINE_OUTPUT'">AND terminal_type = 'MACHINE_OUTPUT'</when><otherwise>AND terminal_type != 'MACHINE_OUTPUT'</otherwise></choose>
+        <if test="factoryCode != null and factoryCode != ''">AND factory_code=#{factoryCode}</if>
+        <if test="rootMaterialCode != null and rootMaterialCode != ''">AND root_material_code=#{rootMaterialCode}</if>
+        <if test="keyword != null and keyword != ''">
+          AND (root_material_code LIKE CONCAT('%',#{keyword},'%') OR terminal_material_code LIKE CONCAT('%',#{keyword},'%'))
+        </if>
+    </sql>
+    <select id="selectRowPage" resultType="com.mrp.mrp.domain.MrpDailyPlanDetail">
+        SELECT factory_code, root_material_code, terminal_material_code, terminal_type, supply_mode, source_month
+        FROM mrp_daily_plan_detail WHERE <include refid="rowFilter"/>
+        GROUP BY factory_code, root_material_code, terminal_material_code, terminal_type, supply_mode, source_month
+        ORDER BY factory_code, root_material_code, source_month, terminal_material_code, terminal_type, supply_mode
+        LIMIT #{offset},#{pageSize}
+    </select>
+    <select id="countRows" resultType="long">
+        SELECT COUNT(*) FROM (SELECT 1 FROM mrp_daily_plan_detail WHERE <include refid="rowFilter"/>
+          GROUP BY factory_code, root_material_code, terminal_material_code, terminal_type, supply_mode, source_month) rows_count
+    </select>
+    <select id="selectRowFacts" resultType="com.mrp.mrp.domain.MrpDailyPlanDetail">
+        SELECT * FROM mrp_daily_plan_detail WHERE run_id=#{runId} AND
+        <foreach collection="rows" item="r" open="(" close=")" separator=" OR ">
+          (factory_code=#{r.factoryCode} AND root_material_code=#{r.rootMaterialCode}
+          AND terminal_material_code=#{r.terminalMaterialCode} AND terminal_type=#{r.terminalType} AND supply_mode=#{r.supplyMode} AND source_month=#{r.sourceMonth})
+        </foreach>
+        ORDER BY factory_code, root_material_code, terminal_material_code, source_month, schedule_date, id
+    </select>
+    <select id="selectMachineFacts" resultType="com.mrp.mrp.domain.MrpDailyPlanDetail">
+        SELECT * FROM mrp_daily_plan_detail WHERE run_id=#{runId} AND terminal_type='MACHINE_OUTPUT' ORDER BY id
+    </select>
+    <sql id="machineRowFilter">
+        run_id=#{runId} AND terminal_type='MACHINE_OUTPUT'
+        <if test="factoryCode != null and factoryCode != ''">AND factory_code=#{factoryCode}</if>
+        <if test="rootMaterialCode != null and rootMaterialCode != ''">AND root_material_code=#{rootMaterialCode}</if>
+        <if test="keyword != null and keyword != ''">AND root_material_code LIKE CONCAT('%',#{keyword},'%')</if>
+    </sql>
+    <select id="selectMachineRowPage" resultType="com.mrp.mrp.domain.MrpDailyPlanDetail">
+        SELECT factory_code,root_material_code,root_material_code terminal_material_code,
+               'MACHINE_OUTPUT' terminal_type,'SELF_MADE' supply_mode
+        FROM mrp_daily_plan_detail WHERE <include refid="machineRowFilter"/>
+        GROUP BY factory_code,root_material_code
+        ORDER BY factory_code,root_material_code LIMIT #{offset},#{pageSize}
+    </select>
+    <select id="countMachineRows" resultType="long">
+        SELECT COUNT(*) FROM (SELECT 1 FROM mrp_daily_plan_detail WHERE <include refid="machineRowFilter"/>
+          GROUP BY factory_code,root_material_code) grouped
+    </select>
+    <select id="selectMachineRowFacts" resultType="com.mrp.mrp.domain.MrpDailyPlanDetail">
+        SELECT * FROM mrp_daily_plan_detail WHERE run_id=#{runId} AND terminal_type='MACHINE_OUTPUT' AND
+        <foreach collection="rows" item="r" open="(" close=")" separator=" OR ">
+          (factory_code=#{r.factoryCode} AND root_material_code=#{r.rootMaterialCode})
+        </foreach>
+        ORDER BY factory_code,root_material_code,source_month,schedule_date,id
+    </select>
+    <!-- Apply selectors before UNION materialization, including the virtual override branch. -->
+    <sql id="factFilter">
+        <if test="sourceMonth != null">AND d.source_month=#{sourceMonth}</if>
+        <if test="startDate != null">AND ${alias}.schedule_date BETWEEN #{startDate} AND #{endDate}</if>
+        <if test="factoryCode != null and factoryCode != ''">AND ${alias}.factory_code=#{factoryCode}</if>
+        <if test="rootMaterialCode != null and rootMaterialCode != ''">AND ${alias}.root_material_code=#{rootMaterialCode}</if>
+        <if test="terminalMaterialCode != null and terminalMaterialCode != ''">AND ${alias}.terminal_material_code=#{terminalMaterialCode}</if>
+        <choose><when test="terminalType != null and terminalType != ''">AND ${alias}.terminal_type=#{terminalType}</when>
+        <otherwise>AND ${alias}.terminal_type != 'MACHINE_OUTPUT'</otherwise></choose>
+    </sql>
+    <sql id="storedFactColumns">
+        SELECT d.id,d.run_id,d.batch_id,d.factory_code,d.root_material_code,d.terminal_material_code,d.terminal_type,
+          d.supply_mode,d.path_group_key,d.source_month,d.source_date,d.schedule_date,d.system_quantity,
+          COALESCE(o.manual_quantity,d.system_quantity) effective_quantity,d.is_production_day,
+          COALESCE(o.revision,-1) revision,d.row_key
+    </sql>
+    <sql id="storedFactSource">
+        FROM mrp_daily_plan_detail d <include refid="storedFactJoinAndFilter"/>
+    </sql>
+    <sql id="storedFactJoinAndFilter">
+        LEFT JOIN mrp_daily_plan_override o ON o.batch_id=#{batchId}
+          AND o.factory_code=d.factory_code AND o.root_material_code=d.root_material_code
+          AND o.terminal_material_code=d.terminal_material_code AND o.terminal_type=d.terminal_type
+          AND o.supply_mode=d.supply_mode AND o.path_group_key=d.path_group_key AND o.schedule_date=d.schedule_date
+        WHERE d.run_id=#{runId} AND COALESCE(o.manual_quantity,d.system_quantity) &gt; 0
+          <include refid="factFilter"><property name="alias" value="d"/></include>
+    </sql>
+    <sql id="virtualFactColumns">
+        SELECT NULL id,d.run_id,d.batch_id,d.factory_code,d.root_material_code,d.terminal_material_code,d.terminal_type,
+          d.supply_mode,d.path_group_key,d.source_month,
+          CASE WHEN #{rolling} THEN o.schedule_date ELSE DATE_ADD(o.schedule_date,INTERVAL 7 DAY) END source_date,
+          o.schedule_date,0 system_quantity,o.manual_quantity effective_quantity,TRUE is_production_day,o.revision,
+          SHA2(CONCAT(d.factory_code,'|',d.root_material_code,'|',d.terminal_material_code,'|',d.terminal_type,'|',d.supply_mode,'|',d.path_group_key,'|',d.source_month,'|',o.schedule_date),256) row_key
+    </sql>
+    <sql id="virtualFactSource">
+        FROM mrp_daily_plan_override o JOIN mrp_daily_plan_detail d ON d.run_id=#{runId}
+          AND d.factory_code=o.factory_code AND d.root_material_code=o.root_material_code
+          AND d.terminal_material_code=o.terminal_material_code AND d.terminal_type=o.terminal_type
+          AND d.supply_mode=o.supply_mode AND d.path_group_key=o.path_group_key
+        WHERE o.batch_id=#{batchId} AND o.manual_quantity &gt; 0
+          <include refid="factFilter"><property name="alias" value="o"/></include>
+          AND d.id=(SELECT MIN(t.id) FROM mrp_daily_plan_detail t WHERE t.run_id=d.run_id AND t.factory_code=d.factory_code
+            AND t.root_material_code=d.root_material_code AND t.terminal_material_code=d.terminal_material_code
+            AND t.terminal_type=d.terminal_type AND t.supply_mode=d.supply_mode AND t.path_group_key=d.path_group_key)
+          AND NOT EXISTS(SELECT 1 FROM mrp_daily_plan_detail t WHERE t.run_id=d.run_id AND t.factory_code=d.factory_code
+            AND t.root_material_code=d.root_material_code AND t.terminal_material_code=d.terminal_material_code
+            AND t.terminal_type=d.terminal_type AND t.supply_mode=d.supply_mode AND t.path_group_key=d.path_group_key
+            AND t.schedule_date=o.schedule_date)
+    </sql>
+    <sql id="effectiveFacts">
+        <include refid="storedFactColumns"/><include refid="storedFactSource"/>
+        UNION ALL
+        <include refid="virtualFactColumns"/><include refid="virtualFactSource"/>
+    </sql>
+    <!-- Type/supply complete the unique group/date identity; do not sort redundant wide row keys. -->
+    <sql id="detailOrder">
+        schedule_date,source_month,factory_code,root_material_code,terminal_material_code,path_group_key,
+        terminal_type,supply_mode
+    </sql>
+    <select id="hasOverrides" resultType="boolean">
+        SELECT EXISTS(SELECT 1 FROM mrp_daily_plan_override WHERE batch_id=#{batchId})
+    </select>
+    <sql id="automaticFactSource">
+        FROM mrp_daily_plan_detail d WHERE d.run_id=#{runId} AND d.system_quantity &gt; 0
+        <include refid="factFilter"><property name="alias" value="d"/></include>
+    </sql>
+    <select id="selectDetails" resultType="com.mrp.mrp.domain.MrpDailyPlanDetail">
+      <choose><when test="!hasOverrides">
+        SELECT d.id,d.run_id,d.batch_id,d.factory_code,d.root_material_code,d.terminal_material_code,d.terminal_type,
+          d.supply_mode,d.path_group_key,d.source_month,d.source_date,d.schedule_date,d.system_quantity,
+          d.system_quantity effective_quantity,d.is_production_day,-1 revision,d.row_key
+        FROM (SELECT d.id <include refid="automaticFactSource"/>
+          ORDER BY <include refid="detailOrder"/> LIMIT #{offset},#{pageSize}) page_ids
+        JOIN mrp_daily_plan_detail d ON d.id=page_ids.id
+        ORDER BY <include refid="detailOrder"/>
+      </when><when test="virtualCount != null">
+        <!-- At most virtualCount rows can precede a stored row. Dropping max(0,offset-V)
+             stored rows therefore cannot drop a requested row. Merge only the remaining
+             min(offset,V)+pageSize stored keys with V virtual keys, then read page payloads. -->
+        <bind name="storedOffset" value="offset > virtualCount ? offset - virtualCount : 0L"/>
+        <bind name="mergeOffset" value="offset > virtualCount ? virtualCount : offset"/>
+        <bind name="windowSize" value="mergeOffset + pageSize"/>
+        SELECT CASE WHEN p.is_virtual=1 THEN NULL ELSE d.id END id,
+          d.run_id,d.batch_id,d.factory_code,d.root_material_code,d.terminal_material_code,d.terminal_type,
+          d.supply_mode,d.path_group_key,d.source_month,
+          CASE WHEN p.is_virtual=1 THEN
+            CASE WHEN #{rolling} THEN p.schedule_date ELSE DATE_ADD(p.schedule_date,INTERVAL 7 DAY) END
+            ELSE d.source_date END source_date,
+          p.schedule_date,CASE WHEN p.is_virtual=1 THEN CAST(0 AS DECIMAL(18,6)) ELSE d.system_quantity END system_quantity,
+          COALESCE(o.manual_quantity,d.system_quantity) effective_quantity,
+          CASE WHEN p.is_virtual=1 THEN TRUE ELSE d.is_production_day END is_production_day,
+          COALESCE(o.revision,-1) revision,
+          CASE WHEN p.is_virtual=1 THEN
+            SHA2(CONCAT(d.factory_code,'|',d.root_material_code,'|',d.terminal_material_code,'|',d.terminal_type,'|',
+              d.supply_mode,'|',d.path_group_key,'|',d.source_month,'|',p.schedule_date),256)
+            ELSE d.row_key END row_key
+        <!-- Rank the bounded key window using each column's existing collation weights.
+             Space-weight padding preserves PAD SPACE including expansion/control characters.
+             Pad only to the longest actual weight in this bounded window. Binary keys avoid the
+             default-buffer failure observed with direct multi-column string filesort.
+             WEIGHT_STRING is MySQL-specific; preserve collation regression coverage
+             when upgrading MySQL. Payload rows are ordered only by numeric rank. -->
+        FROM (SELECT padded_keys.detail_id,padded_keys.override_id,padded_keys.is_virtual,padded_keys.schedule_date,
+          ROW_NUMBER() OVER (ORDER BY schedule_date,source_month,
+          RPAD(WEIGHT_STRING(factory_code),factory_code_weight_size,WEIGHT_STRING(_utf8mb4' ' COLLATE utf8mb4_unicode_ci)),RPAD(WEIGHT_STRING(root_material_code),root_material_code_weight_size,WEIGHT_STRING(_utf8mb4' ' COLLATE utf8mb4_unicode_ci)),
+          RPAD(WEIGHT_STRING(terminal_material_code),terminal_material_code_weight_size,WEIGHT_STRING(_utf8mb4' ' COLLATE utf8mb4_unicode_ci)),RPAD(WEIGHT_STRING(path_group_key),path_group_key_weight_size,WEIGHT_STRING(_utf8mb4' ' COLLATE utf8mb4_unicode_ci)),
+          RPAD(WEIGHT_STRING(terminal_type),terminal_type_weight_size,WEIGHT_STRING(_utf8mb4' ' COLLATE utf8mb4_unicode_ci)),RPAD(WEIGHT_STRING(supply_mode),supply_mode_weight_size,WEIGHT_STRING(_utf8mb4' ' COLLATE utf8mb4_unicode_ci))) page_position FROM (SELECT page_keys.*,
+          MAX(OCTET_LENGTH(WEIGHT_STRING(factory_code))) OVER () factory_code_weight_size,
+          MAX(OCTET_LENGTH(WEIGHT_STRING(root_material_code))) OVER () root_material_code_weight_size,
+          MAX(OCTET_LENGTH(WEIGHT_STRING(terminal_material_code))) OVER () terminal_material_code_weight_size,
+          MAX(OCTET_LENGTH(WEIGHT_STRING(path_group_key))) OVER () path_group_key_weight_size,
+          MAX(OCTET_LENGTH(WEIGHT_STRING(terminal_type))) OVER () terminal_type_weight_size,
+          MAX(OCTET_LENGTH(WEIGHT_STRING(supply_mode))) OVER () supply_mode_weight_size
+          FROM (
+          SELECT * FROM (
+            SELECT d.id detail_id,o.id override_id,0 is_virtual,d.schedule_date,d.source_month,d.factory_code,
+              d.root_material_code,d.terminal_material_code,d.path_group_key,d.terminal_type,d.supply_mode
+            FROM mrp_daily_plan_detail d FORCE INDEX (idx_mdpd_run_detail_order)
+            <include refid="storedFactJoinAndFilter"/>
+            ORDER BY d.schedule_date,d.source_month,d.factory_code,d.root_material_code,d.terminal_material_code,
+              d.path_group_key,d.terminal_type,d.supply_mode
+            LIMIT #{storedOffset},#{windowSize}
+          ) stored_window
+          UNION ALL
+          SELECT d.id detail_id,o.id override_id,1 is_virtual,o.schedule_date,d.source_month,d.factory_code,
+            d.root_material_code,d.terminal_material_code,d.path_group_key,d.terminal_type,d.supply_mode
+          <include refid="virtualFactSource"/>
+        ) page_keys) padded_keys) p
+        STRAIGHT_JOIN mrp_daily_plan_detail d ON d.id=p.detail_id
+        LEFT JOIN mrp_daily_plan_override o ON o.id=p.override_id
+        WHERE p.page_position &gt; #{mergeOffset} AND p.page_position &lt;= #{windowSize}
+        ORDER BY p.page_position
+      </when><otherwise>
+        SELECT * FROM (<include refid="effectiveFacts"/>) effective
+        ORDER BY <include refid="detailOrder"/>
+        LIMIT #{offset},#{pageSize}
+      </otherwise></choose>
+    </select>
+    <select id="countVirtualDetails" resultType="long">
+        SELECT COUNT(*) <include refid="virtualFactSource"/>
+    </select>
+    <select id="countDetails" resultType="long">
+      <choose><when test="!hasOverrides">
+        SELECT COUNT(*) <include refid="automaticFactSource"/>
+      </when><otherwise>
+        SELECT (SELECT COUNT(*) <include refid="storedFactSource"/>)
+             + (SELECT COUNT(*) <include refid="virtualFactSource"/>)
+      </otherwise></choose>
+    </select>
+    <select id="selectMachineLoads" resultType="com.mrp.mrp.domain.MrpDailyPlanDetail">
+        <bind name="sourceMonth" value="null"/>
+        <bind name="startDate" value="null"/><bind name="endDate" value="null"/>
+        <bind name="factoryCode" value="null"/><bind name="rootMaterialCode" value="null"/>
+        <bind name="terminalMaterialCode" value="null"/><bind name="terminalType" value="'MACHINE_OUTPUT'"/>
+        SELECT factory_code, schedule_date, 'MACHINE_OUTPUT' terminal_type, SUM(effective_quantity) effective_quantity
+        FROM (<include refid="effectiveFacts"/>) effective GROUP BY factory_code,schedule_date
+    </select>
+</mapper>

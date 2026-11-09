@@ -12,6 +12,9 @@ const router = useRouter()
 const loading = ref(false)
 const roles = ref<Role[]>([])
 const keyword = ref('')
+const appliedKeyword = ref('')
+
+function handleSearch() { appliedKeyword.value = keyword.value.trim() }
 
 const dialogVisible = ref(false)
 const dialogTitle = ref('新增角色')
@@ -43,8 +46,8 @@ async function loadRoles() {
 onMounted(loadRoles)
 
 function filteredRoles() {
-  if (!keyword.value) return roles.value
-  const kw = keyword.value.toLowerCase()
+  if (!appliedKeyword.value) return roles.value
+  const kw = appliedKeyword.value.toLowerCase()
   return roles.value.filter(r =>
     r.name.toLowerCase().includes(kw) ||
     r.code.toLowerCase().includes(kw)
@@ -155,6 +158,9 @@ function navigateToPermission(role: Role) {
           placeholder="搜索角色名称/编码"
           style="width: 220px"
           clearable
+          @input="!keyword && handleSearch()"
+          @keyup.enter="handleSearch"
+          @clear="handleSearch"
         />
       </div>
 

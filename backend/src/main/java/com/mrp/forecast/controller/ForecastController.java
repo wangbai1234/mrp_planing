@@ -5,6 +5,7 @@ import com.mrp.common.response.PageResult;
 import com.mrp.forecast.domain.ForecastDetail;
 import com.mrp.forecast.domain.ForecastVersion;
 import com.mrp.forecast.service.ForecastImportService;
+import com.mrp.forecast.service.ForecastWorkspaceService;
 import com.mrp.importexport.excel.ParseError;
 import com.mrp.importexport.excel.ParseResult;
 import com.mrp.importexport.excel.TemplateGenerator;
@@ -29,6 +30,8 @@ public class ForecastController {
 
     private final ForecastImportService forecastImportService;
     private final TemplateGenerator templateGenerator;
+    @org.springframework.beans.factory.annotation.Autowired(required = false)
+    private ForecastWorkspaceService workspaceService;
 
     public ForecastController(ForecastImportService forecastImportService, TemplateGenerator templateGenerator) {
         this.forecastImportService = forecastImportService;
@@ -41,7 +44,15 @@ public class ForecastController {
             @RequestParam(defaultValue = "3") int pageSize,
             @RequestParam(required = false) String keyword) {
         PageResult<ForecastVersion> result = forecastImportService.listVersionsPage(keyword, page, pageSize);
+        if (workspaceService != null) {
+            result.items().forEach(v -> workspaceService.requireVisibleVersion(v.id()));
+        }
         return ResponseEntity.ok(ApiResponse.ok(result));
+    }
+
+    @GetMapping("/forecast-versions/current")
+    public ResponseEntity<ApiResponse<Map<String,Object>>> currentVersion() {
+        return ResponseEntity.ok(ApiResponse.ok(workspaceService.current()));
     }
 
     @GetMapping("/forecast-versions/{versionId}")
@@ -50,10 +61,12 @@ public class ForecastController {
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "20") int pageSize,
             @RequestParam(required = false) String keyword) {
+        if (workspaceService != null) workspaceService.requireVisibleVersion(versionId);
         PageResult<Map<String, Object>> result = forecastImportService.getVersionMaterialsPage(versionId, keyword, page, pageSize);
         
         return ResponseEntity.ok(ApiResponse.ok(Map.of(
                 "items", result.items(),
+                "recognizedMonths", workspaceService.versionMonths(versionId),
                 "total", result.total(),
                 "page", result.page(),
                 "pageSize", result.pageSize(),

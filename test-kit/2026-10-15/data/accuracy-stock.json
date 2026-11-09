@@ -1,0 +1,2639 @@
+{
+  "key": "accuracy-stock",
+  "months": [
+    "2026-11-01",
+    "2026-12-01",
+    "2027-01-01",
+    "2027-02-01",
+    "2027-03-01",
+    "2027-04-01"
+  ],
+  "roots": [
+    "6839AA000359",
+    "6839AA000685",
+    "6839AA000654",
+    "6839AA000653",
+    "6839AA000664"
+  ],
+  "reachableNodes": [
+    "11155211",
+    "1117AA000040",
+    "11420629",
+    "11508521",
+    "11520471",
+    "11905018",
+    "1210AA000002",
+    "1210AA000010",
+    "1210AA000043",
+    "1311AA000027",
+    "14110045",
+    "14400141",
+    "14400318",
+    "1513AA000002",
+    "1611AA000043",
+    "1616AA000014",
+    "2210AA000001",
+    "22110030",
+    "22119018",
+    "25900077",
+    "2592AA000020",
+    "28102187",
+    "28150131",
+    "28150132",
+    "28153001",
+    "28153030",
+    "32080000",
+    "32081100",
+    "32082100",
+    "32082470",
+    "32083100",
+    "32083205",
+    "32083604",
+    "32084470",
+    "32085510",
+    "3208AA000112",
+    "3208AA000124",
+    "32100330",
+    "32404105",
+    "33080181",
+    "33080221",
+    "33081103",
+    "33081223",
+    "33082103",
+    "33083470",
+    "33084103",
+    "33089101",
+    "33089151",
+    "33089271",
+    "33089391",
+    "3308AA000020",
+    "3308AA000021",
+    "33115470",
+    "33115475",
+    "33216101",
+    "34080276",
+    "34080476",
+    "34089338",
+    "34089478",
+    "34089520",
+    "43111794",
+    "43900014",
+    "4392AA000001",
+    "4392AA000002",
+    "44320033",
+    "4620AA000006",
+    "5022AA000016",
+    "5061AA000355",
+    "6219AA000027",
+    "6610AA000354",
+    "6839AA000359",
+    "6839AA000574",
+    "6839AA000575",
+    "6839AA000576",
+    "6839AA000577",
+    "6839AA000653",
+    "6839AA000654",
+    "6839AA000664",
+    "6839AA000685",
+    "7211AA000989",
+    "7211AA000990"
+  ],
+  "forecast": [
+    {
+      "factoryCode": "爱培科",
+      "materialCode": "6839AA000359",
+      "quantities": [
+        1001,
+        1000,
+        2,
+        1,
+        0,
+        10001
+      ]
+    },
+    {
+      "factoryCode": "爱培科",
+      "materialCode": "6839AA000685",
+      "quantities": [
+        1001,
+        1000,
+        2,
+        1,
+        0,
+        10001
+      ]
+    },
+    {
+      "factoryCode": "爱培科",
+      "materialCode": "6839AA000654",
+      "quantities": [
+        1001,
+        1000,
+        2,
+        1,
+        0,
+        10001
+      ]
+    },
+    {
+      "factoryCode": "爱培科",
+      "materialCode": "6839AA000653",
+      "quantities": [
+        1001,
+        1000,
+        2,
+        1,
+        0,
+        10001
+      ]
+    },
+    {
+      "factoryCode": "爱培科",
+      "materialCode": "6839AA000664",
+      "quantities": [
+        1001,
+        1000,
+        2,
+        1,
+        0,
+        10001
+      ]
+    },
+    {
+      "factoryCode": "永惠",
+      "materialCode": "6839AA000359",
+      "quantities": [
+        1001,
+        1000,
+        2,
+        1,
+        0,
+        10001
+      ]
+    },
+    {
+      "factoryCode": "永惠",
+      "materialCode": "6839AA000685",
+      "quantities": [
+        1001,
+        1000,
+        2,
+        1,
+        0,
+        10001
+      ]
+    },
+    {
+      "factoryCode": "永惠",
+      "materialCode": "6839AA000654",
+      "quantities": [
+        1001,
+        1000,
+        2,
+        1,
+        0,
+        10001
+      ]
+    },
+    {
+      "factoryCode": "永惠",
+      "materialCode": "6839AA000653",
+      "quantities": [
+        1001,
+        1000,
+        2,
+        1,
+        0,
+        10001
+      ]
+    },
+    {
+      "factoryCode": "永惠",
+      "materialCode": "6839AA000664",
+      "quantities": [
+        1001,
+        1000,
+        2,
+        1,
+        0,
+        10001
+      ]
+    }
+  ],
+  "materialPolicies": [
+    {
+      "materialCode": "11155211",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "1117AA000040",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "11420629",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "11508521",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "11520471",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "11905018",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "1210AA000002",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "1210AA000010",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "1210AA000043",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "1311AA000027",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "14110045",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "14400141",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "14400318",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "1513AA000002",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "1611AA000043",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "1616AA000014",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "2210AA000001",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "22110030",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "22119018",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "25900077",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "2592AA000020",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "28102187",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "28150131",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "28150132",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "28153001",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "28153030",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "32080000",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "32081100",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "32082100",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "32082470",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "32083100",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "32083205",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "32083604",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "32084470",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "32085510",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "3208AA000112",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "3208AA000124",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "32100330",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "32404105",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "33080181",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "33080221",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "33081103",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "33081223",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "33082103",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "33083470",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "33084103",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "33089101",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "33089151",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "33089271",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "33089391",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "3308AA000020",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "3308AA000021",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "33115470",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "33115475",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "33216101",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "34080276",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "34080476",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "34089338",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "34089478",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "34089520",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "43111794",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "43900014",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "4392AA000001",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "4392AA000002",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "44320033",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "4620AA000006",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "5022AA000016",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "5061AA000355",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "6219AA000027",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "6610AA000354",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "6839AA000359",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "6839AA000574",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "6839AA000575",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "6839AA000576",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "6839AA000577",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "6839AA000653",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "6839AA000654",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "6839AA000664",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "6839AA000685",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "7211AA000989",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    },
+    {
+      "materialCode": "7211AA000990",
+      "supplyMode": "SELF_MADE",
+      "explosionPolicy": "EXPLODE"
+    }
+  ],
+  "stockPolicies": [
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "11155211",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "1117AA000040",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "11420629",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "11508521",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "11520471",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "11905018",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "1210AA000002",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "1210AA000010",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "1210AA000043",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "1311AA000027",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "14110045",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "14400141",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "14400318",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "1513AA000002",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "1611AA000043",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "1616AA000014",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "2210AA000001",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "22110030",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "22119018",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "25900077",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "2592AA000020",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "28102187",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "28150131",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "28150132",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "28153001",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "28153030",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "32080000",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "32081100",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "32082100",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "32082470",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "32083100",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "32083205",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "32083604",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "32084470",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "32085510",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "3208AA000112",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "3208AA000124",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "32100330",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "32404105",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "33080181",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "33080221",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "33081103",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "33081223",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "33082103",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "33083470",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "33084103",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "33089101",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "33089151",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "33089271",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "33089391",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "3308AA000020",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "3308AA000021",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "33115470",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "33115475",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "33216101",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "34080276",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "34080476",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "34089338",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "34089478",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "34089520",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "43111794",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "43900014",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "4392AA000001",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "4392AA000002",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "44320033",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "4620AA000006",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "5022AA000016",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "5061AA000355",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "6219AA000027",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "6610AA000354",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "6839AA000359",
+      "safetyStockQty": "10",
+      "warningStockQty": "20"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "6839AA000574",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "6839AA000575",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "6839AA000576",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "6839AA000577",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "6839AA000653",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "6839AA000654",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "6839AA000664",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "6839AA000685",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "7211AA000989",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "7211AA000990",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "11155211",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "1117AA000040",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "11420629",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "11508521",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "11520471",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "11905018",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "1210AA000002",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "1210AA000010",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "1210AA000043",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "1311AA000027",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "14110045",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "14400141",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "14400318",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "1513AA000002",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "1611AA000043",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "1616AA000014",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "2210AA000001",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "22110030",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "22119018",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "25900077",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "2592AA000020",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "28102187",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "28150131",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "28150132",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "28153001",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "28153030",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "32080000",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "32081100",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "32082100",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "32082470",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "32083100",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "32083205",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "32083604",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "32084470",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "32085510",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "3208AA000112",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "3208AA000124",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "32100330",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "32404105",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "33080181",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "33080221",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "33081103",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "33081223",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "33082103",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "33083470",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "33084103",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "33089101",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "33089151",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "33089271",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "33089391",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "3308AA000020",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "3308AA000021",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "33115470",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "33115475",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "33216101",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "34080276",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "34080476",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "34089338",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "34089478",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "34089520",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "43111794",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "43900014",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "4392AA000001",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "4392AA000002",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "44320033",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "4620AA000006",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "5022AA000016",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "5061AA000355",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "6219AA000027",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "6610AA000354",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "6839AA000359",
+      "safetyStockQty": "10",
+      "warningStockQty": "20"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "6839AA000574",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "6839AA000575",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "6839AA000576",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "6839AA000577",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "6839AA000653",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "6839AA000654",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "6839AA000664",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "6839AA000685",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "7211AA000989",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "7211AA000990",
+      "safetyStockQty": "0",
+      "warningStockQty": "0"
+    }
+  ],
+  "inventory": [
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "11155211",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "1117AA000040",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "11420629",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "11508521",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "11520471",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "11905018",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "1210AA000002",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "1210AA000010",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "1210AA000043",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "1311AA000027",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "14110045",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "14400141",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "14400318",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "1513AA000002",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "1611AA000043",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "1616AA000014",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "2210AA000001",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "22110030",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "22119018",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "25900077",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "2592AA000020",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "28102187",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "28150131",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "28150132",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "28153001",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "28153030",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "32080000",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "32081100",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "32082100",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "32082470",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "32083100",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "32083205",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "32083604",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "32084470",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "32085510",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "3208AA000112",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "3208AA000124",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "32100330",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "32404105",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "33080181",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "33080221",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "33081103",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "33081223",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "33082103",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "33083470",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "33084103",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "33089101",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "33089151",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "33089271",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "33089391",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "3308AA000020",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "3308AA000021",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "33115470",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "33115475",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "33216101",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "34080276",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "34080476",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "34089338",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "34089478",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "34089520",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "43111794",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "43900014",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "4392AA000001",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "4392AA000002",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "44320033",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "4620AA000006",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "5022AA000016",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "5061AA000355",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "6219AA000027",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "6610AA000354",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "6839AA000359",
+      "quality": "GOOD",
+      "quantity": "511"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "6839AA000574",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "6839AA000575",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "6839AA000576",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "6839AA000577",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "6839AA000653",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "6839AA000654",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "6839AA000664",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "6839AA000685",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "7211AA000989",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "7211AA000990",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "11155211",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "1117AA000040",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "11420629",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "11508521",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "11520471",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "11905018",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "1210AA000002",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "1210AA000010",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "1210AA000043",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "1311AA000027",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "14110045",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "14400141",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "14400318",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "1513AA000002",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "1611AA000043",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "1616AA000014",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "2210AA000001",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "22110030",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "22119018",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "25900077",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "2592AA000020",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "28102187",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "28150131",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "28150132",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "28153001",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "28153030",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "32080000",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "32081100",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "32082100",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "32082470",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "32083100",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "32083205",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "32083604",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "32084470",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "32085510",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "3208AA000112",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "3208AA000124",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "32100330",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "32404105",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "33080181",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "33080221",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "33081103",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "33081223",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "33082103",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "33083470",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "33084103",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "33089101",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "33089151",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "33089271",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "33089391",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "3308AA000020",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "3308AA000021",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "33115470",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "33115475",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "33216101",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "34080276",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "34080476",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "34089338",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "34089478",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "34089520",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "43111794",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "43900014",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "4392AA000001",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "4392AA000002",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "44320033",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "4620AA000006",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "5022AA000016",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "5061AA000355",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "6219AA000027",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "6610AA000354",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "6839AA000359",
+      "quality": "GOOD",
+      "quantity": "511"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "6839AA000574",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "6839AA000575",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "6839AA000576",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "6839AA000577",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "6839AA000653",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "6839AA000654",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "6839AA000664",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "6839AA000685",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "7211AA000989",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "7211AA000990",
+      "quality": "GOOD",
+      "quantity": "3"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "6839AA000359",
+      "quality": "DEFECTIVE",
+      "quantity": "999999"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "6839AA000685",
+      "quality": "DEFECTIVE",
+      "quantity": "999999"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "6839AA000654",
+      "quality": "DEFECTIVE",
+      "quantity": "999999"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "6839AA000653",
+      "quality": "DEFECTIVE",
+      "quantity": "999999"
+    },
+    {
+      "warehouseCode": "UAT_APK",
+      "materialCode": "6839AA000664",
+      "quality": "DEFECTIVE",
+      "quantity": "999999"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "6839AA000359",
+      "quality": "DEFECTIVE",
+      "quantity": "999999"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "6839AA000685",
+      "quality": "DEFECTIVE",
+      "quantity": "999999"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "6839AA000654",
+      "quality": "DEFECTIVE",
+      "quantity": "999999"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "6839AA000653",
+      "quality": "DEFECTIVE",
+      "quantity": "999999"
+    },
+    {
+      "warehouseCode": "UAT_YH",
+      "materialCode": "6839AA000664",
+      "quality": "DEFECTIVE",
+      "quantity": "999999"
+    }
+  ],
+  "stopNodes": []
+}

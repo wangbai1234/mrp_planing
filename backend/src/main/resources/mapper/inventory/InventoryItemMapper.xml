@@ -3,13 +3,15 @@
 <mapper namespace="com.mrp.inventory.repository.InventoryItemMapper">
 
     <insert id="insertItems">
-        INSERT INTO inventory_item (snapshot_id, product_line, inventory_category, material_id,
+        INSERT INTO inventory_item (snapshot_id, product_line, inventory_category, material_id, inventory_quality,
+            warehouse_code, warehouse_name,
             project_model, material_name, supplier_name, product_mode,
             odm_supplier_qty, xa400_qty, xa378_qty, xa226_qty, shipping_available_qty,
             classification, barcode, remark, order_pending_qty, sales_status, parent_record)
         VALUES
         <foreach collection="list" item="d" separator=",">
-            (#{d.snapshotId}, #{d.productLine}, #{d.inventoryCategory}, #{d.materialId},
+            (#{d.snapshotId}, #{d.productLine}, #{d.inventoryCategory}, #{d.materialId}, #{d.inventoryQuality},
+             #{d.warehouseCode}, #{d.warehouseName},
              #{d.projectModel}, #{d.materialName}, #{d.supplierName}, #{d.productMode},
              #{d.odmSupplierQty}, #{d.xa400Qty}, #{d.xa378Qty}, #{d.xa226Qty}, #{d.shippingAvailableQty},
              #{d.classification}, #{d.barcode}, #{d.remark}, #{d.orderPendingQty}, #{d.salesStatus}, #{d.parentRecord})
@@ -25,8 +27,40 @@
         LIMIT #{limit} OFFSET #{offset}
     </select>
 
+    <sql id="itemSearch">
+        AND (warehouse_code LIKE CONCAT('%', #{keyword}, '%')
+          OR warehouse_name LIKE CONCAT('%', #{keyword}, '%')
+          OR material_id LIKE CONCAT('%', #{keyword}, '%')
+          OR material_name LIKE CONCAT('%', #{keyword}, '%')
+          OR supplier_name LIKE CONCAT('%', #{keyword}, '%'))
+    </sql>
+
+    <select id="selectFilteredPageBySnapshotId" resultType="com.mrp.inventory.domain.InventoryItem">
+        SELECT * FROM inventory_item WHERE snapshot_id = #{snapshotId}
+        <include refid="itemSearch" />
+        ORDER BY id LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="countFilteredBySnapshotId" resultType="int">
+        SELECT COUNT(*) FROM inventory_item WHERE snapshot_id = #{snapshotId}
+        <include refid="itemSearch" />
+    </select>
+
     <select id="countBySnapshotId" resultType="int">
         SELECT COUNT(*) FROM inventory_item WHERE snapshot_id = #{snapshotId}
+    </select>
+
+    <select id="countBySnapshotIdAndWarehouseCode" resultType="int">
+        SELECT COUNT(*)
+        FROM inventory_item
+        WHERE snapshot_id = #{snapshotId}
+          AND warehouse_code = #{warehouseCode}
+    </select>
+
+    <select id="selectWarehouseCodesBySnapshotId" resultType="string">
+        SELECT DISTINCT warehouse_code
+        FROM inventory_item
+        WHERE snapshot_id = #{snapshotId}
     </select>
 
     <delete id="deleteBySnapshotId">

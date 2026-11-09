@@ -1,0 +1,67 @@
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MRP_ACCEPTANCE_DB_PASSWORD:?Set MRP_ACCEPTANCE_DB_PASSWORD}
+      MYSQL_DATABASE: mrp_acceptance
+      MYSQL_USER: acceptance
+      MYSQL_PASSWORD: ${MRP_ACCEPTANCE_DB_PASSWORD:?Set MRP_ACCEPTANCE_DB_PASSWORD}
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+    volumes:
+      - acceptance_mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", 'MYSQL_PWD="$$MYSQL_ROOT_PASSWORD" mysqladmin ping -uroot --silent']
+      interval: 5s
+      timeout: 3s
+      retries: 40
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--requirepass", "${MRP_ACCEPTANCE_DB_PASSWORD:?Set MRP_ACCEPTANCE_DB_PASSWORD}"]
+    environment:
+      REDISCLI_AUTH: ${MRP_ACCEPTANCE_DB_PASSWORD:?Set MRP_ACCEPTANCE_DB_PASSWORD}
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  api:
+    build:
+      context: ..
+      dockerfile: backend/Dockerfile
+    image: mrp-acceptance-api:local
+    environment: &app_environment
+      SPRING_PROFILES_ACTIVE: prod
+      MRP_DB_URL: jdbc:mysql://mysql:3306/mrp_acceptance?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&characterEncoding=UTF-8
+      MRP_DB_USERNAME: acceptance
+      MRP_DB_PASSWORD: ${MRP_ACCEPTANCE_DB_PASSWORD:?Set MRP_ACCEPTANCE_DB_PASSWORD}
+      MRP_REDIS_HOST: redis
+      MRP_REDIS_PORT: 6379
+      MRP_REDIS_PASSWORD: ${MRP_ACCEPTANCE_DB_PASSWORD:?Set MRP_ACCEPTANCE_DB_PASSWORD}
+      MRP_JWT_SECRET: ${MRP_ACCEPTANCE_JWT_SECRET:?Set MRP_ACCEPTANCE_JWT_SECRET}
+      MRP_BOOTSTRAP_ADMIN_PASSWORD: ${MRP_ACCEPTANCE_ADMIN_PASSWORD:-}
+      FEISHU_APP_ID: acceptance-disabled
+      FEISHU_APP_SECRET: acceptance-disabled
+    ports:
+      - "127.0.0.1:${MRP_ACCEPTANCE_API_PORT:-8183}:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  worker:
+    image: mrp-acceptance-api:local
+    environment:
+      <<: *app_environment
+      SPRING_PROFILES_ACTIVE: prod,worker
+      SPRING_MAIN_WEB_APPLICATION_TYPE: none
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+volumes:
+  acceptance_mysql:

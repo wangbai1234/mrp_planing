@@ -1,0 +1,9 @@
+.env
+runtime/
+evidence/runs/
+node_modules
+*.zip
+
+evidence/e2e-results/
+evidence/playwright-report/
+evidence/private/

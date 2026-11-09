@@ -116,6 +116,7 @@ export interface ParseError {
 export interface InventorySnapshot {
   id: number
   snapshotDate: string
+  warehouseCode?: string
   fileName?: string
   status: string
   createdAt: string
@@ -124,11 +125,16 @@ export interface InventorySnapshot {
 export interface InventoryItem {
   id: number
   productLine: string
-  inventoryCategory: string
+  inventoryCategory?: string
   materialId: string
+  inventoryQuality: 'GOOD' | 'DEFECTIVE'
+  warehouseCode?: string
+  warehouseName?: string
+  inventoryQuantity?: number
+  inventoryQty?: number
   projectModel: string
   materialName: string
-  supplierName: string
+  supplierName?: string
   productMode: string
   odmSupplierQty: number
   xa400Qty: number
@@ -137,7 +143,7 @@ export interface InventoryItem {
   shippingAvailableQty: number
   classification: string
   barcode: string
-  remark: string
+  remark?: string
   orderPendingQty: number
   salesStatus: string
   parentRecord: string

@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface MaterialMapper {
@@ -18,6 +19,8 @@ public interface MaterialMapper {
     Material selectByCode(@Param("materialCode") String materialCode);
 
     List<Material> selectByCodes(@Param("codes") List<String> codes);
+
+    List<Map<String, Object>> selectCategoryCodesByMaterialCodes(@Param("codes") List<String> codes);
 
     List<Material> selectAll(@Param("category") String category, @Param("region") String region,
                              @Param("isActive") Boolean isActive, @Param("keyword") String keyword,
