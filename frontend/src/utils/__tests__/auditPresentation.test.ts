@@ -58,6 +58,8 @@ describe('业务审计记录', () => {
       ['2027年1月计划量', '100', '120'], ['调整原因', '—', '月计划调整']
     ])
     expect(auditAction('TRANSFER')).toBe('调整排产')
+    expect(auditSummary(log(null, { materialId: 'M002' }, 'ADD', 'forecast_line'))).toBe('新增了经营计划明细')
+    expect(auditSummary(log(null, { materialId: 'M002' }, 'RESTORE', 'forecast_line'))).toBe('恢复了经营计划明细')
     expect(auditAction('UNRECOGNIZED')).toBe('其他操作')
     expect(auditResource('UNRECOGNIZED')).toBe('业务数据')
   })

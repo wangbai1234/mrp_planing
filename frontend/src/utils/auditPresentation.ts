@@ -50,7 +50,7 @@ const resources: Record<string, string> = {
 }
 
 const actions: Record<string, string> = {
-  CREATE: '新增', UPDATE: '编辑', EDIT: '编辑', DELETE: '删除', IMPORT: '导入', ENABLE: '启用',
+  CREATE: '新增', ADD: '新增', UPDATE: '编辑', EDIT: '编辑', DELETE: '删除', RESTORE: '恢复', IMPORT: '导入', ENABLE: '启用',
   DISABLE: '停用', ASSIGN_ROLE: '分配角色', UPDATE_PERMISSIONS: '更新权限',
   RESET_PASSWORD: '重置密码', COPY_ROLE: '复制角色', LOGIN: '登录',
   TRANSFER: '调整排产', CAPACITY_ACKNOWLEDGE: '确认产能',

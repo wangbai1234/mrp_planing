@@ -173,6 +173,8 @@ async function openComparison(row?: { factoryCode: string; materialId: string })
 }
 async function openLogs(row?: { factoryCode: string; materialId: string }) {
   materialFilter.value = row ? { factoryCode: row.factoryCode, materialId: row.materialId } : null
+  logRows.value = []
+  logTotal.value = 0
   logPage.value = 1; logVisible.value = true; await loadLogs()
 }
 function openLine(row?: DraftLine) {

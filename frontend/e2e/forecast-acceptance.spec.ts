@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 
-const base = 'http://localhost:5191'
+const base = process.env.E2E_BASE_URL || 'http://localhost:5191'
 
 test('经营计划只读验收：历史版本、差异搜索、空结果、导入弹窗', async ({ page, request }) => {
   const errors: string[] = []
@@ -18,23 +18,25 @@ test('经营计划只读验收：历史版本、差异搜索、空结果、导�
   await page.goto(base + '/forecast')
   await expect(page.locator('.forecast-version-heading').getByText(/生效版本 V/)).toBeVisible()
   await expect(page.getByRole('button', { name: '返回最新版本' })).toHaveCount(0)
+  const material = (await page.locator('.forecast-page > .el-card .el-table__body tr').first().locator('td').nth(2).innerText()).trim()
+  expect(material).toBeTruthy()
   await page.locator('.page-actions').getByRole('button', { name: '版本差异' }).click()
   const diff = page.getByRole('dialog', { name: /版本差异/ })
   await expect(diff).toBeVisible()
-  await diff.getByPlaceholder('搜索料号/工厂').fill('FORECAST-API-1')
+  await diff.getByPlaceholder('搜索料号/工厂').fill(material)
   await diff.locator('.el-checkbox').filter({ hasText: '显示未变化' }).click()
   await diff.getByRole('button', { name: '对比' }).click()
-  await expect(diff.locator('.el-table__body tr').first()).toContainText('FORECAST-API-1')
+  await expect(diff.locator('.el-table__body tr').first()).toContainText(material)
   await diff.getByPlaceholder('搜索料号/工厂').fill('NO-SUCH-MATERIAL-987654321')
   await diff.getByRole('button', { name: '对比' }).click()
   await expect(diff.getByText('暂无版本差异')).toBeVisible()
   await diff.getByRole('button', { name: '关闭此对话框' }).click()
 
   await page.getByPlaceholder('搜索料号/名称/工厂').fill('NO-SUCH-MATERIAL-987654321')
-  await page.locator('.forecast-table-header').getByRole('button', { name: '搜索' }).click()
+  await page.getByPlaceholder('搜索料号/名称/工厂').press('Enter')
   await expect(page.getByText('暂无经营计划数据')).toBeVisible()
-  await page.getByPlaceholder('搜索料号/名称/工厂').clear()
-  await page.locator('.forecast-table-header').getByRole('button', { name: '搜索' }).click()
+  await page.getByPlaceholder('搜索料号/名称/工厂').hover()
+  await page.locator('.forecast-table-header .el-input__clear').click()
   await expect(page.locator('.forecast-page > .el-card .el-table__body tr').first()).toBeVisible()
 
   await page.getByRole('button', { name: '查看版本' }).click()

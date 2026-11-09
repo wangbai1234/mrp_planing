@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 
-const base = 'http://localhost:5191'
+const base = process.env.E2E_BASE_URL || 'http://localhost:5191'
 
 test('Forecast 浏览器完整闭环：编辑、新增、删除、恢复、日志、差异和发布', async ({ page, request }) => {
   test.setTimeout(90000)
@@ -100,10 +100,16 @@ test('Forecast 浏览器完整闭环：编辑、新增、删除、恢复、日�
 
   await row.getByRole('button', { name: '查看日志' }).click()
   const logs = page.getByRole('dialog', { name: `操作日志 · ${material}` })
-  await expect(logs.getByText('EDIT').first()).toBeVisible()
-  await expect(logs.getByText('ADD').first()).toBeVisible()
-  await expect(logs.getByText('DELETE').first()).toBeVisible()
+  await expect(logs.getByRole('button', { name: /编辑了经营计划明细/ }).first()).toBeVisible()
+  await expect(logs.getByRole('button', { name: /删除了经营计划明细/ }).first()).toBeVisible()
+  await expect(logs.getByText('端到端测试：恢复料号').first()).toBeVisible()
   await logs.getByRole('button', { name: '关闭此对话框' }).click()
+  const newLogResponse = page.waitForResponse(response => response.url().includes('/audit-logs?')
+    && new URL(response.url()).searchParams.get('resourceId') === `爱培科|${newMaterial}` && response.status() === 200)
+  await added.getByRole('button', { name: '查看日志' }).click()
+  await newLogResponse
+  await expect(page.getByRole('dialog', { name: `操作日志 · ${newMaterial}` }).getByRole('button', { name: /新增了经营计划明细/ })).toBeVisible()
+  await page.getByRole('dialog', { name: `操作日志 · ${newMaterial}` }).getByRole('button', { name: '关闭此对话框' }).click()
 
   await page.getByRole('button', { name: /查看变更.*并生成新版本/ }).click()
   const publish = page.getByRole('dialog', { name: /生成新版本/ })
