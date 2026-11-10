@@ -37,6 +37,7 @@ function finishLogin(res: any) {
 }
 
 function cancelPasswordChange() {
+  if (!pendingLogin.value) return
   showChangePassword.value = false
   pendingLogin.value = null
   newPassword.value = ''
