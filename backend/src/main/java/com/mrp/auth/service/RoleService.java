@@ -34,6 +34,17 @@ public class RoleService {
         return roleMapper.selectAll();
     }
 
+    public java.util.Map<String, Object> getPage(String keyword, int page, int pageSize) {
+        int safePage = Math.max(1, page);
+        int safeSize = Math.max(1, Math.min(100, pageSize));
+        String search = keyword == null ? "" : keyword.trim();
+        return java.util.Map.of(
+                "items", roleMapper.selectPage(search, (safePage - 1) * safeSize, safeSize),
+                "total", roleMapper.countPage(search),
+                "page", safePage,
+                "pageSize", safeSize);
+    }
+
     public List<Role> getActive() {
         return roleMapper.selectActive();
     }

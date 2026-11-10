@@ -207,7 +207,7 @@ function getRoleNames(user: User): string {
         <h2>用户管理</h2>
         <PermissionButton permission="user:create" type="primary" @click="openCreateDialog">
           <el-icon><Plus /></el-icon>
-          新增用户
+          新增
         </PermissionButton>
       </div>
 
@@ -265,12 +265,12 @@ function getRoleNames(user: User): string {
         </el-table-column>
         <el-table-column label="操作" width="280" fixed="right">
           <template #default="{ row }">
-            <PermissionButton permission="user:update" link @click="openEditDialog(row)">编辑</PermissionButton>
-            <PermissionButton permission="user:assign_role" link @click="openRoleDialog(row)">分配角色</PermissionButton>
-            <PermissionButton :permission="row.isActive ? 'user:disable' : 'user:enable'" link @click="handleToggleStatus(row)">
+            <PermissionButton permission="user:update" type="primary" link @click="openEditDialog(row)">编辑</PermissionButton>
+            <PermissionButton permission="user:assign_role" type="primary" link @click="openRoleDialog(row)">分配角色</PermissionButton>
+            <PermissionButton :permission="row.isActive ? 'user:disable' : 'user:enable'" type="primary" link @click="handleToggleStatus(row)">
               {{ row.isActive ? '禁用' : '启用' }}
             </PermissionButton>
-            <PermissionButton permission="user:reset_password" link @click="handleResetPassword(row)">
+            <PermissionButton permission="user:reset_password" type="primary" link @click="handleResetPassword(row)">
               <el-icon><RefreshRight /></el-icon>重置密码
             </PermissionButton>
             <PermissionButton permission="user:delete" link type="danger" @click="handleDelete(row)">删除</PermissionButton>

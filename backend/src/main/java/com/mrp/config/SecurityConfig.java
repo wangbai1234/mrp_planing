@@ -102,6 +102,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.DELETE, "/api/v1/users/**").hasAuthority("user:delete")
 
                 // Role management permissions
+                .requestMatchers(HttpMethod.GET, "/api/v1/roles/*/members").hasAuthority("role:view_members")
                 .requestMatchers(HttpMethod.GET, "/api/v1/roles/factories", "/api/v1/roles/*",
                     "/api/v1/roles/*/permissions", "/api/v1/roles/*/data-scope")
                     .hasAnyAuthority("role:view", "role:assign_permission")

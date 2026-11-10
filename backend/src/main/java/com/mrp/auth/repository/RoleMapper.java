@@ -18,6 +18,10 @@ public interface RoleMapper {
 
     List<Role> selectAll();
 
+    List<Role> selectPage(@Param("keyword") String keyword, @Param("offset") int offset, @Param("limit") int limit);
+
+    int countPage(@Param("keyword") String keyword);
+
     List<Role> selectActive();
 
     List<Role> selectByUserId(@Param("userId") Long userId);

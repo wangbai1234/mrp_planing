@@ -5,16 +5,25 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Setting, User, CopyDocument } from '@element-plus/icons-vue'
 import AdminLayout from './AdminLayout.vue'
 import PermissionButton from '../../components/PermissionButton.vue'
-import { getRoles, createRole, updateRole, deleteRole, copyRole } from '../../api/role'
-import type { Role } from '../../types/permission'
+import { getRolePage, getRoleMembers, createRole, updateRole, deleteRole, copyRole } from '../../api/role'
+import type { Role, User as AppUser } from '../../types/permission'
 
 const router = useRouter()
 const loading = ref(false)
 const roles = ref<Role[]>([])
 const keyword = ref('')
 const appliedKeyword = ref('')
+const page = ref(1)
+const pageSize = ref(20)
+const total = ref(0)
+const membersVisible = ref(false)
+const membersLoading = ref(false)
+const memberRole = ref<Role | null>(null)
+const members = ref<AppUser[]>([])
+const membersPage = ref(1)
+const membersTotal = ref(0)
 
-function handleSearch() { appliedKeyword.value = keyword.value.trim() }
+function handleSearch() { appliedKeyword.value = keyword.value.trim(); page.value = 1; loadRoles() }
 
 const dialogVisible = ref(false)
 const dialogTitle = ref('新增角色')
@@ -35,7 +44,9 @@ const copyFormData = ref({
 async function loadRoles() {
   loading.value = true
   try {
-    roles.value = await getRoles()
+    const result = await getRolePage(appliedKeyword.value, page.value, pageSize.value)
+    roles.value = result.items
+    total.value = result.total
   } catch (e: any) {
     ElMessage.error('加载失败: ' + e.message)
   } finally {
@@ -45,13 +56,25 @@ async function loadRoles() {
 
 onMounted(loadRoles)
 
-function filteredRoles() {
-  if (!appliedKeyword.value) return roles.value
-  const kw = appliedKeyword.value.toLowerCase()
-  return roles.value.filter(r =>
-    r.name.toLowerCase().includes(kw) ||
-    r.code.toLowerCase().includes(kw)
-  )
+async function loadMembers() {
+  if (!memberRole.value) return
+  membersLoading.value = true
+  try {
+    const result = await getRoleMembers(memberRole.value.id, membersPage.value)
+    members.value = result.items
+    membersTotal.value = result.total
+  } catch (e: unknown) {
+    ElMessage.error('加载成员失败: ' + (e instanceof Error ? e.message : '未知错误'))
+  } finally {
+    membersLoading.value = false
+  }
+}
+
+function openMembers(role: Role) {
+  memberRole.value = role
+  membersPage.value = 1
+  membersVisible.value = true
+  loadMembers()
 }
 
 function openCreateDialog() {
@@ -148,7 +171,7 @@ function navigateToPermission(role: Role) {
         <h2>角色管理</h2>
         <PermissionButton permission="role:create" type="primary" @click="openCreateDialog">
           <el-icon><Plus /></el-icon>
-          新增角色
+          新增
         </PermissionButton>
       </div>
 
@@ -164,7 +187,7 @@ function navigateToPermission(role: Role) {
         />
       </div>
 
-      <el-table :data="filteredRoles()" v-loading="loading" style="width: 100%">
+      <el-table :data="roles" v-loading="loading" style="width: 100%">
         <el-table-column prop="name" label="角色名称" min-width="120" />
         <el-table-column prop="code" label="角色编码" min-width="120" />
         <el-table-column prop="description" label="描述" min-width="200" />
@@ -187,23 +210,39 @@ function navigateToPermission(role: Role) {
         </el-table-column>
         <el-table-column label="操作" width="320" fixed="right">
           <template #default="{ row }">
-            <PermissionButton permission="role:update" link @click="openEditDialog(row)">编辑</PermissionButton>
-            <PermissionButton permission="role:assign_permission" link @click="navigateToPermission(row)">
+            <PermissionButton permission="role:update" type="primary" link @click="openEditDialog(row)">编辑</PermissionButton>
+            <PermissionButton permission="role:assign_permission" type="primary" link @click="navigateToPermission(row)">
               <el-icon><Setting /></el-icon>权限配置
             </PermissionButton>
-            <PermissionButton permission="role:view_members" link>
+            <PermissionButton permission="role:view_members" type="primary" link @click="openMembers(row)">
               <el-icon><User /></el-icon>查看成员
             </PermissionButton>
-            <PermissionButton permission="role:create" link @click="openCopyDialog(row)">
+            <PermissionButton permission="role:create" type="primary" link @click="openCopyDialog(row)">
               <el-icon><CopyDocument /></el-icon>复制
             </PermissionButton>
-            <PermissionButton permission="role:update" link @click="handleToggleStatus(row)">
+            <PermissionButton permission="role:update" type="primary" link @click="handleToggleStatus(row)">
               {{ row.status === 'ACTIVE' ? '禁用' : '启用' }}
             </PermissionButton>
             <PermissionButton permission="role:delete" link type="danger" @click="handleDelete(row)">删除</PermissionButton>
           </template>
         </el-table-column>
       </el-table>
+      <el-empty v-if="!loading && !roles.length" description="暂无角色" />
+      <div class="pagination-bar"><el-pagination v-model:current-page="page" v-model:page-size="pageSize"
+        :total="total" :page-sizes="[20, 50, 100]" layout="total, sizes, prev, pager, next"
+        @current-change="loadRoles" @size-change="handleSearch" /></div>
+
+      <el-dialog v-model="membersVisible" :title="`角色成员 · ${memberRole?.name || ''}`" width="680px">
+        <el-table :data="members" v-loading="membersLoading" border>
+          <el-table-column prop="displayName" label="姓名" min-width="130" />
+          <el-table-column prop="username" label="登录账号" min-width="170" />
+          <el-table-column prop="department" label="部门" min-width="130" />
+          <el-table-column label="状态" width="90"><template #default="{ row }">{{ row.isActive ? '启用' : '禁用' }}</template></el-table-column>
+        </el-table>
+        <el-empty v-if="!membersLoading && !members.length" description="暂无成员" />
+        <div class="pagination-bar"><el-pagination v-model:current-page="membersPage" :page-size="20" :total="membersTotal"
+          layout="total, prev, pager, next" @current-change="loadMembers" /></div>
+      </el-dialog>
 
       <!-- Create/Edit Dialog -->
       <el-dialog v-model="dialogVisible" :title="dialogTitle" width="500px" destroy-on-close>
@@ -270,4 +309,5 @@ function navigateToPermission(role: Role) {
   gap: 12px;
   margin-bottom: 16px;
 }
+.pagination-bar { display: flex; justify-content: flex-end; margin-top: 16px; }
 </style>

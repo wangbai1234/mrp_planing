@@ -5,6 +5,16 @@ export function getRoles() {
   return get<Role[]>('/roles')
 }
 
+export function getRolePage(keyword: string, page: number, pageSize: number) {
+  const query = new URLSearchParams({ page: String(page), pageSize: String(pageSize) })
+  if (keyword.trim()) query.set('keyword', keyword.trim())
+  return get<{ items: Role[]; total: number; page: number; pageSize: number }>(`/roles/page?${query}`)
+}
+
+export function getRoleMembers(roleId: number, page: number) {
+  return get<{ items: import('../types/permission').User[]; total: number }>(`/roles/${roleId}/members?page=${page}&pageSize=20`)
+}
+
 export function getActiveRoles() {
   return get<Role[]>('/roles/active')
 }

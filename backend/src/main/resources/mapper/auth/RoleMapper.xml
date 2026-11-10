@@ -27,6 +27,28 @@
         ORDER BY r.id
     </select>
 
+    <select id="selectPage" resultType="com.mrp.auth.domain.Role">
+        SELECT r.id, r.code, r.name, r.description, r.status, r.created_at, r.updated_at,
+               (SELECT COUNT(*) FROM user_role ur WHERE ur.role_id = r.id) as user_count
+        FROM role r
+        <where>
+            <if test="keyword != null and keyword != ''">
+                (r.code LIKE CONCAT('%', #{keyword}, '%') OR r.name LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+        </where>
+        ORDER BY r.id
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="countPage" resultType="int">
+        SELECT COUNT(*) FROM role r
+        <where>
+            <if test="keyword != null and keyword != ''">
+                (r.code LIKE CONCAT('%', #{keyword}, '%') OR r.name LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+        </where>
+    </select>
+
     <select id="selectActive" resultType="com.mrp.auth.domain.Role">
         SELECT id, code, name, description, status, created_at, updated_at
         FROM role

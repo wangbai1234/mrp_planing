@@ -2,6 +2,7 @@ package com.mrp.auth.controller;
 
 import com.mrp.auth.domain.Role;
 import com.mrp.auth.service.RoleService;
+import com.mrp.auth.service.UserService;
 import com.mrp.common.response.ApiResponse;
 import com.mrp.common.security.CurrentUser;
 import org.springframework.web.bind.annotation.*;
@@ -13,14 +14,31 @@ import java.util.List;
 public class RoleController {
 
     private final RoleService roleService;
+    private final UserService userService;
 
-    public RoleController(RoleService roleService) {
+    public RoleController(RoleService roleService, UserService userService) {
         this.roleService = roleService;
+        this.userService = userService;
     }
 
     @GetMapping
     public ApiResponse<List<Role>> list() {
         return ApiResponse.ok(roleService.getAll());
+    }
+
+    @GetMapping("/page")
+    public ApiResponse<java.util.Map<String, Object>> page(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
+        return ApiResponse.ok(roleService.getPage(keyword, page, pageSize));
+    }
+
+    @GetMapping("/{id}/members")
+    public ApiResponse<java.util.Map<String, Object>> members(@PathVariable Long id,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
+        return ApiResponse.ok(userService.list(null, null, id, page, pageSize));
     }
 
     @GetMapping("/active")
